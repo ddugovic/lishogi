@@ -2,6 +2,7 @@ package lila.base
 
 import java.lang.Character.isLetterOrDigit
 import java.lang.{ Math, StringBuilder => jStringBuilder }
+import java.util.regex.Matcher
 import scala.annotation.{ switch, tailrec }
 
 import lila.common.base.StringUtils.escapeHtmlRaw
@@ -182,6 +183,20 @@ final object RawHtml {
     }
 
   private[this] val markdownLinkRegex = """\[([^]]++)\]\((https?://[^)]++)\)""".r
+  def justMarkdownLinks(escapedHtml: String): String =
+    markdownLinkRegex.replaceAllIn(
+      escapedHtml,
+      m => {
+        val content = Matcher.quoteReplacement(m group 1)
+        val href    = removeUrlTrackingParameters(m group 2)
+        s"""<a rel="nofollow noopener noreferrer" href="$href">$content</a>"""
+      }
+    )
+
+  private[this] val trackingParametersRegex =
+    """(?i)(?:\?|&(?:amp;)?)(?:utm\\?_\w+|gclid|gclsrc|\\?_ga)=\w+""".r
+  def removeUrlTrackingParameters(url: String): String =
+    trackingParametersRegex.replaceAllIn(url, "")
 
   def markdownLinks(text: String): String =
     nl2br {

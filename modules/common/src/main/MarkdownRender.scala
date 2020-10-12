@@ -29,7 +29,7 @@ import scala.collection.JavaConverters
 import java.util.Arrays
 import scala.jdk.CollectionConverters._
 import scala.util.Try
-import chess.format.pgn.Pgn
+import shogi.format.kif.Kif
 import com.vladsch.flexmark.util.misc.Extension
 import lila.base.RawHtml
 import com.vladsch.flexmark.html.renderer.ResolvedLink
@@ -89,7 +89,7 @@ final class MarkdownRender(
     tooManyUnderscoreRegex.replaceAllIn(text.value, "_" * 3)
   )
 
-  def apply(key: Key, pgns: Map[String, Pgn] = Map.empty)(text: Markdown): Html =
+  def apply(key: Key, kifs: Map[String, Kif] = Map.empty)(text: Markdown): Html =
     Chronometer
       .sync {
         try {
@@ -110,7 +110,7 @@ object MarkdownRender {
   type Key  = String
   type Html = String
 
-  case class GameExpand(domain: config.NetDomain, getPgn: String => Option[String])
+  case class GameExpand(domain: config.NetDomain, getKif: String => Option[String])
 
   private val rel = "nofollow noopener noreferrer"
 
@@ -143,7 +143,7 @@ object MarkdownRender {
         "i.ibb.co",
         "i.postimg.cc",
         "xkcd.com",
-        "lichess1.org"
+        "lishogi1.org"
       )
     private def whitelistedSrc(src: String): Option[String] =
       for {
@@ -214,7 +214,7 @@ object MarkdownRender {
         def justAsLink() = renderLink(node, context, html, link)
         link.getUrl match {
           case gameRegex(id, color, ply) =>
-            expander.getPgn(id).fold(justAsLink())(renderPgnViewer(node, html, link, _, color, ply))
+            expander.getKif(id).fold(justAsLink())(renderKifViewer(node, html, link, _, color, ply))
           case _ => justAsLink()
         }
       }
@@ -232,7 +232,7 @@ object MarkdownRender {
         def justAsLink() = renderLink(node, context, html, link)
         link.getUrl match {
           case gameRegex(id, color, ply) =>
-            expander.getPgn(id).fold(justAsLink())(renderPgnViewer(node, html, link, _, color, ply))
+            expander.getKif(id).fold(justAsLink())(renderKifViewer(node, html, link, _, color, ply))
           case _ => justAsLink()
         }
       }
@@ -251,16 +251,16 @@ object MarkdownRender {
       html.tag("/a").unit
     }
 
-    private def renderPgnViewer(
+    private def renderKifViewer(
         node: LinkNode,
         html: HtmlWriter,
         link: ResolvedLink,
-        pgn: String,
+        kif: String,
         color: String,
         ply: String
     ) =
       html
-        .attr("data-pgn", pgn)
+        .attr("data-kif", kif)
         .attr("data-orientation", Option(color) | "white")
         .attr("data-ply", Option(ply) | "")
         .attr("class", "lpv--autostart")
