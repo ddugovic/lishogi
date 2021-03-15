@@ -44,7 +44,7 @@ libraryDependencies ++= akka.bundle ++ Seq(
 }
 
 lazy val modules = Seq(
-  common, db, chess, rating, user, security, hub, socket,
+  common, db, chess, shogi, rating, user, security, hub, socket,
   msg, notifyModule, i18n, game, bookmark, search,
   gameSearch, timeline, forum, forumSearch, team, teamSearch,
   analyse, mod, round, pool, lobby, setup,
@@ -92,6 +92,11 @@ lazy val chess = module("chess",
   reactivemongo.bundle
 )
 
+lazy val shogi = module("shogi",
+  Seq(),
+  reactivemongo.bundle
+)
+
 lazy val compression = module("compression", Seq(), Seq(specs2))
 
 lazy val puzzle = module("puzzle",
@@ -135,12 +140,12 @@ lazy val evaluation = module("evaluation",
 )
 
 lazy val common = module("common",
-  Seq(chess),
+  Seq(chess, shogi),
   Seq(kamon.core, scalatags, jodaForms, scaffeine, specs2) ++ reactivemongo.bundle
 )
 
 lazy val rating = module("rating",
-  Seq(common, db, chess, memo, i18n),
+  Seq(common, db, chess, shogi, memo, i18n),
   reactivemongo.bundle
 )
 
@@ -200,7 +205,7 @@ lazy val user = module("user",
 )
 
 lazy val game = module("game",
-  Seq(common, memo, db, chess, hub, user, chat, compression),
+  Seq(common, memo, db, chess, shogi, hub, user, chat, compression),
   Seq(specs2) ++ reactivemongo.bundle
 )
 
@@ -220,7 +225,7 @@ lazy val bot = module("bot",
 )
 
 lazy val analyse = module("analyse",
-  Seq(common, hub, game, user, notifyModule, evalCache, chess),
+  Seq(common, hub, game, user, notifyModule, evalCache, chess, shogi),
   reactivemongo.bundle
 )
 
@@ -415,7 +420,7 @@ lazy val notifyModule = module("notify",
 )
 
 lazy val tree = module("tree",
-  Seq(common, chess),
+  Seq(common, chess, shogi),
   Seq()
 )
 
@@ -425,6 +430,6 @@ lazy val socket = module("socket",
 )
 
 lazy val hub = module("hub",
-  Seq(common, chess),
+  Seq(common, chess, shogi),
   Seq(scaffeine)
 )
