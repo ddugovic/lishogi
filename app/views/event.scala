@@ -6,6 +6,8 @@ import lila.api.Context
 import lila.app.templating.Environment._
 import lila.app.ui.ScalatagsTemplate._
 import lila.common.String.html.richText
+import lila.event.{ Event, EventForm }
+import lila.i18n.LangList
 
 import controllers.routes
 
@@ -134,7 +136,14 @@ object event {
         help = raw("What to redirect to when the event starts").some
       )(form3.input(_)),
       form3.split(
-        form3.group(form("lang"), raw("Language"), half = true)(form3.select(_, lila.i18n.LangList.choices)),
+        form3.group(form("lang"), raw("Language"), half = true)(
+          form3.select(
+            _,
+            lila.i18n.LangList.popularNoRegion.map { l =>
+              l.code -> s"${l.language.toUpperCase} ${LangList name l}"
+            }
+          )
+        ),
         form3.group(
           form("hostedBy"),
           raw("Hosted by Lishogi user"),

@@ -101,7 +101,7 @@ object LangList {
     // Lang("zu", "ZA")  -> "isiZulu"
   )
 
-  lazy val popular: List[Lang] = {
+  private lazy val popular: List[Lang] = {
     // 26/04/2020 based on db.user4.aggregate({$sortByCount:'$lang'}).toArray()
     val langs =
       "en-US en-GB ja-JP ru-RU es-ES tr-TR fr-FR de-DE pt-BR it-IT pl-PL ar-SA nl-NL"
@@ -129,17 +129,10 @@ object LangList {
 
   def nameByStr(str: String): String = I18nLangPicker.byStr(str).fold(str)(name)
 
-  lazy val allChoices: List[(String, String)] = all.toList
+  lazy val allChoices: List[(String, String)] = all.view
     .map { case (l, name) =>
       l.code -> name
     }
-
-  lazy val popularChoices: List[(String, String)] = popularNoRegion.toList
-    .take(20)
-    .flatMap { l =>
-      all.get(l).map { name =>
-        l.code -> s"${l.code} $name"
-      }
-    }
+    .toList
     .sortBy(_._1)
 }
