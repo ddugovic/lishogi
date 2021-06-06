@@ -15,6 +15,7 @@ class BerserkTest extends ChessTest {
     "nope" in {
       Clock.Config(0 * 60, 1).berserkable must_== false
       Clock.Config(0 * 60, 10).berserkable must_== false
+      Clock.Config(0 * 60, 0, 10).berserkable must_== false
     }
   }
   "berserk flags" should {
