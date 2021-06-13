@@ -151,7 +151,7 @@ final class Game(
       evals = getBoolOpt("evals", req) | extended,
       opening = getBoolOpt("opening", req) | extended,
       literate = getBoolOpt("literate", req) | false,
-      pgnInJson = getBoolOpt("pgnInJson", req) | false
+      pgnInJson = getBoolOpt("kifInJson", req) | false
     )
 
   private[controllers] def gameContentType(config: GameApiV2.Config) =

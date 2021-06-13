@@ -258,7 +258,7 @@ final class GameApiV2(
     for {
       lightUsers <- gameLightUsers(g) dmap { case (wu, bu) => List(wu, bu) }
       pgn <-
-        withFlags.pgnInJson ?? pgnDump
+        withFlags.kifInJson ?? pgnDump
           .apply(g, initialFen, analysisOption, withFlags)
           .dmap(pgnDump.toPgnString)
           .dmap(some)

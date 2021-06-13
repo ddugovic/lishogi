@@ -178,7 +178,7 @@ object PgnDump {
       evals: Boolean = true,
       opening: Boolean = true,
       literate: Boolean = false,
-      pgnInJson: Boolean = false,
+      kifInJson: Boolean = false,
       delayMoves: Int = 0
   )
 
