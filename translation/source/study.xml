@@ -58,9 +58,9 @@
   <string name="last">Last</string>
   <string name="shareAndExport">Share &amp; export</string>
   <string name="cloneStudy">Clone</string>
-  <string name="studyPgn">Study PGN</string>
+  <string name="studyKif">Study KIF</string>
   <string name="downloadAllGames">Download all games</string>
-  <string name="chapterPgn">Chapter PGN</string>
+  <string name="chapterKif">Chapter KIF</string>
   <string name="downloadGame">Download game</string>
   <string name="studyUrl">Study URL</string>
   <string name="broadcastUrl">Broadcast URL</string>
