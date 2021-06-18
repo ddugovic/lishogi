@@ -296,7 +296,7 @@ object Clock {
   }
 
   // [TimeControl "600+2"] -> 10+2
-  def readPgnConfig(str: String): Option[Config] =
+  def readKifuConfig(str: String): Option[Config] =
     str.split('+') match {
       case Array(initStr, incStr) =>
         for {

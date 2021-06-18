@@ -1,7 +1,7 @@
 package lila.study
 
 import shogi.Hands
-import shogi.format.pgn.{ Glyph, Glyphs }
+import shogi.format.kif.{ Glyph, Glyphs }
 import shogi.format.{ FEN, Uci, UciCharPair }
 
 import shogi.Centis

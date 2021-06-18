@@ -1,6 +1,6 @@
 package lila.study
 
-import shogi.format.pgn._
+import shogi.format.kif._
 import shogi.format.{ FEN, Uci, UciCharPair }
 import shogi.variant
 import shogi.Hands

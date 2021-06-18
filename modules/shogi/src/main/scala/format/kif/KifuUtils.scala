@@ -1,6 +1,5 @@
 package shogi
-package format
-package pgn
+package format.kif
 
 import scala._
 
@@ -112,8 +111,8 @@ object KifuUtils {
     } filter { _ != "" }
   }
 
-  def movesAsKifu(uciPgn: Vector[(String, String)]): Vector[String] = {
-    uciPgn.foldLeft(Vector[String]()) { (prev, t) =>
+  def movesAsKifu(uciKifu: Vector[(String, String)]): Vector[String] = {
+    uciKifu.foldLeft(Vector[String]()) { (prev, t) =>
       // t is a tuple of (uci, pgn)
       val movePattern = "([a-i])([1-9])([a-i])([1-9])(\\+?)".r
       val dropPattern = "([A-Z])\\*([a-i])([1-9])".r

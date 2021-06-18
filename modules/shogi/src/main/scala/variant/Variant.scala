@@ -265,9 +265,9 @@ abstract class Variant private[variant] (
     Tokin
   )
 
-  lazy val rolesByPgn: Map[Char, Role] = roles
+  lazy val rolesByKifu: Map[Char, Role] = roles
     .map { r =>
-      (r.pgn, r)
+      (r.kif, r)
     }
     .to(Map)
 

@@ -1,5 +1,5 @@
 package shogi
-package format.pgn
+package format.kif
 
 import scalaz.Validation.{ failure, success }
 
@@ -29,7 +29,7 @@ object Reader {
       makeReplay(makeGame(parsed.tags ++ tags), op(parsed.sans))
     }
 
-  def fullWithSans(parsed: ParsedPgn, op: Sans => Sans): Result =
+  def fullWithSans(parsed: ParsedKifu, op: Sans => Sans): Result =
     makeReplay(makeGame(parsed.tags), op(parsed.sans))
 
   def movesWithSans(moveStrs: Iterable[String], op: Sans => Sans, tags: Tags): Valid[Result] =

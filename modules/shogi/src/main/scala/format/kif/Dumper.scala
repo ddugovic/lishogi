@@ -1,5 +1,5 @@
 package shogi
-package format.pgn
+package format.kif
 
 object Dumper {
 
@@ -34,7 +34,7 @@ object Dumper {
           else if (!promotion) ""
           else "+"
         }
-        s"${role.pgn}$disambiguation${captures.fold("x", "")}${dest.key}$promotes"
+        s"${role.kif}$disambiguation${captures.fold("x", "")}${dest.key}$promotes"
       }
     })
   }

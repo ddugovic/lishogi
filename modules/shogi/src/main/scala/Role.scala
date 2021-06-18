@@ -7,7 +7,7 @@ sealed trait Role {
   lazy val forsythUpper: Char = forsyth.toUpper
   val forsythFull: String
   lazy val forsythFullUpper: String = forsythFull.toUpperCase
-  lazy val pgn: Char                = forsythUpper
+  lazy val kif: Char               = forsythUpper
   lazy val name                     = toString.toLowerCase
   val projection: Boolean
   val dirs: Directions
@@ -201,8 +201,8 @@ object Role {
   val allByForsyth: Map[Char, Role] = all map { r =>
     (r.forsyth, r)
   } toMap
-  val allByPgn: Map[Char, Role] = all map { r =>
-    (r.pgn, r)
+  val allByKifu: Map[Char, Role] = all map { r =>
+    (r.kif, r)
   } toMap
   val allByName: Map[String, Role] = all map { r =>
     (r.name, r)

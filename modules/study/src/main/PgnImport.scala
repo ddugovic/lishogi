@@ -1,6 +1,6 @@
 package lila.study
 
-import shogi.format.pgn.{ Dumper, Glyphs, ParsedPgn, San, Tags }
+import shogi.format.kif.{ Dumper, Glyphs, ParsedKifu, San, Tags }
 import shogi.format.{ FEN, Forsyth, Uci, UciCharPair }
 
 import shogi.Centis
@@ -71,7 +71,7 @@ object PgnImport {
         }
     }
 
-  private def findAnnotator(pgn: ParsedPgn, contributors: List[LightUser]): Option[Comment.Author] =
+  private def findAnnotator(pgn: ParsedKifu, contributors: List[LightUser]): Option[Comment.Author] =
     pgn tags "annotator" map { a =>
       val lowered = a.toLowerCase
       contributors.find { c =>

@@ -1,6 +1,6 @@
 package lila.analyse
 
-import shogi.format.pgn.Glyph
+import shogi.format.kif.Glyph
 import lila.tree.Eval._
 import scala.util.chaining._
 

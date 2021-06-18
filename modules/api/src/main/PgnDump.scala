@@ -1,7 +1,7 @@
 package lila.api
 
 import shogi.format.FEN
-import shogi.format.pgn.Pgn
+import shogi.format.kif.Kifu
 import lila.analyse.{ Analysis, Annotator }
 import lila.game.Game
 import lila.game.PgnDump.WithFlags
@@ -24,7 +24,7 @@ final class PgnDump(
       flags: WithFlags,
       teams: Option[GameTeams] = None,
       realPlayers: Option[RealPlayers] = None
-  ): Fu[Pgn] =
+  ): Fu[Kifu] =
     dumper(game, initialFen, flags, teams) flatMap { pgn =>
       if (flags.tags) (game.simulId ?? simulApi.idToName) map { simulName =>
         simulName
@@ -41,7 +41,7 @@ final class PgnDump(
       realPlayers.fold(pgn)(_.update(game, pgn))
     }
 
-  private def addEvals(p: Pgn, analysis: Analysis): Pgn =
+  private def addEvals(p: Kifu, analysis: Analysis): Kifu =
     analysis.infos.foldLeft(p) { case (pgn, info) =>
       pgn.updateTurn(
         info.turn,
@@ -69,7 +69,7 @@ final class PgnDump(
         realPlayers: Option[RealPlayers]
     ) => apply(game, initialFen, analysis, flags, teams, realPlayers) dmap toPgnString
 
-  def toPgnString(pgn: Pgn) = {
+  def toPgnString(pgn: Kifu) = {
     // merge analysis & eval comments
     // 1. e4 { [%eval 0.17] } { [%clk 0:00:30] }
     // 1. e4 { [%eval 0.17] [%clk 0:00:30] }

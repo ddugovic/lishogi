@@ -1,8 +1,8 @@
 package lila.study
 
 import akka.stream.scaladsl._
-import shogi.format.pgn.{ Glyphs, Initial, Pgn, Tag, Tags }
-import shogi.format.{ Forsyth, pgn => shogiPgn }
+import shogi.format.kif.{ Glyphs, Initial, Kifu, Tag, Tags }
+import shogi.format.{ Forsyth, kif => shogiPgn }
 import org.joda.time.format.DateTimeFormat
 
 import lila.common.String.slugify
@@ -24,7 +24,7 @@ final class PgnDump(
       .intersperse("\n\n\n")
 
   def ofChapter(study: Study, flags: WithFlags)(chapter: Chapter) =
-    Pgn(
+    Kifu(
       tags = makeTags(study, chapter),
       turns = toTurns(chapter.root)(flags).toList,
       initial = Initial(

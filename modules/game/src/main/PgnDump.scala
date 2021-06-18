@@ -1,8 +1,8 @@
 package lila.game
 
 import shogi.format.Forsyth
-import shogi.format.pgn.{ ParsedPgn, Parser, Pgn, Tag, TagType, Tags }
-import shogi.format.{ FEN, pgn => shogiPgn }
+import shogi.format.kif.{ ParsedKifu, Parser, Kifu, Tag, TagType, Tags }
+import shogi.format.{ FEN, kif => shogiPgn }
 import shogi.{ Centis, Color }
 
 import lila.common.config.BaseUrl
@@ -20,7 +20,7 @@ final class PgnDump(
       initialFen: Option[FEN],
       flags: WithFlags,
       teams: Option[Color.Map[String]] = None
-  ): Fu[Pgn] = {
+  ): Fu[Kifu] = {
     val imported = game.pgnImport.flatMap { pgni =>
       Parser.full(pgni.pgn).toOption
     }
@@ -43,7 +43,7 @@ final class PgnDump(
           game.startColor
         )
       }
-      Pgn(ts, turns)
+      Kifu(ts, turns)
     }
   }
 
@@ -79,7 +79,7 @@ final class PgnDump(
   def tags(
       game: Game,
       initialFen: Option[FEN],
-      imported: Option[ParsedPgn],
+      imported: Option[ParsedKifu],
       withOpening: Boolean,
       teams: Option[Color.Map[String]] = None
   ): Fu[Tags] =

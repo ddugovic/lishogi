@@ -1,7 +1,7 @@
 package lila.study
 
-import shogi.format.pgn.{ Glyph, Glyphs, Tag, Tags }
 import shogi.format.{ FEN, Uci, UciCharPair, Forsyth }
+import shogi.format.kif.{ Glyph, Glyphs, Tag, Tags }
 import shogi.variant.Variant
 import shogi.{ Centis, Piece, Hand, Hands, Pos, Role }
 import org.joda.time.DateTime

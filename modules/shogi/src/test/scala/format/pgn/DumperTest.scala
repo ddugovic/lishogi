@@ -1,5 +1,5 @@
 package shogi
-package format.pgn
+package format.kif
 
 import format.Forsyth
 import Pos._

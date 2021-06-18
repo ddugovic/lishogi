@@ -1,5 +1,5 @@
 package shogi
-package format.pgn
+package format.kif
 
 import variant.Variant
 
@@ -17,7 +17,7 @@ object Parser extends scalaz.syntax.ToTraverseOps {
       variations: List[List[StrMove]]
   )
 
-  def full(pgn: String): Valid[ParsedPgn] =
+  def full(pgn: String): Valid[ParsedKifu] =
     try {
       val preprocessed = augmentString(pgn).linesIterator
         .map(_.trim)
@@ -41,7 +41,7 @@ object Parser extends scalaz.syntax.ToTraverseOps {
         resultOption = parsedMoves._3
         tags         = resultOption.filterNot(_ => preTags.exists(_.Result)).foldLeft(preTags)(_ + _)
         sans <- objMoves(strMoves, tags.variant | Variant.default)
-      } yield ParsedPgn(init, tags, sans)
+      } yield ParsedKifu(init, tags, sans)
     } catch {
       case _: StackOverflowError =>
         println(pgn)
@@ -177,7 +177,7 @@ object Parser extends scalaz.syntax.ToTraverseOps {
     def apply(str: String, variant: Variant): Valid[San] = {
       str match {
         case MoveR(role, file, rank, capture, pos, prom) => {
-          role.headOption.fold[Option[Role]](Some(Pawn))(variant.rolesByPgn.get) flatMap { role =>
+          role.headOption.fold[Option[Role]](Some(Pawn))(variant.rolesByKifu.get) flatMap { role =>
             Pos posAt pos map { dest =>
               succezz(
                 Std(
@@ -200,7 +200,7 @@ object Parser extends scalaz.syntax.ToTraverseOps {
           } getOrElse slow(str)
         }
         case DropR(roleS, posS) =>
-          roleS.headOption flatMap variant.rolesByPgn.get flatMap { role =>
+          roleS.headOption flatMap variant.rolesByKifu.get flatMap { role =>
             Pos posAt posS map { pos =>
               succezz(
                 Drop(
@@ -289,7 +289,7 @@ object Parser extends scalaz.syntax.ToTraverseOps {
 
     val promotion = "+" ^^^ true | "=" ^^^ false | success(false)
 
-    val role = mapParser(Role.allByPgn, "role")
+    val role = mapParser(Role.allByKifu, "role")
 
     val file = mapParser(fileMap, "file")
 
@@ -314,7 +314,7 @@ object Parser extends scalaz.syntax.ToTraverseOps {
         case err              => "Cannot parse tags: %s\n%s".format(err.toString, pgn).failureNel
       }
 
-    def fromFullPgn(pgn: String): Valid[Tags] =
+    def fromFullKifu(pgn: String): Valid[Tags] =
       splitTagAndMoves(pgn) flatMap { case (tags, _) =>
         apply(tags)
       }

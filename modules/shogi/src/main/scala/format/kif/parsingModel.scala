@@ -1,9 +1,9 @@
 package shogi
-package format.pgn
+package format.kif
 
 import scalaz.Validation.FlatMap._
 
-case class ParsedPgn(
+case class ParsedKifu(
     initialPosition: InitialPosition,
     tags: Tags,
     sans: Sans

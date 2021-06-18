@@ -1,5 +1,5 @@
 package shogi
-package format.pgn
+package format.kif
 import variant.Standard
 
 class ParserTest extends ShogiTest {
@@ -85,13 +85,13 @@ class ParserTest extends ShogiTest {
   }
 
   "comments" in {
-    parser("Ne5f7+! {such a neat comment}") must beSuccess.like { case ParsedPgn(_, _, Sans(List(san))) =>
+    parser("Ne5f7+! {such a neat comment}") must beSuccess.like { case ParsedKifu(_, _, Sans(List(san))) =>
       san.metas.comments must_== List("such a neat comment")
     }
   }
 
   "first move variation" in {
-    parser("1. Pe4 (1. Pd4)") must beSuccess.like { case ParsedPgn(_, _, Sans(List(san))) =>
+    parser("1. Pe4 (1. Pd4)") must beSuccess.like { case ParsedKifu(_, _, Sans(List(san))) =>
       san.metas.variations.headOption must beSome.like { case variation =>
         variation.value must haveSize(1)
       }

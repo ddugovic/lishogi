@@ -62,9 +62,9 @@ object Uci extends scalaz.std.OptionInstances with scalaz.syntax.ToTraverseOps {
 
   case class Drop(role: Role, pos: Pos) extends Uci {
 
-    def uci = s"${role.pgn}*${pos.key}"
+    def uci = s"${role.kif}*${pos.key}"
 
-    def piotr = s"${role.pgn}*${pos.piotrStr}"
+    def piotr = s"${role.kif}*${pos.piotrStr}"
 
     def origDest = pos -> pos
 
@@ -88,14 +88,14 @@ object Uci extends scalaz.std.OptionInstances with scalaz.syntax.ToTraverseOps {
 
   def apply(move: String): Option[Uci] =
     if (move lift 1 contains '*') for {
-      role <- move.headOption flatMap Role.allByPgn.get
+      role <- move.headOption flatMap Role.allByKifu.get
       pos  <- Pos.posAt(move drop 2 take 2)
     } yield Uci.Drop(role, pos)
     else Uci.Move(move)
 
   def piotr(move: String): Option[Uci] =
     if (move lift 1 contains '*') for {
-      role <- move.headOption flatMap Role.allByPgn.get
+      role <- move.headOption flatMap Role.allByKifu.get
       pos  <- move lift 2 flatMap Pos.piotr
     } yield Uci.Drop(role, pos)
     else Uci.Move.piotr(move)

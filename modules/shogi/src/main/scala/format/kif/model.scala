@@ -1,6 +1,5 @@
 package shogi
-package format
-package pgn
+package format.kif
 
 import play.api.libs.json._
 import org.joda.time.DateTime
@@ -8,7 +7,7 @@ import org.joda.time.format.DateTimeFormat
 
 import scala._
 
-case class Pgn(
+case class Kifu(
     tags: Tags,
     turns: List[Turn],
     initial: Initial = Initial.empty
@@ -48,15 +47,15 @@ case class Pgn(
     s"$tags\n\n$initStr$turnStr $endStr"
   }.trim
 
-  def renderAsKifu(uciPgn: scala.collection.IndexedSeq[(String, String)], gameCreatedAt: DateTime) = {
+  def renderAsKifu(uciKifu: scala.collection.IndexedSeq[(String, String)], gameCreatedAt: DateTime) = {
     val fmt            = DateTimeFormat.forPattern("yyyy/MM/dd HH:mm:ss")
     val gameCreatedTag = "開始日時：" + fmt.print(gameCreatedAt) + "\n"
     val tagsStr        = KifuUtils tagsAsKifu tags mkString "\n"
     val movesHeader    = """
 手数----指手---------消費時間--
 """
-    val uciPgnAsVector = uciPgn.foldLeft(Vector[(String, String)]()) { _ :+ _ }
-    val movesVector    = KifuUtils.movesAsKifu(uciPgnAsVector)
+    val uciKifuAsVector = uciKifu.foldLeft(Vector[(String, String)]()) { _ :+ _ }
+    val movesVector    = KifuUtils.movesAsKifu(uciKifuAsVector)
     val movesStr       = movesVector.zipWithIndex map { move => s"${move._2 + 1} ${move._1}" } mkString "\n"
 
     val endMoveStr = ""
@@ -135,7 +134,7 @@ case class Move(
   def isLong = comments.nonEmpty || variations.nonEmpty
 
   private def clockString: Option[String] =
-    secondsLeft.map(seconds => "[%clk " + Move.formatPgnSeconds(seconds) + "]")
+    secondsLeft.map(seconds => "[%clk " + Move.formatKifuSeconds(seconds) + "]")
 
   override def toString = {
     val glyphStr = glyphs.toList
@@ -167,7 +166,7 @@ object Move {
   private def noDoubleLineBreak(txt: String) =
     noDoubleLineBreakRegex.replaceAllIn(txt, "\n")
 
-  private def formatPgnSeconds(t: Int) =
+  private def formatKifuSeconds(t: Int) =
     periodFormatter.print(
       org.joda.time.Duration.standardSeconds(t).toPeriod
     )

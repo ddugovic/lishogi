@@ -108,7 +108,7 @@ object Event {
       Move(
         orig = move.orig,
         dest = move.dest,
-        san = shogi.format.pgn.Dumper(move),
+        san = shogi.format.kif.Dumper(move),
         fen = shogi.format.Forsyth.exportSituation(situation),
         check = situation.check,
         threefold = situation.fourfoldRepetition,
@@ -139,7 +139,7 @@ object Event {
       MoveOrDrop.data(fen, check, threefold, state, clock, possibleMoves, possibleDrops, crazyData) {
         Json.obj(
           "role" -> role.name,
-          "uci"  -> s"${role.pgn}*${pos.key}",
+          "uci"  -> s"${role.kif}*${pos.key}",
           "san"  -> san
         )
       }
@@ -156,7 +156,7 @@ object Event {
       Drop(
         role = drop.piece.role,
         pos = drop.pos,
-        san = shogi.format.pgn.Dumper(drop),
+        san = shogi.format.kif.Dumper(drop),
         fen = shogi.format.Forsyth.exportSituation(situation),
         check = situation.check,
         threefold = situation.fourfoldRepetition,

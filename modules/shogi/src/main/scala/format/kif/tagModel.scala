@@ -1,5 +1,5 @@
 package shogi
-package format.pgn
+package format.kif
 
 import org.joda.time.DateTimeZone
 import org.joda.time.format.DateTimeFormat
@@ -28,7 +28,7 @@ case class Tags(value: List[Tag]) extends AnyVal {
   def clockConfig: Option[Clock.Config] =
     value.collectFirst { case Tag(Tag.TimeControl, str) =>
       str
-    } flatMap Clock.readPgnConfig
+    } flatMap Clock.readKifuConfig
 
   def variant: Option[shogi.variant.Variant] =
     apply(_.Variant).map(_.toLowerCase).flatMap { case name =>
