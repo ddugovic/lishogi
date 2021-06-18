@@ -652,6 +652,6 @@ abstract private[controllers] class LilaController(val env: Env)
   protected val noProxyBufferHeader = "X-Accel-Buffering" -> "no"
   protected val noProxyBuffer       = (res: Result) => res.withHeaders(noProxyBufferHeader)
 
-  protected val pgnContentType    = "application/x-chess-pgn"
+  protected val kifContentType    = "application/x-shogi-kif"
   protected val ndJsonContentType = "application/x-ndjson"
 }

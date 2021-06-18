@@ -29,7 +29,7 @@ object Replay {
       initialFen: Option[String],
       variant: shogi.variant.Variant
   ): Valid[Reader.Result] =
-    moveStrs.some.filter(_.nonEmpty) toValid "[replay] pgn is empty" flatMap { nonEmptyMoves =>
+    moveStrs.some.filter(_.nonEmpty) toValid "[replay] kif is empty" flatMap { nonEmptyMoves =>
       Reader.moves(
         nonEmptyMoves,
         Tags(

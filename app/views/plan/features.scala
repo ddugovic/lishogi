@@ -74,7 +74,7 @@ object features {
             //  )
             //),
             //tr(check)(
-            //  "Download/Upload any game as PGN"
+            //  "Download/Upload any game as KIF"
             //),
             //tr(unlimited)(
             //  a(href := routes.Search.index(1))("Advanced search"),

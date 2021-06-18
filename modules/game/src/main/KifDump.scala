@@ -2,18 +2,18 @@ package lila.game
 
 import shogi.format.Forsyth
 import shogi.format.kif.{ ParsedKifu, Parser, Kifu, Tag, TagType, Tags }
-import shogi.format.{ FEN, kif => shogiPgn }
+import shogi.format.{ FEN, kif => shogiKif }
 import shogi.{ Centis, Color }
 
 import lila.common.config.BaseUrl
 import lila.common.LightUser
 
-final class PgnDump(
+final class KifDump(
     baseUrl: BaseUrl,
     lightUserApi: lila.user.LightUserApi
 )(implicit ec: scala.concurrent.ExecutionContext) {
 
-  import PgnDump._
+  import KifDump._
 
   def apply(
       game: Game,
@@ -21,8 +21,8 @@ final class PgnDump(
       flags: WithFlags,
       teams: Option[Color.Map[String]] = None
   ): Fu[Kifu] = {
-    val imported = game.pgnImport.flatMap { pgni =>
-      Parser.full(pgni.pgn).toOption
+    val imported = game.kifImport.flatMap { kifi =>
+      Parser.full(kifi.kif).toOption
     }
     val tagsFuture =
       if (flags.tags) tags(game, initialFen, imported, withOpening = flags.opening, teams = teams)
@@ -31,8 +31,8 @@ final class PgnDump(
       val turns = flags.moves ?? {
         val fenSituation = ts.fen.map(_.value) flatMap Forsyth.<<<
         val moves2 =
-          if (fenSituation.exists(_.situation.color.gote)) ".." +: game.pgnMoves
-          else game.pgnMoves
+          if (fenSituation.exists(_.situation.color.gote)) ".." +: game.kifMoves
+          else game.kifMoves
         val moves3 =
           if (flags.delayMoves > 0) moves2 dropRight flags.delayMoves
           else moves2
@@ -148,19 +148,19 @@ final class PgnDump(
       from: Int,
       clocks: Vector[Centis],
       startColor: Color
-  ): List[shogiPgn.Turn] =
+  ): List[shogiKif.Turn] =
     (moves grouped 2).zipWithIndex.toList map { case (moves, index) =>
       val clockOffset = startColor.fold(0, 1)
-      shogiPgn.Turn(
+      shogiKif.Turn(
         number = index + from,
         sente = moves.headOption filter (".." !=) map { san =>
-          shogiPgn.Move(
+          shogiKif.Move(
             san = san,
             secondsLeft = clocks lift (index * 2 - clockOffset) map (_.roundSeconds)
           )
         },
         gote = moves lift 1 map { san =>
-          shogiPgn.Move(
+          shogiKif.Move(
             san = san,
             secondsLeft = clocks lift (index * 2 + 1 - clockOffset) map (_.roundSeconds)
           )
@@ -169,7 +169,7 @@ final class PgnDump(
     } filterNot (_.isEmpty)
 }
 
-object PgnDump {
+object KifDump {
 
   case class WithFlags(
       clocks: Boolean = true,

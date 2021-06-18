@@ -1,14 +1,14 @@
 package lila.relay
 
 import shogi.format.kif.Tags
-import lila.study.{ Chapter, Node, PgnImport }
+import lila.study.{ Chapter, Node, KifImport }
 
 case class RelayGame(
     index: Int,
     tags: Tags,
     variant: shogi.variant.Variant,
     root: Node.Root,
-    end: Option[PgnImport.End]
+    end: Option[KifImport.End]
 ) {
 
   def staticTagsMatch(chapterTags: Tags): Boolean =

@@ -70,11 +70,11 @@ final private class Captcher(gameRepo: GameRepo)(implicit ec: scala.concurrent.E
       gameRepo game id flatMap { _ ?? fromGame }
 
     private def fromGame(game: Game): Fu[Option[Captcha]] =
-      gameRepo getOptionPgn game.id map {
+      gameRepo getOptionKif game.id map {
         _ flatMap { makeCaptcha(game, _) }
       }
 
-    private def makeCaptcha(game: Game, moves: PgnMoves): Option[Captcha] =
+    private def makeCaptcha(game: Game, moves: KifMoves): Option[Captcha] =
       for {
         rewinded  <- rewind(moves)
         solutions <- solve(rewinded)
@@ -94,7 +94,7 @@ final private class Captcher(gameRepo: GameRepo)(implicit ec: scala.concurrent.E
         s"${move.orig} ${move.dest}"
       } toNel
 
-    private def rewind(moves: PgnMoves): Option[ShogiGame] =
+    private def rewind(moves: KifMoves): Option[ShogiGame] =
       kif.Reader
         .movesWithSans(
           moves,

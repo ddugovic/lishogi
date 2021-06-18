@@ -47,10 +47,10 @@ object Ecopening {
       })
     }
 
-  def fromGame(pgnMoves: List[String]): Option[Ecopening] =
+  def fromGame(kifMoves: List[String]): Option[Ecopening] =
     Replay
       .boards(
-        moveStrs = pgnMoves take EcopeningDB.MAX_MOVES,
+        moveStrs = kifMoves take EcopeningDB.MAX_MOVES,
         initialFen = none,
         variant = variant.Standard
       )

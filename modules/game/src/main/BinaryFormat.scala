@@ -12,17 +12,17 @@ import lila.db.ByteArray
 
 object BinaryFormat {
 
-  object pgn {
+  object kif {
 
-    def write(moves: PgnMoves): ByteArray =
+    def write(moves: KifMoves): ByteArray =
       ByteArray {
         format.kif.Binary.writeMoves(moves).get
       }
 
-    def read(ba: ByteArray): PgnMoves =
+    def read(ba: ByteArray): KifMoves =
       format.kif.Binary.readMoves(ba.value.toList).get.toVector
 
-    def read(ba: ByteArray, nb: Int): PgnMoves =
+    def read(ba: ByteArray, nb: Int): KifMoves =
       format.kif.Binary.readMoves(ba.value.toList, nb).get.toVector
   }
 

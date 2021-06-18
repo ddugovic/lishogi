@@ -9,13 +9,13 @@ final class Importer(gameRepo: GameRepo)(implicit ec: scala.concurrent.Execution
   def apply(data: ImportData, user: Option[String], forceId: Option[String] = None): Fu[Game] = {
 
     def gameExists(processing: => Fu[Game]): Fu[Game] =
-      gameRepo.findPgnImport(data.pgn) flatMap { _.fold(processing)(fuccess) }
+      gameRepo.findKifImport(data.kif) flatMap { _.fold(processing)(fuccess) }
 
     gameExists {
       (data preprocess user).future flatMap { case Preprocessed(g, _, initialFen, _) =>
         val game = forceId.fold(g.sloppy)(g.withId)
         (gameRepo.insertDenormalized(game, initialFen = initialFen)) >> {
-          game.pgnImport.flatMap(_.user).isDefined ?? gameRepo.setImportCreatedAt(game)
+          game.kifImport.flatMap(_.user).isDefined ?? gameRepo.setImportCreatedAt(game)
         } >> {
           gameRepo.finish(
             id = game.id,

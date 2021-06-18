@@ -244,11 +244,11 @@ object BSONHandlers {
     x => BSONInteger(x.id)
   )
 
-  implicit val PgnTagBSONHandler = tryHandler[Tag](
+  implicit val KifTagBSONHandler = tryHandler[Tag](
     { case BSONString(v) =>
       v.split(":", 2) match {
         case Array(name, value) => Success(Tag(name, value))
-        case _                  => handlerBadValue(s"Invalid pgn tag $v")
+        case _                  => handlerBadValue(s"Invalid kif tag $v")
       }
     },
     t => BSONString(s"${t.name}:${t.value}")

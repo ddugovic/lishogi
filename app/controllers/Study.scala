@@ -312,16 +312,16 @@ final class Study(
       } inject Redirect(routes.Study.show(id))
     }
 
-  def importPgn(id: String) =
+  def importKif(id: String) =
     AuthBody { implicit ctx => me =>
       implicit val req = ctx.body
       get("sri") ?? { sri =>
-        lila.study.StudyForm.importPgn.form
+        lila.study.StudyForm.importKif.form
           .bindFromRequest()
           .fold(
             jsonFormError,
             data =>
-              env.study.api.importPgns(
+              env.study.api.importKifs(
                 StudyModel.Id(id),
                 data.toChapterDatas,
                 sticky = data.sticky
@@ -415,49 +415,49 @@ final class Study(
       }(rateLimitedFu)
     }
 
-  private val PgnRateLimitPerIp = new lila.memo.RateLimit[IpAddress](
+  private val KifRateLimitPerIp = new lila.memo.RateLimit[IpAddress](
     credits = 30,
     duration = 1.minute,
-    key = "export.study.pgn.ip"
+    key = "export.study.kif.ip"
   )
 
-  def pgn(id: String) =
+  def kif(id: String) =
     Open { implicit ctx =>
-      PgnRateLimitPerIp(HTTPRequest lastRemoteAddress ctx.req) {
+      KifRateLimitPerIp(HTTPRequest lastRemoteAddress ctx.req) {
         OptionFuResult(env.study.api byId id) { study =>
           CanViewResult(study) {
-            lila.mon.export.pgn.study.increment()
-            Ok.chunked(env.study.pgnDump(study, requestPgnFlags(ctx.req)))
+            lila.mon.export.kif.study.increment()
+            Ok.chunked(env.study.kifDump(study, requestKifFlags(ctx.req)))
               .withHeaders(
                 noProxyBufferHeader,
-                CONTENT_DISPOSITION -> s"attachment; filename=${env.study.pgnDump filename study}.pgn"
+                CONTENT_DISPOSITION -> s"attachment; filename=${env.study.kifDump filename study}.kif"
               )
-              .as(pgnContentType)
+              .as(kifContentType)
               .fuccess
           }
         }
       }(rateLimitedFu)
     }
 
-  def chapterPgn(id: String, chapterId: String) =
+  def chapterKif(id: String, chapterId: String) =
     Open { implicit ctx =>
       env.study.api.byIdWithChapter(id, chapterId) flatMap {
         _.fold(notFound) { case WithChapter(study, chapter) =>
           CanViewResult(study) {
-            lila.mon.export.pgn.studyChapter.increment()
-            Ok(env.study.pgnDump.ofChapter(study, requestPgnFlags(ctx.req))(chapter).toString)
+            lila.mon.export.kif.studyChapter.increment()
+            Ok(env.study.kifDump.ofChapter(study, requestKifFlags(ctx.req))(chapter).toString)
               .withHeaders(
-                CONTENT_DISPOSITION -> s"attachment; filename=${env.study.pgnDump.filename(study, chapter)}.pgn"
+                CONTENT_DISPOSITION -> s"attachment; filename=${env.study.kifDump.filename(study, chapter)}.kif"
               )
-              .as(pgnContentType)
+              .as(kifContentType)
               .fuccess
           }
         }
       }
     }
 
-  private def requestPgnFlags(req: RequestHeader) =
-    lila.study.PgnDump.WithFlags(
+  private def requestKifFlags(req: RequestHeader) =
+    lila.study.KifDump.WithFlags(
       comments = getBoolOpt("comments", req) | true,
       variations = getBoolOpt("variations", req) | true,
       clocks = getBoolOpt("clocks", req) | true
@@ -472,7 +472,7 @@ final class Study(
               Ok.chunked(stream)
                 .withHeaders(
                   noProxyBufferHeader,
-                  CONTENT_DISPOSITION -> s"attachment; filename=${env.study.pgnDump.filename(study, chapter)}.gif"
+                  CONTENT_DISPOSITION -> s"attachment; filename=${env.study.kifDump.filename(study, chapter)}.gif"
                 ) as "image/gif"
             }
           }

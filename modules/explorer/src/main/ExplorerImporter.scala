@@ -16,22 +16,22 @@ final class ExplorerImporter(
 
   def apply(id: Game.ID): Fu[Option[Game]] =
     gameRepo game id flatMap {
-      case Some(game) if !game.isPgnImport || game.createdAt.isAfter(masterGameEncodingFixedAt) =>
+      case Some(game) if !game.isKifImport || game.createdAt.isAfter(masterGameEncodingFixedAt) =>
         fuccess(game.some)
       case _ =>
-        (gameRepo remove id) >> fetchPgn(id) flatMap {
+        (gameRepo remove id) >> fetchKif(id) flatMap {
           case None => fuccess(none)
-          case Some(pgn) =>
+          case Some(kif) =>
             gameImporter(
-              ImportData(pgn, none),
+              ImportData(kif, none),
               user = "lishogi".some,
               forceId = id.some
             ) map some
         }
     }
 
-  private def fetchPgn(id: String): Fu[Option[String]] = {
-    ws.url(s"$endpoint/master/pgn/$id").get() map {
+  private def fetchKif(id: String): Fu[Option[String]] = {
+    ws.url(s"$endpoint/master/kif/$id").get() map {
       case res if res.status == 200 => res.body.some
       case _                        => None
     }

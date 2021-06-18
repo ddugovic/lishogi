@@ -219,7 +219,7 @@ final class Api(
           val config = GameApiV2.ByTournamentConfig(
             tournamentId = tour.id,
             format = GameApiV2.Format byRequest req,
-            flags = gameC.requestPgnFlags(req, extended = false),
+            flags = gameC.requestKifFlags(req, extended = false),
             perSecond = MaxPerSecond(20)
           )
           GlobalConcurrencyLimitPerIP(HTTPRequest lastRemoteAddress req)(
@@ -290,7 +290,7 @@ final class Api(
           val config = GameApiV2.BySwissConfig(
             swissId = swiss.id,
             format = GameApiV2.Format byRequest req,
-            flags = gameC.requestPgnFlags(req, extended = false),
+            flags = gameC.requestKifFlags(req, extended = false),
             perSecond = MaxPerSecond(20)
           )
           GlobalConcurrencyLimitPerIP(HTTPRequest lastRemoteAddress req)(

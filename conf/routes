@@ -113,7 +113,7 @@ GET   /api/storm/dashboard/:username    controllers.Storm.apiDashboardOf(usernam
 GET   /analysis/help                   controllers.UserAnalysis.help
 GET   /analysis/*something             controllers.UserAnalysis.parseArg(something: String)
 GET   /analysis                        controllers.UserAnalysis.index
-POST  /analysis/pgn                    controllers.UserAnalysis.pgn
+POST  /analysis/kif                    controllers.UserAnalysis.kif
 
 # Study
 GET   /study                           controllers.Study.allDefault(page: Int ?= 1)
@@ -129,8 +129,8 @@ GET   /study/search                    controllers.Study.search(q: String ?= "",
 GET   /study/$id<\w{8}>                controllers.Study.show(id: String)
 POST  /study                           controllers.Study.create
 POST  /study/as                        controllers.Study.createAs
-GET   /study/$id<\w{8}>.pgn            controllers.Study.pgn(id: String)
-GET   /study/$id<\w{8}>/$chapterId<\w{8}>.pgn controllers.Study.chapterPgn(id: String, chapterId: String)
+GET   /study/$id<\w{8}>.kif            controllers.Study.kif(id: String)
+GET   /study/$id<\w{8}>/$chapterId<\w{8}>.kif controllers.Study.chapterKif(id: String, chapterId: String)
 #GET   /study/$id<\w{8}>/$chapterId<\w{8}>.gif controllers.Study.chapterGif(id: String, chapterId: String)
 POST  /study/$id<\w{8}>/delete         controllers.Study.delete(id: String)
 GET   /study/$id<\w{8}>/clone          controllers.Study.cloneStudy(id: String)
@@ -139,7 +139,7 @@ GET   /study/$id<\w{8}>/$chapterId<\w{8}>        controllers.Study.chapter(id: S
 GET   /study/$id<\w{8}>/$chapterId<\w{8}>/meta   controllers.Study.chapterMeta(id: String, chapterId: String)
 GET   /study/embed/$id<\w{8}>/$chapterId<\w{8}>  controllers.Study.embed(id: String, chapterId: String)
 POST  /study/$id<\w{8}>/clear-chat     controllers.Study.clearChat(id: String)
-POST  /study/$id<\w{8}>/import-pgn     controllers.Study.importPgn(id: String)
+POST  /study/$id<\w{8}>/import-kif     controllers.Study.importKif(id: String)
 GET   /study/$id<\w{8}>/multi-board    controllers.Study.multiBoard(id: String, page: Int ?= 1)
 POST  /study/$id<\w{8}>/admin          controllers.Study.admin(id: String)
 GET   /study/topic                     controllers.Study.topics
@@ -330,7 +330,7 @@ GET   /api/team/:id/arena                     controllers.Tournament.byTeam(id: 
 POST  /$gameId<\w{8}>/request-analysis        controllers.Analyse.requestAnalysis(gameId: String)
 
 GET   /game/export/$gameId<\w{8}>                             controllers.Game.exportOne(gameId: String)
-GET   /game/export/$gameId<\w{8}>.pgn                         controllers.Game.exportOne(gameId: String)
+GET   /game/export/$gameId<\w{8}>.kif                         controllers.Game.exportOne(gameId: String)
 # GET   /game/export/png/$gameId<\w{8}>.png                     controllers.Export.legacyGameThumbnail(gameId: String)
 # GET   /game/export/gif/thumbnail/$gameId<\w{8}>.gif           controllers.Export.gameThumbnail(gameId: String)
 # GET   /game/export/gif/$gameId<\w{8}>.gif                     controllers.Export.gif(gameId: String, color: String = "sente")

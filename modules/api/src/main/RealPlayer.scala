@@ -48,9 +48,9 @@ final class RealPlayerApi(
 
 case class RealPlayers(players: Map[User.ID, RealPlayer]) {
 
-  def update(game: lila.game.Game, pgn: Kifu) =
-    pgn.copy(
-      tags = pgn.tags ++ Tags {
+  def update(game: lila.game.Game, kif: Kifu) =
+    kif.copy(
+      tags = kif.tags ++ Tags {
         game.players.flatMap { player =>
           player.userId.flatMap(players.get) ?? { rp =>
             List(

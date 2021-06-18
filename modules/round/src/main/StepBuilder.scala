@@ -12,11 +12,11 @@ object StepBuilder {
 
   def apply(
       id: String,
-      pgnMoves: Vector[String],
+      kifMoves: Vector[String],
       variant: Variant,
       initialFen: String
   ): JsArray = {
-    shogi.Replay.gameMoveWhileValid(pgnMoves, initialFen, variant) match {
+    shogi.Replay.gameMoveWhileValid(kifMoves, initialFen, variant) match {
       case (init, games, error) =>
         error foreach logChessError(id)
         JsArray {

@@ -33,8 +33,8 @@ final class Annotator(netDomain: lila.common.config.NetDomain) {
     }
 
   private def annotateTurns(p: Kifu, advices: List[Advice]): Kifu =
-    advices.foldLeft(p) { case (pgn, advice) =>
-      pgn.updateTurn(
+    advices.foldLeft(p) { case (kif, advice) =>
+      kif.updateTurn(
         advice.turn,
         turn =>
           turn.update(

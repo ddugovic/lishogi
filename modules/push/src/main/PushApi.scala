@@ -67,7 +67,7 @@ final private class PushApi(
           game.player.userId ?? { userId =>
             IfAway(pov) {
               asyncOpponentName(pov) flatMap { opponent =>
-                game.pgnMoves.lastOption ?? { sanMove =>
+                game.kifMoves.lastOption ?? { sanMove =>
                   pushToAll(
                     userId,
                     _.move,

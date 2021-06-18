@@ -32,7 +32,7 @@ final private class AnalysisBuilder(evalCache: FishnetEvalCache)(implicit
         .fold(
           fufail(_),
           replay =>
-            UciToPgn(
+            UciToKif(
               replay,
               Analysis(
                 id = work.game.id,
@@ -46,7 +46,7 @@ final private class AnalysisBuilder(evalCache: FishnetEvalCache)(implicit
             ) match {
               case (analysis, errors) =>
                 errors foreach { e =>
-                  logger.debug(s"[UciToPgn] $debug $e")
+                  logger.debug(s"[UciToKif] $debug $e")
                 }
                 if (analysis.valid) {
                   if (!isPartial && analysis.emptyRatio >= 1d / 10)

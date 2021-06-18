@@ -30,7 +30,7 @@ object widgets {
                 if (g.imported)
                   frag(
                     span("IMPORT"),
-                    g.pgnImport.flatMap(_.user).map { user =>
+                    g.kifImport.flatMap(_.user).map { user =>
                       frag(" ", trans.by(userIdLink(user.some, None, false)))
                     },
                     separator,
@@ -46,7 +46,7 @@ object widgets {
                     if (g.rated) trans.rated.txt() else trans.casual.txt()
                   )
               ),
-              g.pgnImport.flatMap(_.date).fold(momentFromNow(g.createdAt))(frag(_)),
+              g.kifImport.flatMap(_.date).fold(momentFromNow(g.createdAt))(frag(_)),
               g.tournamentId.map { tourId =>
                 frag(separator, tournamentLink(tourId))
               } orElse
@@ -80,13 +80,13 @@ object widgets {
             }
           ),
           // if (g.turns > 0) {
-          //   val pgnMoves = g.pgnMoves take 20
+          //   val kifMoves = g.kifMoves take 20
           //   div(cls := "opening")(
           //     (!g.fromPosition ?? g.opening) map { opening =>
           //       strong(opening.opening.ecoName)
           //     },
-          //     div(cls := "pgn")(
-          //       pgnMoves.take(6).zipWithIndex map {
+          //     div(cls := "kif")(
+          //       kifMoves.take(6).zipWithIndex map {
           //         case (w, i) => s"${i + 1}. ${w}"
           //         case _                 => ""
           //       } mkString " ",
@@ -97,8 +97,8 @@ object widgets {
           frag(br, br),
           g.metadata.analysed option
             div(cls := "metadata text", dataIcon := "")(trans.computerAnalysisAvailable()),
-          g.pgnImport.flatMap(_.user).map { user =>
-            div(cls := "metadata")("PGN import by ", userIdLink(user.some))
+          g.kifImport.flatMap(_.user).map { user =>
+            div(cls := "metadata")("KIF import by ", userIdLink(user.some))
           }
         )
       )

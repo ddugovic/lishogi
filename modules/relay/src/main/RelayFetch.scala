@@ -11,7 +11,7 @@ import scala.concurrent.duration._
 
 import lila.base.LilaException
 import lila.memo.CacheApi
-import lila.study.MultiPgn
+import lila.study.MultiKif
 import lila.tree.Node.Comments
 import Relay.Sync.Upstream
 
@@ -154,12 +154,12 @@ final private class RelayFetch(
     formatApi get upstream.withRound flatMap {
       case RelayFormat.SingleFile(doc) =>
         doc.format match {
-          // all games in a single PGN file
-          case RelayFormat.DocFormat.Pgn => httpGet(doc.url) map { MultiPgn.split(_, max) }
+          // all games in a single KIF file
+          case RelayFormat.DocFormat.Kif => httpGet(doc.url) map { MultiKif.split(_, max) }
           // maybe a single JSON game? Why not
           case RelayFormat.DocFormat.Json =>
             httpGetJson[GameJson](doc.url)(gameReads) map { game =>
-              MultiPgn(List(game.toPgn()))
+              MultiKif(List(game.toKif()))
             }
         }
       case RelayFormat.ManyFiles(indexUrl, makeGameDoc) =>
@@ -169,17 +169,17 @@ final private class RelayFetch(
               val number  = i + 1
               val gameDoc = makeGameDoc(number)
               (gameDoc.format match {
-                case RelayFormat.DocFormat.Pgn => httpGet(gameDoc.url)
+                case RelayFormat.DocFormat.Kif => httpGet(gameDoc.url)
                 case RelayFormat.DocFormat.Json =>
-                  httpGetJson[GameJson](gameDoc.url) map { _.toPgn(pairing.tags) }
+                  httpGetJson[GameJson](gameDoc.url) map { _.toKif(pairing.tags) }
               }) map (number -> _)
             }
             .sequenceFu
             .map { results =>
-              MultiPgn(results.sortBy(_._1).map(_._2).toList)
+              MultiKif(results.sortBy(_._1).map(_._2).toList)
             }
         }
-    } flatMap RelayFetch.multiPgnToGames.apply
+    } flatMap RelayFetch.multiKifToGames.apply
   }
 
   private def httpGet(url: Url): Fu[String] =
@@ -251,7 +251,7 @@ private object RelayFetch {
     implicit val roundReads         = Json.reads[RoundJson]
 
     case class GameJson(moves: List[String], result: Option[String]) {
-      def toPgn(extraTags: Tags = Tags.empty) = {
+      def toKif(extraTags: Tags = Tags.empty) = {
         val strMoves = moves.map(_ split ' ') map { move =>
           shogi.format.kif.Move(
             san = ~move.headOption,
@@ -264,17 +264,17 @@ private object RelayFetch {
     implicit val gameReads = Json.reads[GameJson]
   }
 
-  object multiPgnToGames {
+  object multiKifToGames {
 
     import scala.util.{ Failure, Success, Try }
 
-    def apply(multiPgn: MultiPgn): Fu[Vector[RelayGame]] =
-      multiPgn.value
+    def apply(multiKif: MultiKif): Fu[Vector[RelayGame]] =
+      multiKif.value
         .foldLeft[Try[(Vector[RelayGame], Int)]](Success(Vector.empty -> 0)) {
-          case (Success((acc, index)), pgn) =>
-            pgnCache.get(pgn) flatMap { f =>
+          case (Success((acc, index)), kif) =>
+            kifCache.get(kif) flatMap { f =>
               val game = f(index)
-              if (game.isEmpty) Failure(LilaException(s"Found an empty PGN at index $index"))
+              if (game.isEmpty) Failure(LilaException(s"Found an empty KIF at index $index"))
               else Success((acc :+ game, index + 1))
             }
           case (acc, _) => acc
@@ -282,14 +282,14 @@ private object RelayFetch {
         .future
         .dmap(_._1)
 
-    private val pgnCache: LoadingCache[String, Try[Int => RelayGame]] = CacheApi.scaffeineNoScheduler
+    private val kifCache: LoadingCache[String, Try[Int => RelayGame]] = CacheApi.scaffeineNoScheduler
       .expireAfterAccess(2 minutes)
       .maximumSize(512)
       .build(compute)
 
-    private def compute(pgn: String): Try[Int => RelayGame] =
+    private def compute(kif: String): Try[Int => RelayGame] =
       lila.study
-        .PgnImport(pgn, Nil)
+        .KifImport(kif, Nil)
         .fold(
           err => Failure(LilaException(err)),
           res =>

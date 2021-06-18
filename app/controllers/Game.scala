@@ -18,7 +18,7 @@ final class Game(
   def delete(gameId: String) =
     Auth { implicit ctx => me =>
       OptionFuResult(env.game.gameRepo game gameId) { game =>
-        if (game.pgnImport.flatMap(_.user) ?? (me.id.==)) {
+        if (game.kifImport.flatMap(_.user) ?? (me.id.==)) {
           env.hub.bookmark ! lila.hub.actorApi.bookmark.Remove(game.id)
           (env.game.gameRepo remove game.id) >>
             (env.analyse.analysisRepo remove game.id) >>
@@ -37,11 +37,11 @@ final class Game(
     env.round.proxyRepo.gameIfPresent(gameId) orElse env.game.gameRepo.game(gameId) flatMap {
       case None => NotFound.fuccess
       case Some(game) =>
-        lila.mon.export.pgn.game.increment()
+        lila.mon.export.kif.game.increment()
         val config = GameApiV2.OneConfig(
-          format = if (HTTPRequest acceptsJson req) GameApiV2.Format.JSON else GameApiV2.Format.PGN,
+          format = if (HTTPRequest acceptsJson req) GameApiV2.Format.JSON else GameApiV2.Format.KIF,
           imported = getBool("imported", req),
-          flags = requestPgnFlags(req, extended = true),
+          flags = requestKifFlags(req, extended = true),
           noDelay = get("key", req).exists(env.noDelaySecretSetting.get().value.contains),
           playerFile = get("players", req)
         )
@@ -87,7 +87,7 @@ final class Game(
             color = get("color", req) flatMap shogi.Color.apply,
             analysed = getBoolOpt("analysed", req),
             ongoing = getBool("ongoing", req),
-            flags = requestPgnFlags(req, extended = false).copy(literate = false),
+            flags = requestKifFlags(req, extended = false).copy(literate = false),
             perSecond = MaxPerSecond(me match {
               case Some(m) if m is user.id => 60
               case Some(_) if oauth        => 30 // bonus for oauth logged in only (not for CSRF)
@@ -116,7 +116,7 @@ final class Game(
       val config = GameApiV2.ByIdsConfig(
         ids = req.body.split(',').view.take(300).toSeq,
         format = GameApiV2.Format byRequest req,
-        flags = requestPgnFlags(req, extended = false),
+        flags = requestKifFlags(req, extended = false),
         perSecond = MaxPerSecond(20),
         playerFile = get("players", req)
       )
@@ -143,8 +143,8 @@ final class Game(
         }
     }
 
-  private[controllers] def requestPgnFlags(req: RequestHeader, extended: Boolean) =
-    lila.game.PgnDump.WithFlags(
+  private[controllers] def requestKifFlags(req: RequestHeader, extended: Boolean) =
+    lila.game.KifDump.WithFlags(
       moves = getBoolOpt("moves", req) | true,
       tags = getBoolOpt("tags", req) | true,
       clocks = getBoolOpt("clocks", req) | extended,
@@ -156,7 +156,7 @@ final class Game(
 
   private[controllers] def gameContentType(config: GameApiV2.Config) =
     config.format match {
-      case GameApiV2.Format.PGN => pgnContentType
+      case GameApiV2.Format.KIF => kifContentType
       case GameApiV2.Format.JSON =>
         config match {
           case _: GameApiV2.OneConfig => JSON

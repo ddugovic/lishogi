@@ -357,7 +357,7 @@ final class GameRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCont
         .filter(Forsyth.initial !=)
     }
     val checkInHours =
-      if (g2.isPgnImport) none
+      if (g2.isKifImport) none
       else if (g2.hasClock) 1.some
       else if (g2.hasAi) (Game.aiAbandonedHours + 1).some
       else (24 * 10).some
@@ -388,7 +388,7 @@ final class GameRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCont
 
   // used to make a compound sparse index
   def setImportCreatedAt(g: Game) =
-    coll.update.one($id(g.id), $set("pgni.ca" -> g.createdAt)).void
+    coll.update.one($id(g.id), $set("kifi.ca" -> g.createdAt)).void
 
   def initialFen(gameId: ID): Fu[Option[FEN]] =
     coll.primitiveOne[FEN]($id(gameId), F.initialFen)
@@ -461,12 +461,12 @@ final class GameRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCont
       .skip(ThreadLocalRandom nextInt 1000)
       .one[Game]
 
-  def findPgnImport(pgn: String): Fu[Option[Game]] =
+  def findKifImport(kif: String): Fu[Option[Game]] =
     coll.one[Game](
-      $doc(s"${F.pgnImport}.h" -> PgnImport.hash(pgn))
+      $doc(s"${F.kifImport}.h" -> KifImport.hash(kif))
     )
 
-  def getOptionPgn(id: ID): Fu[Option[PgnMoves]] = game(id) dmap2 { _.pgnMoves }
+  def getOptionKif(id: ID): Fu[Option[KifMoves]] = game(id) dmap2 { _.kifMoves }
 
   def lastGameBetween(u1: String, u2: String, since: DateTime): Fu[Option[Game]] =
     coll.one[Game](

@@ -5,7 +5,7 @@ import play.api.libs.json._
 import play.api.libs.ws.WSClient
 import scala.concurrent.duration._
 
-import lila.study.MultiPgn
+import lila.study.MultiKif
 import lila.memo.CacheApi
 import lila.memo.CacheApi._
 
@@ -48,8 +48,8 @@ final private class RelayFormatApi(ws: WSClient, cacheApi: CacheApi)(implicit
           url.some,
           !url.path.parts.contains(mostCommonSingleFileName) option addPart(url, mostCommonSingleFileName)
         ).flatten.distinct
-      )(looksLikePgn) dmap2 { (u: Url) =>
-        SingleFile(pgnDoc(u))
+      )(looksLikeKif) dmap2 { (u: Url) =>
+        SingleFile(kifDoc(u))
       }
 
     def guessManyFiles(url: Url): Fu[Option[RelayFormat]] =
@@ -58,9 +58,9 @@ final private class RelayFormatApi(ws: WSClient, cacheApi: CacheApi)(implicit
       )(looksLikeJson) flatMap {
         _ ?? { index =>
           val jsonUrl = (n: Int) => jsonDoc(replaceLastPart(index, s"game-$n.json"))
-          val pgnUrl  = (n: Int) => pgnDoc(replaceLastPart(index, s"game-$n.pgn"))
+          val kifUrl  = (n: Int) => kifDoc(replaceLastPart(index, s"game-$n.kif"))
           looksLikeJson(jsonUrl(1).url).map(_ option jsonUrl) orElse
-            looksLikePgn(pgnUrl(1).url).map(_ option pgnUrl) dmap2 {
+            looksLikeKif(kifUrl(1).url).map(_ option kifUrl) dmap2 {
               ManyFiles(index, _)
             }
         }
@@ -82,11 +82,11 @@ final private class RelayFormatApi(ws: WSClient, cacheApi: CacheApi)(implicit
         case _                        => none
       }
 
-  private def looksLikePgn(body: String): Boolean =
-    MultiPgn.split(body, 1).value.headOption ?? { pgn =>
-      lila.study.PgnImport(pgn, Nil).isSuccess
+  private def looksLikeKif(body: String): Boolean =
+    MultiKif.split(body, 1).value.headOption ?? { kif =>
+      lila.study.KifImport(kif, Nil).isSuccess
     }
-  private def looksLikePgn(url: Url): Fu[Boolean] = httpGet(url).map { _ exists looksLikePgn }
+  private def looksLikeKif(url: Url): Fu[Boolean] = httpGet(url).map { _ exists looksLikeKif }
 
   private def looksLikeJson(body: String): Boolean =
     try {
@@ -104,13 +104,13 @@ private object RelayFormat {
   sealed trait DocFormat
   object DocFormat {
     case object Json extends DocFormat
-    case object Pgn  extends DocFormat
+    case object Kif  extends DocFormat
   }
 
   case class Doc(url: Url, format: DocFormat)
 
   def jsonDoc(url: Url) = Doc(url, DocFormat.Json)
-  def pgnDoc(url: Url)  = Doc(url, DocFormat.Pgn)
+  def kifDoc(url: Url)  = Doc(url, DocFormat.Kif)
 
   case class SingleFile(doc: Doc) extends RelayFormat
 
@@ -130,6 +130,6 @@ private object RelayFormat {
         }
       }
 
-  val mostCommonSingleFileName = "games.pgn"
+  val mostCommonSingleFileName = "games.kif"
   val mostCommonIndexNames     = List("round.json", "index.json")
 }

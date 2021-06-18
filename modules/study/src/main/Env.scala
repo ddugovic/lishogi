@@ -13,7 +13,7 @@ final class Env(
     appConfig: Configuration,
     ws: WSClient,
     lightUserApi: lila.user.LightUserApi,
-    gamePgnDump: lila.game.PgnDump,
+    gameKifDump: lila.game.KifDump,
     divider: lila.game.Divider,
     gameRepo: lila.game.GameRepo,
     userRepo: lila.user.UserRepo,
@@ -54,7 +54,7 @@ final class Env(
 
   lazy val jsonView = wire[JsonView]
 
-  private lazy val pgnFetch = wire[PgnFetch]
+  private lazy val kifFetch = wire[KifFetch]
 
   private lazy val chapterMaker = wire[ChapterMaker]
 
@@ -78,7 +78,7 @@ final class Env(
 
   lazy val multiBoard = wire[StudyMultiBoard]
 
-  lazy val pgnDump = wire[PgnDump]
+  lazy val kifDump = wire[KifDump]
 
   lazy val gifExport = new GifExport(ws, appConfig.get[String]("game.gifUrl"))
 

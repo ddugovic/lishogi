@@ -29,7 +29,7 @@ object TreeBuilder {
   ): Root =
     apply(
       id = game.id,
-      pgnMoves = game.pgnMoves,
+      kifMoves = game.kifMoves,
       variant = game.variant,
       analysis = analysis,
       initialFen = initialFen,
@@ -39,7 +39,7 @@ object TreeBuilder {
 
   def apply(
       id: String,
-      pgnMoves: Vector[String],
+      kifMoves: Vector[String],
       variant: Variant,
       analysis: Option[Analysis],
       initialFen: FEN,
@@ -47,7 +47,7 @@ object TreeBuilder {
       clocks: Option[Vector[Centis]]
   ): Root = {
     val withClocks: Option[Vector[Centis]] = withFlags.clocks ?? clocks
-    shogi.Replay.gameMoveWhileValid(pgnMoves, initialFen.value, variant) match {
+    shogi.Replay.gameMoveWhileValid(kifMoves, initialFen.value, variant) match {
       case (init, games, error) =>
         error foreach logChessError(id)
         val openingOf: OpeningOf =

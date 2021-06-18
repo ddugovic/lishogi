@@ -13,8 +13,8 @@ final private class ChapterMaker(
     lightUser: lila.user.LightUserApi,
     chatApi: ChatApi,
     gameRepo: lila.game.GameRepo,
-    pgnFetch: PgnFetch,
-    pgnDump: lila.game.PgnDump
+    kifFetch: KifFetch,
+    kifDump: lila.game.KifDump
 )(implicit ec: scala.concurrent.ExecutionContext) {
 
   import ChapterMaker._
@@ -22,25 +22,25 @@ final private class ChapterMaker(
   def apply(study: Study, data: Data, order: Int, userId: User.ID): Fu[Chapter] =
     data.game.??(parseGame) flatMap {
       case None =>
-        data.game ?? pgnFetch.fromUrl flatMap {
-          case Some(pgn) => fromFenOrPgnOrBlank(study, data.copy(pgn = pgn.some), order, userId)
-          case _         => fromFenOrPgnOrBlank(study, data, order, userId)
+        data.game ?? kifFetch.fromUrl flatMap {
+          case Some(kif) => fromFenOrKifOrBlank(study, data.copy(kif = kif.some), order, userId)
+          case _         => fromFenOrKifOrBlank(study, data, order, userId)
         }
       case Some(game) => fromGame(study, game, data, order, userId)
     } map { (c: Chapter) =>
       if (c.name.value.isEmpty) c.copy(name = Chapter defaultName order) else c
     }
 
-  def fromFenOrPgnOrBlank(study: Study, data: Data, order: Int, userId: User.ID): Fu[Chapter] =
-    data.pgn.filter(_.trim.nonEmpty) match {
-      case Some(pgn) => fromPgn(study, pgn, data, order, userId)
+  def fromFenOrKifOrBlank(study: Study, data: Data, order: Int, userId: User.ID): Fu[Chapter] =
+    data.kif.filter(_.trim.nonEmpty) match {
+      case Some(kif) => fromKif(study, kif, data, order, userId)
       case None      => fuccess(fromFenOrBlank(study, data, order, userId))
     }
 
-  private def fromPgn(study: Study, pgn: String, data: Data, order: Int, userId: User.ID): Fu[Chapter] =
+  private def fromKif(study: Study, kif: String, data: Data, order: Int, userId: User.ID): Fu[Chapter] =
     for {
       contributors <- lightUser.asyncMany(study.members.contributorIds.toList)
-      parsed <- PgnImport(pgn, contributors.flatten).future recoverWith { case e: Exception =>
+      parsed <- KifImport(kif, contributors.flatten).future recoverWith { case e: Exception =>
         fufail(ValidationException(e.getMessage))
       }
     } yield Chapter.make(
@@ -124,7 +124,7 @@ final private class ChapterMaker(
   ): Fu[Chapter] =
     for {
       root <- game2root(game, initialFen)
-      tags <- pgnDump.tags(game, initialFen, none, withOpening = true)
+      tags <- kifDump.tags(game, initialFen, none, withOpening = true)
       name <- {
         if (data.isDefaultName)
           Namer.gameVsText(game, withRatings = false)(lightUser.async) dmap Chapter.Name.apply
@@ -140,7 +140,7 @@ final private class ChapterMaker(
         data.realOrientation
       ),
       root = root,
-      tags = PgnTags(tags),
+      tags = KifTags(tags),
       order = order,
       ownerId = userId,
       practice = data.isPractice,
@@ -209,7 +209,7 @@ private[study] object ChapterMaker {
       game: Option[String] = None,
       variant: Option[String] = None,
       fen: Option[String] = None,
-      pgn: Option[String] = None,
+      kif: Option[String] = None,
       orientation: String = "sente",
       mode: String = ChapterMaker.Mode.Normal.key,
       initial: Boolean = false,

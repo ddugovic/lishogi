@@ -18,14 +18,14 @@ object Reader {
     }
   }
 
-  def full(pgn: String, tags: Tags = Tags.empty): Valid[Result] =
-    fullWithSans(pgn, identity, tags)
+  def full(kif: String, tags: Tags = Tags.empty): Valid[Result] =
+    fullWithSans(kif, identity, tags)
 
   def moves(moveStrs: Iterable[String], tags: Tags): Valid[Result] =
     movesWithSans(moveStrs, identity, tags)
 
-  def fullWithSans(pgn: String, op: Sans => Sans, tags: Tags = Tags.empty): Valid[Result] =
-    Parser.full(cleanUserInput(pgn)) map { parsed =>
+  def fullWithSans(kif: String, op: Sans => Sans, tags: Tags = Tags.empty): Valid[Result] =
+    Parser.full(cleanUserInput(kif)) map { parsed =>
       makeReplay(makeGame(parsed.tags ++ tags), op(parsed.sans))
     }
 

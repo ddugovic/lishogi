@@ -14,13 +14,13 @@ import lila.common.{ HTTPRequest, LightUser }
 import lila.db.dsl._
 import lila.team.GameTeams
 import lila.game.JsonView._
-import lila.game.PgnDump.WithFlags
+import lila.game.KifDump.WithFlags
 import lila.game.{ Game, PerfPicker, Query }
 import lila.tournament.Tournament
 import lila.user.User
 
 final class GameApiV2(
-    pgnDump: PgnDump,
+    kifDump: KifDump,
     gameRepo: lila.game.GameRepo,
     tournamentRepo: lila.tournament.TournamentRepo,
     pairingRepo: lila.tournament.PairingRepo,
@@ -45,22 +45,22 @@ final class GameApiV2(
         evals = configInput.flags.evals && !game.playable
       )
     )
-    game.pgnImport ifTrue config.imported match {
-      case Some(imported) => fuccess(imported.pgn)
+    game.kifImport ifTrue config.imported match {
+      case Some(imported) => fuccess(imported.kif)
       case None =>
         for {
           realPlayers                  <- config.playerFile.??(realPlayerApi.apply)
           (game, initialFen, analysis) <- enrich(config.flags)(game)
           export <- config.format match {
             case Format.JSON => toJson(game, initialFen, analysis, config.flags) dmap Json.stringify
-            case Format.PGN =>
-              pgnDump(
+            case Format.KIF =>
+              kifDump(
                 game,
                 initialFen,
                 analysis,
                 config.flags,
                 realPlayers = realPlayers
-              ) dmap pgnDump.toPgnString
+              ) dmap kifDump.toKifString
           }
         } yield export
     }
@@ -70,10 +70,10 @@ final class GameApiV2(
   def filename(game: Game, format: Format): Fu[String] =
     gameLightUsers(game) map { case (wu, bu) =>
       fileR.replaceAllIn(
-        "lishogi_pgn_%s_%s_vs_%s.%s.%s".format(
+        "lishogi_kif_%s_%s_vs_%s.%s.%s".format(
           Tag.UTCDate.format.print(game.createdAt),
-          pgnDump.dumper.player(game.sentePlayer, wu),
-          pgnDump.dumper.player(game.gotePlayer, bu),
+          kifDump.dumper.player(game.sentePlayer, wu),
+          kifDump.dumper.player(game.gotePlayer, bu),
           game.id,
           format.toString.toLowerCase
         ),
@@ -171,7 +171,7 @@ final class GameApiV2(
           }
           .mapAsync(4) { case ((game, fen, analysis), pairing, teams) =>
             config.format match {
-              case Format.PGN => pgnDump.formatter(config.flags)(game, fen, analysis, teams, none)
+              case Format.KIF => kifDump.formatter(config.flags)(game, fen, analysis, teams, none)
               case Format.JSON =>
                 def addBerserk(color: shogi.Color)(json: JsObject) =
                   if (pairing berserkOf color)
@@ -202,7 +202,7 @@ final class GameApiV2(
       .mapAsync(4)(enrich(config.flags))
       .mapAsync(4) { case (game, fen, analysis) =>
         config.format match {
-          case Format.PGN => pgnDump.formatter(config.flags)(game, fen, analysis, none, none)
+          case Format.KIF => kifDump.formatter(config.flags)(game, fen, analysis, none, none)
           case Format.JSON =>
             toJson(game, fen, analysis, config.flags, None) dmap { json =>
               s"${Json.stringify(json)}\n"
@@ -226,13 +226,13 @@ final class GameApiV2(
 
   private def formatterFor(config: Config) =
     config.format match {
-      case Format.PGN  => pgnDump.formatter(config.flags)
+      case Format.KIF  => kifDump.formatter(config.flags)
       case Format.JSON => jsonFormatter(config.flags)
     }
 
   private def emptyMsgFor(config: Config) =
     config.format match {
-      case Format.PGN  => "\n"
+      case Format.KIF  => "\n"
       case Format.JSON => "{}\n"
     }
 
@@ -257,10 +257,10 @@ final class GameApiV2(
   ): Fu[JsObject] =
     for {
       lightUsers <- gameLightUsers(g) dmap { case (wu, bu) => List(wu, bu) }
-      pgn <-
-        withFlags.kifInJson ?? pgnDump
+      kif <-
+        withFlags.kifInJson ?? kifDump
           .apply(g, initialFen, analysisOption, withFlags)
-          .dmap(pgnDump.toPgnString)
+          .dmap(kifDump.toKifString)
           .dmap(some)
     } yield Json
       .obj(
@@ -289,8 +289,8 @@ final class GameApiV2(
       .add("initialFen" -> initialFen.map(_.value))
       .add("winner" -> g.winnerColor.map(_.name))
       .add("opening" -> g.opening.ifTrue(withFlags.opening))
-      .add("moves" -> withFlags.moves.option(g.pgnMoves mkString " "))
-      .add("pgn" -> pgn)
+      .add("moves" -> withFlags.moves.option(g.kifMoves mkString " "))
+      .add("kif" -> kif)
       .add("daysPerTurn" -> g.daysPerTurn)
       .add("analysis" -> analysisOption.ifTrue(withFlags.evals).map(analysisJson.moves(_, withGlyph = false)))
       .add("tournament" -> g.tournamentId)
@@ -312,9 +312,9 @@ object GameApiV2 {
 
   sealed trait Format
   object Format {
-    case object PGN  extends Format
+    case object KIF  extends Format
     case object JSON extends Format
-    def byRequest(req: play.api.mvc.RequestHeader) = if (HTTPRequest acceptsNdJson req) JSON else PGN
+    def byRequest(req: play.api.mvc.RequestHeader) = if (HTTPRequest acceptsNdJson req) JSON else KIF
   }
 
   sealed trait Config {

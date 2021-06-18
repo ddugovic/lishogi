@@ -33,7 +33,7 @@ object jsI18n {
       leaveTheStudy,
       youAreNowAContributor,
       youAreNowASpectator,
-      pgnTags,
+      kifTags,
       like,
       newTag,
       commentThisPosition,
@@ -91,7 +91,7 @@ object jsI18n {
       startFromCustomPosition,
       loadAGameByUrl,
       loadAPositionFromFen,
-      loadAGameFromPgn,
+      loadAGameFromKif,
       automatic,
       urlOfTheGame,
       loadAGameFromXOrY,
@@ -124,7 +124,7 @@ object jsI18n {
       nbChapters,
       nbGames,
       nbMembers,
-      pasteYourPgnTextHereUpToNbGames
+      pasteYourKifTextHereUpToNbGames
     ).map(_.key)
   }
 }

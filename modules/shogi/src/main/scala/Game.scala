@@ -4,7 +4,7 @@ import format.{ kif, Uci }
 
 case class Game(
     situation: Situation,
-    pgnMoves: Vector[String] = Vector(),
+    kifMoves: Vector[String] = Vector(),
     clock: Option[Clock] = None,
     turns: Int = 0, // plies
     startedAtTurn: Int = 0
@@ -26,7 +26,7 @@ case class Game(
     copy(
       situation = newSituation,
       turns = turns + 1,
-      pgnMoves = pgnMoves :+ kif.Dumper(situation, move),
+      kifMoves = kifMoves :+ kif.Dumper(situation, move),
       clock = applyClock(move.metrics, newSituation.status.isEmpty)
     )
   }
@@ -46,7 +46,7 @@ case class Game(
     copy(
       situation = newSituation,
       turns = turns + 1,
-      pgnMoves = pgnMoves :+ kif.Dumper(drop),
+      kifMoves = kifMoves :+ kif.Dumper(drop),
       clock = applyClock(drop.metrics, newSituation.status.isEmpty)
     )
   }

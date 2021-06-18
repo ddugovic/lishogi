@@ -204,7 +204,7 @@ final class JsonView(
           val branch = tree.Branch(
             id = UciCharPair(move.fold(l => l.toUci, r => r.toUci)),
             ply = game.turns,
-            move = Uci.WithSan(move.fold(l => l.toUci, r => r.toUci), game.pgnMoves.last),
+            move = Uci.WithSan(move.fold(l => l.toUci, r => r.toUci), game.kifMoves.last),
             fen = shogi.format.Forsyth >> game,
             check = game.situation.check,
             crazyData = game.situation.board.crazyData

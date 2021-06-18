@@ -71,7 +71,7 @@ object Relay {
   def makeId = Id(lila.common.ThreadLocalRandom nextString 8)
 
   case class Sync(
-      upstream: Option[Sync.Upstream], // if empty, needs a client to push PGN
+      upstream: Option[Sync.Upstream], // if empty, needs a client to push KIF
       until: Option[DateTime],         // sync until then; resets on move
       nextAt: Option[DateTime],        // when to run next sync
       delay: Option[Int],              // override time between two sync (rare)

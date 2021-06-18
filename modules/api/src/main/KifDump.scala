@@ -4,11 +4,11 @@ import shogi.format.FEN
 import shogi.format.kif.Kifu
 import lila.analyse.{ Analysis, Annotator }
 import lila.game.Game
-import lila.game.PgnDump.WithFlags
+import lila.game.KifDump.WithFlags
 import lila.team.GameTeams
 
-final class PgnDump(
-    val dumper: lila.game.PgnDump,
+final class KifDump(
+    val dumper: lila.game.KifDump,
     annotator: Annotator,
     simulApi: lila.simul.SimulApi,
     getTournamentName: lila.tournament.GetTourName,
@@ -25,25 +25,25 @@ final class PgnDump(
       teams: Option[GameTeams] = None,
       realPlayers: Option[RealPlayers] = None
   ): Fu[Kifu] =
-    dumper(game, initialFen, flags, teams) flatMap { pgn =>
+    dumper(game, initialFen, flags, teams) flatMap { kif =>
       if (flags.tags) (game.simulId ?? simulApi.idToName) map { simulName =>
         simulName
           .orElse(game.tournamentId flatMap getTournamentName.get)
           .orElse(game.swissId map lila.swiss.Swiss.Id flatMap getSwissName.apply)
-          .fold(pgn)(pgn.withEvent)
+          .fold(kif)(kif.withEvent)
       }
-      else fuccess(pgn)
-    } map { pgn =>
-      val evaled = analysis.ifTrue(flags.evals).fold(pgn)(addEvals(pgn, _))
+      else fuccess(kif)
+    } map { kif =>
+      val evaled = analysis.ifTrue(flags.evals).fold(kif)(addEvals(kif, _))
       if (flags.literate) annotator(evaled, analysis, game.opening, game.winnerColor, game.status)
       else evaled
-    } map { pgn =>
-      realPlayers.fold(pgn)(_.update(game, pgn))
+    } map { kif =>
+      realPlayers.fold(kif)(_.update(game, kif))
     }
 
   private def addEvals(p: Kifu, analysis: Analysis): Kifu =
-    analysis.infos.foldLeft(p) { case (pgn, info) =>
-      pgn.updateTurn(
+    analysis.infos.foldLeft(p) { case (kif, info) =>
+      kif.updateTurn(
         info.turn,
         turn =>
           turn.update(
@@ -67,12 +67,12 @@ final class PgnDump(
         analysis: Option[Analysis],
         teams: Option[GameTeams],
         realPlayers: Option[RealPlayers]
-    ) => apply(game, initialFen, analysis, flags, teams, realPlayers) dmap toPgnString
+    ) => apply(game, initialFen, analysis, flags, teams, realPlayers) dmap toKifString
 
-  def toPgnString(pgn: Kifu) = {
+  def toKifString(kif: Kifu) = {
     // merge analysis & eval comments
     // 1. e4 { [%eval 0.17] } { [%clk 0:00:30] }
     // 1. e4 { [%eval 0.17] [%clk 0:00:30] }
-    s"$pgn\n\n\n".replaceIf("] } { [", "] [")
+    s"$kif\n\n\n".replaceIf("] } { [", "] [")
   }
 }

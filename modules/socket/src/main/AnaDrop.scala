@@ -19,7 +19,7 @@ case class AnaDrop(
 
   def branch: Valid[Branch] =
     shogi.Game(variant.some, fen.some).drop(role, pos) flatMap { case (game, drop) =>
-      game.pgnMoves.lastOption toValid "Dropped but no last move!" map { san =>
+      game.kifMoves.lastOption toValid "Dropped but no last move!" map { san =>
         val uci     = Uci(drop)
         val movable = !game.situation.end
         val fen     = shogi.format.Forsyth >> game

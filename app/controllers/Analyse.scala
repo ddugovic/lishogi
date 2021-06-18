@@ -7,7 +7,7 @@ import shogi.format.FEN
 import lila.api.Context
 import lila.app._
 import lila.common.HTTPRequest
-import lila.game.{ PgnDump, Pov }
+import lila.game.{ KifDump, Pov }
 import lila.round.JsonView.WithFlags
 import views._
 
@@ -46,12 +46,12 @@ final class Analyse(
             roundC.getWatcherChat(pov.game) zip
             (ctx.noBlind ?? env.game.crosstableApi.withMatchup(pov.game)) zip
             env.bookmark.api.exists(pov.game, ctx.me) zip
-            env.api.pgnDump(
+            env.api.kifDump(
               pov.game,
               initialFen,
               analysis = none,
-              PgnDump.WithFlags(clocks = false)
-            ) flatMap { case analysis ~ analysisInProgress ~ simul ~ chat ~ crosstable ~ bookmarked ~ pgn =>
+              KifDump.WithFlags(clocks = false)
+            ) flatMap { case analysis ~ analysisInProgress ~ simul ~ chat ~ crosstable ~ bookmarked ~ kif =>
               env.api.roundApi.review(
                 pov,
                 lila.api.Mobile.Api.currentVersion,
@@ -67,8 +67,8 @@ final class Analyse(
                   opening = true
                 )
               ) map { data =>
-                val finalPgn = env.analyse.annotator(
-                  pgn,
+                val finalKif = env.analyse.annotator(
+                  kif,
                   analysis,
                   pov.game.opening,
                   pov.game.winnerColor,
@@ -84,7 +84,7 @@ final class Analyse(
                       pov,
                       data,
                       initialFen,
-                      finalPgn.renderAsKifu(movesSeq, pov.game.createdAt),
+                      finalKif.renderAsKifu(movesSeq, pov.game.createdAt),
                       analysis,
                       analysisInProgress,
                       simul,
@@ -122,7 +122,7 @@ final class Analyse(
       val url = routes.Round.watcher(pov.gameId, pov.color.name)
       fuccess {
         shogi.Replay
-          .plyAtFen(pov.game.pgnMoves, initialFen.map(_.value), pov.game.variant, atFen)
+          .plyAtFen(pov.game.kifMoves, initialFen.map(_.value), pov.game.variant, atFen)
           .fold(
             err => {
               lila.log("analyse").info(s"RedirectAtFen: ${pov.gameId} $atFen $err")
@@ -139,13 +139,13 @@ final class Analyse(
       analysis   <- env.analyse.analyser get pov.game
       simul      <- pov.game.simulId ?? env.simul.repo.find
       crosstable <- env.game.crosstableApi.withMatchup(pov.game)
-      pgn        <- env.api.pgnDump(pov.game, initialFen, analysis, PgnDump.WithFlags(clocks = false))
+      kif        <- env.api.kifDump(pov.game, initialFen, analysis, KifDump.WithFlags(clocks = false))
     } yield Ok(
       html.analyse.replayBot(
         pov,
         initialFen,
         env.analyse
-          .annotator(pgn, analysis, pov.game.opening, pov.game.winnerColor, pov.game.status)
+          .annotator(kif, analysis, pov.game.opening, pov.game.winnerColor, pov.game.status)
           .toString,
         simul,
         crosstable

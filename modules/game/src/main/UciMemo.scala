@@ -27,7 +27,7 @@ final class UciMemo(gameRepo: GameRepo)(implicit ec: scala.concurrent.ExecutionC
 
   def get(game: Game, max: Int = hardLimit): Fu[UciVector] =
     cache getIfPresent game.id filter { moves =>
-      moves.size.min(max) == game.pgnMoves.size.min(max)
+      moves.size.min(max) == game.kifMoves.size.min(max)
     } match {
       case Some(moves) => fuccess(moves)
       case _           => compute(game, max) addEffect { set(game, _) }
@@ -41,6 +41,6 @@ final class UciMemo(gameRepo: GameRepo)(implicit ec: scala.concurrent.ExecutionC
   private def compute(game: Game, max: Int): Fu[UciVector] =
     for {
       fen      <- gameRepo initialFen game
-      uciMoves <- UciDump(game.pgnMoves.take(max), fen.map(_.value), game.variant).future
+      uciMoves <- UciDump(game.kifMoves.take(max), fen.map(_.value), game.variant).future
     } yield uciMoves.toVector
 }

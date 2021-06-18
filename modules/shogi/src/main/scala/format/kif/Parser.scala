@@ -7,7 +7,7 @@ import scala.util.parsing.combinator._
 import scalaz.Validation.FlatMap._
 import scalaz.Validation.{ success => succezz }
 
-// http://www.saremba.de/chessgml/standards/pgn/pgn-complete.htm
+// http://www.saremba.de/chessgml/standards/kif/kif-complete.htm
 object Parser extends scalaz.syntax.ToTraverseOps {
 
   case class StrMove(
@@ -17,16 +17,16 @@ object Parser extends scalaz.syntax.ToTraverseOps {
       variations: List[List[StrMove]]
   )
 
-  def full(pgn: String): Valid[ParsedKifu] =
+  def full(kif: String): Valid[ParsedKifu] =
     try {
-      val preprocessed = augmentString(pgn).linesIterator
+      val preprocessed = augmentString(kif).linesIterator
         .map(_.trim)
         .filter {
           _.headOption != Some('%')
         }
         .mkString("\n")
-        .replace("[pgn]", "")
-        .replace("[/pgn]", "")
+        .replace("[kif]", "")
+        .replace("[/kif]", "")
         .replace("‑", "-")
         .replace("–", "-")
         .replace("e.p.", "") // silly en-passant notation
@@ -44,8 +44,8 @@ object Parser extends scalaz.syntax.ToTraverseOps {
       } yield ParsedKifu(init, tags, sans)
     } catch {
       case _: StackOverflowError =>
-        println(pgn)
-        sys error "### StackOverflowError ### in PGN parser"
+        println(kif)
+        sys error "### StackOverflowError ### in KIF parser"
     }
 
   def moves(str: String, variant: Variant): Valid[Sans] = {
@@ -88,8 +88,8 @@ object Parser extends scalaz.syntax.ToTraverseOps {
 
     private def cleanComments(comments: List[String]) = comments.map(_.trim).filter(_.nonEmpty)
 
-    def apply(pgn: String): Valid[(InitialPosition, List[StrMove], Option[Tag])] =
-      parseAll(strMoves, pgn) match {
+    def apply(kif: String): Valid[(InitialPosition, List[StrMove], Option[Tag])] =
+      parseAll(strMoves, kif) match {
         case Success((init, moves, result), _) =>
           succezz(
             (
@@ -100,7 +100,7 @@ object Parser extends scalaz.syntax.ToTraverseOps {
               }
             )
           )
-        case err => "Cannot parse moves: %s\n%s".format(err.toString, pgn).failureNel
+        case err => "Cannot parse moves: %s\n%s".format(err.toString, kif).failureNel
       }
 
     def strMoves: Parser[(InitialPosition, List[StrMove], Option[String])] =
@@ -307,15 +307,15 @@ object Parser extends scalaz.syntax.ToTraverseOps {
 
   object TagParser extends RegexParsers with Logging {
 
-    def apply(pgn: String): Valid[Tags] =
-      parseAll(all, pgn) match {
-        case f: Failure       => "Cannot parse tags: %s\n%s".format(f.toString, pgn).failureNel
+    def apply(kif: String): Valid[Tags] =
+      parseAll(all, kif) match {
+        case f: Failure       => "Cannot parse tags: %s\n%s".format(f.toString, kif).failureNel
         case Success(tags, _) => succezz(Tags(tags))
-        case err              => "Cannot parse tags: %s\n%s".format(err.toString, pgn).failureNel
+        case err              => "Cannot parse tags: %s\n%s".format(err.toString, kif).failureNel
       }
 
-    def fromFullKifu(pgn: String): Valid[Tags] =
-      splitTagAndMoves(pgn) flatMap { case (tags, _) =>
+    def fromFullKifu(kif: String): Valid[Tags] =
+      splitTagAndMoves(kif) flatMap { case (tags, _) =>
         apply(tags)
       }
 
@@ -341,11 +341,11 @@ object Parser extends scalaz.syntax.ToTraverseOps {
   }
 
   // there must be a newline between the tags and the first move
-  private def ensureTagsNewline(pgn: String): String =
-    """"\]\s*(\d+\.)""".r.replaceAllIn(pgn, m => "\"]\n" + m.group(1))
+  private def ensureTagsNewline(kif: String): String =
+    """"\]\s*(\d+\.)""".r.replaceAllIn(kif, m => "\"]\n" + m.group(1))
 
-  private def splitTagAndMoves(pgn: String): Valid[(String, String)] =
-    augmentString(ensureTagsNewline(pgn)).linesIterator.to(List).map(_.trim).filter(_.nonEmpty) span { line =>
+  private def splitTagAndMoves(kif: String): Valid[(String, String)] =
+    augmentString(ensureTagsNewline(kif)).linesIterator.to(List).map(_.trim).filter(_.nonEmpty) span { line =>
       line lift 0 contains '['
     } match {
       case (tagLines, moveLines) => succezz(tagLines.mkString("\n") -> moveLines.mkString("\n"))

@@ -71,7 +71,7 @@ final class UserAnalysis(
           gotePlayer = lila.game.Player.make(shogi.Gote, none),
           mode = shogi.Mode.Casual,
           source = lila.game.Source.Api,
-          pgnImport = None
+          kifImport = None
         )
         .withId("synthetic"),
       from.situation.color
@@ -131,7 +131,7 @@ final class UserAnalysis(
     }
 
   // XHR only
-  def pgn =
+  def kif =
     OpenBody { implicit ctx =>
       implicit val req = ctx.body
       env.importer.forms.importForm

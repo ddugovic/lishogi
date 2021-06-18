@@ -8,7 +8,7 @@ final private class StudyMaker(
     lightUserApi: lila.user.LightUserApi,
     gameRepo: lila.game.GameRepo,
     chapterMaker: ChapterMaker,
-    pgnDump: lila.game.PgnDump
+    kifDump: lila.game.KifDump
 )(implicit ec: scala.concurrent.ExecutionContext) {
 
   def apply(data: StudyMaker.ImportGame, user: User): Fu[Study.WithChapter] =
@@ -22,14 +22,14 @@ final private class StudyMaker(
 
   private def createFromScratch(data: StudyMaker.ImportGame, user: User): Fu[Study.WithChapter] = {
     val study = Study.make(user, Study.From.Scratch, data.id, data.name, data.settings)
-    chapterMaker.fromFenOrPgnOrBlank(
+    chapterMaker.fromFenOrKifOrBlank(
       study,
       ChapterMaker.Data(
         game = none,
         name = Chapter.Name("Chapter 1"),
         variant = data.form.variantStr,
         fen = data.form.fenStr,
-        pgn = data.form.pgnStr,
+        kif = data.form.kifStr,
         orientation = data.form.orientation.name,
         mode = ChapterMaker.Mode.Normal.key,
         initial = true
@@ -49,7 +49,7 @@ final private class StudyMaker(
   ): Fu[Study.WithChapter] = {
     for {
       root <- chapterMaker.game2root(pov.game, initialFen)
-      tags <- pgnDump.tags(pov.game, initialFen, none, withOpening = true)
+      tags <- kifDump.tags(pov.game, initialFen, none, withOpening = true)
       name <- Namer.gameVsText(pov.game, withRatings = false)(lightUserApi.async) dmap Chapter.Name.apply
       study = Study.make(user, Study.From.Game(pov.gameId), data.id, Study.Name("Game study").some)
       chapter = Chapter.make(
@@ -61,7 +61,7 @@ final private class StudyMaker(
           orientation = pov.color
         ),
         root = root,
-        tags = PgnTags(tags),
+        tags = KifTags(tags),
         order = 1,
         ownerId = user.id,
         practice = false,

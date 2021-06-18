@@ -46,7 +46,7 @@ case class Game(
   def variant   = shogi.situation.board.variant
   def turns     = shogi.turns
   def clock     = shogi.clock
-  def pgnMoves  = shogi.pgnMoves
+  def kifMoves  = shogi.kifMoves
 
   val players = List(sentePlayer, gotePlayer)
 
@@ -182,9 +182,9 @@ case class Game(
     }
   }
 
-  def pgnMoves(color: Color): PgnMoves = {
+  def kifMoves(color: Color): KifMoves = {
     val pivot = if (color == startColor) 0 else 1
-    pgnMoves.zipWithIndex.collect {
+    kifMoves.zipWithIndex.collect {
       case (e, i) if (i % 2) == pivot => e
     }
   }
@@ -213,7 +213,7 @@ case class Game(
       sentePlayer = copyPlayer(sentePlayer),
       gotePlayer = copyPlayer(gotePlayer),
       shogi = game,
-      binaryMoveTimes = (!isPgnImport && !shogi.clock.isDefined).option {
+      binaryMoveTimes = (!isKifImport && !shogi.clock.isDefined).option {
         BinaryFormat.moveTime.write {
           binaryMoveTimes.?? { t =>
             BinaryFormat.moveTime.read(t, playedTurns)
@@ -447,7 +447,7 @@ case class Game(
 
   def accountable = playedTurns >= 2 || isTournament
 
-  def replayable = isPgnImport || finished || (aborted && bothPlayersHaveMoved)
+  def replayable = isKifImport || finished || (aborted && bothPlayersHaveMoved)
 
   def analysable =
     replayable && playedTurns > 4 &&
@@ -580,7 +580,7 @@ case class Game(
     if (playedTurns > 5) (player(color).blurs.nb * 100) / playerMoves(color)
     else 0
 
-  def isBeingPlayed = !isPgnImport && !finishedOrAborted
+  def isBeingPlayed = !isKifImport && !finishedOrAborted
 
   def olderThan(seconds: Int) = movedAt isBefore DateTime.now.minusSeconds(seconds)
 
@@ -629,8 +629,8 @@ case class Game(
 
   def source = metadata.source
 
-  def pgnImport   = metadata.pgnImport
-  def isPgnImport = pgnImport.isDefined
+  def kifImport   = metadata.kifImport
+  def isKifImport = kifImport.isDefined
 
   def resetTurns =
     copy(
@@ -639,7 +639,7 @@ case class Game(
 
   lazy val opening: Option[FullOpening.AtPly] =
     if (fromPosition || !Variant.openingSensibleVariants(variant)) none
-    else FullOpeningDB search pgnMoves
+    else FullOpeningDB search kifMoves
 
   def synthetic = id == Game.syntheticId
 
@@ -743,7 +743,7 @@ object Game {
       gotePlayer: Player,
       mode: Mode,
       source: Source,
-      pgnImport: Option[PgnImport],
+      kifImport: Option[KifImport],
       daysPerTurn: Option[Int] = None
   ): NewGame = {
     val createdAt = DateTime.now
@@ -758,7 +758,7 @@ object Game {
         mode = mode,
         metadata = Metadata(
           source = source.some,
-          pgnImport = pgnImport,
+          kifImport = kifImport,
           tournamentId = none,
           swissId = none,
           simulId = none,
@@ -773,7 +773,7 @@ object Game {
   def metadata(source: Source) =
     Metadata(
       source = source.some,
-      pgnImport = none,
+      kifImport = none,
       tournamentId = none,
       swissId = none,
       simulId = none,
@@ -789,8 +789,8 @@ object Game {
     val playerUids        = "us"
     val playingUids       = "pl"
     val binaryPieces      = "ps"
-    val oldPgn            = "pg"
-    val huffmanPgn        = "hp"
+    val oldKif            = "pg"
+    val huffmanKif        = "hp"
     val status            = "s"
     val turns             = "t"
     val startedAtTurn     = "st"
@@ -813,7 +813,7 @@ object Game {
     val createdAt         = "ca"
     val movedAt           = "ua" // ua = updatedAt (bc)
     val source            = "so"
-    val pgnImport         = "pgni"
+    val kifImport         = "kifi"
     val tournamentId      = "tid"
     val swissId           = "iid"
     val simulId           = "sid"

@@ -80,7 +80,7 @@ object pref {
               radios(form("display.replay"), translatedMoveListWhilePlayingChoices)
             ),
             setting(
-              pgnPieceNotation(),
+              kifPieceNotation(),
               radios(form("display.pieceNotation"), translatedPieceNotationChoices),
               false
             ),

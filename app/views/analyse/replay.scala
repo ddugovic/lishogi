@@ -47,7 +47,7 @@ object replay {
         palantir = ctx.me.exists(_.canPalantir)
       )
     }
-    val pgnLinks = div(
+    val kifLinks = div(
       /*
       a(dataIcon := "x", cls := "text", href := s"${routes.Game.exportOne(game.id)}?literate=1")(
         trans.downloadAnnotated()
@@ -62,7 +62,7 @@ object replay {
       )(
         trans.downloadRaw()
       ),
-      game.isPgnImport option a(
+      game.isKifImport option a(
         dataIcon := "x",
         cls := "text",
         href := s"${routes.Game.exportOne(game.id)}?imported=1"
@@ -143,7 +143,7 @@ object replay {
                 div(cls := "move-times")(
                   game.turns > 1 option div(id := "movetimes-chart")
                 ),
-                div(cls := "fen-pgn")(
+                div(cls := "fen-kif")(
                   div(
                     strong("SFEN"),
                     input(
@@ -152,11 +152,11 @@ object replay {
                       cls := "copyable autoselect analyse__underboard__fen"
                     )
                   ),
-                  div(cls := "pgn-options")(
+                  div(cls := "kif-options")(
                     strong("Kifu"),
-                    pgnLinks
+                    kifLinks
                   ),
-                  game.variant == shogi.variant.Standard option div(cls := "pgn")(kifu)
+                  game.variant == shogi.variant.Standard option div(cls := "kif")(kifu)
                 ),
                 cross.map { c =>
                   div(cls := "ctable")(
@@ -173,19 +173,19 @@ object replay {
                       s"Provided by ${usernameOrId(a.providedBy)}"
                     }
                   )(trans.computerAnalysis()),
-                !game.isPgnImport option frag(
+                !game.isKifImport option frag(
                   game.turns > 1 option span(dataPanel := "move-times")(trans.moveTimes()),
                   cross.isDefined option span(dataPanel := "ctable")(trans.crosstable())
                 ),
-                span(dataPanel := "fen-pgn")(raw("SFEN &amp; Kifu"))
+                span(dataPanel := "fen-kif")(raw("SFEN &amp; Kifu"))
               )
             )
           )
         ),
         if (ctx.blind)
           div(cls := "blind-content none")(
-            h2("PGN downloads"),
-            pgnLinks
+            h2("KIF downloads"),
+            kifLinks
           )
       )
     )

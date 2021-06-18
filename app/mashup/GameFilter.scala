@@ -105,7 +105,7 @@ object GameFilterMenu {
         case Imported =>
           pagBuilder(
             selector = Query imported user.id,
-            sort = $sort desc "pgni.ca",
+            sort = $sort desc "kifi.ca",
             nb = nb
           )(page)
         case All =>

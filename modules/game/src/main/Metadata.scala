@@ -5,16 +5,16 @@ import lila.db.ByteArray
 
 private[game] case class Metadata(
     source: Option[Source],
-    pgnImport: Option[PgnImport],
+    kifImport: Option[KifImport],
     tournamentId: Option[String],
     swissId: Option[String],
     simulId: Option[String],
     analysed: Boolean
 ) {
 
-  def pgnDate = pgnImport flatMap (_.date)
+  def kifDate = kifImport flatMap (_.date)
 
-  def pgnUser = pgnImport flatMap (_.user)
+  def kifUser = kifImport flatMap (_.user)
 
   def isEmpty = this == Metadata.empty
 }
@@ -24,20 +24,20 @@ private[game] object Metadata {
   val empty = Metadata(None, None, None, None, None, false)
 }
 
-case class PgnImport(
+case class KifImport(
     user: Option[String],
     date: Option[String],
-    pgn: String,
-    // hashed PGN for DB unicity
+    kif: String,
+    // hashed KIF for DB unicity
     h: Option[ByteArray]
 )
 
-object PgnImport {
+object KifImport {
 
-  def hash(pgn: String) =
+  def hash(kif: String) =
     ByteArray {
       MessageDigest getInstance "MD5" digest {
-        pgn.linesIterator
+        kif.linesIterator
           .map(_.replace(" ", ""))
           .filter(_.nonEmpty)
           .to(List)
@@ -49,16 +49,16 @@ object PgnImport {
   def make(
       user: Option[String],
       date: Option[String],
-      pgn: String
+      kif: String
   ) =
-    PgnImport(
+    KifImport(
       user = user,
       date = date,
-      pgn = pgn,
-      h = hash(pgn).some
+      kif = kif,
+      h = hash(kif).some
     )
 
   import reactivemongo.api.bson.Macros
   import ByteArray.ByteArrayBSONHandler
-  implicit val pgnImportBSONHandler = Macros.handler[PgnImport]
+  implicit val kifImportBSONHandler = Macros.handler[KifImport]
 }

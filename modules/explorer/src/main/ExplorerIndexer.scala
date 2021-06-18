@@ -9,7 +9,7 @@ import scala.util.{ Failure, Success, Try }
 
 import lila.common.LilaStream
 import lila.db.dsl._
-import lila.game.{ Game, GameRepo, PgnDump, Player, Query }
+import lila.game.{ Game, GameRepo, KifDump, Player, Query }
 import lila.user.{ User, UserRepo }
 
 final private class ExplorerIndexer(
@@ -26,7 +26,7 @@ final private class ExplorerIndexer(
   private val separator           = "\n\n\n"
   private val datePattern         = "yyyy-MM-dd"
   private val dateFormatter       = DateTimeFormat forPattern datePattern
-  private val pgnDateFormat       = DateTimeFormat forPattern "yyyy.MM.dd";
+  private val kifDateFormat       = DateTimeFormat forPattern "yyyy.MM.dd";
   private val internalEndPointUrl = s"$internalEndpoint/import/lishogi"
 
   private def parseDate(str: String): Option[DateTime] =
@@ -48,13 +48,13 @@ final private class ExplorerIndexer(
           .sortedCursor(query, Query.sortChronological)
           .documentSource()
           .via(LilaStream.logRate[Game]("fetch")(logger))
-          .mapAsyncUnordered(8) { makeFastPgn(_, botUserIds) }
+          .mapAsyncUnordered(8) { makeFastKif(_, botUserIds) }
           .via(LilaStream.collect)
           .via(LilaStream.logRate("index")(logger))
           .grouped(50)
           .map(_ mkString separator)
-          .mapAsyncUnordered(2) { pgn =>
-            ws.url(internalEndPointUrl).put(pgn).flatMap {
+          .mapAsyncUnordered(2) { kif =>
+            ws.url(internalEndPointUrl).put(kif).flatMap {
               case res if res.status == 200 => funit
               case res                      => fufail(s"Stop import because of status ${res.status}")
             }
@@ -67,7 +67,7 @@ final private class ExplorerIndexer(
 
   def apply(game: Game): Funit =
     getBotUserIds() flatMap { botUserIds =>
-      makeFastPgn(game, botUserIds) map {
+      makeFastKif(game, botUserIds) map {
         _ foreach flowBuffer.apply
       }
     }
@@ -75,8 +75,8 @@ final private class ExplorerIndexer(
   private object flowBuffer {
     private val max = 30
     private val buf = scala.collection.mutable.ArrayBuffer.empty[String]
-    def apply(pgn: String): Unit = {
-      buf += pgn
+    def apply(kif: String): Unit = {
+      buf += kif
       val startAt = nowMillis
       if (buf.size >= max) {
         ws.url(internalEndPointUrl).put(buf mkString separator) andThen {
@@ -124,7 +124,7 @@ final private class ExplorerIndexer(
     }
   }
 
-  private def makeFastPgn(game: Game, botUserIds: Set[User.ID]): Fu[Option[String]] =
+  private def makeFastKif(game: Game, botUserIds: Set[User.ID]): Fu[Option[String]] =
     ~(for {
       senteRating <- stableRating(game.sentePlayer)
       goteRating  <- stableRating(game.gotePlayer)
@@ -155,11 +155,11 @@ final private class ExplorerIndexer(
           s"[Gote ${username(shogi.Gote)}]",
           s"[SenteElo $senteRating]",
           s"[GoteElo $goteRating]",
-          s"[Result ${PgnDump.result(game)}]",
-          s"[Date ${pgnDateFormat.print(game.createdAt)}]"
+          s"[Result ${KifDump.result(game)}]",
+          s"[Date ${kifDateFormat.print(game.createdAt)}]"
         )
         val allTags = fenTags ::: otherTags
-        s"${allTags.mkString("\n")}\n\n${game.pgnMoves.take(maxPlies).mkString(" ")}".some
+        s"${allTags.mkString("\n")}\n\n${game.kifMoves.take(maxPlies).mkString(" ")}".some
       }
     })
 

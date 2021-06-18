@@ -2,19 +2,19 @@ package lila.study
 
 import akka.stream.scaladsl._
 import shogi.format.kif.{ Glyphs, Initial, Kifu, Tag, Tags }
-import shogi.format.{ Forsyth, kif => shogiPgn }
+import shogi.format.{ Forsyth, kif => shogiKif }
 import org.joda.time.format.DateTimeFormat
 
 import lila.common.String.slugify
 import lila.tree.Node.{ Shape, Shapes }
 
-final class PgnDump(
+final class KifDump(
     chapterRepo: ChapterRepo,
     lightUserApi: lila.user.LightUserApi,
     net: lila.common.config.NetConfig
 ) {
 
-  import PgnDump._
+  import KifDump._
 
   def apply(study: Study, flags: WithFlags): Source[String, _] =
     chapterRepo
@@ -87,7 +87,7 @@ final class PgnDump(
     }
 }
 
-object PgnDump {
+object KifDump {
 
   case class WithFlags(comments: Boolean, variations: Boolean, clocks: Boolean)
 
@@ -95,7 +95,7 @@ object PgnDump {
   private val noVariations: Variations = Vector.empty
 
   private def node2move(node: Node, variations: Variations)(implicit flags: WithFlags) =
-    shogiPgn.Move(
+    shogiKif.Move(
       san = node.move.san,
       glyphs = if (flags.comments) node.glyphs else Glyphs.empty,
       comments = flags.comments ?? {
@@ -137,23 +137,23 @@ object PgnDump {
   }
 
   def toTurn(first: Node, second: Option[Node], variations: Variations)(implicit flags: WithFlags) =
-    shogiPgn.Turn(
+    shogiKif.Turn(
       number = first.fullMoveNumber,
       sente = node2move(first, variations).some,
       gote = second map { node2move(_, first.children.variations) }
     )
 
-  def toTurns(root: Node.Root)(implicit flags: WithFlags): Vector[shogiPgn.Turn] =
+  def toTurns(root: Node.Root)(implicit flags: WithFlags): Vector[shogiKif.Turn] =
     toTurns(root.mainline, root.children.variations)
 
   def toTurns(
       line: Vector[Node],
       variations: Variations
-  )(implicit flags: WithFlags): Vector[shogiPgn.Turn] = {
+  )(implicit flags: WithFlags): Vector[shogiKif.Turn] = {
     line match {
       case Vector() => Vector()
       case first +: rest if first.ply % 2 == 0 =>
-        shogiPgn.Turn(
+        shogiKif.Turn(
           number = 1 + (first.ply - 1) / 2,
           sente = none,
           gote = node2move(first, variations).some
@@ -164,10 +164,10 @@ object PgnDump {
 
   def toTurnsFromSente(line: Vector[Node], variations: Variations)(implicit
       flags: WithFlags
-  ): Vector[shogiPgn.Turn] =
+  ): Vector[shogiKif.Turn] =
     line
       .grouped(2)
-      .foldLeft(variations -> Vector.empty[shogiPgn.Turn]) { case variations ~ turns ~ pair =>
+      .foldLeft(variations -> Vector.empty[shogiKif.Turn]) { case variations ~ turns ~ pair =>
         pair.headOption.fold(variations -> turns) { first =>
           pair
             .lift(1)

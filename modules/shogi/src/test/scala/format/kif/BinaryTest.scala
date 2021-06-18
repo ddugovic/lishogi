@@ -8,10 +8,10 @@ class BinaryTest extends ShogiTest {
   import BinaryTestData._
   import BinaryTestUtils._
 
-  def compareStrAndBin(pgn: String) = {
-    val bin = (Binary writeMoves pgn.split(' ').toList).get.toList
-    ((Binary readMoves bin).get mkString " ") must_== pgn
-    bin.size must be_<=(pgn.size)
+  def compareStrAndBin(kif: String) = {
+    val bin = (Binary writeMoves kif.split(' ').toList).get.toList
+    ((Binary readMoves bin).get mkString " ") must_== kif
+    bin.size must be_<=(kif.size)
   }
 
   "binary encoding" should {
@@ -70,9 +70,9 @@ class BinaryTest extends ShogiTest {
     }
     "write many moves" in {
       "all games" in {
-        forall(pgn200) { pgn =>
-          val bin = (Binary writeMoves pgn.split(' ').toList).get
-          bin.size must be_<=(pgn.size)
+        forall(kif200) { kif =>
+          val bin = (Binary writeMoves kif.split(' ').toList).get
+          bin.size must be_<=(kif.size)
         }
       }
     }
@@ -134,10 +134,10 @@ class BinaryTest extends ShogiTest {
     }
     "be isomorphic" in {
       "for one" in {
-        compareStrAndBin(pgn200.head)
+        compareStrAndBin(kif200.head)
       }
       "for all" in {
-        forall(pgn200)(compareStrAndBin)
+        forall(kif200)(compareStrAndBin)
       }
     }
   }
@@ -179,5 +179,5 @@ object BinaryTestUtils {
 
 object BinaryTestData {
 
-  val pgn200: List[String] = format.kif.Fixtures.prod500standard.take(200)
+  val kif200: List[String] = format.kif.Fixtures.prod500standard.take(200)
 }

@@ -113,12 +113,12 @@ object KifuUtils {
 
   def movesAsKifu(uciKifu: Vector[(String, String)]): Vector[String] = {
     uciKifu.foldLeft(Vector[String]()) { (prev, t) =>
-      // t is a tuple of (uci, pgn)
+      // t is a tuple of (uci, kif)
       val movePattern = "([a-i])([1-9])([a-i])([1-9])(\\+?)".r
       val dropPattern = "([A-Z])\\*([a-i])([1-9])".r
-      val pgnPattern  = "([A-Z]).*".r
+      val kifPattern  = "([A-Z]).*".r
       val kifuMove = t match {
-        case (movePattern(o1, o2, d1, d2, pro), pgnPattern(piece)) => {
+        case (movePattern(o1, o2, d1, d2, pro), kifPattern(piece)) => {
           val lastMovePattern = s"(.*)${origSymbols(o1)}${origSymbols(o2)}".r
           (prev.lastOption match {
             // check if 同 is needed
@@ -131,7 +131,7 @@ object KifuUtils {
         }
         case (dropPattern(piece, d1, d2), _) =>
           destSymbols(d1) + destSymbols(d2) + pieceSymbols(piece) + kifuSymbols("*")
-        case _ => "UCI/PGN parse error"
+        case _ => "UCI/KIF parse error"
       }
       prev :+ kifuMove
     }

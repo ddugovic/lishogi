@@ -41,7 +41,7 @@ object BSONHandlers {
   implicit val gameBSONHandler: BSON[Game] = new BSON[Game] {
 
     import Game.{ BSONFields => F }
-    import PgnImport.pgnImportBSONHandler
+    import KifImport.kifImportBSONHandler
 
     def reads(r: BSON.Reader): Game = {
 
@@ -57,9 +57,9 @@ object BSONHandlers {
       val gameVariant = Variant(r intD F.variant) | shogi.variant.Standard
 
       val decoded = {
-        val pgnMoves = PgnStorage.OldBin.decode(r bytesD F.oldPgn, playedPlies)
-        PgnStorage.Decoded(
-          pgnMoves = pgnMoves,
+        val kifMoves = KifStorage.OldBin.decode(r bytesD F.oldKif, playedPlies)
+        KifStorage.Decoded(
+          kifMoves = kifMoves,
           pieces = BinaryFormat.piece.read(r bytes F.binaryPieces, gameVariant),
           positionHashes = r.getO[shogi.PositionHash](F.positionHashes) | Array.empty,
           lastMove = r strO F.historyLastMove flatMap Uci.apply,
@@ -81,7 +81,7 @@ object BSONHandlers {
           ),
           color = turnColor
         ),
-        pgnMoves = decoded.pgnMoves,
+        kifMoves = decoded.kifMoves,
         clock = r.getO[Color => Clock](F.clock) {
           clockBSONReader(createdAt, light.sentePlayer.berserk, light.gotePlayer.berserk)
         } map (_(turnColor)),
@@ -120,7 +120,7 @@ object BSONHandlers {
         movedAt = r.dateD(F.movedAt, createdAt),
         metadata = Metadata(
           source = r intO F.source flatMap Source.apply,
-          pgnImport = r.getO[PgnImport](F.pgnImport)(PgnImport.pgnImportBSONHandler),
+          kifImport = r.getO[KifImport](F.kifImport)(KifImport.kifImportBSONHandler),
           tournamentId = r strO F.tournamentId,
           swissId = r strO F.swissId,
           simulId = r strO F.simulId,
@@ -162,18 +162,18 @@ object BSONHandlers {
         F.createdAt         -> w.date(o.createdAt),
         F.movedAt           -> w.date(o.movedAt),
         F.source            -> o.metadata.source.map(_.id),
-        F.pgnImport         -> o.metadata.pgnImport,
+        F.kifImport         -> o.metadata.kifImport,
         F.tournamentId      -> o.metadata.tournamentId,
         F.swissId           -> o.metadata.swissId,
         F.simulId           -> o.metadata.simulId,
         F.analysed          -> w.boolO(o.metadata.analysed)
       ) ++ {
         // if (false) // one day perhaps
-        //   $doc(F.huffmanPgn -> PgnStorage.Huffman.encode(o.pgnMoves take Game.maxPlies))
+        //   $doc(F.huffmanKif -> KifStorage.Huffman.encode(o.kifMoves take Game.maxPlies))
         // else {
-        val f = PgnStorage.OldBin
+        val f = KifStorage.OldBin
         $doc(
-          F.oldPgn          -> f.encode(o.pgnMoves take Game.maxPlies),
+          F.oldKif          -> f.encode(o.kifMoves take Game.maxPlies),
           F.binaryPieces    -> BinaryFormat.piece.write(o.board.pieces),
           F.positionHashes  -> o.history.positionHashes,
           F.historyLastMove -> o.history.lastMove.map(_.uci),

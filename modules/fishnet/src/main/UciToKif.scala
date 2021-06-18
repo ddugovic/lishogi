@@ -6,12 +6,12 @@ import shogi.{ Drop, Move, Replay, Situation }
 import scalaz.Validation.success
 import scalaz.Validation.FlatMap._
 
-import lila.analyse.{ Analysis, Info, PgnMove }
+import lila.analyse.{ Analysis, Info, KifMove }
 import lila.base.LilaException
 
-// convert variations from UCI to PGN.
+// convert variations from UCI to KIF.
 // also drops extra variations
-private object UciToPgn {
+private object UciToKif {
 
   type WithErrors[A] = (A, List[Exception])
 
@@ -26,7 +26,7 @@ private object UciToPgn {
       else info.dropVariation
     }
 
-    def uciToPgn(ply: Int, variation: List[String]): Valid[List[PgnMove]] =
+    def uciToKif(ply: Int, variation: List[String]): Valid[List[KifMove]] =
       for {
         situation <-
           if (ply == replay.setup.startedAtTurn + 1) success(replay.setup.situation)
@@ -48,9 +48,9 @@ private object UciToPgn {
     onlyMeaningfulVariations.foldLeft[WithErrors[List[Info]]]((Nil, Nil)) {
       case ((infos, errs), info) if info.variation.isEmpty => (info :: infos, errs)
       case ((infos, errs), info) =>
-        uciToPgn(info.ply, info.variation).fold(
+        uciToKif(info.ply, info.variation).fold(
           err => (info.dropVariation :: infos, LilaException(err) :: errs),
-          pgn => (info.copy(variation = pgn) :: infos, errs)
+          kif => (info.copy(variation = kif) :: infos, errs)
         )
     } match {
       case (infos, errors) => analysis.copy(infos = infos.reverse) -> errors

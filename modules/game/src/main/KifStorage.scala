@@ -5,28 +5,28 @@ import shogi.{ variant => _, ToOptionOpsFromOption => _, _ }
 import shogi.variant.{ Standard }
 import lila.db.ByteArray
 
-sealed trait PgnStorage
+sealed trait KifStorage
 
-private object PgnStorage {
+private object KifStorage {
 
-  case object OldBin extends PgnStorage {
+  case object OldBin extends KifStorage {
 
-    def encode(pgnMoves: PgnMoves) = {
+    def encode(kifMoves: KifMoves) = {
       ByteArray {
-        monitor(_.game.pgn.encode("old")) {
-          format.kif.Binary.writeMoves(pgnMoves).get
+        monitor(_.game.kif.encode("old")) {
+          format.kif.Binary.writeMoves(kifMoves).get
         }
       }
     }
 
-    def decode(bytes: ByteArray, plies: Int): PgnMoves = {
-      monitor(_.game.pgn.decode("old")) {
+    def decode(bytes: ByteArray, plies: Int): KifMoves = {
+      monitor(_.game.kif.decode("old")) {
         format.kif.Binary.readMoves(bytes.value.toList, plies).get.toVector
       }
     }
   }
 
-  // case object Huffman extends PgnStorage {
+  // case object Huffman extends KifStorage {
   //
   //   import org.lishogi.compression.game.{
   //     Encoder,
@@ -35,19 +35,19 @@ private object PgnStorage {
   //     Role => JavaRole
   //   }
   //   import scala.jdk.CollectionConverters._
-  // // PgnMoves - Vector[String]
-  //   def encode(pgnMoves: PgnMoves) = {
+  // // KifMoves - Vector[String]
+  //   def encode(kifMoves: KifMoves) = {
   //     ByteArray {
-  //       monitor(_.game.pgn.encode("huffman")) {
-  //         Encoder.encode(pgnMoves.toArray)
+  //       monitor(_.game.kif.encode("huffman")) {
+  //         Encoder.encode(kifMoves.toArray)
   //       }
   //     }
   //   }
   //   def decode(bytes: ByteArray, plies: Int): Decoded =
-  //     monitor(_.game.pgn.decode("huffman")) {
+  //     monitor(_.game.kif.decode("huffman")) {
   //       val decoded      = Encoder.decode(bytes.value, plies)
   //       Decoded(
-  //         pgnMoves = decoded.pgnMoves.toVector,
+  //         kifMoves = decoded.kifMoves.toVector,
   //         pieces = Standard.pieces,
   //         checkCount = List(0, 0),
   //         positionHashes = decoded.positionHashes,
@@ -71,7 +71,7 @@ private object PgnStorage {
   // }
 
   case class Decoded(
-      pgnMoves: PgnMoves,
+      kifMoves: KifMoves,
       pieces: PieceMap,
       positionHashes: PositionHash, // irrelevant after game ends
       checkCount: List[Int],

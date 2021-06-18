@@ -64,7 +64,7 @@ LishogiRound.boot(${safeJsonValue(
     )
   }
 
-  def crawler(pov: Pov, initialFen: Option[shogi.format.FEN], pgn: shogi.format.kif.Kifu)(implicit
+  def crawler(pov: Pov, initialFen: Option[shogi.format.FEN], kif: shogi.format.kif.Kifu)(implicit
       ctx: Context
   ) =
     bits.layout(
@@ -80,7 +80,7 @@ LishogiRound.boot(${safeJsonValue(
             div(cls := "for-crawler")(
               h1(titleGame(pov.game)),
               p(describePov(pov)),
-              div(cls := "pgn")(pgn.render)
+              div(cls := "kif")(kif.render)
             )
           ),
           div(cls := "round__board main-board")(shogiground(pov))

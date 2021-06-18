@@ -65,7 +65,7 @@ final private class GameJson(
         "perf"    -> perfJson(game),
         "rated"   -> game.rated,
         "players" -> playersJson(game),
-        "pgn"     -> game.shogi.pgnMoves.take(plies + 1).mkString(" ")
+        "kif"     -> game.shogi.kifMoves.take(plies + 1).mkString(" ")
       )
       .add("clock", game.clock.map(_.config.show))
 
@@ -98,11 +98,11 @@ final private class GameJson(
         "players" -> playersJson(game),
         "rated"   -> game.rated,
         "treeParts" -> {
-          val pgnMoves = game.pgnMoves.take(plies + 1)
+          val kifMoves = game.kifMoves.take(plies + 1)
           for {
-            pgnMove <- pgnMoves.lastOption
+            kifMove <- kifMoves.lastOption
             situation <- shogi.Replay
-              .situations(pgnMoves, None, game.variant)
+              .situations(kifMoves, None, game.variant)
               .valueOr { err =>
                 sys.error(s"GameJson.generateBc ${game.id} $err")
               }
@@ -111,7 +111,7 @@ final private class GameJson(
           } yield Json.obj(
             "fen"   -> Forsyth.>>(situation),
             "ply"   -> (plies + 1),
-            "san"   -> pgnMove,
+            "san"   -> kifMove,
             "id"    -> UciCharPair(uciMove).toString,
             "uci"   -> uciMove.uci,
             "crazy" -> Forsyth.exportCrazyPocket(situation.board)

@@ -68,7 +68,7 @@ case class Tags(value: List[Tag]) extends AnyVal {
 object Tags {
   val empty = Tags(Nil)
 
-  // according to http://www.saremba.de/chessgml/standards/pgn/pgn-complete.htm#c8.1.1
+  // according to http://www.saremba.de/chessgml/standards/kif/kif-complete.htm#c8.1.1
   val sevenTagRoster = List(
     Tag.Event,
     Tag.Site,

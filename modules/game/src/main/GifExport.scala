@@ -103,7 +103,7 @@ final class GifExport(
 
   private def frames(game: Game, initialFen: Option[FEN]) = {
     Replay.gameMoveWhileValid(
-      game.pgnMoves,
+      game.kifMoves,
       initialFen.map(_.value) | game.variant.initialFen,
       game.variant
     ) match {

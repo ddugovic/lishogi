@@ -4,7 +4,7 @@ package format.kif
 class TagTest extends ShogiTest {
 
   "Tags" should {
-    // http://www.saremba.de/chessgml/standards/pgn/pgn-complete.htm#c8.1.1
+    // http://www.saremba.de/chessgml/standards/kif/kif-complete.htm#c8.1.1
     "be sorted" in {
       Tags(
         List(

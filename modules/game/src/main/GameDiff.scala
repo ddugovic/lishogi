@@ -74,10 +74,10 @@ object GameDiff {
         ByteArrayBSONHandler.writeOpt(BinaryFormat.periodEntries.writeSide(x))
       }
 
-    // if (false) dTry(huffmanPgn, _.pgnMoves, writeBytes compose PgnStorage.Huffman.encode)
+    // if (false) dTry(huffmanKif, _.kifMoves, writeBytes compose KifStorage.Huffman.encode)
     // else {
-    val f = PgnStorage.OldBin
-    dTry(oldPgn, _.pgnMoves, writeBytes compose f.encode)
+    val f = KifStorage.OldBin
+    dTry(oldKif, _.kifMoves, writeBytes compose f.encode)
     dTry(binaryPieces, _.board.pieces, writeBytes compose BinaryFormat.piece.write)
     d(positionHashes, _.history.positionHashes, w.bytes)
     d(historyLastMove, _.history.lastMove.map(_.uci) | "", w.str)

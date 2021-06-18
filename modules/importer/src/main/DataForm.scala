@@ -14,12 +14,12 @@ final class DataForm {
 
   lazy val importForm = Form(
     mapping(
-      "pgn"     -> nonEmptyText.verifying("invalidPgn", p => checkPgn(p).isSuccess),
+      "kif"     -> nonEmptyText.verifying("invalidKif", p => checkKif(p).isSuccess),
       "analyse" -> optional(nonEmptyText)
     )(ImportData.apply)(ImportData.unapply)
   )
 
-  def checkPgn(pgn: String): Valid[Preprocessed] = ImportData(pgn, none).preprocess(none)
+  def checkKif(kif: String): Valid[Preprocessed] = ImportData(kif, none).preprocess(none)
 }
 
 private case class TagResult(status: Status, winner: Option[Color])
@@ -30,7 +30,7 @@ case class Preprocessed(
     parsed: ParsedKifu
 )
 
-case class ImportData(pgn: String, analyse: Option[String]) {
+case class ImportData(kif: String, analyse: Option[String]) {
 
   private type TagPicker = Tag.type => TagType
 
@@ -43,9 +43,9 @@ case class ImportData(pgn: String, analyse: Option[String]) {
     }
 
   def preprocess(user: Option[String]): Valid[Preprocessed] =
-    Parser.full(pgn) flatMap { parsed =>
+    Parser.full(kif) flatMap { parsed =>
       Reader.fullWithSans(
-        pgn,
+        kif,
         sans => sans.copy(value = sans.value take maxPlies),
         Tags.empty
       ) map evenIncomplete map { case replay @ Replay(setup, _, state) =>
@@ -88,7 +88,7 @@ case class ImportData(pgn: String, analyse: Option[String]) {
             gotePlayer = Player.make(shogi.Gote, None) withName name(_.Gote, _.GoteElo),
             mode = Mode.Casual,
             source = Source.Import,
-            pgnImport = PgnImport.make(user = user, date = date, pgn = pgn).some
+            kifImport = KifImport.make(user = user, date = date, kif = kif).some
           )
           .sloppy
           .start pipe { dbGame =>

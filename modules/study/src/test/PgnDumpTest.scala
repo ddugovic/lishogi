@@ -7,11 +7,11 @@ import shogi.Hands
 import Node._
 import org.specs2.mutable._
 
-class PgnDumpTest extends Specification {
+class KifDumpTest extends Specification {
 
-  implicit private val flags = PgnDump.WithFlags(true, true, true)
+  implicit private val flags = KifDump.WithFlags(true, true, true)
 
-  val P = PgnDump
+  val P = KifDump
 
   def node(ply: Int, uci: String, san: String, children: Children = emptyChildren) =
     Node(

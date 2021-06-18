@@ -8,7 +8,7 @@ import lila.common.LightUser
 import lila.importer.{ ImportData, Preprocessed }
 import lila.tree.Node.{ Comment, Comments, Shapes }
 
-object PgnImport {
+object KifImport {
 
   case class Result(
       root: Node.Root,
@@ -24,11 +24,11 @@ object PgnImport {
       statusText: String
   )
 
-  def apply(pgn: String, contributors: List[LightUser]): Valid[Result] =
-    ImportData(pgn, analyse = none).preprocess(user = none).map {
-      case Preprocessed(game, replay, initialFen, parsedPgn) =>
-        val annotator = findAnnotator(parsedPgn, contributors)
-        parseComments(parsedPgn.initialPosition.comments, annotator) match {
+  def apply(kif: String, contributors: List[LightUser]): Valid[Result] =
+    ImportData(kif, analyse = none).preprocess(user = none).map {
+      case Preprocessed(game, replay, initialFen, parsedKif) =>
+        val annotator = findAnnotator(parsedKif, contributors)
+        parseComments(parsedKif.initialPosition.comments, annotator) match {
           case (shapes, _, comments) =>
             val root = Node.Root(
               ply = replay.setup.turns,
@@ -37,13 +37,13 @@ object PgnImport {
               shapes = shapes,
               comments = comments,
               glyphs = Glyphs.empty,
-              clock = parsedPgn.tags.clockConfig.map(_.limit),
+              clock = parsedKif.tags.clockConfig.map(_.limit),
               crazyData = replay.setup.situation.board.crazyData,
               children = Node.Children {
-                val variations = makeVariations(parsedPgn.sans.value, replay.setup, annotator)
+                val variations = makeVariations(parsedKif.sans.value, replay.setup, annotator)
                 makeNode(
                   prev = replay.setup,
-                  sans = parsedPgn.sans.value,
+                  sans = parsedKif.sans.value,
                   annotator = annotator
                 ).fold(variations)(_ :: variations).toVector
               }
@@ -65,14 +65,14 @@ object PgnImport {
             Result(
               root = commented,
               variant = game.variant,
-              tags = PgnTags(parsedPgn.tags),
+              tags = KifTags(parsedKif.tags),
               end = end
             )
         }
     }
 
-  private def findAnnotator(pgn: ParsedKifu, contributors: List[LightUser]): Option[Comment.Author] =
-    pgn tags "annotator" map { a =>
+  private def findAnnotator(kif: ParsedKifu, contributors: List[LightUser]): Option[Comment.Author] =
+    kif tags "annotator" map { a =>
       val lowered = a.toLowerCase
       contributors.find { c =>
         c.name == lowered || c.titleName == lowered || lowered.endsWith(s"/${c.id}")
@@ -152,12 +152,12 @@ object PgnImport {
       }
     } catch {
       case _: StackOverflowError =>
-        logger.warn(s"study PgnImport.makeNode StackOverflowError")
+        logger.warn(s"study KifImport.makeNode StackOverflowError")
         None
     }
 
   /*
-   * Fix bad PGN like this one found on reddit:
+   * Fix bad KIF like this one found on reddit:
    * 7. c4 (7. c4 Nf6) (7. c4 dxc4) 7... cxd4
    * where 7. c4 appears three times
    */

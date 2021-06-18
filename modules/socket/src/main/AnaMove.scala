@@ -27,7 +27,7 @@ case class AnaMove(
 
   def branch: Valid[Branch] = {
     shogi.Game(variant.some, fen.some)(orig, dest, promotion) flatMap { case (game, move) =>
-      game.pgnMoves.lastOption toValid "Moved but no last move!" map { san =>
+      game.kifMoves.lastOption toValid "Moved but no last move!" map { san =>
         val uci     = Uci(move)
         val movable = game.situation playable false
         val fen     = shogi.format.Forsyth >> game

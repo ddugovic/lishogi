@@ -50,7 +50,7 @@ final private class PovToEntry(
               boards <-
                 shogi.Replay
                   .boards(
-                    moveStrs = game.pgnMoves,
+                    moveStrs = game.kifMoves,
                     initialFen = fen,
                     variant = game.variant
                   )
@@ -75,8 +75,8 @@ final private class PovToEntry(
           }
       }
 
-  private def pgnMoveToRole(pgn: String): Role =
-    pgn.head match {
+  private def kifMoveToRole(kif: String): Role =
+    kif.head match {
       case 'N'       => shogi.Knight
       case 'B'       => shogi.Bishop
       case 'R'       => shogi.Rook
@@ -92,7 +92,7 @@ final private class PovToEntry(
       }
     }
     val movetimes = from.movetimes.toList
-    val roles     = from.pov.game.pgnMoves(from.pov.color) map pgnMoveToRole
+    val roles     = from.pov.game.kifMoves(from.pov.color) map kifMoveToRole
     val boards = {
       val pivot = if (from.pov.color == from.pov.game.startColor) 0 else 1
       from.boards.toList.zipWithIndex.collect {
@@ -190,11 +190,11 @@ final private class PovToEntry(
       perf = perfType,
       eco =
         if (game.playable || game.turns < 4 || game.fromPosition || game.variant.exotic) none
-        else shogi.opening.Ecopening fromGame game.pgnMoves.toList,
-      myCastling = Castling.fromMoves(game pgnMoves pov.color),
+        else shogi.opening.Ecopening fromGame game.kifMoves.toList,
+      myCastling = Castling.fromMoves(game kifMoves pov.color),
       opponentRating = opRating,
       opponentStrength = RelativeStrength(opRating - myRating),
-      opponentCastling = Castling.fromMoves(game pgnMoves !pov.color),
+      opponentCastling = Castling.fromMoves(game kifMoves !pov.color),
       moves = makeMoves(from),
       queenTrade = queenTrade(from),
       result = game.winnerUserId match {
