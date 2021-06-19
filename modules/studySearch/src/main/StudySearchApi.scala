@@ -72,7 +72,6 @@ final class StudySearchApi(
     Tag.Round,
     Tag.Sente,
     Tag.Gote,
-    Tag.ECO,
     Tag.Opening,
     Tag.Annotator
   )

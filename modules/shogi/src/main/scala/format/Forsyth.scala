@@ -6,9 +6,8 @@ import variant.{ Standard, Variant }
 /** Transform a game to standard Forsyth Edwards Notation
   * http://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
   *
-  * Crazyhouse & Threecheck extensions:
+  * Crazyhouse extension:
   * https://github.com/ddugovic/Stockfish/wiki/FEN-extensions
-  * http://scidb.sourceforge.net/help/en/FEN.html#ThreeCheck
   */
 object Forsyth {
 
@@ -31,14 +30,6 @@ object Forsyth {
     }
 
   def <<(rawSource: String): Option[Situation] = <<@(Standard, rawSource)
-
-  case class SituationPlus(situation: Situation, moveNumber: Int) {
-
-    def turns = fullMoveNumber * 2 - (if (situation.color.sente) 2 else 1)
-
-    def fullMoveNumber = 1 + (moveNumber - 1) / 2
-
-  }
 
   def <<<@(variant: Variant, rawSource: String): Option[SituationPlus] =
     read(rawSource) { source =>

@@ -285,7 +285,7 @@ case class Game(
           case Some(ch) =>
             start.withClockAndHistory(
               c.nextPeriod(turnColor),
-              ch.enteredNewPeriod(turnColor, shogi.fullMoveNumber)
+              ch.enteredNewPeriod(turnColor, shogi.moveNumber / 2)
             )
           case _ => start.withClock(c.nextPeriod(turnColor))
         }

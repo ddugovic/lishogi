@@ -68,17 +68,15 @@ case class Tags(value: List[Tag]) extends AnyVal {
 object Tags {
   val empty = Tags(Nil)
 
-  // according to http://www.saremba.de/chessgml/standards/kif/kif-complete.htm#c8.1.1
-  val sevenTagRoster = List(
+  val tagIndex: Map[TagType, Int] = List(
     Tag.Event,
     Tag.Site,
     Tag.Date,
     Tag.Round,
     Tag.Sente,
     Tag.Gote,
-    Tag.Result
-  )
-  val tagIndex: Map[TagType, Int] = sevenTagRoster.zipWithIndex.toMap
+    Tag.Handicap
+  ).zipWithIndex.toMap
 
   private val DateRegex = """(\d{4}|\?{4})\.(\d\d|\?\?)\.(\d\d|\?\?)""".r
 }
@@ -111,7 +109,6 @@ object Tag {
   case object Result          extends TagType
   case object FEN             extends TagType
   case object Variant         extends TagType
-  case object ECO             extends TagType
   case object Opening         extends TagType
   case object Termination     extends TagType
   case object Annotator       extends TagType
@@ -144,7 +141,6 @@ object Tag {
     Result,
     FEN,
     Variant,
-    ECO,
     Opening,
     Termination,
     Annotator,

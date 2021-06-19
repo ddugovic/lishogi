@@ -30,13 +30,11 @@ final class KifDump(
     tagsFuture map { ts =>
       val turns = flags.moves ?? {
         val fenSituation = ts.fen.map(_.value) flatMap Forsyth.<<<
-        val moves2 =
-          if (fenSituation.exists(_.situation.color.gote)) ".." +: game.kifMoves
-          else game.kifMoves
+        val moves2 = game.kifMoves
         val moves3 =
           if (flags.delayMoves > 0) moves2 dropRight flags.delayMoves
           else moves2
-        makeTurns(
+        makeTurnsWithClocks(
           moves3,
           fenSituation.map(_.fullMoveNumber) | 1,
           flags.clocks ?? ~game.bothClockStates,
@@ -119,7 +117,6 @@ final class KifDump(
           teams.map { t => Tag("GoteTeam", t.gote) },
           Tag(_.Variant, game.variant.name.capitalize).some,
           Tag.timeControl(game.clock.map(_.config)).some,
-          Tag(_.ECO, game.opening.fold("?")(_.opening.eco)).some,
           withOpening option Tag(_.Opening, game.opening.fold("?")(_.opening.name)),
           Tag(
             _.Termination, {
@@ -143,7 +140,7 @@ final class KifDump(
       }
     }
 
-  private def makeTurns(
+  private def makeTurnsWithClocks(
       moves: Seq[String],
       from: Int,
       clocks: Vector[Centis],
@@ -156,13 +153,13 @@ final class KifDump(
         sente = moves.headOption filter (".." !=) map { san =>
           shogiKif.Move(
             san = san,
-            secondsLeft = clocks lift (index * 2 - clockOffset) map (_.roundSeconds)
+            secondsLeft = clocks lift (index - clockOffset) map (_.roundSeconds)
           )
         },
         gote = moves lift 1 map { san =>
           shogiKif.Move(
             san = san,
-            secondsLeft = clocks lift (index * 2 + 1 - clockOffset) map (_.roundSeconds)
+            secondsLeft = clocks lift (index + 1 - clockOffset) map (_.roundSeconds)
           )
         }
       )

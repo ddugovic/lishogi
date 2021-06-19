@@ -69,7 +69,6 @@ final class KifDump(
         Tag(_.UTCDate, Tag.UTCDate.format.print(chapter.createdAt)),
         Tag(_.UTCTime, Tag.UTCTime.format.print(chapter.createdAt)),
         Tag(_.Variant, chapter.setup.variant.name.capitalize),
-        Tag(_.ECO, opening.fold("?")(_.eco)),
         Tag(_.Opening, opening.fold("?")(_.name)),
         Tag(_.Result, "*") // required for SCID to import
       ) ::: List(annotatorTag(study)) ::: (chapter.root.fen.value != Forsyth.initial).??(
@@ -138,7 +137,7 @@ object KifDump {
 
   def toTurn(first: Node, second: Option[Node], variations: Variations)(implicit flags: WithFlags) =
     shogiKif.Turn(
-      number = first.fullMoveNumber,
+      number = 1 + first.ply,
       sente = node2move(first, variations).some,
       gote = second map { node2move(_, first.children.variations) }
     )

@@ -74,11 +74,6 @@ case class Game(
 
   def isStandardInit = board.pieces == shogi.variant.Standard.pieces
 
-  /** Fullmove number: The number of the full move.
-    * It starts at 1, and is incremented after Gote's move.
-    */
-  def fullMoveNumber: Int = 1 + turns / 2
-
   def moveNumber: Int = 1 + turns
 
   def moveString = s"${moveNumber}."
