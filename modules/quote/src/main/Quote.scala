@@ -1588,6 +1588,7 @@ object Quote {
     new Quote("We will never display ads.", "lichess.org"),
     new Quote("We do not track you. It's a rare feature, nowadays.", "lichess.org"),
     new Quote("Every chess player is a premium user.", "lichess.org"),
+    new Quote("All of life is relationship. We relate to people, things, and ideas, and our actions reflect the tone and substance of each relationship. How we relate to money, to the ideal of love, to nature, to our concept of death, and to our spouse reveals, in the moment, the truth of ourselves.", "John McAfee"),
     new Quote("I never lose. I either win or learn.", "Nelson Mandela")
   )
 
