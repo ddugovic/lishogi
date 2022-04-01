@@ -14,7 +14,7 @@ object PoolList {
 
   val json = Json toJson all
 
-  implicit private class PimpedInt(self: Int) {
+  implicit private class LilaInt(self: Int) {
     def ++(increment: Int) = shogi.Clock.Config(self * 60, increment, 0, 0)
     def players            = NbPlayers(self)
   }
