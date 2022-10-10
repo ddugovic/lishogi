@@ -46,7 +46,7 @@ lazy val modules = Seq(
   playban, insight, perfStat, slack, quote, challenge,
   study, studySearch, fishnet, explorer, learn, plan,
   event, coach, practice, evalCache, irwin,
-  activity, relay, streamer, bot, clas, swiss, storm
+  activity, relay, streamer, bot, clas, swiss, storm, ublog
 )
 
 lazy val moduleRefs = modules map projectToRef
@@ -68,7 +68,7 @@ lazy val i18n = module("i18n",
     MessageCompiler(
       sourceDir = new File("translation/source"),
       destDir = new File("translation/dest"),
-      dbs = "site arena emails learn activity coordinates study class contact patron coach broadcast streamer tfa settings preferences team perfStat search tourname faq lag swiss puzzle puzzleTheme storm".split(' ').toList,
+      dbs = "site arena emails learn activity coordinates study class contact patron coach broadcast streamer tfa settings preferences team perfStat search tourname faq lag swiss puzzle puzzleTheme storm ublog".split(' ').toList,
       compileTo = (Compile / sourceManaged).value
     )
   }.taskValue
@@ -112,6 +112,11 @@ lazy val coordinate = module("coordinate",
 )
 
 lazy val blog = module("blog",
+  Seq(common, memo, timeline),
+  Seq(prismic, specs2) ++ flexmark.bundle ++ reactivemongo.bundle
+)
+
+lazy val ublog = module("ublog",
   Seq(common, memo, timeline),
   Seq(prismic, specs2) ++ flexmark.bundle ++ reactivemongo.bundle
 )
@@ -222,7 +227,7 @@ lazy val pool = module("pool",
 )
 
 lazy val activity = module("activity",
-  Seq(common, game, analyse, user, forum, study, pool, puzzle, tournament, practice, team),
+  Seq(common, game, analyse, user, forum, study, pool, puzzle, tournament, practice, team, ublog),
   reactivemongo.bundle
 )
 

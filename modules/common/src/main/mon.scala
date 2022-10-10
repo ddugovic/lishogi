@@ -635,6 +635,17 @@ object mon {
       )
     def timeout(name: String) = counter("workQueue.timeout").withTag("name", name)
   }
+  object markdown {
+    val time = timer("markdown.time").withoutTags()
+  }
+  object ublog {
+    def create(user: String) = counter("ublog.create").withTag("user", user)
+    def view(user: String)   = counter("ublog.view").withTag("user", user)
+  }
+  object picfit {
+    def uploadTime(user: String) = future("picfit.upload.time", Map("user" -> user))
+    def uploadSize(user: String) = histogram("picfit.upload.size").withTag("user", user)
+  }
 
   def chronoSync[A] = lila.common.Chronometer.syncMon[A] _
 
@@ -655,6 +666,8 @@ object mon {
   private def histogram(name: String) = backend.histogram(name)
 
   private def future(name: String) = (success: Boolean) => timer(name).withTag("success", successTag(success))
+  private def future(name: String, tags: Map[String, String]) = (success: Boolean) =>
+    timer(name).withTags(tags + ("success" -> successTag(success)))
   private def future(name: String, segment: String) =
     (success: Boolean) =>
       timer(name).withTags(
@@ -662,6 +675,7 @@ object mon {
       )
 
   private def successTag(success: Boolean) = if (success) "success" else "failure"
+  private def hitTag(hit: Boolean)         = if (hit) "hit" else "miss"
 
   private def apiTag(api: Option[ApiVersion]) = api.fold("-")(_.toString)
 

@@ -75,6 +75,10 @@ private object BSONHandlers {
   implicit private lazy val postIdHandler = BSONStringHandler.as[PostId](PostId.apply, _.value)
   implicit lazy val postsHandler = isoHandler[Posts, List[PostId]]((p: Posts) => p.value, Posts.apply _)
 
+  implicit private lazy val ublogPostIdHandler = BSONStringHandler.as[UblogPostId](UblogPostId.apply, _.value)
+  implicit lazy val ublogPostsHandler =
+    isoHandler[UblogPosts, List[UblogPostId]]((p: UblogPosts) => p.value, UblogPosts.apply _)
+
   implicit lazy val puzzlesHandler = isoHandler[Puzzles, Score]((p: Puzzles) => p.score, Puzzles.apply _)
 
   implicit lazy val stormHandler = new lila.db.BSON[Storm] {
@@ -117,6 +121,7 @@ private object BSONHandlers {
     val id       = "_id"
     val games    = "g"
     val posts    = "p"
+    val ublogPosts = "u"
     val puzzles  = "z"
     val storm    = "m"
     val practice = "r"
@@ -138,6 +143,7 @@ private object BSONHandlers {
         id = r.get[Id](id),
         games = r.getO[Games](games),
         posts = r.getO[Posts](posts),
+        ublogPosts = r.getO[UblogPosts](ublogPosts),
         puzzles = r.getO[Puzzles](puzzles),
         storm = r.getO[Storm](storm),
         practice = r.getO[Practice](practice),
@@ -155,6 +161,7 @@ private object BSONHandlers {
         id       -> o.id,
         games    -> o.games,
         posts    -> o.posts,
+        ublogPosts -> o.ublogPosts,
         puzzles  -> o.puzzles,
         storm    -> o.storm,
         practice -> o.practice,

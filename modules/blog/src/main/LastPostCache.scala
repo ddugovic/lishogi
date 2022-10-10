@@ -29,6 +29,7 @@ final class LastPostCache(
             _ ?? {
               _.currentPageResults.toList flatMap MiniPost.fromDocument(
                 config.collection,
+                imgSize = "ublog",
                 langCode = langCode
               )
             }

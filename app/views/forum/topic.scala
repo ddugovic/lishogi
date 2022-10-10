@@ -94,7 +94,9 @@ object topic {
       main(cls := "forum forum-topic page-small box box-pad")(
         h1(
           a(
-            href     := routes.ForumCateg.show(categ.slug),
+            href := topic.ublogId.fold(s"${routes.ForumCateg.show(categ.slug)}") { id =>
+              routes.Ublog.redirect(id).url
+            },
             dataIcon := "I",
             cls      := "text"
           ),
@@ -148,7 +150,7 @@ object topic {
                   if (topic.hidden) "Feature" else "Un-feature"
                 )
               ),
-            canModCateg option
+            canModCateg || (topic.isUblog && ctx.me.exists(topic.isAuthor)) option
               postForm(action := routes.ForumTopic.close(categ.slug, topic.slug))(
                 button(cls := "button button-empty button-red")(
                   if (topic.closed) "Reopen" else "Close"

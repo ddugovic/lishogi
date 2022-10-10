@@ -42,6 +42,7 @@ final class Env(
     challengeEnv: lila.challenge.Env,
     socketEnv: lila.socket.Env,
     msgEnv: lila.msg.Env,
+    ublogApi: lila.ublog.UblogApi,
     cacheApi: lila.memo.CacheApi,
     ws: WSClient,
     val mode: Mode

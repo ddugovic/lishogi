@@ -4,6 +4,7 @@ import lila.api.Context
 import lila.app.templating.Environment._
 import lila.app.ui.ScalatagsTemplate._
 import lila.common.BlogLangs
+import lila.ublog.UblogPost
 
 import controllers.routes
 
@@ -84,26 +85,23 @@ object bits {
       )
     )
 
-  def lastPosts(posts: List[lila.blog.MiniPost])(implicit ctx: Context): Option[Frag] = {
-    posts.nonEmpty option
-      div(cls := "lobby__blog lobby__box")(
-        a(cls := "lobby__box__top", href := routes.Blog.index())(
-          h2(cls := "title text", dataIcon := "6")(trans.latestUpdates()),
-          span(cls := "more")(trans.more(), " »")
-        ),
-        div(cls := "lobby__box__content")(
-          posts filter { post => post.langCode == BlogLangs.parse(ctx.lang.code) } map { post =>
-            a(cls     := "post", href := routes.Blog.show(post.id, post.slug))(
-              img(src := post.image),
-              span(cls := "text")(
-                strong(post.title),
-                span(post.shortlede)
-              ),
-              semanticDate(post.date)
-            )
-          }
+  def lastPosts(lishogi: List[lila.blog.MiniPost], uposts: List[lila.ublog.UblogPost.PreviewPost])(implicit ctx: Context): Frag = {
+    div(cls := "lobby__blog ublog-post-cards")(
+      lishogi map { post =>
+        a(cls := "ublog-post-card ublog-post-card--link", href := routes.Blog.show(post.id, post.slug))(
+          img(
+            src     := post.image,
+            cls     := "ublog-post-card__image",
+            widthA  := UblogPost.thumbnail.Small.width,
+            heightA := UblogPost.thumbnail.Small.height
+          ),
+          span(cls := "ublog-post-card__content")(
+            h2(cls := "ublog-post-card__title")(post.title),
+            semanticDate(post.date)(ctx.lang)(cls := "ublog-post-card__over-image")
+          )
         )
-      )
+      },
+      ctx.noKid option (uposts map { views.html.ublog.post.card(_, showAuthor = false, showIntro = false) })
   }
 
   def playbanInfo(ban: lila.playban.TempBan)(implicit ctx: Context) =

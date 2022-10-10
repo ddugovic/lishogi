@@ -71,6 +71,12 @@ object header {
           )(
             splitNumber(trans.nbForumPosts.pluralSame(info.nbPosts))
           ),
+          ctx.noKid && (info.ublog.exists(_.nbPosts > 0) || ctx.is(u)) option a(
+            cls  := "nm-item",
+            href := routes.Ublog.index(u.username)
+          )(
+            splitNumber(s"${info.ublog.??(_.nbPosts)} blog posts")
+          ),
           (ctx.isAuth && ctx.noKid && !ctx.is(u)) option
             a(cls := "nm-item note-zone-toggle")(splitNumber(s"${social.notes.size} Notes"))
         ),
@@ -264,6 +270,9 @@ object header {
             )
           )
       },
+      info.ublog.??(_.latests).nonEmpty option div(cls := "user-show__blog ublog-post-cards")(
+        info.ublog.??(_.latests) map { views.html.ublog.post.card(_, showAuthor = false) }
+      ),
       div(cls := "angles number-menu number-menu--tabs menu-box-pop")(
         a(
           dataTab := "activity",

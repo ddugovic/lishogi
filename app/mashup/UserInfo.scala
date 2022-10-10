@@ -9,6 +9,7 @@ import lila.forum.PostApi
 import lila.game.Crosstable
 import lila.relation.RelationApi
 import lila.security.Granter
+import lila.ublog.{ UblogApi, UblogPost }
 import lila.user.{ Trophies, TrophyApi, User }
 
 case class UserInfo(
@@ -20,6 +21,7 @@ case class UserInfo(
     nbFollowers: Int,
     nbBlockers: Option[Int],
     nbPosts: Int,
+    ublog: Option[UblogPost.BlogPreview],
     nbStudies: Int,
     trophies: Trophies,
     shields: List[lila.tournament.TournamentShield.Award],

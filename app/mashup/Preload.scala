@@ -11,6 +11,7 @@ import lila.streamer.LiveStreams
 import lila.timeline.Entry
 import lila.tournament.{ Tournament, Winner }
 import lila.tv.Tv
+import lila.ublog.UblogPost
 import lila.user.LightUserApi
 import lila.user.User
 import play.api.libs.json._
@@ -29,7 +30,8 @@ final class Preload(
     lightUserApi: LightUserApi,
     roundProxy: lila.round.GameProxyRepo,
     simulIsFeaturable: SimulIsFeaturable,
-    lastPostCache: lila.blog.LastPostCache
+    lastPostCache: lila.blog.LastPostCache,
+    lastPostsCache: AsyncLoadingCache[Unit, List[UblogPost.PreviewPost]]
 )(implicit ec: scala.concurrent.ExecutionContext) {
 
   import Preload._
@@ -79,6 +81,7 @@ final class Preload(
                 puzzle,
                 streams.excludeUsers(events.flatMap(_.hostedBy)),
                 lastPostCache.apply,
+                ublogPosts,
                 playban,
                 currentGame,
                 simulIsFeaturable,
@@ -130,6 +133,7 @@ object Preload {
       puzzle: Option[lila.puzzle.DailyPuzzle.WithHtml],
       streams: LiveStreams.WithTitles,
       lastPost: List[lila.blog.MiniPost],
+      ublogPosts: List[UblogPost.PreviewPost],
       playban: Option[TempBan],
       currentGame: Option[Preload.CurrentGame],
       isFeaturable: Simul => Boolean,

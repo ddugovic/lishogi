@@ -57,6 +57,14 @@ object timeline {
               title := topicName
             )(shorten(topicName, 30))
           )
+        case UblogPost(userId, id, slug, title) =>
+          trans.ublog.xPublishedY(
+            userLink(userId),
+            a(
+              href     := routes.Ublog.post(usernameOrId(userId), slug, id),
+              st.title := title
+            )(shorten(title, 40))
+          )
         case TourJoin(userId, tourId, tourName) =>
           trans.xCompetesInY(
             userIdLink(userId.some, withOnline = false),
@@ -108,6 +116,11 @@ object timeline {
           )
         case BlogPost(id, slug, title, _) =>
           a(cls := "text", dataIcon := "6", href := routes.Blog.show(id, slug))(title)
+        case UblogPostLike(userId, postId, postTitle) =>
+          trans.xLikesY(
+            userLink(userId),
+            a(href := routes.Ublog.redirect(postId))(postTitle)
+          )
         case StreamStart(id, name) =>
           views.html.streamer.bits
             .redirectLink(id)(cls := "text", dataIcon := "")(trans.xStartedStreaming(name))

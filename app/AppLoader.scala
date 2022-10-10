@@ -135,6 +135,7 @@ final class LilaComponents(ctx: ApplicationLoader.Context)
   lazy val video: Video                   = wire[Video]
   lazy val swiss: Swiss                   = wire[Swiss]
   lazy val storm: Storm                   = wire[Storm]
+  lazy val ublog: Ublog                   = wire[Ublog]
 
   // eagerly wire up all controllers
   val router: Router = {
