@@ -1,6 +1,8 @@
 package lila.common
 
+import play.api.mvc.Call
 import scala.concurrent.duration._
+import lila.base.LilaTypes
 
 case class ApiVersion(value: Int) extends AnyVal with IntValue with Ordered[ApiVersion] {
   def compare(other: ApiVersion) = Integer.compare(value, other.value)
@@ -120,7 +122,16 @@ object Domain {
   }
 }
 
+case class LangPath(value: String) extends AnyVal
+object LangPath { def apply(call: Call): LangPath = LangPath(call.url) }
+
 case class Strings(value: List[String]) extends AnyVal
+case class UserIds(value: List[String]) extends AnyVal
+case class Ints(value: List[Int])       extends AnyVal
+
+case class Template(value: String) extends AnyVal
+
+case class Days(value: Int) extends AnyVal with LilaTypes.IntValue
 
 case class Every(value: FiniteDuration)  extends AnyVal
 case class AtMost(value: FiniteDuration) extends AnyVal

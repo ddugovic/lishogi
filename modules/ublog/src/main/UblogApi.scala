@@ -17,7 +17,7 @@ final class UblogApi(
     userRepo: UserRepo,
     picfitApi: PicfitApi,
     timeline: lila.hub.actors.Timeline,
-    irc: lila.irc.IrcApi
+    slack: lila.slack.SlackApi
 )(implicit ec: ExecutionContext) {
 
   import UblogBsonHandlers._
@@ -120,7 +120,7 @@ final class UblogApi(
       colls.post.unsetField($id(post.id), "image") inject post.copy(image = none)
 
   private def sendPostToZulip(user: User, blog: UblogBlog, post: UblogPost): Funit =
-    irc.ublogPost(
+    slack.ublogPost(
       user,
       id = post.id.value,
       slug = post.slug,

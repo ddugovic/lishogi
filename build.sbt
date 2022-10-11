@@ -131,7 +131,7 @@ lazy val common = module("common",
   Seq(
     scalalib, galimatias, shogi, autoconfig,
     kamon.core, scalatags, jodaForms, scaffeine, specs2, apacheText
-  ) ++ reactivemongo.bundle ++ flexmark.bundle
+  ) ++ specs2Bundle ++ reactivemongo.bundle ++ flexmark.bundle
 )
 
 lazy val rating = module("rating",

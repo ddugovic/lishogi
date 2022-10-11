@@ -14,7 +14,7 @@ final class Env(
     userRepo: lila.user.UserRepo,
     timeline: lila.hub.actors.Timeline,
     picfitApi: lila.memo.PicfitApi,
-    ircApi: lila.irc.IrcApi,
+    slackApi: lila.slack.SlackApi,
     relationApi: lila.relation.RelationApi,
     captcher: lila.hub.actors.Captcher,
     cacheApi: lila.memo.CacheApi,

@@ -27,16 +27,17 @@ object config {
 
   case class MaxPerSecond(value: Int) extends AnyVal with IntValue
 
-  case class NetDomain(value: String)   extends AnyVal with StringValue
-  case class AssetDomain(value: String) extends AnyVal with StringValue
-  case class RateLimit(value: Boolean)  extends AnyVal
+  case class NetDomain(value: String)    extends AnyVal with StringValue
+  case class AssetDomain(value: String)  extends AnyVal with StringValue
+  case class AssetBaseUrl(value: String) extends AnyVal with StringValue
+  case class RateLimit(value: Boolean)   extends AnyVal
 
   case class NetConfig(
       domain: NetDomain,
       prodDomain: NetDomain,
       @ConfigName("base_url") baseUrl: BaseUrl,
       @ConfigName("asset.domain") assetDomain: AssetDomain,
-      @ConfigName("asset.base_url") assetBaseUrl: String,
+      @ConfigName("asset.base_url") assetBaseUrl: AssetBaseUrl,
       @ConfigName("socket.domains") socketDomains: List[String],
       crawlable: Boolean,
       @ConfigName("ratelimit") rateLimit: RateLimit,
@@ -55,6 +56,7 @@ object config {
   implicit val emailAddressLoader = strLoader(EmailAddress.apply)
   implicit val netDomainLoader    = strLoader(NetDomain.apply)
   implicit val assetDomainLoader  = strLoader(AssetDomain.apply)
+  implicit val assetBaseUrlLoader = strLoader(AssetBaseUrl.apply)
   implicit val ipLoader           = strLoader(IpAddress.apply)
   implicit val rateLimitLoader    = boolLoader(RateLimit.apply)
   implicit val netLoader          = AutoConfig.loader[NetConfig]
