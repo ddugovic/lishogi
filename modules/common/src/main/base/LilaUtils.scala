@@ -1,5 +1,6 @@
 package lila.base
 
+import alleycats.Zero
 import cats.data.Validated
 import com.typesafe.config.Config
 
@@ -9,7 +10,6 @@ import scala.concurrent.Future
 import scala.util.Try
 
 import org.joda.time.{ DateTime, Duration }
-import ornicar.scalalib.Zero
 
 import LilaTypes._
 

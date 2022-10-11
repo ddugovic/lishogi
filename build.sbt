@@ -74,17 +74,17 @@ lazy val i18n = module("i18n",
   }.taskValue
 )
 
+lazy val puzzle = module("puzzle",
+  Seq(common, memo, hub, history, db, user, rating, pref, tree, game),
+  reactivemongo.bundle
+)
+
 lazy val storm = module("storm",
   Seq(common, memo, hub, puzzle, db, user, rating, pref, tree),
   reactivemongo.bundle
 )
 
 lazy val compression = module("compression", Seq(), Seq(specs2))
-
-lazy val puzzle = module("puzzle",
-  Seq(common, memo, hub, history, db, user, rating, pref, tree, game),
-  reactivemongo.bundle
-)
 
 lazy val quote = module("quote",
   Seq(),
@@ -130,7 +130,7 @@ lazy val common = module("common",
   Seq(),
   Seq(
     scalalib, galimatias, shogi, autoconfig,
-    kamon.core, scalatags, jodaForms, scaffeine, specs2, apacheText
+    kamon.core, scalatags, jodaForms, scaffeine, apacheText
   ) ++ specs2Bundle ++ reactivemongo.bundle ++ flexmark.bundle
 )
 

@@ -132,6 +132,3 @@ case class Ints(value: List[Int])       extends AnyVal
 case class Template(value: String) extends AnyVal
 
 case class Days(value: Int) extends AnyVal with LilaTypes.IntValue
-
-case class Every(value: FiniteDuration)  extends AnyVal
-case class AtMost(value: FiniteDuration) extends AnyVal

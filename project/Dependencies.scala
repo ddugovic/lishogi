@@ -15,9 +15,9 @@ object Dependencies {
   val cats        = "org.typelevel"         %% "cats-core"                      % "2.8.0"
   val alleycats   = "org.typelevel"         %% "alleycats-core"                 % "2.8.0"
   val shogi       = "io.github.WandererXII" %% "scalashogi"                     % "2.0.0"
-  val scalalib    = "com.github.ornicar"   %% "scalalib"                        % "7.0.2"
+  val scalalib    = "com.github.ornicar"   %% "scalalib"                        % "7.1.0"
   val hasher      = "com.roundeights"      %% "hasher"                          % "1.2.1"
-  val jodaTime    = "joda-time"             % "joda-time"                       % "2.10.14"
+  val jodaTime    = "joda-time"             % "joda-time"                       % "2.11.1"
   val maxmind     = "com.sanoma.cda"       %% "maxmind-geoip2-scala"            % "1.3.1-THIB"
   val prismic     = "io.prismic"           %% "scala-kit"                       % "1.2.18-THIB213"
   val scrimage    = "com.sksamuel.scrimage" % "scrimage-core"                   % "4.0.22"
@@ -63,19 +63,20 @@ object Dependencies {
   }
 
   object play {
-    val version = "2.8.16"
-    val api     = "com.typesafe.play" %% "play"      % version
-    val json    = "com.typesafe.play" %% "play-json" % "2.9.2"
+    val version  = "2.8.16-lila_1.13"
+    val api      = "com.typesafe.play" %% "play"           % version
+    val json     = "com.typesafe.play" %% "play-json"      % "2.9.3"
+    val jsonJoda = "com.typesafe.play" %% "play-json-joda" % "2.9.3"
   }
   object kamon {
-    val version    = "2.2.3"
+    val version    = "2.5.7"
     val core       = "io.kamon" %% "kamon-core"           % version
     val influxdb   = "io.kamon" %% "kamon-influxdb"       % version
     val metrics    = "io.kamon" %% "kamon-system-metrics" % version
     val prometheus = "io.kamon" %% "kamon-prometheus"     % version
   }
   object akka {
-    val version    = "2.6.19"
+    val version    = "2.6.20"
     val akka       = "com.typesafe.akka" %% "akka-actor"       % version
     val akkaTyped  = "com.typesafe.akka" %% "akka-actor-typed" % version
     val akkaStream = "com.typesafe.akka" %% "akka-stream"      % version

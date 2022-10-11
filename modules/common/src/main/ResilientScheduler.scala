@@ -1,6 +1,7 @@
 package lila.common
 
 import akka.actor._
+import lila.common.config.{ AtMost, Every }
 import scala.concurrent.duration._
 
 object ResilientScheduler {
