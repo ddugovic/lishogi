@@ -47,11 +47,11 @@ final private class PovToEntry(
             situations <-
               shogi.Replay
                 .situations(
-                  usis = game.usiMoves,
+                  moves = game.moves,
                   initialSfen = game.initialSfen,
                   variant = game.variant
                 )
-                .toOption
+                .some
             movetimes <- game.moveTimes(pov.color).flatMap(_.toNel)
           } yield RichPov(
             pov = pov,
@@ -80,14 +80,7 @@ final private class PovToEntry(
       }
     }
     val movetimes = from.movetimes.toList
-    val roles =
-      shogi.Replay
-        .usiWithRoleWhilePossible(
-          from.pov.game.usiMoves,
-          from.pov.game.initialSfen,
-          from.pov.game.variant
-        )
-        .map(_.role)
+    val roles = from.pov.game.moves.map(_.role)
     val situations = {
       val pivot = if (from.pov.color == from.pov.game.startColor) 0 else 1
       from.situations.toList.zipWithIndex.collect {

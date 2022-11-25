@@ -1,6 +1,6 @@
 package lila.game
 
-import shogi.{ Clock, Color, Gote, Hands, Sente }
+import shogi.{ Clock, Color, Gote, Hands, Moves, Sente }
 import Game.BSONFields._
 import reactivemongo.api.bson._
 import scala.util.Try
@@ -75,9 +75,9 @@ object GameDiff {
       }
 
     d(
-      usiMoves,
-      _.usiMoves,
-      (usis: UsiMoves) => w.bytes(BinaryFormat.usi.write(usis, a.variant).value)
+      moves,
+      _.moves,
+      (moves: Moves) => w.bytes(BinaryFormat.usi.write(moves, a.variant).value)
     )
     d(positionHashes, _.history.positionHashes, w.bytes)
     d(

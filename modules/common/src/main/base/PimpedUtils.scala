@@ -9,7 +9,7 @@ import scala.concurrent.Future
 import scala.util.Try
 
 import org.joda.time.{ DateTime, Duration }
-import ornicar.scalalib.Zero
+import alleycats.Zero
 
 import LilaTypes._
 

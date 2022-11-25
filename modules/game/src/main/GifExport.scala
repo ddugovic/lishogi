@@ -9,7 +9,7 @@ import lila.common.Json._
 import lila.common.Maths
 import lila.common.config.BaseUrl
 
-import shogi.{ Centis, Color, Game => ShogiGame, Replay, Situation }
+import shogi.{ Centis, Color, Game => ShogiGame, Move, Replay, Situation }
 import shogi.format.forsyth.Sfen
 import shogi.format.usi.Usi
 
@@ -110,12 +110,12 @@ final class GifExport(
 
   private def frames(game: Game) = {
     Replay.gamesWhileValid(
-      game.usiMoves,
+      game.usis,
       game.initialSfen,
       game.variant
     ) match {
       case (games, _) =>
-        val steps = (games.head, None) :: games.tail.zip(game.usiMoves.map(_.some))
+        val steps = (games.head, None) :: games.tail.zip(game.moves.map(_.some))
         framesRec(
           steps.zip(scaleMoveTimes(~game.moveTimes).map(_.some).padTo(steps.length, None)),
           Json.arr()
@@ -124,12 +124,12 @@ final class GifExport(
   }
 
   @annotation.tailrec
-  private def framesRec(games: List[((ShogiGame, Option[Usi]), Option[Centis])], arr: JsArray): JsArray =
+  private def framesRec(games: List[((ShogiGame, Option[Move]), Option[Centis])], arr: JsArray): JsArray =
     games match {
-      case ((game, usi), scaledMoveTime) :: tail =>
+      case ((game, move), scaledMoveTime) :: tail =>
         // longer delay for last frame
         val delay = if (tail.isEmpty) Centis(500).some else scaledMoveTime
-        framesRec(tail, arr :+ frame(game.situation, usi, delay))
+        framesRec(tail, arr :+ frame(game.situation, move, delay))
       case _ => arr
     }
 

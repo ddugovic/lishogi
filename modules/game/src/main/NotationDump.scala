@@ -1,6 +1,5 @@
 package lila.game
 
-import shogi.Replay
 import shogi.format.kif.Kif
 import shogi.format.csa.Csa
 import shogi.format.{ Notation, NotationMove, Tag, Tags }
@@ -37,12 +36,7 @@ final class NotationDump(
           acc :+ (acc.takeRight(2).headOption.getOrElse(Centis(0)) + cur)
         )
         val clockOffset = game.startColor.fold(0, 1)
-        val extendedMoves = Replay.usiWithRoleWhilePossible(
-          game.usiMoves,
-          game.initialSfen,
-          game.variant
-        )
-        extendedMoves.zipWithIndex.map { case (usiWithRole, index) =>
+        game.moves.zipWithIndex.map { case (usiWithRole, index) =>
           NotationMove(
             moveNumber = index + game.shogi.startedAtMove,
             usiWithRole = usiWithRole,

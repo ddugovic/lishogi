@@ -1,6 +1,6 @@
 package controllers
 
-import ornicar.scalalib.Zero
+import alleycats.Zero
 import play.api.data.FormError
 import play.api.libs.json._
 import play.api.mvc._
@@ -465,7 +465,7 @@ final class Auth(
     }
 
   implicit private val limitedDefault =
-    Zero.instance[Result](TooManyRequests("Too many requests, try again later."))
+    Zero[Result](TooManyRequests("Too many requests, try again later."))
 
   private[controllers] def HasherRateLimit =
     PasswordHasher.rateLimit[Result](enforce = env.net.rateLimit) _

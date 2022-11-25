@@ -58,7 +58,7 @@ final class Player(
               initialSfen = game.initialSfen,
               studyId = none,
               variant = game.variant,
-              moves = game.usiMoves.map(_.usi) mkString " "
+              moves = game.moves.map(_.usi.usi) mkString " "
             ),
             level = level,
             clock = game.clock.map { clk =>

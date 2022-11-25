@@ -37,7 +37,8 @@ case class Game(
   def variant   = shogi.variant
   def plies     = shogi.plies
   def clock     = shogi.clock
-  def usiMoves  = shogi.usiMoves
+  def moves     = shogi.moves
+  def usis      = shogi.usis
 
   def initialSfen = history.initialSfen
 
@@ -176,13 +177,6 @@ case class Game(
   def bothClockStates: Option[Vector[Centis]] =
     clockHistory.map(_.bothClockStates(startColor, clock ?? (_.byoyomi)))
 
-  def usiMoves(color: Color): UsiMoves = {
-    val pivot = if (color == startColor) 0 else 1
-    usiMoves.zipWithIndex.collect {
-      case (e, i) if (i % 2) == pivot => e
-    }
-  }
-
   // apply a move
   def update(
       game: ShogiGame, // new shogi position
@@ -235,7 +229,7 @@ case class Game(
   }
 
   def lastMoveKeys: Option[String] =
-    history.lastMove map (_.usi)
+    history.lastMove map (_.usi.usi)
 
   def updatePlayer(color: Color, f: Player => Player) =
     color.fold(
@@ -583,7 +577,7 @@ case class Game(
 
   lazy val opening: Option[FullOpening.AtPly] =
     if (fromPosition || !Variant.openingSensibleVariants(variant)) none
-    else FullOpeningDB search usiMoves
+    else FullOpeningDB search moves
 
   def synthetic = id == Game.syntheticId
 
@@ -730,7 +724,7 @@ object Game {
     val playerIds         = "is"
     val playerUids        = "us"
     val playingUids       = "pl"
-    val usiMoves          = "um"
+    val moves             = "um"
     val status            = "s"
     val plies             = "t"
     val clock             = "c"

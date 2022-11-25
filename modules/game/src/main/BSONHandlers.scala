@@ -2,7 +2,7 @@ package lila.game
 
 import shogi.format.forsyth.Sfen
 import shogi.variant.Variant
-import shogi.{ Clock, Color, Game => ShogiGame, Gote, Hands, History => ShogiHistory, Mode, Sente, Status }
+import shogi.{ Clock, Color, Game => ShogiGame, Gote, Hands, History => ShogiHistory, Mode, Replay, Sente, Status }
 import org.joda.time.DateTime
 import reactivemongo.api.bson._
 import scala.util.Try
@@ -51,25 +51,26 @@ object BSONHandlers {
         )
         .getOrElse(PeriodEntries.default)
 
-      val usiMoves = BinaryFormat.usi.read(r bytesD F.usiMoves, gameVariant)
-      val pieces   = BinaryFormat.pieces.read(usiMoves, initialSfen, gameVariant)
+      val usis = BinaryFormat.usi.read(r bytesD F.moves, gameVariant)
+      val pieces   = BinaryFormat.pieces.read(usis, initialSfen, gameVariant)
 
       val positionHashes = r.getO[shogi.PositionHash](F.positionHashes) | Array.empty
       val hands          = r.strO(F.hands) flatMap { Sfen.makeHandsFromString(_, gameVariant) }
 
+      val moves = Replay.moveWhilePossible(usis, initialSfen, gameVariant)
       val shogiGame = ShogiGame(
         situation = shogi.Situation(
           shogi.Board(pieces = pieces),
           hands = hands.getOrElse(Hands.empty),
           color = plyColor,
           history = ShogiHistory(
-            lastMove = usiMoves.lastOption,
+            lastMove = moves.lastOption,
             positionHashes = positionHashes,
             initialSfen = initialSfen
           ),
           variant = gameVariant
         ),
-        usiMoves = usiMoves,
+        moves = moves,
         clock = r.getO[Color => Clock](F.clock) {
           clockBSONReader(createdAt, periodEntries, light.sentePlayer.berserk, light.gotePlayer.berserk)
         } map (_(plyColor)),
@@ -153,7 +154,7 @@ object BSONHandlers {
         F.analysed          -> w.boolO(o.metadata.analysed),
         F.positionHashes    -> o.history.positionHashes,
         F.hands             -> Sfen.handsToString(o.hands, o.variant),
-        F.usiMoves          -> BinaryFormat.usi.write(o.usiMoves, o.variant)
+        F.moves             -> BinaryFormat.usi.write(o.moves, o.variant)
       )
   }
 

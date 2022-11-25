@@ -231,16 +231,16 @@ final private[api] class GameApi(
             .add("analysis" -> analysisOption.flatMap(analysisJson.player(g pov p.color)))
         }),
         "analysis" -> analysisOption.ifTrue(withFlags.analysis).map(analysisJson.moves(_)),
-        "moves"    -> withFlags.moves.option(g.usiMoves.map(_.usi) mkString " "),
+        "moves"    -> withFlags.moves.option(g.moves.map(_.usi.usi) mkString " "),
         "opening"  -> withFlags.opening.??(g.opening),
         "sfens" -> (withFlags.sfens && g.finished) ?? {
           shogi.Replay
             .situations(
-              usis = g.usiMoves,
+              moves = g.moves,
               initialSfen = g.initialSfen,
               variant = g.variant
             )
-            .toOption map { sits =>
+            .some map { sits =>
             JsArray(sits.toList.map(_.toSfen.value) map JsString.apply)
           }
         },

@@ -101,7 +101,7 @@ final class Analyser(
         initialSfen = game.initialSfen,
         studyId = none,
         variant = game.variant,
-        moves = game.usiMoves.take(maxPlies).map(_.usi).mkString(" ")
+        moves = game.moves.take(maxPlies).map(_.usi.usi).mkString(" ")
       ),
       startPly = game.shogi.startedAtPly,
       sender = sender

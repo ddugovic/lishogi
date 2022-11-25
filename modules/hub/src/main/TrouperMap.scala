@@ -2,7 +2,7 @@ package lila.hub
 
 import com.github.benmanes.caffeine.cache._
 import java.util.concurrent.TimeUnit
-import ornicar.scalalib.Zero
+import alleycats.Zero
 import play.api.Mode
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.Promise

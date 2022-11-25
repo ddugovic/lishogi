@@ -20,7 +20,7 @@ object BinaryFormat {
       }
 
     def read(ba: ByteArray, variant: Variant): UsiMoves =
-      format.usi.Binary.decodeMoves(ba.value.toList, variant)
+      format.usi.Binary.decodeMoves(ba.value.toList, variant, lila.game.Game.maxPlies)
 
   }
 

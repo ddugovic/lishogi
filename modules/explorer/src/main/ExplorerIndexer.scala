@@ -158,7 +158,7 @@ final private class ExplorerIndexer(
         s"$$Start${dateFormatter.print(game.createdAt)}"
       )
       val allTags = sfenTags ::: otherTags
-      s"${allTags.mkString("\n")}\n\n${game.usiMoves.take(maxPlies).map(_.usi).mkString(" ")}".some
+      s"${allTags.mkString("\n")}\n\n${game.moves.take(maxPlies).map(_.usi.usi).mkString(" ")}".some
     })
 
   private val logger = lila.log("explorer")

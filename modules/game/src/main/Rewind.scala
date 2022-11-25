@@ -17,7 +17,7 @@ object Rewind {
   def apply(game: Game): Validated[String, Progress] =
     Reader
       .fromUsi(
-        usis = game.usiMoves.dropRight(1),
+        usis = game.usis.dropRight(1),
         tags = createTags(game)
       )
       .valid

@@ -2,7 +2,7 @@ package lila.game
 
 import lila.common.ThreadLocalRandom
 
-import shogi.{ Color, Status }
+import shogi.{ Color, Status, Usis }
 import org.joda.time.DateTime
 import reactivemongo.akkastream.{ cursorProducer, AkkaStreamCursor }
 import reactivemongo.api.commands.WriteResult
@@ -438,7 +438,7 @@ final class GameRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCont
       $doc(s"${F.notationImport}.h" -> NotationImport.hash(notation))
     )
 
-  def getOptionUsis(id: ID): Fu[Option[UsiMoves]] = game(id) dmap2 { _.usiMoves }
+  def getOptionUsis(id: ID): Fu[Option[Usis]] = game(id) dmap2 { _.usis }
 
   def lastGameBetween(u1: String, u2: String, since: DateTime): Fu[Option[Game]] =
     coll.one[Game](

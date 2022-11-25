@@ -42,10 +42,10 @@ object NotationImport {
               glyphs = Glyphs.empty,
               clock = parsedNotation.tags.clockConfig.map(_.limit),
               children = Node.Children {
-                val variations = makeVariations(parsedNotation.parsedMoves.value, replay.setup, annotator)
+                val variations = makeVariations(parsedNotation.parsedMoves, replay.setup, annotator)
                 makeNode(
                   prev = replay.setup,
-                  parsedMoves = parsedNotation.parsedMoves.value,
+                  parsedMoves = parsedNotation.parsedMoves,
                   annotator = annotator
                 ).fold(variations)(_ :: variations).toVector
               }
@@ -88,10 +88,10 @@ object NotationImport {
               glyphs = Glyphs.empty,
               clock = parsedNotation.tags.clockConfig.map(_.limit),
               children = Node.Children {
-                val variations = makeVariations(parsedNotation.parsedMoves.value, replay.setup, annotator)
+                val variations = makeVariations(parsedNotation.parsedMoves, replay.setup, annotator)
                 makeNode(
                   prev = replay.setup,
-                  parsedMoves = parsedNotation.parsedMoves.value,
+                  parsedMoves = parsedNotation.parsedMoves,
                   annotator = annotator
                 ).fold(variations)(_ :: variations).toVector
               }
@@ -124,7 +124,7 @@ object NotationImport {
   ) =
     parsedMoves.headOption.?? {
       _.metas.variations.flatMap { variation =>
-        makeNode(game, variation.value, annotator)
+        makeNode(game, variation, annotator)
       }
     }
 

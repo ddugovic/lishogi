@@ -10,7 +10,7 @@ import lila.mod.UserSearch
 import lila.report.{ Mod => AsMod, Suspect }
 import lila.security.{ FingerHash, Permission }
 import lila.user.{ Title, User => UserModel }
-import ornicar.scalalib.Zero
+import alleycats.Zero
 import play.api.data._
 import play.api.data.Forms._
 import play.api.mvc._

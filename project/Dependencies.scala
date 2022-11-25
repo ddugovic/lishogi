@@ -12,7 +12,7 @@ object Dependencies {
     val commons = Seq(sonatype, lilaMaven, sonatypeS)
   }
 
-  val shogi       = "io.github.WandererXII" %% "scalashogi"                     % "2.0.0"
+  val shogi       = "io.github.WandererXII" %% "scalashogi"                     % "2.1.0-SNAPSHOT"
   val scalalib    = "com.github.ornicar"   %% "scalalib"                        % "7.0.2"
   val hasher      = "com.roundeights"      %% "hasher"                          % "1.2.1"
   val jodaTime    = "joda-time"             % "joda-time"                       % "2.10.14"
