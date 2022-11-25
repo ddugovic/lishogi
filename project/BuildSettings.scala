@@ -1,11 +1,12 @@
 import play.sbt.PlayImport._
 import sbt._, Keys._
+import bloop.integrations.sbt.BloopKeys.bloopGenerate
 
 object BuildSettings {
 
   import Dependencies._
 
-  val lilaVersion        = "3.0"
+  val lilaVersion        = "3.2"
   val globalScalaVersion = "2.13.8"
 
   val useEpoll = sys.props.get("epoll").fold(false)(_.toBoolean)
@@ -13,34 +14,37 @@ object BuildSettings {
 
   def buildSettings =
     Defaults.coreDefaultSettings ++ Seq(
-      version := lilaVersion,
+      version      := lilaVersion,
       organization := "org.lishogi",
-      scalaVersion := globalScalaVersion,
+      //resolvers += lilaMaven,
       resolvers ++= Dependencies.Resolvers.commons,
+      scalaVersion := globalScalaVersion,
       scalacOptions ++= compilerOptions,
+      // No bloop project for tests
+      Test / bloopGenerate := None,
       // disable publishing doc and sources
-      Compile / doc / sources := Seq.empty,
+      Compile / doc / sources                := Seq.empty,
       Compile / packageDoc / publishArtifact := false,
       Compile / packageSrc / publishArtifact := false,
       Compile / run / fork                   := true,
-      javaOptions ++= Seq("-Xms64m", "-Xmx256m"),
+      javaOptions ++= Seq("-Xms64m", "-Xmx512m"),
       // com.typesafe.play:play-ahc-ws-standalone_2.13:2.1.3 brings in 0.9.0, but we want 1.0.0:
       libraryDependencySchemes += "org.scala-lang.modules" %% "scala-java8-compat" % "always"
     )
 
-  def defaultLibs: Seq[ModuleID] =
-    akka.bundle ++ Seq(
+  lazy val defaultLibs: Seq[ModuleID] =
+    akka.bundle ++ macwire.bundle ++ Seq(
+      cats,
+      alleycats,
       play.api,
-      scalalib,
       shogi,
+      scalalib,
       jodaTime,
       ws,
-      macwire.macros,
-      macwire.util,
       autoconfig
     )
 
-  def module(
+  def smallModule(
       name: String,
       deps: Seq[sbt.ClasspathDep[sbt.ProjectReference]],
       libs: Seq[ModuleID]
@@ -50,14 +54,19 @@ object BuildSettings {
       file("modules/" + name)
     ).dependsOn(deps: _*)
       .settings(
-        libraryDependencies ++= defaultLibs ++ libs,
+        libraryDependencies ++= libs,
         buildSettings,
         srcMain
       )
 
+  def module(
+      name: String,
+      deps: Seq[sbt.ClasspathDep[sbt.ProjectReference]],
+      libs: Seq[ModuleID]
+  ) =
+    smallModule(name, deps, defaultLibs ++ libs)
+
   val compilerOptions = Seq(
-    "-encoding",
-    "utf-8",
     "-explaintypes",
     "-feature",
     "-language:higherKinds",
@@ -65,7 +74,7 @@ object BuildSettings {
     "-language:postfixOps",
     "-Ymacro-annotations",
     // Warnings as errors!
-    //"-Xfatal-warnings",
+    "-Xfatal-warnings",
     // Linting options
     "-unchecked",
     "-Xcheckinit",
@@ -86,8 +95,8 @@ object BuildSettings {
     "-Wdead-code",
     "-Wextra-implicit",
     // "-Wnumeric-widen",
-    "-Wunused:imports",
-    //"-Wunused:locals",
+    // "-Wunused:imports",
+    // "-Wunused:locals",
     "-Wunused:patvars",
     // "-Wunused:privates",  // unfortunately doesn't work with wire macros
     // "-Wunused:implicits", // unfortunately doesn't work with wire macros
@@ -97,7 +106,7 @@ object BuildSettings {
 
   val srcMain = Seq(
     Compile / scalaSource := (Compile / sourceDirectory).value,
-    Test / scalaSource := (Test / sourceDirectory).value
+    Test / scalaSource    := (Test / sourceDirectory).value
   )
 
   def projectToRef(p: Project): ProjectReference = LocalProject(p.id)

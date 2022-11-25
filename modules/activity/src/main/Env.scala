@@ -12,6 +12,7 @@ final class Env(
     practiceApi: lila.practice.PracticeApi,
     gameRepo: lila.game.GameRepo,
     postApi: lila.forum.PostApi,
+    ublogApi: lila.ublog.UblogApi,
     simulApi: lila.simul.SimulApi,
     studyApi: lila.study.StudyApi,
     tourLeaderApi: lila.tournament.LeaderboardApi,
@@ -33,6 +34,7 @@ final class Env(
   lila.common.Bus.subscribeFun(
     "finishGame",
     "forumPost",
+    "ublogPost",
     "finishPuzzle",
     "finishPractice",
     "team",
@@ -46,6 +48,7 @@ final class Env(
   ) {
     case lila.game.actorApi.FinishGame(game, _, _) if !game.aborted => write.game(game).unit
     case lila.forum.actorApi.CreatePost(post)                       => write.forumPost(post).unit
+    case lila.ublog.UblogPost.Create(post)                => write.ublogPost(post).unit
     case res: lila.puzzle.Puzzle.UserResult                         => write.puzzle(res).unit
     case prog: lila.practice.PracticeProgress.OnComplete            => write.practice(prog).unit
     case lila.simul.Simul.OnStart(simul)                            => write.simul(simul).unit

@@ -42,6 +42,22 @@ GET   /rel/blocks                      controllers.Relation.blocks(page: Int ?= 
 # GET   /insights/:username/:metric/:dimension controllers.Insight.path(username: String, metric: String, dimension: String, filters: String = "")
 # GET   /insights/:username/:metric/:dimension/*filters controllers.Insight.path(username: String, metric: String, dimension: String, filters: String)
 
+# User blog
+GET   /@/:username/blog                controllers.Ublog.index(username, page: Int ?= 1)
+GET   /@/:username/blog/:slug/:id      controllers.Ublog.post(username, slug, id)
+GET   /@/:username/blog/drafts         controllers.Ublog.drafts(username, page: Int ?= 1)
+GET   /@/:username/blog/new            controllers.Ublog.form(username)
+GET   /@/:username/blog.atom           controllers.Ublog.userAtom(username)
+POST  /ublog/new                       controllers.Ublog.create
+GET   /ublog/$id<\w{8}>/discuss        controllers.Ublog.discuss(id)
+GET   /ublog/$id<\w{8}>/redirect       controllers.Ublog.redirect(id)
+GET   /ublog/$id<\w{8}>/edit           controllers.Ublog.edit(id)
+POST  /ublog/$id<\w{8}>/edit           controllers.Ublog.update(id)
+POST  /ublog/$id<\w{8}>/del            controllers.Ublog.delete(id)
+POST  /ublog/$id<\w{8}>/like           controllers.Ublog.like(id, v: Boolean)
+POST  /ublog/:blogId/tier              controllers.Ublog.setTier(blogId)
+POST  /upload/image/ublog/$id<\w{8}>   controllers.Ublog.image(id)
+
 # User subpages
 GET   /@/:username/tournaments/:path   controllers.UserTournament.path(username: String, path: String, page: Int ?= 1)
 

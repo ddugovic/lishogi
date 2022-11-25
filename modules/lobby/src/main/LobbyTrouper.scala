@@ -7,8 +7,8 @@ import scala.annotation.nowarn
 import scala.concurrent.duration._
 import scala.concurrent.Promise
 
-import lila.common.config.Max
-import lila.common.{ AtMost, Bus, Every }
+import lila.common.config.{ AtMost, Every, Max }
+import lila.common.Bus
 import lila.game.Game
 import lila.hub.Trouper
 import lila.socket.Socket.{ Sri, Sris }

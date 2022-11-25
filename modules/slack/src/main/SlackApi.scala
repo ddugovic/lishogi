@@ -168,6 +168,16 @@ final class SlackApi(
       )
     )
 
+  def ublogPost(user: User, id: String, slug: String, title: String, intro: String): Funit =
+    client(
+      SlackMessage(
+        username = "non-tiered new posts",
+        icon = "lightning",
+        text = s":note: ${markdown.lishogiLink(s"/@/${user.username}/blog/$slug/$id", title)} $intro - by ${markdown.userLink(user)}",
+        channel = rooms.broadcast
+      )
+    )
+
   def publishError(msg: String): Funit =
     client(
       SlackMessage(
@@ -306,5 +316,25 @@ private object SlackApi {
   object stage {
     val name = "stage.lishogi.org"
     val icon = "volcano"
+  }
+
+  private val userRegex = lila.common.String.atUsernameRegex.pattern
+  private val postRegex = lila.common.String.forumPostPathRegex.pattern
+
+  private object markdown {
+    def link(url: String, name: String)         = s"[$name]($url)"
+    def lishogiLink(path: String, name: String) = s"[$name](https://lishogi.org$path)"
+    def userLink(name: String): String          = lishogiLink(s"/@/$name?mod&notes", name)
+    def userLink(user: User): String            = userLink(user.username)
+    def modLink(name: String): String           = lishogiLink(s"/@/$name", name)
+    def modLink(user: User): String             = modLink(user.username)
+    def gameLink(id: String)                    = lishogiLink(s"/$id", s"#$id")
+    def userNotesLink(name: String)             = lishogiLink(s"/@/$name?notes", "notes")
+    def broadcastLink(id: String, name: String) = lishogiLink(s"/broadcast/-/$id", name)
+    def linkifyUsers(msg: String)               = userRegex matcher msg replaceAll (m => userLink(m.group(1)))
+    val postReplace                             = lishogiLink("/forum/$1", "$1")
+    def linkifyPosts(msg: String)               = postRegex matcher msg replaceAll postReplace
+    def linkifyPostsAndUsers(msg: String)       = linkifyPosts(linkifyUsers(msg))
+    def fixImageUrl(url: String)                = url.replace("/display?", "/display.jpg?")
   }
 }

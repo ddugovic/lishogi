@@ -68,6 +68,7 @@ object Entry {
       case d: TeamJoin    => "team-join"    -> toBson(d)
       case d: TeamCreate  => "team-create"  -> toBson(d)
       case d: ForumPost   => "forum-post"   -> toBson(d)
+      case d: UblogPost   => "ublog-post"   -> toBson(d)
       case d: TourJoin    => "tour-join"    -> toBson(d)
       case d: GameEnd     => "game-end"     -> toBson(d)
       case d: SimulCreate => "simul-create" -> toBson(d)
@@ -76,6 +77,7 @@ object Entry {
       case d: StudyLike   => "study-like"   -> toBson(d)(studyLikeHandler)
       case d: PlanStart   => "plan-start"   -> toBson(d)(planStartHandler)
       case d: BlogPost    => "blog-post"    -> toBson(d)(blogPostHandler)
+      case d: UblogPostLike => "ublog-post-like" -> toBson(d)
       case d: StreamStart => "stream-start" -> toBson(d)(streamStartHandler)
     }
   } match {
@@ -88,6 +90,7 @@ object Entry {
     implicit val teamJoinHandler    = Macros.handler[TeamJoin]
     implicit val teamCreateHandler  = Macros.handler[TeamCreate]
     implicit val forumPostHandler   = Macros.handler[ForumPost]
+    implicit val ublogPostHandler   = Macros.handler[UblogPost]
     implicit val tourJoinHandler    = Macros.handler[TourJoin]
     implicit val gameEndHandler     = Macros.handler[GameEnd]
     implicit val simulCreateHandler = Macros.handler[SimulCreate]
@@ -96,6 +99,7 @@ object Entry {
     implicit val studyLikeHandler   = Macros.handler[StudyLike]
     implicit val planStartHandler   = Macros.handler[PlanStart]
     implicit val blogPostHandler    = Macros.handler[BlogPost]
+    implicit val ublogPostLikeHandler = Macros.handler[UblogPostLike]
     implicit val streamStartHandler = Macros.handler[StreamStart]
   }
 
@@ -104,6 +108,7 @@ object Entry {
     implicit val teamJoinWrite    = Json.writes[TeamJoin]
     implicit val teamCreateWrite  = Json.writes[TeamCreate]
     implicit val forumPostWrite   = Json.writes[ForumPost]
+    implicit val ublogPostWrite   = Json.writes[UblogPost]
     implicit val tourJoinWrite    = Json.writes[TourJoin]
     implicit val gameEndWrite     = Json.writes[GameEnd]
     implicit val simulCreateWrite = Json.writes[SimulCreate]
@@ -112,12 +117,14 @@ object Entry {
     implicit val studyLikeWrite   = Json.writes[StudyLike]
     implicit val planStartWrite   = Json.writes[PlanStart]
     implicit val blogPostWrite    = Json.writes[BlogPost]
+    implicit val ublogPostLikeWrite = Json.writes[UblogPostLike]
     implicit val streamStartWrite = Json.writes[StreamStart]
     implicit val atomWrite = Writes[Atom] {
       case d: Follow      => followWrite writes d
       case d: TeamJoin    => teamJoinWrite writes d
       case d: TeamCreate  => teamCreateWrite writes d
       case d: ForumPost   => forumPostWrite writes d
+      case d: UblogPost   => ublogPostWrite writes d
       case d: TourJoin    => tourJoinWrite writes d
       case d: GameEnd     => gameEndWrite writes d
       case d: SimulCreate => simulCreateWrite writes d
@@ -126,6 +133,7 @@ object Entry {
       case d: StudyLike   => studyLikeWrite writes d
       case d: PlanStart   => planStartWrite writes d
       case d: BlogPost    => blogPostWrite writes d
+      case d: UblogPostLike => ublogPostLikeWrite writes d
       case d: StreamStart => streamStartWrite writes d
     }
   }

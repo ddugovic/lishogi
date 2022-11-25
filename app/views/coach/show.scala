@@ -24,6 +24,7 @@ object show {
       c: lila.coach.Coach.WithUser,
       coachReviews: lila.coach.CoachReview.Reviews,
       studies: Seq[lila.study.Study.WithChaptersAndLiked],
+      posts: Seq[lila.ublog.UblogPost.PreviewPost],
       myReview: Option[lila.coach.CoachReview]
   )(implicit ctx: Context) = {
     val profile   = c.coach.profile
@@ -81,6 +82,12 @@ $('.coach-review-form form').show();
             section(otherExperiences(), profile.otherExperience),
             section(bestSkills(), profile.skills),
             section(teachingMethod(), profile.methodology)
+          ),
+          posts.nonEmpty option st.section(cls := "coach-show__posts")(
+            h2(cls := "coach-show__title")(trans.ublog.latestBlogPosts()),
+            div(cls := "ublog-post-cards ")(
+              posts map { views.html.ublog.post.card(_, showAuthor = false) }
+            )
           ),
           studies.nonEmpty option st.section(cls := "coach-show__studies")(
             h2(publicStudies()),

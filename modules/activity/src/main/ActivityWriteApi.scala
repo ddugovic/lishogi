@@ -56,6 +56,10 @@ final class ActivityWriteApi(
       }
     }
 
+  def ublogPost(post: lila.ublog.UblogPost): Funit = update(post.created.by) { a =>
+    $doc(ActivityFields.ublogPosts -> (~a.ublogPosts + UblogPostId(post.id.value)))
+  }
+
   def puzzle(res: lila.puzzle.Puzzle.UserResult): Funit =
     getOrCreate(res.userId) flatMap { a =>
       coll.update

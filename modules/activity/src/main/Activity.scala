@@ -11,6 +11,7 @@ case class Activity(
     id: Activity.Id,
     games: Option[Games] = None,
     posts: Option[Posts] = None,
+    ublogPosts: Option[UblogPosts] = None,
     puzzles: Option[Puzzles] = None,
     storm: Option[Storm] = None,
     practice: Option[Practice] = None,
@@ -31,6 +32,7 @@ case class Activity(
     !stream && List(
       games,
       posts,
+      ublogPosts,
       puzzles,
       storm,
       practice,

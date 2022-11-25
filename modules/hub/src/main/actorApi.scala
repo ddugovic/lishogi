@@ -143,6 +143,10 @@ package timeline {
       extends Atom(s"forum:${~topicId}", false) {
     def userIds = List(userId)
   }
+  case class UblogPost(userId: String, id: String, slug: String, title: String)
+      extends Atom(s"ublog:$id", false) {
+    def userIds = List(userId)
+  }
   case class TourJoin(userId: String, tourId: String, tourName: String) extends Atom("tournament", true) {
     def userIds = List(userId)
   }
@@ -170,6 +174,9 @@ package timeline {
   case class BlogPost(id: String, slug: String, title: String, langCode: String)
       extends Atom("blogPost", true) {
     def userIds = Nil
+  }
+  case class UblogPostLike(userId: String, id: String, title: String) extends Atom("ublogPostLike", false) {
+    def userIds = List(userId)
   }
   case class StreamStart(id: String, name: String) extends Atom("streamStart", true) {
     def userIds = List(id)

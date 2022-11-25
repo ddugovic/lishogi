@@ -108,7 +108,7 @@ final class User(
               }
               res <-
                 if (HTTPRequest isSynchronousHttp ctx.req) for {
-                  info   <- env.userInfo(u, nbs, ctx)
+                  info   <- env.userInfo(u, nbs, ctx, withUblog = false)
                   _      <- env.team.cached.nameCache preloadMany info.teamIds
                   social <- env.socialInfo(u, ctx)
                   searchForm =

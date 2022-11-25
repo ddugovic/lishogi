@@ -6,6 +6,7 @@ import reactivemongo.api.ReadPreference
 import lila.db.dsl._
 import lila.game.LightPov
 import lila.practice.PracticeStructure
+import lila.ublog.UblogPost
 import lila.user.User
 
 final class ActivityReadApi(
@@ -13,6 +14,7 @@ final class ActivityReadApi(
     gameRepo: lila.game.GameRepo,
     practiceApi: lila.practice.PracticeApi,
     postApi: lila.forum.PostApi,
+    ublogApi: lila.ublog.UblogApi,
     simulApi: lila.simul.SimulApi,
     studyApi: lila.study.StudyApi,
     tourLeaderApi: lila.tournament.LeaderboardApi
@@ -49,6 +51,12 @@ final class ActivityReadApi(
         postApi
           .liteViewsByIds(p.value.map(_.value))
           .mon(_.user segment "activity.posts") dmap some
+      }
+      ublogPosts <- a.ublogPosts ?? { p =>
+        ublogApi
+          .liveLightsByIds(p.value.map(_.value).map(UblogPost.Id))
+          .mon(_.user segment "activity.ublogs")
+          .dmap(_.some.filter(_.nonEmpty))
       }
       practice = (for {
         p      <- a.practice
@@ -107,6 +115,7 @@ final class ActivityReadApi(
       storm = a.storm,
       practice = practice,
       posts = postView,
+      ublogPosts = ublogPosts,
       simuls = simuls,
       patron = a.patron,
       corresMoves = corresMoves,

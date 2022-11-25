@@ -94,6 +94,41 @@ final private[forum] class TopicApi(
         } inject topic
     }
 
+  def makeUblogDiscuss(
+      slug: String,
+      name: String,
+      url: String,
+      ublogId: String,
+      authorId: User.ID
+  )(implicit ctx: UserContext): Funit =
+    env.categRepo.bySlug(Categ.ublogSlug) flatMap {
+      _ ?? { categ =>
+        val topic = Topic.make(
+          categId = categ.slug,
+          slug = slug,
+          name = name,
+          troll = false,
+          userId = authorId,
+          hidden = false,
+          ublogId = ublogId.some
+        )
+        val post = Post.make(
+          topicId = topic.id,
+          author = none,
+          userId = authorId.some,
+          ip = none,
+          troll = false,
+          hidden = false,
+          text = s"Comments on $url",
+          lang = none,
+          number = 1,
+          categId = categ.id,
+          modIcon = false.some
+        )
+        makeNewTopic(categ, topic, post)
+      }
+    }
+
   def makeBlogDiscuss(categ: Categ, slug: String, name: String, url: String): Funit = {
     val topic = Topic.make(
       categId = categ.slug,
@@ -116,6 +151,10 @@ final private[forum] class TopicApi(
       categId = categ.id,
       modIcon = true.some
     )
+    makeNewTopic(categ, topic, post)
+  }
+
+  private def makeNewTopic(categ: Categ, topic: Topic, post: Post): Funit = {
     env.postRepo.coll.insert.one(post) >>
       env.topicRepo.coll.insert.one(topic withPost post) >>
       env.categRepo.coll.update.one($id(categ.id), categ withTopic post) >>-

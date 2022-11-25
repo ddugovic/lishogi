@@ -23,6 +23,7 @@ object activity {
             a.storm map renderStorm,
             a.games map renderGames,
             a.posts map renderPosts,
+            a.ublogPosts map renderUblogPosts(u),
             a.corresMoves map { case (nb, povs) =>
               renderCorresMoves(nb, povs)
             },
@@ -124,6 +125,21 @@ object activity {
             )
           )
         }
+      )
+    )
+
+  private def renderUblogPosts(user: User)(posts: List[lila.ublog.UblogPost.LightPost])(implicit
+      ctx: Context
+  ) =
+    ctx.noKid option entryTag(
+      iconTag(""),
+      div(
+        trans.ublog.publishedNbBlogPosts.pluralSame(posts.size),
+        subTag(posts.map { post =>
+          div(
+            a(href := routes.Ublog.post(user.username, post.slug, post.id.value))(shorten(post.title, 120))
+          )
+        })
       )
     )
 

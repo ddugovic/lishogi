@@ -7,6 +7,7 @@ import lila.practice.PracticeStudy
 import lila.simul.Simul
 import lila.study.Study
 import lila.tournament.LeaderboardApi.{ Entry => TourEntry }
+import lila.ublog.UblogPost
 
 import activities._
 import model._
@@ -20,6 +21,7 @@ case class ActivityView(
     simuls: Option[List[Simul]] = None,
     patron: Option[Patron] = None,
     posts: Option[Map[lila.forum.Topic, List[lila.forum.Post]]] = None,
+    ublogPosts: Option[List[UblogPost.LightPost]] = None,
     corresMoves: Option[(Int, List[LightPov])] = None,
     corresEnds: Option[(Score, List[LightPov])] = None,
     follows: Option[Follows] = None,

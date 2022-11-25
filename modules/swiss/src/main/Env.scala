@@ -5,7 +5,7 @@ import play.api.Configuration
 import scala.concurrent.duration._
 
 import lila.common.config._
-import lila.common.{ AtMost, Every, ResilientScheduler }
+import lila.common.ResilientScheduler
 import lila.socket.Socket.{ GetVersion, SocketVersion }
 
 @Module
