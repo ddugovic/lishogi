@@ -20,10 +20,9 @@ final class Moretimer(
         if pov.game.hasClock
         then give(pov.game, List(!pov.color), duration).some
         else
-          pov.game.hasCorrespondenceClock.option:
+          pov.game.hasClock.option:
             messenger.volatile(pov.game, s"${!pov.color} gets more time")
-            val p = pov.game.correspondenceGiveTime
-            p.game.correspondenceClock.map(Event.CorrespondenceClock.apply).fold(p)(p + _)
+            give(pov.game, List(!pov.color), duration)
 
   def isAllowedIn(game: Game): Fu[Boolean] =
     (game.canTakebackOrAddTime && game.playable && !game.metadata.hasRule(_.NoGiveTime)) so

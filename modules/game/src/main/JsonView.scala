@@ -147,13 +147,13 @@ object JsonView:
       "emerg"     -> c.config.emergSeconds
     )
 
-  given OWrites[CorrespondenceClock] = OWrites: c =>
+  /*given OWrites[CorrespondenceClock] = OWrites: c =>
     Json.obj(
       "daysPerTurn" -> c.daysPerTurn,
       "increment"   -> c.increment,
       "white"       -> c.whiteTime,
       "black"       -> c.blackTime
-    )
+    )*/
 
   given OWrites[chess.opening.Opening.AtPly] = OWrites: o =>
     Json.obj(

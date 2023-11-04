@@ -296,8 +296,8 @@ object Event:
     def data =
       Json
         .obj(
-          "white" -> white.toSeconds,
-          "black" -> black.toSeconds
+          "white" -> white,
+          "black" -> black
         )
         .add("lag" -> nextLagComp.filter(_ > 1))
   object Clock:
@@ -312,12 +312,14 @@ object Event:
     def typ  = "berserk"
     def data = Json.toJson(color)
 
-  case class CorrespondenceClock(white: Float, black: Float) extends ClockEvent:
+  case class CorrespondenceClock(white: Centis, black: Centis) extends ClockEvent:
     def typ  = "cclock"
     def data = Json.obj("white" -> white, "black" -> black)
   object CorrespondenceClock:
-    def apply(clock: lila.game.CorrespondenceClock): CorrespondenceClock =
-      CorrespondenceClock(clock.whiteTime, clock.blackTime)
+    def apply(clock: ChessClock): CorrespondenceClock = CorrespondenceClock(
+      clock remainingTime Color.White,
+      clock remainingTime Color.Black
+    )
 
   case class CheckCount(white: Int, black: Int) extends Event:
     def typ = "checkCount"

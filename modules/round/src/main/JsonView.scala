@@ -119,7 +119,7 @@ final class JsonView(
                 .add("submitMove" -> submitMovePref(pref, game, flags.nvui))
           )
           .add("clock" -> game.clock.map(clockJson))
-          .add("correspondence" -> game.correspondenceClock)
+          .add("correspondence" -> game.correspondenceClock.map(clockJson))
           .add("takebackable" -> takebackable)
           .add("moretimeable" -> moretimeable)
           .add("crazyhouse" -> pov.game.board.crazyData)
@@ -178,7 +178,7 @@ final class JsonView(
             .add("opening" -> game.opening)
             .add("importedBy" -> game.pgnImport.flatMap(_.user)),
           "clock"          -> game.clock.map(clockJson),
-          "correspondence" -> game.correspondenceClock,
+          "correspondence" -> game.correspondenceClock.map(clockJson),
           "player" -> {
             commonWatcherJson(game, player, users(pov.color), flags) ++ Json
               .obj(

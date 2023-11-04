@@ -64,9 +64,7 @@ final class UserGameApi(
       .add("opening" -> g.opening)
       .add("lastMove" -> g.lastMoveKeys)
       .add("clock" -> g.clock)
-      .add("correspondence" -> g.daysPerTurn.map { d =>
-        Json.obj("daysPerTurn" -> d)
-      })
+      .add("correspondence" -> g.correspondenceClock)
       .add("tournament" -> g.tournamentId.map { tid =>
         Json.obj("id" -> tid, "name" -> getTournamentName.sync(tid))
       })

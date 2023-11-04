@@ -109,10 +109,7 @@ object games:
                       playerLink(pov.opponent, withDiff = false)
                     ),
                     td(
-                      dataSort := pov.game.clock.fold(
-                        pov.game.correspondenceClock.fold(Int.MaxValue)(_.daysPerTurn * 3600 * 24)
-                      )(_.config.estimateTotalSeconds)
-                    )(
+                      dataSort := pov.game.clock.so(_.config.estimateTotalSeconds))(
                       iconTag(pov.game.perfType.icon)(cls := "text"),
                       shortClockName(pov.game)
                     ),

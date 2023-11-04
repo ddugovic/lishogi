@@ -191,9 +191,7 @@ case class Game(
       blackOffersDraw = blackPlayer.isOfferingDraw
     )
 
-    val clockEvent = updated.chess.clock map Event.Clock.apply orElse {
-      updated.playableCorrespondenceClock map Event.CorrespondenceClock.apply
-    }
+    val clockEvent = updated.chess.clock map Event.Clock.apply
 
     val events = moveOrDrop.fold(
       Event.Move(_, game.situation, state, clockEvent, updated.board.crazyData),
@@ -232,18 +230,7 @@ case class Game(
     clock.map: c =>
       start.withClock(c.start)
 
-  def correspondenceClock: Option[CorrespondenceClock] =
-    daysPerTurn.map: days =>
-      val increment   = days.value * 24 * 60 * 60
-      val secondsLeft = (movedAt.toSeconds + increment - nowSeconds).toInt max 0
-      CorrespondenceClock(
-        increment = increment,
-        whiteTime = turnColor.fold(secondsLeft, increment).toFloat,
-        blackTime = turnColor.fold(increment, secondsLeft).toFloat
-      )
-
-  def playableCorrespondenceClock: Option[CorrespondenceClock] =
-    playable so correspondenceClock
+  def correspondenceClock: Option[Clock] = if isCorrespondence then chess.clock else None
 
   def speed = Speed(chess.clock.map(_.config))
 
@@ -327,9 +314,7 @@ case class Game(
   def boosted = rated && finished && bothPlayersHaveMoved && playedTurns < 10
 
   def moretimeable(color: Color) =
-    playable && canTakebackOrAddTime && !hasRule(_.NoGiveTime) && {
-      clock.so(_ moretimeable color) || correspondenceClock.so(_ moretimeable color)
-    }
+    playable && canTakebackOrAddTime && !hasRule(_.NoGiveTime) && clock.so(_ moretimeable color)
 
   def abortable       = status == Status.Started && playedTurns < 2 && nonMandatory
   def abortableByUser = abortable && !hasRule(_.NoAbort)
@@ -421,18 +406,12 @@ case class Game(
   def drawn = finished && winner.isEmpty
 
   def outoftime(withGrace: Boolean): Boolean =
-    if isCorrespondence then outoftimeCorrespondence else outoftimeClock(withGrace)
-
-  private def outoftimeClock(withGrace: Boolean): Boolean =
     clock.so: c =>
       started && playable && {
         c.outOfTime(turnColor, withGrace) || {
           !c.isRunning && c.players.exists(_.elapsed.centis > 0)
         }
       }
-
-  private def outoftimeCorrespondence: Boolean =
-    playableCorrespondenceClock.exists(_ outoftime turnColor)
 
   def isCorrespondence  = speed == Speed.Correspondence
   def isSpeed(s: Speed) = speed == s
@@ -441,7 +420,7 @@ case class Game(
 
   def hasClock = clock.isDefined
 
-  def hasCorrespondenceClock = daysPerTurn.isDefined
+  def hasCorrespondenceClock = isCorrespondence && hasClock
 
   def isUnlimited = !hasClock && !hasCorrespondenceClock
 
@@ -449,13 +428,10 @@ case class Game(
 
   def withClock(c: Clock) = Progress(this, copy(chess = chess.copy(clock = Some(c))))
 
-  def correspondenceGiveTime = Progress(this, copy(movedAt = nowInstant))
-
   def estimateClockTotalTime = clock.map(_.estimateTotalSeconds)
 
   def estimateTotalTime =
-    estimateClockTotalTime orElse
-      correspondenceClock.map(_.estimateTotalTime) getOrElse 1200
+    estimateClockTotalTime getOrElse 1200
 
   def timeForFirstMove: Centis =
     Centis.ofSeconds:
