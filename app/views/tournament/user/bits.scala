@@ -73,8 +73,8 @@ object bits {
                 a(
                   cls := List(
                     s"nm-item to-${ps._1}" -> true,
-                    "active"               -> ps._1 == path,
-                    "disabled"             -> !ctx.is(u) && ps._1 == "upcoming",
+                    "active"               -> (ps._1 == path),
+                    "disabled"             -> (!ctx.is(u) && ps._1 == "upcoming"),
                   ),
                   href := routes.UserTournament.path(u.username, ps._1),
                 )(ps._2)
