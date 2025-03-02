@@ -14,9 +14,8 @@
   "homepage": "https://lishogi.org",
   "engines": {
     "node": ">=20",
-    "pnpm": ">=9"
+    "pnpm": ">=10"
   },
-  "packageManager": "pnpm@9.12.2",
   "dependencies": {
     "@build/tsconfig": "workspace:*",
     "@types/jquery": "^3.5.32",
@@ -27,21 +26,22 @@
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@types/node": "catalog:",
-    "knip": "^5.42.1",
-    "prettier": "^3.4.2",
+    "knip": "^5.45.0",
+    "prettier": "^3.5.2",
     "stylelint": "~16.13.2",
     "stylelint-config-standard-scss": "^14.0.0"
   },
   "scripts": {
     "preinstall": "npx --yes only-allow pnpm",
     "type-check": "pnpm -r type-check",
-    "clean": "del public/compiled && del public/css && del public/translation && pnpm -r clean",
+    "clean": "del public/compiled && del public/css && del public/piece-css && del public/translation && pnpm -r clean",
     "build:js": "pnpm -F @build/js run build",
     "build:css": "pnpm -F @build/css run build",
     "build:vendor": "pnpm -F @build/vendor run build",
     "build:pieces": "pnpm -F @build/pieces run build",
     "build:i18n:ts": "pnpm -F @build/i18n run build",
     "build:i18n:scala": "pnpm -F @bin/utils run trans-dump",
+    "build:i18n": "pnpm build:i18n:ts && pnpm build:i18n:scala",
     "build:ui": "pnpm clean && pnpm build:js && pnpm build:i18n:ts && pnpm build:css && pnpm build:pieces && pnpm build:vendor",
     "lint:ts": "biome check && knip",
     "lint:ts:fix": "biome check --write",

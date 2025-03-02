@@ -7,7 +7,7 @@
     "@build/wrapper": "workspace:*",
     "@types/node": "catalog:",
     "fast-glob": "^3.3.3",
-    "fast-xml-parser": "^4.5.1",
+    "fast-xml-parser": "^4.5.3",
     "tsx": "catalog:"
   },
   "scripts": {

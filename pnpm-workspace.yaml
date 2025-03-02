@@ -8,12 +8,17 @@ catalog:
   'snabbdom': ^3.6.2
   '@badrap/result': ^0.2.13
   'breakpoint-sass': 'github:WandererXII/breakpoint#4.x'
-  'chart.js': ^4.4.7
+  'chart.js': ^4.4.8
+  'flatpickr': ^4.6.13
   '@types/node': ^20.17.12
-  'tsx': ^4.19.2
+  'tsx': ^4.19.3
   '@textcomplete/core': '^0.1.13'
   '@textcomplete/textarea': '^0.1.13'
   '@yaireo/tagify': '^4.33.1'
   '@types/yaireo__tagify': '^4.27.0'
   'debounce-promise': '^3.1.2'
   '@types/debounce-promise': '^3.1.9'
+
+onlyBuiltDependencies:
+  - esbuild
+  - '@biomejs/biome'
