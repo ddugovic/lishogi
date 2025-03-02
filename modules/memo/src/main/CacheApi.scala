@@ -40,7 +40,7 @@ final class CacheApi(
       compute: K => Fu[V],
       default: K => V,
       strategy: Syncache.Strategy,
-      expireAfter: Syncache.ExpireAfter = Syncache.NoExpire,
+      expireAfter: Syncache.ExpireAfter,
       refreshAfter: Syncache.RefreshAfter = Syncache.NoRefresh,
   ): Syncache[K, V] = {
     val actualCapacity =

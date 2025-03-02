@@ -46,7 +46,6 @@ export default function ctrl(opts: NotifyOpts, redraw: Redraw): Ctrl {
   }
 
   function loadPage(page: number) {
-    console.log('CALLED LAODPAGE');
     return window.lishogi.xhr
       .json('GET', '/notify', { url: { page: page || 1 } })
       .then((d: any) => update(d, false))

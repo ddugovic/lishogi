@@ -2,7 +2,7 @@ import { spinnerHtml } from 'common/spinner';
 
 window.lishogi.ready.then(() => {
   const $form = $('main.importer form');
-  $form.submit(() => {
+  $form.on('submit', () => {
     setTimeout(() => {
       $form.html(spinnerHtml);
     }, 50);

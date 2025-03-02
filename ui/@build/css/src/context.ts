@@ -59,6 +59,7 @@ export function sassContext(): Context {
       themeDir = packages.find(p => p.name === 'common')?.path;
       await buildVars();
 
+      console.log(sass.info);
       compiler = await sass.initAsyncCompiler();
 
       const postCssPlugins: postcss.AcceptedPlugin[] = !isProd
