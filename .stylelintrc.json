@@ -1,6 +1,6 @@
 {
   "extends": ["stylelint-config-standard-scss"],
-  "ignoreFiles": "**/node_modules/**",
+  "ignoreFiles": ["**/node_modules/**", "public/**/*"],
   "rules": {
     "alpha-value-notation": "number",
     "color-function-notation": "legacy",
