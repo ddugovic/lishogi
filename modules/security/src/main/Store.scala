@@ -188,7 +188,7 @@ final class Store(val coll: Coll, cacheApi: lila.memo.CacheApi, localIp: IpAddre
   implicit private val IpAndFpReader: BSONDocumentReader[IpAndFp] = Macros.reader[IpAndFp]
 
   def ipsAndFps(userIds: List[User.ID], max: Int = 100): Fu[List[IpAndFp]] =
-    coll.secondary.list[IpAndFp]($doc("user" $in userIds), max)
+    coll.secondaryPreferred.list[IpAndFp]($doc("user" $in userIds), max)
 
   def ips(user: User): Fu[Set[IpAddress]] =
     coll.distinctEasy[IpAddress, Set]("ip", $doc("user" -> user.id))
