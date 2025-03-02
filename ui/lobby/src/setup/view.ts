@@ -45,7 +45,14 @@ export function setupModal(ctrl: SetupCtrl): VNode {
 
 function innerModal(ctrl: SetupCtrl): MaybeVNodes {
   return [
-    h('h2', i18n('createAGame')),
+    h(
+      'h2',
+      ctrl.key === 'ai'
+        ? i18n('playWithTheMachine')
+        : ctrl.key === 'friend'
+          ? i18n('playWithAFriend')
+          : i18n('createAGame'),
+    ),
     variant(ctrl),
     ctrl.key !== 'hook' ? position(ctrl) : undefined,
     timeControl(ctrl),
@@ -281,7 +288,14 @@ function rating(ctrl: SetupCtrl): VNode {
 function innerModalNvui(ctrl: SetupCtrl): MaybeVNodes {
   let color: Color | 'random' = 'random';
   return [
-    h('h2', i18n('createAGame')),
+    h(
+      'h2',
+      ctrl.key === 'ai'
+        ? i18n('playWithTheMachine')
+        : ctrl.key === 'friend'
+          ? i18n('playWithAFriend')
+          : i18n('createAGame'),
+    ),
     selectNvui(ctrl, i18n('variant'), 'variant', variantChoicesTranslated),
     ctrl.key !== 'hook'
       ? h('div', [
