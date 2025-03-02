@@ -78,7 +78,7 @@ object form {
     }
 
   def allFieldsets(
-      form: Form[?],
+      form: Form[_],
       fields: TourFields,
       teams: List[lila.hub.LightTeam],
       tour: Option[Tournament],
@@ -109,7 +109,7 @@ object form {
     )
 
   def clocksFields(
-      form: Form[?],
+      form: Form[_],
       fields: TourFields,
   )(implicit ctx: Context) =
     form3.fieldset(trans.clock.txt(), toggle = true.some)(
@@ -118,7 +118,7 @@ object form {
     )
 
   def conditionFields(
-      form: Form[?],
+      form: Form[_],
       fields: TourFields,
       teams: List[lila.hub.LightTeam],
       tour: Option[Tournament],
@@ -169,7 +169,7 @@ object form {
       },
     )
 
-  def featuresFields(form: Form[?])(implicit ctx: Context) =
+  def featuresFields(form: Form[_])(implicit ctx: Context) =
     form3.fieldset(trans.features.txt(), toggle = false.some)(
       form3.split(
         div(cls := "f-arena")(

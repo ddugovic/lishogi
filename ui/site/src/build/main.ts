@@ -60,7 +60,6 @@ window.lishogi.registerModule = (name: string, func: (...args: any[]) => any) =>
 lishogi.ready.then(() => {
   init();
   Object.keys(window.lishogi.modulesData).forEach(key => {
-    console.log('daata:', window.lishogi.modulesData[key]);
     window.lishogi.modules[key]!(window.lishogi.modulesData[key]);
   });
   initSocket();

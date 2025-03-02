@@ -21,6 +21,7 @@ final class LastPostCache(
     compute = langCode => fetch(BlogLang.fromLangCode(langCode)),
     default = _ => Nil,
     strategy = Syncache.NeverWait,
+    expireAfter = Syncache.NoExpire,
     refreshAfter = Syncache.RefreshAfterWrite(config.lastPostTtl),
   )
 

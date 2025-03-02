@@ -267,7 +267,7 @@ final class Api(
   def gamesByUsersStream =
     AnonOrScopedBody(parse.tolerantText)()(
       anon = gamesByUsers(300),
-      scoped = req => u => gamesByUsers(500)(req),
+      scoped = req => _ => gamesByUsers(500)(req),
     )
 
   def cloudEval =

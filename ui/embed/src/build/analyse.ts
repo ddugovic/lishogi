@@ -16,7 +16,6 @@ window.lishogi.ready.then(() => {
   const study = window.lishogi.modulesData[__bundlename__].study as StudyData | undefined;
   const el = document.querySelector('main.analyse')!;
   const ctrl = new AnalyseCtrl(data, study, redraw);
-  console.log('embed data:', data, window.lishogi.modulesData[__bundlename__]);
 
   el.innerHTML = '';
   let vnode = patch(el, view(ctrl));
