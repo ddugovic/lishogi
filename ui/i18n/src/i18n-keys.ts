@@ -849,6 +849,7 @@ export type I18nKey =
   | 'dateStartedNewest'
   | 'timeAlmostUp'
   | 'gameAgainstX'
+  | 'pageReload'
   | 'opponentLeftCounter'
   | 'nbMoves'
   | 'nbPlayers'

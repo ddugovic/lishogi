@@ -849,6 +849,7 @@ object I18nKeys {
   val `dateStartedNewest` = new I18nKey("dateStartedNewest")
   val `timeAlmostUp` = new I18nKey("timeAlmostUp")
   val `gameAgainstX` = new I18nKey("gameAgainstX")
+  val `pageReload` = new I18nKey("pageReload")
   val `opponentLeftCounter` = new I18nKey("opponentLeftCounter")
   val `nbMoves` = new I18nKey("nbMoves")
   val `nbPlayers` = new I18nKey("nbPlayers")

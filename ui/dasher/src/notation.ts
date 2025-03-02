@@ -19,11 +19,12 @@ export function ctrl(data: NotationData, redraw: Redraw, close: Close): Notation
   return {
     set(n: Notation) {
       data.current = n;
-      window.lishogi.xhr
-        .text('POST', '/pref/notation', { formData: { notation: n } })
-        .then(window.lishogi.reload, () =>
-          window.lishogi.announce({ msg: 'Failed to save notation preference' }),
-        );
+      window.lishogi.xhr.text('POST', '/pref/notation', { formData: { notation: n } }).then(
+        () => {
+          if (confirm(i18n('pageReload'))) window.lishogi.reload;
+        },
+        () => window.lishogi.announce({ msg: 'Failed to save notation preference' }),
+      );
       redraw();
     },
     data,
@@ -72,7 +73,7 @@ function notationExample(notation: Notation): string {
     case Notation.Usi:
       return '7g7f';
     case Notation.Yorozuya:
-      return '';
+      return '午六歩';
   }
 }
 
