@@ -1,6 +1,7 @@
 import spinner from 'common/spinner';
 import { type VNode, h } from 'snabbdom';
 import { view as backgroundView } from './background';
+import { view as customBackgroundView } from './custom-background';
 import { view as customThemeView } from './custom-theme';
 import type { DasherCtrl } from './dasher';
 import { view as langsView } from './langs';
@@ -25,6 +26,9 @@ export function loaded(ctrl: DasherCtrl): VNode {
       break;
     case 'background':
       content = backgroundView(ctrl.subs.background);
+      break;
+    case 'customBackground':
+      content = customBackgroundView(ctrl.subs.customBackground);
       break;
     case 'theme':
       content = themeView(ctrl.subs.theme);

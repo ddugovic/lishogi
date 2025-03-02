@@ -69,11 +69,11 @@ sealed trait Context extends lila.user.UserContextWrapper {
 
   def currentSoundSet = lila.pref.SoundSet(pref.soundSet)
 
-  lazy val currentBg = if (pref.transp) "transp" else if (pref.dark) "dark" else "light"
-
-  def transpBgImg = currentBg == "transp" option pref.bgImgOrDefault
+  def currentBg = lila.pref.Background(pref.background)
 
   def activeCustomTheme = (currentTheme.key == "custom") ?? pref.customTheme
+
+  def activeCustomBackground = (currentBg.key.startsWith("custom")) ?? pref.customBackground
 
   lazy val isMobileBrowser = HTTPRequest isMobile req
 

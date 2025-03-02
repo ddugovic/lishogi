@@ -42,7 +42,7 @@
       color: theme.$c-inaccuracy;
 
       &:hover {
-        color: theme.$m-inaccuracy_saturation_100;
+        color: theme.$c-inaccuracy-clear;
       }
     }
 
@@ -50,7 +50,7 @@
       color: theme.$c-mistake;
 
       &:hover {
-        color: theme.$m-mistake_saturation_100;
+        color: theme.$c-mistake-clear;
       }
     }
 
@@ -58,7 +58,7 @@
       color: theme.$c-blunder;
 
       &:hover {
-        color: theme.$m-blunder_saturation_100;
+        color: theme.$c-blunder-clear;
       }
     }
   }

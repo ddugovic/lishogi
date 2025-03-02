@@ -1,4 +1,5 @@
 import { loadScript } from 'common/assets';
+import { camelToKebab } from 'common/string';
 import { currentTheme } from 'common/theme';
 
 type LinkType = 'youtube' | 'twitter' | 'game' | 'study';
@@ -211,12 +212,45 @@ const expandGames = (games: Candidate[]): void => {
 function configureSrc(url: string) {
   if (url.includes('://')) return url; // youtube, img, etc
   const parsed = new URL(url, window.location.href);
-  const theme =
-    document.body.dataset.boardTheme === 'custom' ? undefined : document.body.dataset.boardTheme;
+  const style = getComputedStyle(document.documentElement);
+
+  const theme = document.body.dataset.boardTheme;
+  if (theme) {
+    parsed.searchParams.append('theme', theme);
+    if (theme === 'custom') {
+      const allVars = [
+        'boardColor',
+        'boardImg',
+        'gridColor',
+        'gridWidth',
+        // hands are transparent - so not needed
+        // 'handsColor',
+        // 'handsImg',
+      ];
+      for (const v of allVars) {
+        const vv = style.getPropertyValue(`--custom-${camelToKebab(v)}`).trim();
+        if (vv && (v !== 'boardImg' || vv !== 'none')) parsed.searchParams.append(`t-${v}`, vv);
+      }
+    }
+  }
+
   const pieceSet = document.body.dataset.pieceSet;
-  if (theme) parsed.searchParams.append('theme', theme);
   if (pieceSet) parsed.searchParams.append('pieceSet', pieceSet);
-  parsed.searchParams.append('bg', document.body.getAttribute('data-theme')!);
+
+  const bg = document.body.getAttribute('data-theme');
+  if (bg) {
+    parsed.searchParams.append('bg', bg);
+    if (bg === 'custom') {
+      if (document.documentElement.classList.contains('custom-light'))
+        parsed.searchParams.append('bg-light', '1');
+      const allVars = ['bgPage', 'font', 'accent', 'primary', 'secondary', 'brag', 'green', 'red'];
+      for (const v of allVars) {
+        const vv = style.getPropertyValue(`--custom-${camelToKebab(v)}`).trim();
+        if (vv) parsed.searchParams.append(`bg-${v}`, vv);
+      }
+    }
+  }
+
   return parsed.href;
 }
 

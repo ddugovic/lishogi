@@ -165,12 +165,6 @@
     padding: 2rem;
   }
 
-  group.radio {
-    input:checked + label {
-      @extend %active-soft;
-    }
-  }
-
   @include breakpoint.breakpoint(media-queries.$mq-not-xx-small) {
     td.icon {
       display: none;

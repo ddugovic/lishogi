@@ -68,6 +68,8 @@ $c-bot: $c-fancy;
 
 $c-page-input: $c-bg-low;
 
+$c-bg-action: $c-bg-box;
+
 $c-bg-metal: $c-bg-high;
 $metal-shadow: 0 1px 0 white;
 $c-bg-metal-hover: color.adjust($c-bg-high, $lightness: -3%);

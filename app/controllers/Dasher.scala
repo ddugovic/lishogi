@@ -6,6 +6,7 @@ import lila.app._
 import lila.common.LightUser.lightUserWrites
 import lila.i18n.I18nLangPicker
 import lila.i18n.LangList
+import lila.pref.JsonView.customBackgroundWriter
 import lila.pref.JsonView.customThemeWriter
 import lila.pref.PieceSet
 
@@ -42,10 +43,16 @@ final class Dasher(env: Env) extends LilaController(env) {
                   )
                 }),
               ),
-              "background" -> Json.obj(
-                "current" -> ctx.currentBg,
-                "image"   -> ctx.pref.bgImgOrDefault,
-              ),
+              "background" -> Json
+                .obj(
+                  "current" -> ctx.currentBg.key,
+                )
+                .add(
+                  "image" -> ctx.pref.bgImg,
+                )
+                .add(
+                  "customBackground" -> ctx.pref.customBackground,
+                ),
               "theme" -> Json.obj(
                 "thickGrid" -> ctx.pref.isUsingThickGrid,
                 "current"   -> ctx.currentTheme.key,

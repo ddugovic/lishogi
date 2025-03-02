@@ -55,8 +55,11 @@ $c-fancy: hsl(294deg, 62%, 48%);
 $c-fancy-over: white;
 
 $c-inaccuracy: hsl(202deg, 78%, 62%);
+$c-inaccuracy-clear: hsl(202deg, 100%, 62%);
 $c-mistake: hsl(41deg, 100%, 45%);
+$c-mistake-clear: hsl(41deg, 100%, 45%);
 $c-blunder: hsl(0deg, 69%, 60%);
+$c-blunder-clear: hsl(0deg, 100%, 60%);
 
 $c-good-move: hsl(130deg, 67%, 62%);
 $c-brilliant: hsl(129deg, 71%, 45%);
@@ -93,6 +96,8 @@ $text-shadow: none;
 $c-bot: $c-fancy;
 
 $c-page-input: $c-bg-box;
+
+$c-bg-action: color.mix($c-bg-box, $c-font-dim, 90%);
 
 $c-bg-metal: $c-bg-zebra;
 $c-font-metal: inherit;

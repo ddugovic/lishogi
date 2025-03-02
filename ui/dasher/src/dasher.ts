@@ -1,5 +1,6 @@
 import { type Prop, prop } from 'common/common';
 import { type BackgroundCtrl, type BackgroundData, ctrl as backgroundCtrl } from './background';
+import { type CustomBackgroundCtrl, ctrl as customBackgroundCtrl } from './custom-background';
 import {
   type CustomThemeCtrl,
   type CustomThemeData,
@@ -33,6 +34,7 @@ export type Mode =
   | 'langs'
   | 'sound'
   | 'background'
+  | 'customBackground'
   | 'board'
   | 'notation'
   | 'theme'
@@ -50,6 +52,7 @@ export interface DasherCtrl {
     langs: LangsCtrl;
     sound: SoundCtrl;
     background: BackgroundCtrl;
+    customBackground: CustomBackgroundCtrl;
     notation: NotationCtrl;
     theme: ThemeCtrl;
     customTheme: CustomThemeCtrl;
@@ -78,7 +81,8 @@ export function makeCtrl(opts: DasherOpts, data: DasherData, redraw: Redraw): Da
   const subs = {
     langs: langsCtrl(data.lang, close),
     sound: soundCtrl(data.sound, redraw, close),
-    background: backgroundCtrl(data.background, redraw, close),
+    background: backgroundCtrl(data.background, redraw, setMode, close),
+    customBackground: customBackgroundCtrl(data.background.customBackground, redraw, setMode),
     theme: themeCtrl(data.theme, redraw, setMode),
     customTheme: customThemeCtrl(data.customTheme, redraw, setMode),
     notation: notationCtrl(data.notation, redraw, close),

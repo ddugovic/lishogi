@@ -31,11 +31,7 @@
     align-items: center;
     cursor: pointer;
     border: theme.$border;
-    background: theme.$m-font-dim_alpha_neg90;
-
-    @include mixins.theme-wrap('light') {
-      background: theme.$m-bg-box_alpha_neg50;
-    }
+    background: theme.$c-bg-action;
 
     color: theme.$c-font-clear;
 
@@ -57,8 +53,8 @@
     }
 
     &:hover {
-      background: theme.$m-accent_alpha_neg80;
-      opacity: 1;
+      background: theme.$m-accent_bg-action_mix_50;
+      color: theme.$c-font-clearer;
 
       &.isReady::before {
         opacity: 0.5;

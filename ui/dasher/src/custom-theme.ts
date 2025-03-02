@@ -1,5 +1,6 @@
 import { spectrum } from 'common/assets';
 import spinner from 'common/spinner';
+import { camelToKebab } from 'common/string';
 import { debounce } from 'common/timings';
 import { i18n } from 'i18n';
 import { type VNode, h } from 'snabbdom';
@@ -181,25 +182,15 @@ function makeColorPicker(ctrl: CustomThemeCtrl, vnode: VNode, key: Key) {
 }
 
 function defaultColor(key: ColorKey): string {
-  const isDark = document.body.classList.contains('dark');
-  const isTransp = document.body.classList.contains('transp');
+  const kls = document.documentElement.classList;
+  const isDark = kls.contains('dark') || kls.contains('custom-dark');
+  const isTransp = kls.contains('transp');
   if (key === 'gridColor') return isTransp ? '#cccccc' : isDark ? '#bababa' : '#4d4d4d';
   else return isTransp ? '#00000099' : isDark ? '#262421' : '#ffffff';
 }
 
 function cssVariableName(key: keyof Omit<CustomThemeData, 'gridWidth'>): string {
-  switch (key) {
-    case 'boardColor':
-      return 'board-color';
-    case 'boardImg':
-      return 'board-url';
-    case 'gridColor':
-      return 'grid-color';
-    case 'handsColor':
-      return 'hands-color';
-    case 'handsImg':
-      return 'hands-url';
-  }
+  return `--custom-${camelToKebab(key)}`;
 }
 
 function applyCustomTheme(key: Key, value: string | number) {
@@ -208,9 +199,8 @@ function applyCustomTheme(key: Key, value: string | number) {
     document.body.classList.remove(...kls);
     document.body.classList.add(kls[value as number]);
   } else {
-    const prefix = '--c-';
     if (key === 'boardImg' || key === 'handsImg') value = value ? `url(${value})` : 'none';
-    document.body.style.setProperty(prefix + cssVariableName(key), value as string);
+    document.documentElement.style.setProperty(cssVariableName(key), value as string);
   }
 }
 

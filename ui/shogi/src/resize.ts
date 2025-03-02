@@ -25,7 +25,9 @@ export default function resizeHandle(
     const mouseupEvent = start.type === 'touchstart' ? 'touchend' : 'mouseup';
 
     const startPos = eventPosition(start)!;
-    const initialZoom = Number.parseInt(getComputedStyle(document.body).getPropertyValue('--zoom'));
+    const initialZoom = Number.parseInt(
+      getComputedStyle(document.documentElement).getPropertyValue('--zoom'),
+    );
     let zoom = initialZoom;
 
     const saveZoom = debounce(() => {
@@ -38,7 +40,7 @@ export default function resizeHandle(
 
       zoom = Math.round(Math.min(100, Math.max(0, initialZoom + delta / 10)));
 
-      document.body.style.setProperty('--zoom', zoom.toString());
+      document.documentElement.style.setProperty('--zoom', zoom.toString());
       window.dispatchEvent(new Event('resize'));
 
       saveZoom();

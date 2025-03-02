@@ -48,7 +48,7 @@ object show {
                   iframe(
                     st.frameborder  := "0",
                     frame.scrolling := "yes",
-                    src := s"https://twitch.tv/embed/${twitch.userId}/chat?${(ctx.currentBg != "light") ?? "darkpopout&"}parent=$netDomain",
+                    src := s"https://twitch.tv/embed/${twitch.userId}/chat?${(!ctx.currentBg.key.endsWith("light")) ?? "darkpopout&"}parent=$netDomain",
                   )
                 }
             },

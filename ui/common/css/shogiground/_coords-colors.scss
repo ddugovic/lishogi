@@ -16,7 +16,7 @@
     'doubutsu': #c36e5f,
     'gray': #eee,
     'blue': #eee,
-    'custom': var(--c-grid-color, theme.$c-font),
+    'custom': var(--custom-grid-color, theme.$c-font),
   );
 
   @each $theme, $color in $coords-color {

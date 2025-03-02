@@ -5,10 +5,14 @@ import play.api.i18n.Lang
 import play.api.mvc.RequestHeader
 
 import lila.common.Nonce
+import lila.pref.CustomBackground
+import lila.pref.CustomTheme
 
 case class EmbedConfig(
     bg: String,
+    customBg: Option[CustomBackground],
     board: String,
+    customTheme: Option[CustomTheme],
     pieceSet: lila.pref.PieceSet,
     chuPieceSet: lila.pref.PieceSet,
     kyoPieceSet: lila.pref.PieceSet,
@@ -24,21 +28,49 @@ object EmbedConfig {
     implicit def configReq(implicit config: EmbedConfig): RequestHeader = config.req
   }
 
-  def apply(req: RequestHeader): EmbedConfig = {
-    val pieceSet = get("pieceSet", req)
+  def apply(reqHeader: RequestHeader): EmbedConfig = {
+    implicit val req = reqHeader
+    val customTheme = CustomTheme(
+      boardColor = get("t-boardColor") | CustomTheme.default.boardColor,
+      boardImg = get("t-boardImg") | CustomTheme.default.boardImg,
+      gridColor = get("t-gridColor") | CustomTheme.default.gridColor,
+      gridWidth = get("t-gridWidth").flatMap(_.toIntOption) | CustomTheme.default.gridWidth,
+      handsColor = get("t-handsColor") | CustomTheme.default.handsColor,
+      handsImg = get("t-handsImg") | CustomTheme.default.handsImg,
+    ).some.filterNot(_ == CustomTheme.default)
+
+    val customBg = get("bg-bgPage") map { bgPage =>
+      CustomBackground(
+        light = get("bg-light").isDefined,
+        bgPage = bgPage,
+        font = ~get("bg-font"),
+        accent = ~get("bg-accent"),
+        primary = ~get("bg-primary"),
+        secondary = ~get("bg-secondary"),
+        brag = ~get("bg-brag"),
+        green = ~get("bg-green"),
+        red = ~get("bg-red"),
+      )
+    }
+    val bg = get("bg") | "auto"
+
+    val pieceSet = get("pieceSet")
+
     EmbedConfig(
-      bg = get("bg", req).filterNot("auto".==) | "dark",
-      board = lila.pref.Theme(~get("theme", req)).cssClass,
+      bg = if (bg == "auto" && customBg.isDefined) "custom" else lila.pref.Background(bg).key,
+      customBg = customBg,
+      board = lila.pref.Theme(~get("theme")).cssClass,
+      customTheme = customTheme,
       pieceSet = lila.pref.PieceSet(~pieceSet),
-      chuPieceSet = lila.pref.ChuPieceSet(get("chuPieceSet", req) | ~pieceSet),
-      kyoPieceSet = lila.pref.KyoPieceSet(get("kyoPieceSet", req) | ~pieceSet),
-      lang = get("lang", req)
+      chuPieceSet = lila.pref.ChuPieceSet(get("chuPieceSet") | ~pieceSet),
+      kyoPieceSet = lila.pref.KyoPieceSet(get("kyoPieceSet") | ~pieceSet),
+      lang = get("lang")
         .flatMap(lila.i18n.I18nLangPicker.byQuery) | lila.i18n.I18nLangPicker(req, none),
       req = req,
       nonce = Nonce.random,
     )
   }
 
-  private def get(name: String, req: RequestHeader): Option[String] =
+  private def get(name: String)(implicit req: RequestHeader): Option[String] =
     req.queryString get name flatMap (_.headOption) filter (_.nonEmpty)
 }

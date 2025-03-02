@@ -210,7 +210,7 @@ object DataForm {
 
   val bg = Form(
     single(
-      "bg" -> text.verifying(List("light", "dark", "transp") contains _),
+      "bg" -> text.verifying(List("light", "dark", "transp", "custom") contains _),
     ),
   )
 
@@ -262,6 +262,20 @@ object DataForm {
           ))
       },
     )(CustomTheme.apply)(CustomTheme.unapply),
+  )
+
+  val customBackground = Form(
+    mapping(
+      "light"     -> boolean,
+      "bgPage"    -> text(maxLength = 30),
+      "font"      -> text(maxLength = 30),
+      "accent"    -> text(maxLength = 30),
+      "primary"   -> text(maxLength = 30),
+      "secondary" -> text(maxLength = 30),
+      "brag"      -> text(maxLength = 30),
+      "green"     -> text(maxLength = 30),
+      "red"       -> text(maxLength = 30),
+    )(CustomBackground.apply)(CustomBackground.unapply),
   )
 
 }

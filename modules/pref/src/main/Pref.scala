@@ -2,9 +2,9 @@ package lila.pref
 
 case class Pref(
     _id: String, // user id
-    dark: Boolean,
-    transp: Boolean,
+    background: String,
     bgImg: Option[String],
+    customBackground: Option[CustomBackground],
     theme: String,
     customTheme: Option[CustomTheme],
     pieceSet: String,
@@ -51,9 +51,7 @@ case class Pref(
 
   def id = _id
 
-  def isUsingCustomTheme = theme == "custom"
-
-  def themeColor = if (transp || dark) "#2e2a24" else "#dbd7d1"
+  def themeColor = if (background == "light") "#dbd7d1" else "#2e2a24"
 
   def coordColorName = Color name coordColor
   def coordsClass    = Coords cssClassOf coords
@@ -63,8 +61,9 @@ case class Pref(
   def set(name: String, value: String): Option[Pref] =
     name match {
       case "bg" =>
-        if (value == "transp") copy(dark = true, transp = true).some
-        else copy(dark = value == "dark", transp = false).some
+        Background.allByKey get value map { bg =>
+          copy(background = bg.key)
+        }
       case "bgImg" => copy(bgImg = value.some).some
       case "theme" =>
         Theme.allByKey get value map { t =>
@@ -108,18 +107,18 @@ case class Pref(
 
   def isBlindfold = blindfold == Pref.Blindfold.YES
 
-  def bgImgOrDefault = bgImg | Pref.defaultBgImg
+  def activeBgImgUrl = bgImg.ifTrue(background == "transp").map(cssBackgroundImageValue)
 
   def customThemeOrDefault = customTheme | CustomTheme.default
 
   def isUsingThickGrid = thickGrid == ThickGrid.YES
 
+  def gridWidth = customThemeOrDefault.gridWidth
+
   def isZen = zen == Zen.YES
 }
 
 object Pref {
-
-  val defaultBgImg = "//lishogi1.org/assets/images/background/nature.jpg"
 
   trait BooleanPref {
     val NO      = 0
@@ -387,9 +386,9 @@ object Pref {
 
   lazy val default = Pref(
     _id = "",
-    dark = true,
-    transp = false,
+    background = Background.default.key,
     bgImg = none,
+    customBackground = none,
     theme = Theme.default.key,
     customTheme = none,
     pieceSet = PieceSet.default.key,

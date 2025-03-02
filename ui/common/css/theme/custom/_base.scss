@@ -1,0 +1,13 @@
+@supports (color: oklch(0.5 0.2 240)) and (color: color-mix(in srgb, red, blue)) {
+  html.custom-dark,
+  html.custom-light {
+    --c-bg-page: var(--custom-bg-page);
+    --c-font: var(--custom-font);
+    --c-accent: var(--custom-accent);
+    --c-primary: var(--custom-primary);
+    --c-secondary: var(--custom-secondary);
+    --c-brag: var(--custom-brag);
+    --c-green: var(--custom-green);
+    --c-red: var(--custom-red);
+  }
+}

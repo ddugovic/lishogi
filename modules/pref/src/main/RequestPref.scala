@@ -8,10 +8,11 @@ object RequestPref {
 
   def queryParamOverride(req: RequestHeader)(pref: Pref): Pref =
     queryParam(req, "bg").fold(pref) { bg =>
-      pref.copy(
-        dark = bg != "light",
-        transp = bg == "transp",
-      )
+      if (bg == Background.dark.key || bg == Background.light.key)
+        pref.copy(
+          background = bg,
+        )
+      else pref
     }
 
   def fromRequest(req: RequestHeader, languageNotation: Boolean = true): Pref = {
@@ -19,24 +20,14 @@ object RequestPref {
     def paramOrSession(name: String): Option[String] =
       queryParam(req, name) orElse req.session.get(name)
 
-    val customTheme = CustomTheme(
-      boardColor = paramOrSession("boardColor") | CustomTheme.default.boardColor,
-      boardImg = paramOrSession("boardImg") | CustomTheme.default.boardImg,
-      gridColor = paramOrSession("gridColor") | CustomTheme.default.gridColor,
-      gridWidth =
-        paramOrSession("gridWidth").flatMap(_.toIntOption) | CustomTheme.default.gridWidth,
-      handsColor = paramOrSession("handsColor") | CustomTheme.default.handsColor,
-      handsImg = paramOrSession("handsImg") | CustomTheme.default.handsImg,
-    ).some.filterNot(_ == CustomTheme.default)
     val bg       = paramOrSession("bg") | "dark"
     val theme    = paramOrSession("theme") | default.theme
-    val pieceSet = paramOrSession("pieceSet")
+    val pieceSet = paramOrSession("pieceSet") | default.pieceSet
 
     default.copy(
-      dark = bg != "light",
-      transp = bg == "transp",
+      background = bg,
       theme = theme,
-      pieceSet = pieceSet | default.pieceSet,
+      pieceSet = pieceSet,
       chuPieceSet = paramOrSession("chuPieceSet") | default.chuPieceSet,
       kyoPieceSet = paramOrSession("kyoPieceSet") | default.kyoPieceSet,
       soundSet = paramOrSession("soundSet") | default.soundSet,
@@ -44,7 +35,6 @@ object RequestPref {
       notation =
         paramOrSession("notation").flatMap(_.toIntOption) | defaultNotation(req, languageNotation),
       thickGrid = paramOrSession("thickGrid").flatMap(_.toIntOption) | default.thickGrid,
-      customTheme = customTheme,
     )
   }
 

@@ -11,7 +11,9 @@ import { type VNode, h } from 'snabbdom';
 import { fixed } from '../util';
 import { bg, fontClear, fontDimmer } from './colors';
 
-const isLight = document.body.classList.contains('light');
+const isLight =
+  document.documentElement.classList.contains('light') ||
+  document.documentElement.classList.contains('custom-light');
 
 function chart<T extends 'line' | 'bar' | 'doughnut'>(
   id: string,

@@ -58,7 +58,7 @@
     min-height: 0;
     max-height: 25rem;
 
-    body.dark & {
+    html.dark & {
       border: 1px solid theme.$c-font-dimmer;
     }
 

@@ -20,7 +20,7 @@ const sassOptions: sass.Options<'async'> = {
 const loadPaths = ['']; // for cross package imports...
 
 export function sassContext(): Context {
-  let outdir: string;
+  let outDir: string;
 
   const allFiles = new Map<string, string[]>();
   const buildFiles = new Map<string, string[]>();
@@ -48,8 +48,8 @@ export function sassContext(): Context {
       isFiltered = flags.includes('--filter');
       onlyVars = flags.includes('--vars');
 
-      outdir = `${rootPath}/public/css/`;
-      await fs.promises.mkdir(outdir, { recursive: true });
+      outDir = `${rootPath}/public/css/`;
+      await fs.promises.mkdir(outDir, { recursive: true });
 
       await innerInit();
 
@@ -156,7 +156,7 @@ export function sassContext(): Context {
 
     const basename = path.basename(file, '.scss');
     const name = basename === 'main' ? packageName : `${packageName}.${basename}`;
-    const outputPath = path.join(outdir, `${name}.${isProd ? 'min' : 'dev'}.css`);
+    const outputPath = path.join(outDir, `${name}.${isProd ? 'min' : 'dev'}.css`);
 
     let res = postCssResult.css;
     if (!isProd && sassResult.sourceMap)

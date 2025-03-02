@@ -6,6 +6,7 @@
 @use 'link';
 @use 'board';
 @use 'piece';
+@use 'color';
 @use 'local';
 
 #dasher_app {
@@ -183,6 +184,12 @@
     }
   }
 
+  .custom-background {
+    .radio {
+      margin: 12px 6px;
+    }
+  }
+
   .board .zoom {
     display: none;
     border-top: theme.$border;
@@ -198,10 +205,6 @@
   }
 
   .custom-theme {
-    p {
-      margin: 6px 0 3px;
-    }
-
     .board,
     .grid,
     .hands {
@@ -219,31 +222,6 @@
       text-align: center;
     }
 
-    .color-wrap,
-    .url-wrap,
-    .select-wrap {
-      margin: 6px;
-    }
-
-    .select-wrap {
-      display: inline-flex;
-      align-items: center;
-      justify-content: space-around;
-      width: calc(100% - 12px);
-
-      & > * {
-        flex-grow: 1;
-      }
-    }
-
-    .color-wrap input {
-      width: calc(100% - 35px);
-    }
-
-    .url-wrap input {
-      width: 100%;
-    }
-
     &.loading {
       height: 400px;
 
@@ -257,49 +235,32 @@
       }
     }
 
-    .sp-container {
-      background-color: theme.$c-bg-box;
-
-      .sp-alpha {
-        border-radius: 4px;
-      }
-
-      .sp-alpha-handle.highlight {
-        background: theme.$c-bg-input;
-        outline: 2px solid theme.$c-bad;
-        animation: 1.3s flash-glow ease-in-out infinite;
-
-        &::after {
-          content: '';
-          position: absolute;
-          left: -2px;
-          top: -20px;
-          border: 10px solid theme.$c-bad;
-          border-bottom: 0;
-          border-left-color: transparent;
-          border-right-color: transparent;
-          opacity: 0;
-          animation:
-            0.5s delayed-show forwards,
-            1.3s bounce ease-in-out infinite;
-          animation-delay: 3s;
-        }
-      }
-
-      .sp-alpha-handle,
-      .sp-slider {
-        background: theme.$c-bg-input;
-        outline: 1px solid theme.$c-font-clearer;
-      }
-
-      .sp-dragger {
-        outline: 1px solid #1b1b1b;
-      }
-    }
-
     body:not(.hands-background) & .hands {
       display: none;
     }
+  }
+
+  .url-wrap,
+  .select-wrap {
+    margin: 6px;
+    p {
+      margin: 6px 0 3px;
+    }
+  }
+
+  .select-wrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-around;
+    width: calc(100% - 12px);
+
+    & > * {
+      flex-grow: 1;
+    }
+  }
+
+  .url-wrap input {
+    width: 100%;
   }
 }
 

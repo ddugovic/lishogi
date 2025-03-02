@@ -23,7 +23,7 @@ $c-support: theme.$c-brag;
 
     &:hover .lobby__support__text,
     &:hover i::before {
-      color: #fff;
+      color: theme.$c-brag-over;
     }
   }
 

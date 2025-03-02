@@ -45,7 +45,16 @@ case class CustomTheme(
     gridWidth: Int,
     handsColor: String,
     handsImg: String,
-)
+) {
+  def toVars =
+    List(
+      s"--custom-board-color:${boardColor};",
+      s"--custom-board-img:${cssBackgroundImageValue(boardImg)};",
+      s"--custom-grid-color:${gridColor};",
+      s"--custom-hands-color:${handsColor};",
+      s"--custom-hands-img:${cssBackgroundImageValue(handsImg)};",
+    ).mkString("")
+}
 
 object CustomTheme {
   val default = new CustomTheme(

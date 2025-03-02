@@ -1,6 +1,7 @@
 import { mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import { generateCssVariables } from './css-variable-generator.js';
+import { generateColorMixVariables } from './custom-theme.js';
 import { generateScssMap } from './scss-map-generator.js';
 import { parseThemes } from './theme-parser.js';
 
@@ -14,6 +15,8 @@ export async function build(extracted: Set<string>, themeDir: string): Promise<v
     await generateScssMap(themeVars, extracted, outDir);
 
     await generateCssVariables(themeVars, extracted, outDir);
+
+    await generateColorMixVariables(extracted, outDir);
 
     console.log('CSS variables build completed successfully!');
   } catch (error) {

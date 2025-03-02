@@ -64,15 +64,6 @@
   background: theme.$m-white_accent_mix_20;
 }
 
-%active-soft {
-  @extend %active-inset-shadow;
-
-  background: theme.$c-shade;
-  color: theme.$c-font-clearer;
-  text-shadow: 1px 1px 1px theme.$c-font-shadow !important;
-  font-weight: bold;
-}
-
 %dropdown-shadow {
   box-shadow: -1px 5px 6px rgba(0, 0, 0, 0.3);
 }

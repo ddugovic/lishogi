@@ -11,12 +11,12 @@ private object PrefHandlers {
 
     def reads(r: BSON.Reader): CustomTheme =
       CustomTheme(
-        boardColor = r str "bc",
-        boardImg = r str "bi",
-        gridColor = r str "gc",
-        gridWidth = r int "gw",
-        handsColor = r str "hc",
-        handsImg = r str "hi",
+        boardColor = r strD "bc",
+        boardImg = r strD "bi",
+        gridColor = r strD "gc",
+        gridWidth = r intD "gw",
+        handsColor = r strD "hc",
+        handsImg = r strD "hi",
       )
 
     def writes(w: BSON.Writer, o: CustomTheme) =
@@ -30,14 +30,43 @@ private object PrefHandlers {
       )
   }
 
+  implicit val customBackgroundBSONHandler: BSON[CustomBackground] = new BSON[CustomBackground] {
+
+    def reads(r: BSON.Reader): CustomBackground =
+      CustomBackground(
+        light = r boolD "l",
+        bgPage = r strD "b",
+        font = r strD "f",
+        accent = r strD "a",
+        primary = r strD "p",
+        secondary = r strD "s",
+        brag = r strD "br",
+        green = r strD "g",
+        red = r strD "r",
+      )
+
+    def writes(w: BSON.Writer, o: CustomBackground) =
+      BSONDocument(
+        "l"  -> w.boolO(o.light),
+        "b"  -> w.str(o.bgPage),
+        "f"  -> w.str(o.font),
+        "a"  -> w.str(o.accent),
+        "p"  -> w.str(o.primary),
+        "s"  -> w.str(o.secondary),
+        "br" -> w.str(o.brag),
+        "g"  -> w.str(o.green),
+        "r"  -> w.str(o.red),
+      )
+  }
+
   implicit val prefBSONHandler: BSON[Pref] = new BSON[Pref] {
 
     def reads(r: BSON.Reader): Pref =
       Pref(
         _id = r str "_id",
-        dark = r.getD("dark", Pref.default.dark),
-        transp = r.getD("transp", Pref.default.transp),
+        background = r.getD("bg", Pref.default.background),
         bgImg = r.strO("bgImg"),
+        customBackground = r.getO[CustomBackground]("customBg"),
         theme = r.getD("theme", Pref.default.theme),
         customTheme = r.getO[CustomTheme]("customTheme"),
         pieceSet = r.getD("pieceSet", Pref.default.pieceSet),
@@ -83,9 +112,9 @@ private object PrefHandlers {
     def writes(w: BSON.Writer, o: Pref) =
       $doc(
         "_id"                -> o._id,
-        "dark"               -> o.dark,
-        "transp"             -> o.transp,
+        "bg"                 -> o.background,
         "bgImg"              -> o.bgImg,
+        "customBg"           -> o.customBackground,
         "theme"              -> o.theme,
         "customTheme"        -> o.customTheme,
         "pieceSet"           -> o.pieceSet,

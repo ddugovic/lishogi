@@ -17,7 +17,11 @@ object embed {
   )(body: Modifier*)(implicit config: EmbedConfig) =
     frag(
       layout.bits.doctype,
-      layout.bits.htmlTag(config.lang, config.bg)(
+      html(
+        st.lang := lila.i18n.languageCode(config.lang),
+        cls     := layout.bits.backgroundClass(config.bg, config.customBg),
+        style   := layout.bits.cssVariables(none, config.customTheme, config.customBg, none),
+      )(
         head(
           layout.bits.charset,
           layout.bits.viewport,
@@ -25,6 +29,7 @@ object embed {
           st.headTitle(title),
           pieceSpriteByVariant(variant),
           cssTag("common.variables"),
+          (config.bg == "custom") option cssTag("common.custom"),
           moreCss,
           embedJsUnsafe(layout.bits.windowLishogi, config.nonce.some),
           vendorJsTag("shogiground", "shogiground.min.js"),

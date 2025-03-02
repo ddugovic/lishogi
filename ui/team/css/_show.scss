@@ -23,7 +23,7 @@ $section-margin-more: 5vh;
     height: 40vh;
     margin-bottom: $section-margin;
 
-    body.dark & {
+    html.dark & {
       box-shadow: none;
 
       &__tabs,

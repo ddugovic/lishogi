@@ -320,7 +320,7 @@ $c-bg-clas-over-dim: theme.$m-white_clas_mix_80;
       &-choices {
         @extend %flex-center, %box-neat-force;
 
-        body.dark & {
+        html.dark & {
           box-shadow: none;
         }
 

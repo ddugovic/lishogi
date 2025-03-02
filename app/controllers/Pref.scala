@@ -49,9 +49,12 @@ final class Pref(env: Env) extends LilaController(env) {
       } else if (name == "customTheme") {
         implicit val req = ctx.body
         FormResult(forms.customTheme) { v =>
-          saveCustomTheme(v, ctx) map { cookie =>
-            Ok(()).withCookies(cookie)
-          }
+          saveCustomTheme(v, ctx) inject Ok(())
+        }
+      } else if (name == "customBackground") {
+        implicit val req = ctx.body
+        FormResult(forms.customBackground) { v =>
+          saveCustomBackground(v, ctx) inject Ok(())
         }
       } else {
         implicit val req = ctx.body
@@ -98,17 +101,13 @@ final class Pref(env: Env) extends LilaController(env) {
       api.setPrefString(_, name, value)
     } inject env.lilaCookie.session(name, value)(ctx.req)
 
-  private def saveCustomTheme(ct: lila.pref.CustomTheme, ctx: Context): Fu[Cookie] =
+  private def saveCustomBackground(cb: lila.pref.CustomBackground, ctx: Context): Funit =
+    ctx.me ?? {
+      api.setPref(_, p => p.copy(customBackground = cb.some))
+    }
+
+  private def saveCustomTheme(ct: lila.pref.CustomTheme, ctx: Context): Funit =
     ctx.me ?? {
       api.setPref(_, p => p.copy(customTheme = ct.some))
-    } inject env.lilaCookie.session(
-      List(
-        ("boardColor" -> ct.boardColor),
-        ("boardImg"   -> ct.boardImg),
-        ("gridColor"  -> ct.gridColor),
-        ("gridWidth"  -> ct.gridWidth.toString),
-        ("handsColor" -> ct.handsColor),
-        ("handsImg"   -> ct.handsImg),
-      ),
-    )(ctx.req)
+    }
 }

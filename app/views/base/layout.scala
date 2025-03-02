@@ -1,7 +1,6 @@
 package views.html.base
 
 import controllers.routes
-import play.api.i18n.Lang
 
 import org.joda.time.DateTime
 
@@ -12,14 +11,11 @@ import lila.app.ui.ScalatagsTemplate._
 import lila.common.CanonicalPath
 import lila.common.ContentSecurityPolicy
 import lila.common.String.html.safeJsonValue
-import lila.common.base.StringUtils.escapeHtmlRaw
 
 object layout {
 
   object bits {
-    val doctype = raw("<!DOCTYPE html>")
-    def htmlTag(lang: Lang, theme: String) =
-      html(st.lang := lila.i18n.languageCode(lang), cls := theme)
+    val doctype    = raw("<!DOCTYPE html>")
     val topComment = raw("""<!-- Lishogi is open source! See https://lishogi.org/source -->""")
     val charset    = raw("""<meta charset="utf-8">""")
     val viewport = raw(
@@ -35,6 +31,23 @@ object layout {
       raw {
         s"""<meta name="theme-color" content="${ctx.pref.themeColor}">"""
       }
+    def backgroundClass(bg: String, customBackground: Option[lila.pref.CustomBackground]) =
+      customBackground
+        .ifTrue(bg == "custom")
+        .fold(bg)(cb => s"${bg}-${if (cb.light) "light" else "dark"}")
+    def cssVariables(
+        zoom: Option[Int],
+        customTheme: Option[lila.pref.CustomTheme],
+        customBackground: Option[lila.pref.CustomBackground],
+        bgImgUrl: Option[String],
+    ): Option[String] =
+      (
+        zoom.map(z => s"--zoom:${z};") ++
+          bgImgUrl.map(url => s"--tr-bg-url:${url};") ++
+          customTheme.map(_.toVars) ++
+          customBackground.map(_.toVars)
+      ).reduceLeftOption(_ + _)
+
     val windowLishogi: String =
       """window.lishogi={ready:new Promise(r=>document.addEventListener("DOMContentLoaded",r)),modulesData:{}}"""
   }
@@ -189,26 +202,6 @@ object layout {
       }
     }
 
-  private def cssBackgroundImageValue(url: String): String =
-    if (url.isEmpty) "none" else s"url(${escapeHtmlRaw(url).replace("&amp;", "&")})"
-
-  private def cssVariables(zoomable: Boolean)(implicit ctx: Context): Option[String] = {
-    val zoom = zoomable option s"--zoom:${ctx.zoom};"
-    val customBg = ctx.transpBgImg map { img =>
-      s"--tr-bg-url:${cssBackgroundImageValue(img)};"
-    }
-    val customTheme = ctx.activeCustomTheme map { ct =>
-      List(
-        s"--c-board-color:${ct.boardColor};",
-        s"--c-board-url:${cssBackgroundImageValue(ct.boardImg)};",
-        s"--c-grid-color:${ct.gridColor};",
-        s"--c-hands-color:${ct.handsColor};",
-        s"--c-hands-url:${cssBackgroundImageValue(ct.handsImg)};",
-      ).mkString("")
-    }
-    (zoom ++ customBg ++ customTheme).reduceLeftOption(_ + _)
-  }
-
   private val vendorSiteJs = frag(
     jQueryTag,
     howlerTag,
@@ -253,7 +246,16 @@ object layout {
   )(body: Frag)(implicit ctx: Context): Frag =
     frag(
       doctype,
-      htmlTag(ctx.lang, ctx.currentBg)(
+      html(
+        st.lang := lila.i18n.languageCode(ctx.lang),
+        cls     := backgroundClass(ctx.currentBg.key, ctx.activeCustomBackground),
+        style := cssVariables(
+          zoomable option ctx.zoom,
+          ctx.activeCustomTheme,
+          ctx.activeCustomBackground,
+          ctx.pref.activeBgImgUrl,
+        ),
+      )(
         topComment,
         head(
           charset,
@@ -266,6 +268,7 @@ object layout {
             else s"[dev] ${fullTitle | s"$title | lishogi.dev"}"
           },
           cssTag("common.variables"),
+          ctx.activeCustomBackground.isDefined option cssTag("common.custom"),
           cssTag("misc.site"),
           ctx.pageData.inquiry.isDefined option cssTag("user.mod.inquiry"),
           ctx.userContext.impersonatedBy.isDefined option cssTag("user.mod.impersonate"),
@@ -310,17 +313,17 @@ object layout {
         ),
         st.body(
           cls := List(
-            s"${ctx.currentBg} ${ctx.currentTheme.cssClass} coords-${ctx.pref.coordsClass}" -> true,
-            s"grid-width-${ctx.pref.customThemeOrDefault.gridWidth}" -> ctx.pref.isUsingCustomTheme,
-            "thick-grid"                                             -> ctx.pref.isUsingThickGrid,
-            "clear-hands"                                            -> ctx.pref.clearHands,
-            "hands-background"                                       -> ctx.pref.handsBackground,
-            "no-touch"                                               -> !ctx.pref.squareOverlay,
-            "zen"                                                    -> ctx.pref.isZen,
-            "blind-mode"                                             -> ctx.blind,
-            "kid"                                                    -> ctx.kid,
-            "mobile"                                                 -> ctx.isMobileBrowser,
-            "playing"                                                -> playing,
+            s"${ctx.currentTheme.cssClass} coords-${ctx.pref.coordsClass}" -> true,
+            s"grid-width-${ctx.pref.gridWidth}" -> ctx.activeCustomTheme.isDefined,
+            "thick-grid"                        -> ctx.pref.isUsingThickGrid,
+            "clear-hands"                       -> ctx.pref.clearHands,
+            "hands-background"                  -> ctx.pref.handsBackground,
+            "no-touch"                          -> !ctx.pref.squareOverlay,
+            "zen"                               -> ctx.pref.isZen,
+            "blind-mode"                        -> ctx.blind,
+            "kid"                               -> ctx.kid,
+            "mobile"                            -> ctx.isMobileBrowser,
+            "playing"                           -> playing,
           ),
           dataDev           := (!isProd).option("true"),
           dataVapid         := vapidPublicKey,
@@ -331,7 +334,7 @@ object layout {
           dataAssetUrl      := assetBaseUrl,
           dataAssetVersion  := assetVersion.value,
           dataNonce         := ctx.nonce.ifTrue(sameAssetDomain).map(_.value),
-          dataTheme         := ctx.currentBg,
+          dataTheme         := ctx.currentBg.key,
           dataBoardTheme    := ctx.currentTheme.key,
           dataPieceSet      := ctx.currentPieceSet.key,
           dataChuPieceSet   := ctx.currentChuPieceSet.key,
@@ -339,7 +342,6 @@ object layout {
           dataAnnounce      := AnnounceStore.get.map(a => safeJsonValue(a.json)),
           dataNotation      := ctx.pref.notation.toString,
           dataColorName     := ctx.pref.colorName.toString,
-          style             := cssVariables(zoomable),
         )(
           blindModeForm,
           ctx.pageData.inquiry map { views.html.mod.inquiry(_) },

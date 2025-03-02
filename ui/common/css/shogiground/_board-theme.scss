@@ -56,7 +56,8 @@ sg-squares {
     border-width: 0;
     border-bottom: 1px solid black;
     border-right: 1px solid black;
-    background-image: linear-gradient(to right, black 1px, transparent 1px),
+    background-image:
+      linear-gradient(to right, black 1px, transparent 1px),
       linear-gradient(to bottom, black 1px, transparent 1px);
     background-size: calc(100% / 9) calc(100% / 9);
   }
@@ -419,7 +420,8 @@ sg-squares {
   }
 
   .sg-wrap.preload sg-squares {
-    background-image: linear-gradient(to right, #eee 1px, transparent 1px),
+    background-image:
+      linear-gradient(to right, #eee 1px, transparent 1px),
       linear-gradient(to bottom, #eee 1px, transparent 1px);
   }
 
@@ -486,47 +488,47 @@ sg-squares {
 
 .custom {
   #dasher_app .piece .list {
-    background-color: var(--c-board-color, theme.$c-bg-box);
-    background-image: var(--c-board-url, none);
+    background-color: var(--custom-board-color, theme.$c-bg-box);
+    background-image: var(--custom-board-img, none);
   }
 
   sg-board {
-    background-color: var(--c-board-color, theme.$c-bg-box);
-    background-image: var(--c-board-url, none);
+    background-color: var(--custom-board-color, theme.$c-bg-box);
+    background-image: var(--custom-board-img, none);
 
     sg-squares {
-      border-top: 1px solid var(--c-grid-color, theme.$c-font);
-      border-left: 1px solid var(--c-grid-color, theme.$c-font);
+      border-top: 1px solid var(--custom-grid-color, theme.$c-font);
+      border-left: 1px solid var(--custom-grid-color, theme.$c-font);
     }
 
     sq {
-      border-bottom: 1px solid var(--c-grid-color, theme.$c-font);
-      border-right: 1px solid var(--c-grid-color, theme.$c-font);
+      border-bottom: 1px solid var(--custom-grid-color, theme.$c-font);
+      border-right: 1px solid var(--custom-grid-color, theme.$c-font);
 
       &::after {
-        background-color: var(--c-grid-color, theme.$c-font) !important;
+        background-color: var(--custom-grid-color, theme.$c-font) !important;
       }
     }
 
     sg-resize {
       &::after,
       &::before {
-        background-color: var(--c-grid-color, theme.$c-font);
+        background-color: var(--custom-grid-color, theme.$c-font);
       }
     }
   }
 
   @include breakpoint.breakpoint(uniboard.$mq-col2-uniboard) {
     sg-hand {
-      background-color: var(--c-hands-color, theme.$c-bg-box);
-      background-image: var(--c-hands-url, none);
-      border: 1px solid var(--c-grid-color, theme.$c-font);
+      background-color: var(--custom-hands-color, theme.$c-bg-box);
+      background-image: var(--custom-hands-img, none);
+      border: 1px solid var(--custom-grid-color, theme.$c-font);
     }
 
     &.coords-edge .main-board {
       sg-board,
       sg-hand {
-        outline: 1px solid var(--c-grid-color, theme.$c-font);
+        outline: 1px solid var(--custom-grid-color, theme.$c-font);
       }
     }
   }
@@ -534,14 +536,11 @@ sg-squares {
   .preload sg-squares {
     border-top: unset;
     border-left: unset;
-    border-bottom: 1px solid var(--c-grid-color, theme.$c-font);
-    border-right: 1px solid var(--c-grid-color, theme.$c-font);
-    background-image: linear-gradient(
-        to right,
-        var(--c-grid-color, theme.$c-font) 1px,
-        transparent 1px
-      ),
-      linear-gradient(to bottom, var(--c-grid-color, theme.$c-font) 1px, transparent 1px);
+    border-bottom: 1px solid var(--custom-grid-color, theme.$c-font);
+    border-right: 1px solid var(--custom-grid-color, theme.$c-font);
+    background-image:
+      linear-gradient(to right, var(--custom-grid-color, theme.$c-font) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--custom-grid-color, theme.$c-font) 1px, transparent 1px);
   }
 
   &.grid-width-0 {
@@ -598,12 +597,9 @@ sg-squares {
       }
 
       &.preload sg-squares {
-        background-image: linear-gradient(
-            to right,
-            var(--c-grid-color, theme.$c-font) 2px,
-            transparent 2px
-          ),
-          linear-gradient(to bottom, var(--c-grid-color, theme.$c-font) 2px, transparent 2px);
+        background-image:
+          linear-gradient(to right, var(--custom-grid-color, theme.$c-font) 2px, transparent 2px),
+          linear-gradient(to bottom, var(--custom-grid-color, theme.$c-font) 2px, transparent 2px);
       }
     }
 
@@ -640,12 +636,9 @@ sg-squares {
       }
 
       &.preload sg-squares {
-        background-image: linear-gradient(
-            to right,
-            var(--c-grid-color, theme.$c-font) 3px,
-            transparent 3px
-          ),
-          linear-gradient(to bottom, var(--c-grid-color, theme.$c-font) 3px, transparent 3px);
+        background-image:
+          linear-gradient(to right, var(--custom-grid-color, theme.$c-font) 3px, transparent 3px),
+          linear-gradient(to bottom, var(--custom-grid-color, theme.$c-font) 3px, transparent 3px);
       }
     }
 
