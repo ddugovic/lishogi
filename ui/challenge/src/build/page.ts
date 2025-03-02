@@ -1,6 +1,6 @@
 function main(opts: any): void {
   let accepting: boolean;
-  const $el = $('.challenge-page');
+  const selector = '.challenge-page';
 
   window.lishogi.socket = new window.lishogi.StrongSocket(opts.socketUrl, opts.data.socketVersion, {
     options: {
@@ -9,7 +9,7 @@ function main(opts: any): void {
     events: {
       reload: () => {
         window.lishogi.xhr.text('GET', opts.xhrUrl).then(html => {
-          $el.replaceWith($(html).find($el));
+          $(selector).replaceWith($(html).find(selector));
           init();
         });
       },
@@ -21,26 +21,32 @@ function main(opts: any): void {
       $('#challenge-redirect').each(function (this: HTMLAnchorElement) {
         location.href = this.href;
       });
-    $el.find('form.accept').on('submit', function () {
-      accepting = true;
-      $(this).html('<span class="ddloader"></span>');
-    });
-    $el.find('form.xhr').on('submit', function (this: HTMLFormElement, e) {
-      e.preventDefault();
-      window.lishogi.xhr.formToXhr(this);
-      $(this).html('<span class="ddloader"></span>');
-    });
-    $el.find('input.friend-autocomplete').each(function () {
-      const $input = $(this);
-      window.lishogi.userAutocomplete($input, {
-        focus: 1,
-        friend: 1,
-        tag: 'span',
-        onSelect: () => {
-          $input.parents('form').trigger('submit');
-        },
+    $(selector)
+      .find('form.accept')
+      .on('submit', function () {
+        accepting = true;
+        $(this).html('<span class="ddloader"></span>');
       });
-    });
+    $(selector)
+      .find('form.xhr')
+      .on('submit', function (this: HTMLFormElement, e) {
+        e.preventDefault();
+        window.lishogi.xhr.formToXhr(this);
+        $(this).html('<span class="ddloader"></span>');
+      });
+    $(selector)
+      .find('input.friend-autocomplete')
+      .each(function () {
+        const $input = $(this);
+        window.lishogi.userAutocomplete($input, {
+          focus: 1,
+          friend: 1,
+          tag: 'span',
+          onSelect: () => {
+            $input.parents('form').trigger('submit');
+          },
+        });
+      });
   }
 
   init();
