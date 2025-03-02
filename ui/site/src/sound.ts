@@ -32,6 +32,7 @@ export function createSound(): typeof window.lishogi.sound {
   }
 
   function loadStandard(name: Name, soundSet?: string) {
+    if (!enabled()) return;
     const path = capitalize(name);
     loadOggOrMp3(name, `${state.baseUrl}/${soundSet || state.soundSet}/${path}`);
   }
@@ -40,7 +41,7 @@ export function createSound(): typeof window.lishogi.sound {
     if (state.soundSet !== 'music') {
       ['move', 'capture', 'check', 'genericNotify'].forEach(s => loadStandard(s));
       if (clock) {
-        setTimeout(() => ['tick', 'lowtime', 'period'].forEach(s => loadStandard(s)), 1000 * 5);
+        setTimeout(() => ['tick', 'lowTime', 'period'].forEach(s => loadStandard(s)), 1000 * 5);
       }
     }
   }
