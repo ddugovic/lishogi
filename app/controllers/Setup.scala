@@ -124,11 +124,22 @@ final class Setup(
                       rematchOf = none,
                     )
                     (env.challenge.api create challenge) flatMap {
-                      case true =>
+                      case true => {
                         negotiate(
                           html = fuccess(Redirect(routes.Round.watcher(challenge.id, "sente"))),
-                          json = challengeC showChallenge challenge,
+                          json =
+                            if (getBool("redirect"))
+                              fuccess(
+                                Ok(
+                                  Json.obj(
+                                    "id"  -> challenge.id,
+                                    "url" -> routes.Round.watcher(challenge.id, "sente").url,
+                                  ),
+                                ),
+                              )
+                            else challengeC.showChallenge(challenge),
                         )
+                      }
                       case false =>
                         negotiate(
                           html = fuccess(Redirect(routes.Lobby.home)),
