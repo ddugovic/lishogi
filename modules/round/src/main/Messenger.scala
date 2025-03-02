@@ -1,13 +1,27 @@
 package lila.round
 
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
+
 import lila.chat.Chat
 import lila.chat.ChatApi
 import lila.chat.ChatTimeout
 import lila.game.Game
 import lila.hub.actorApi.shutup.PublicSource
+import lila.i18n.I18nKey
 import lila.user.User
 
 final class Messenger(api: ChatApi) {
+
+  private val dateTimeFormatter = DateTimeFormat forStyle "MS"
+  private def timestampMessage(str: String, stepNumber: Int): String =
+    s"[${dateTimeFormatter print DateTime.now} ($stepNumber. move)]${str.toLowerCase.capitalize}"
+
+  def systemWithTimestamp(game: Game, trans: I18nKey, args: String*): Unit =
+    system(true)(game, timestampMessage(s"key:${trans.key}:${args.mkString(",")}", game.plies))
+
+  def system(game: Game, trans: I18nKey, args: String*): Unit =
+    system(true)(game, s"key:${trans.key}:${args.mkString(",")}")
 
   def system(game: Game, message: String): Unit =
     system(true)(game, message)
@@ -15,7 +29,7 @@ final class Messenger(api: ChatApi) {
   def volatile(game: Game, message: String): Unit =
     system(false)(game, message)
 
-  def system(persistent: Boolean)(game: Game, message: String): Unit = {
+  private def system(persistent: Boolean)(game: Game, message: String): Unit = {
     val apiCall =
       if (persistent) api.userChat.system _
       else api.userChat.volatile _

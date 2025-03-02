@@ -1,5 +1,7 @@
 import * as enhance from 'common/rich-text';
-import { i18n } from 'i18n';
+import { i18n, i18nFormatCapitalized } from 'i18n';
+import type { I18nKey } from 'i18n/i18n-keys';
+import { colorName } from 'shogi/color-name';
 import { type VNode, type VNodeData, h, thunk } from 'snabbdom';
 import type { ChatCtrl, Line } from './interfaces';
 import { lineAction as modLineAction } from './moderation';
@@ -37,18 +39,22 @@ export default function (ctrl: ChatCtrl): Array<VNode | undefined> {
         },
         hook: {
           insert(vnode) {
-            const $el = $(vnode.elm as HTMLElement).on('click', 'a.jump', (e: Event) => {
-              window.lishogi.pubsub.emit(
-                'jump',
-                (e.target as HTMLElement).getAttribute('data-ply'),
-              );
-            });
+            const $el = $(vnode.elm as HTMLElement).on(
+              'click',
+              'a.jump',
+              (e: JQuery.ClickEvent) => {
+                window.lishogi.pubsub.emit(
+                  'jump',
+                  (e.target as HTMLElement).getAttribute('data-ply'),
+                );
+              },
+            );
             if (mod)
-              $el.on('click', '.mod', (e: Event) =>
+              $el.on('click', '.mod', (e: JQuery.ClickEvent) =>
                 mod.open((e.target as HTMLElement).parentNode as HTMLElement),
               );
             else
-              $el.on('click', '.flag', (e: Event) =>
+              $el.on('click', '.flag', (e: JQuery.ClickEvent) =>
                 report(ctrl, (e.target as HTMLElement).parentNode as HTMLElement),
               );
             scrollCb(vnode);
@@ -190,18 +196,76 @@ const updateText = (parseMoves: boolean) => (oldVnode: VNode, vnode: VNode) => {
   }
 };
 
-function renderText(t: string, parseMoves: boolean) {
-  if (enhance.isMoreThanText(t)) {
+function renderText(t: string, parseMoves: boolean, system: boolean) {
+  const [timestamp, text] = separateTimestamp(t);
+  const maybeTranslated = system ? translateMessage(text) : text;
+  if (enhance.isMoreThanText(text)) {
     const hook = updateText(parseMoves);
     return h('t', {
-      lishogiChat: t,
+      attrs: {
+        title: timestamp,
+      },
+      lishogiChat: maybeTranslated,
       hook: {
         create: hook,
         update: hook,
       },
     });
   }
-  return h('t', t);
+  return h('t', maybeTranslated);
+}
+
+function separateTimestamp(str: string): [string, string] {
+  const match = str.match(/\[(.*?)\]/);
+  return match ? [match[1], str.replace(/\[(.*?)\)]/, '')] : ['', str];
+}
+
+function translateMessage(t: string): string {
+  const [prefix, trans, color] = t.split(':');
+  if (prefix !== 'key') return t;
+  switch (trans) {
+    case 'takebackPropositionAccepted':
+      return i18n('takebackPropositionAccepted');
+    case 'takebackPropositionSent':
+      return i18n('takebackPropositionSent');
+    case 'takebackPropositionCanceled':
+      return i18n('takebackPropositionCanceled');
+    case 'takebackPropositionDeclined':
+      return i18n('takebackPropositionDeclined');
+    case 'rematchOfferAccepted':
+      return i18n('rematchOfferAccepted');
+    case 'rematchOfferCanceled':
+      return i18n('rematchOfferCanceled');
+    case 'rematchOfferDeclined':
+      return i18n('rematchOfferDeclined');
+    case 'rematchOfferSent':
+      return i18n('rematchOfferSent');
+    case 'xOffersDraw':
+      return i18nFormatCapitalized('xOffersDraw', colorName(color as Color, false));
+    case 'drawOfferCanceled':
+      return i18n('drawOfferCanceled');
+    case 'xDeclinesDraw':
+      return i18nFormatCapitalized('xDeclinesDraw', colorName(color as Color, false));
+    case 'adjournmentOfferAccepted':
+      return i18n('adjournmentOfferAccepted');
+    case 'xOffersAdjournment':
+      return i18nFormatCapitalized('xOffersAdjournment', colorName(color as Color, false));
+    case 'adjournmentOfferCanceled':
+      return i18n('adjournmentOfferCanceled');
+    case 'xDeclinesAdjournment':
+      return i18nFormatCapitalized('xDeclinesAdjournment', colorName(color as Color, false));
+    case 'adjournmentOfferSent':
+      return i18n('adjournmentOfferSent');
+    case 'gameResumed':
+      return i18n('gameResumed');
+    case 'xOffersResumption':
+      return i18nFormatCapitalized('xOffersResumption', colorName(color as Color, false));
+    case 'xDeclinesResumption':
+      return i18nFormatCapitalized('xDeclinesResumption', colorName(color as Color, false));
+    default:
+      console.warn('Unhandled translation', t);
+      return i18n(trans as I18nKey);
+  }
 }
 
 function report(ctrl: ChatCtrl, line: HTMLElement) {
@@ -213,7 +277,7 @@ function report(ctrl: ChatCtrl, line: HTMLElement) {
 
 function renderLine(ctrl: ChatCtrl, line: Line) {
   const system = line.u === 'lishogi';
-  const textNode = renderText(line.t, ctrl.opts.parseMoves);
+  const textNode = renderText(line.t, ctrl.opts.parseMoves, system);
 
   if (system) return h('li.system', textNode);
 

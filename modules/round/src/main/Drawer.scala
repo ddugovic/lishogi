@@ -25,7 +25,7 @@ final private[round] class Drawer(
         val progress = Progress(g) map { g =>
           g.updatePlayer(color, _ offerDraw g.plies)
         }
-        messenger.system(g, trans.xOffersDraw.txt(color.toString).toLowerCase.capitalize)
+        messenger.system(g, trans.xOffersDraw, color.toString)
         proxy.save(progress) >>-
           publishDrawOffer(progress.game) inject
           List(Event.DrawOffer(by = color.some))
@@ -37,14 +37,14 @@ final private[round] class Drawer(
     pov match {
       case Pov(g, color) if pov.player.isOfferingDraw =>
         proxy.save {
-          messenger.system(g, trans.drawOfferCanceled.txt())
+          messenger.system(g, trans.drawOfferCanceled)
           Progress(g) map { g =>
             g.updatePlayer(color, _.removeDrawOffer)
           }
         } inject List(Event.DrawOffer(by = none))
       case Pov(g, color) if pov.opponent.isOfferingDraw =>
         proxy.save {
-          messenger.system(g, trans.xDeclinesDraw.txt(color.toString).toLowerCase.capitalize)
+          messenger.system(g, trans.xDeclinesDraw, color.toString)
           Progress(g) map { g =>
             g.updatePlayer(!color, _.removeDrawOffer)
           }

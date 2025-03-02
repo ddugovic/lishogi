@@ -224,9 +224,9 @@ importers:
       sortablejs:
         specifier: ^1.15.6
         version: 1.15.6
-      spectrum:
-        specifier: github:WandererXII/spectrum
-        version: spectrum-colorpicker2@https://codeload.github.com/WandererXII/spectrum/tar.gz/cc23948ee12b17aea0a316e8d17425629ece5a01
+      spectrum-colorpicker2:
+        specifier: ^2.0.10
+        version: 2.0.10
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
@@ -406,6 +406,9 @@ importers:
       i18n:
         specifier: workspace:*
         version: link:../i18n
+      shogi:
+        specifier: 'workspace:'
+        version: link:../shogi
       snabbdom:
         specifier: 'catalog:'
         version: 3.6.2
@@ -2614,9 +2617,8 @@ packages:
     resolution: {integrity: sha512-l3BikUxvPOcn5E74dZiq5BGsTb5yEwhaTSzccU6t4sDOH8NWJCstKO5QT2CvtFoK6F0saL7p9xHAqHOlCPJygA==}
     engines: {node: '>= 8'}
 
-  spectrum-colorpicker2@https://codeload.github.com/WandererXII/spectrum/tar.gz/cc23948ee12b17aea0a316e8d17425629ece5a01:
-    resolution: {tarball: https://codeload.github.com/WandererXII/spectrum/tar.gz/cc23948ee12b17aea0a316e8d17425629ece5a01}
-    version: 2.0.9
+  spectrum-colorpicker2@2.0.10:
+    resolution: {integrity: sha512-WXyR8qT2tZ71u1W2cdwOPd28jGpuxjwJBeLVTN8xVEWsgQDotlK6DuUwocOyL9qAxTh9570qxTfZYbY7m2wuvQ==}
 
   string-width@4.2.3:
     resolution: {integrity: sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==}
@@ -4225,7 +4227,7 @@ snapshots:
 
   source-map@0.7.4: {}
 
-  spectrum-colorpicker2@https://codeload.github.com/WandererXII/spectrum/tar.gz/cc23948ee12b17aea0a316e8d17425629ece5a01: {}
+  spectrum-colorpicker2@2.0.10: {}
 
   string-width@4.2.3:
     dependencies:

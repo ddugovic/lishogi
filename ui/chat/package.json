@@ -19,7 +19,8 @@
     "breakpoint-sass": "catalog:",
     "common": "workspace:*",
     "i18n": "workspace:*",
-    "snabbdom": "catalog:"
+    "snabbdom": "catalog:",
+    "shogi": "workspace:"
   },
   "scripts": {
     "clean": "del dist",

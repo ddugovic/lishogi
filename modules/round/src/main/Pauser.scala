@@ -2,18 +2,13 @@ package lila.round
 
 import scala.concurrent.duration._
 
-import play.api.i18n.Lang
-
 import com.github.blemale.scaffeine.Cache
-import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
 
 import lila.game.Event
 import lila.game.Game
 import lila.game.GameRepo
 import lila.game.Pov
 import lila.game.Progress
-import lila.i18n.defaultLang
 import lila.i18n.{ I18nKeys => trans }
 import lila.memo.CacheApi
 
@@ -22,32 +17,28 @@ final private[round] class Pauser(
     gameRepo: GameRepo,
 )(implicit ec: scala.concurrent.ExecutionContext) {
 
-  implicit private val chatLang: Lang = defaultLang
-
   private val rateLimit = new lila.memo.RateLimit[String](
     credits = 2,
     duration = 15 minute,
     key = "round.pauser",
   )
 
-  private val dateTimeStyle     = "MS"
-  private val dateTimeFormatter = DateTimeFormat forStyle dateTimeStyle
-
   def yes(pov: Pov)(implicit proxy: GameProxy): Fu[Events] =
     pov match {
       case Pov(g, color) if pov.opponent.isOfferingPause && !g.prePaused =>
         proxy.save {
-          messenger.system(
+          messenger.systemWithTimestamp(
             g,
-            timestampMessage(trans.adjournmentOfferAccepted.txt(), g.plies),
+            trans.adjournmentOfferAccepted,
           )
           Progress(g, g.updatePlayers(_.offerPause))
         } inject List(Event.PauseOffer(by = color.some))
       case Pov(g, color) if g.playerCanOfferPause(color) && rateLimit(pov.fullId)(true)(false) =>
         proxy.save {
-          messenger.system(
+          messenger.systemWithTimestamp(
             g,
-            timestampMessage(trans.xOffersAdjournment.txt(color.toString), g.plies),
+            trans.xOffersAdjournment,
+            color.toString,
           )
           Progress(g, g.updatePlayer(color, _.offerPause))
         } inject List(Event.PauseOffer(by = color.some))
@@ -58,19 +49,16 @@ final private[round] class Pauser(
     pov match {
       case Pov(g, color) if pov.player.isOfferingPause =>
         proxy.save {
-          messenger.system(g, timestampMessage(trans.adjournmentOfferCanceled.txt(), g.plies))
+          messenger.systemWithTimestamp(g, trans.adjournmentOfferCanceled)
           Progress(g, g.updatePlayer(color, _.removePauseOffer))
         } inject List(Event.PauseOffer(by = none))
       case Pov(g, color) if pov.opponent.isOfferingPause =>
         proxy.save {
-          messenger.system(g, timestampMessage(trans.xDeclinesAdjournment.txt(color), g.plies))
+          messenger.systemWithTimestamp(g, trans.xDeclinesAdjournment, color.toString)
           Progress(g, g.updatePlayer(!color, _.removePauseOffer))
         } inject List(Event.PauseOffer(by = none))
       case _ => fuccess(List(Event.ReloadOwner))
     }
-
-  private def timestampMessage(str: String, stepNumber: Int): String =
-    s"[${dateTimeFormatter print DateTime.now} ($stepNumber. move)]${str.toLowerCase.capitalize}"
 
   private val resumeOffers: Cache[Game.ID, Pauser.ResumeOffers] = CacheApi.scaffeineNoScheduler
     .expireAfterWrite(3 minutes)
@@ -89,7 +77,7 @@ final private[round] class Pauser(
       case Pov(g, color) if g.paused =>
         if (isOfferingResume(g.id, !color)) {
           resumeOffers invalidate g.id
-          messenger.system(g, trans.gameResumed.txt())
+          messenger.system(g, trans.gameResumed)
           val prog = Progress(g, g.resume, List(Event.Reload))
           proxy.save(prog) >>
             gameRepo.resume(
@@ -109,7 +97,7 @@ final private[round] class Pauser(
             )
         } else if (!isOfferingResume(g.id, color)) {
           resumeOffers.put(g.id, Pauser.ResumeOffers(sente = color.sente, gote = color.gote))
-          messenger.system(g, trans.xOffersResumption.txt(color))
+          messenger.system(g, trans.xOffersResumption, color.toString)
           fuccess(Left(List(Event.ResumeOffer(by = color.some))))
         } else fuccess(Left(List(Event.ReloadOwner)))
       case _ => fuccess(Left(List(Event.ReloadOwner)))
@@ -118,9 +106,9 @@ final private[round] class Pauser(
   def resumeNo(pov: Pov): Fu[Events] =
     if (pov.game.paused) {
       if (isOfferingResumeFromPov(pov)) {
-        messenger.system(pov.game, trans.resumptionOfferCanceled.txt())
+        messenger.system(pov.game, trans.resumptionOfferCanceled)
       } else if (isOfferingResumeFromPov(!pov)) {
-        messenger.system(pov.game, trans.xDeclinesResumption.txt(pov.color))
+        messenger.system(pov.game, trans.xDeclinesResumption, pov.color.toString)
       }
       resumeOffers invalidate pov.gameId
       fuccess(List(Event.ResumeOffer(by = none)))

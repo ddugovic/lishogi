@@ -1,7 +1,5 @@
 package lila.round
 
-import play.api.i18n.Lang
-
 import shogi.Color
 
 import lila.common.Bus
@@ -10,7 +8,6 @@ import lila.game.Game
 import lila.game.Pov
 import lila.game.Progress
 import lila.game.Rewind
-import lila.i18n.defaultLang
 import lila.i18n.{ I18nKeys => trans }
 import lila.pref.Pref
 import lila.pref.PrefApi
@@ -20,8 +17,6 @@ final private class Takebacker(
     messenger: Messenger,
     prefApi: PrefApi,
 )(implicit ec: scala.concurrent.ExecutionContext) {
-
-  implicit private val chatLang: Lang = defaultLang
 
   def yes(
       situation: TakebackSituation,
@@ -42,7 +37,7 @@ final private class Takebacker(
           double(game) >>- publishTakeback(pov) dmap (_ -> situation)
         case Pov(game, color) if (game playerCanProposeTakeback color) && situation.offerable =>
           {
-            messenger.system(game, trans.takebackPropositionSent.txt())
+            messenger.system(game, trans.takebackPropositionSent)
             val progress = Progress(game) map { g =>
               g.updatePlayer(color, _ proposeTakeback g.plies)
             }
@@ -59,7 +54,7 @@ final private class Takebacker(
     pov match {
       case Pov(game, color) if pov.player.isProposingTakeback =>
         proxy.save {
-          messenger.system(game, trans.takebackPropositionCanceled.txt())
+          messenger.system(game, trans.takebackPropositionCanceled)
           Progress(game) map { g =>
             g.updatePlayer(color, _.removeTakebackProposition)
           }
@@ -68,7 +63,7 @@ final private class Takebacker(
         }
       case Pov(game, color) if pov.opponent.isProposingTakeback =>
         proxy.save {
-          messenger.system(game, trans.takebackPropositionDeclined.txt())
+          messenger.system(game, trans.takebackPropositionDeclined)
           Progress(game) map { g =>
             g.updatePlayer(!color, _.removeTakebackProposition)
           }
@@ -126,7 +121,7 @@ final private class Takebacker(
 
   private def saveAndNotify(p1: Progress)(implicit proxy: GameProxy): Fu[Events] = {
     val p2 = p1 + Event.Reload
-    messenger.system(p2.game, trans.takebackPropositionAccepted.txt())
+    messenger.system(p2.game, trans.takebackPropositionAccepted)
     proxy.save(p2) inject p2.events
   }
 

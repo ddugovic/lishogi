@@ -29,7 +29,7 @@ final private class Finisher(
 )(implicit ec: scala.concurrent.ExecutionContext) {
 
   def abort(pov: Pov)(implicit proxy: GameProxy): Fu[Events] =
-    apply(pov.game, _.Aborted, None) >>- {
+    apply(pov.game, _.Aborted, none) >>- {
       getSocketStatus(pov.game) foreach { ss =>
         playban.abort(pov, ss.colorsOnGame)
       }

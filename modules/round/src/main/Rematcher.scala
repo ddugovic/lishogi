@@ -2,8 +2,6 @@ package lila.round
 
 import scala.concurrent.duration._
 
-import play.api.i18n.Lang
-
 import com.github.blemale.scaffeine.Cache
 
 import shogi.Clock
@@ -21,7 +19,6 @@ import lila.game.PerfPicker
 import lila.game.Pov
 import lila.game.Rematches
 import lila.game.Source
-import lila.i18n.defaultLang
 import lila.i18n.{ I18nKeys => trans }
 import lila.memo.CacheApi
 import lila.user.User
@@ -35,8 +32,6 @@ final private class Rematcher(
     onStart: OnStart,
     rematches: Rematches,
 )(implicit ec: scala.concurrent.ExecutionContext) {
-
-  implicit private val chatLang: Lang = defaultLang
 
   private val declined = new lila.memo.ExpireSetMemo(1 minute)
 
@@ -73,10 +68,10 @@ final private class Rematcher(
   }
 
   def no(pov: Pov): Fu[Events] = {
-    if (isOfferingFromPov(pov)) messenger.system(pov.game, trans.rematchOfferCanceled.txt())
+    if (isOfferingFromPov(pov)) messenger.system(pov.game, trans.rematchOfferCanceled)
     else if (isOfferingFromPov(!pov)) {
       declined put pov.fullId
-      messenger.system(pov.game, trans.rematchOfferDeclined.txt())
+      messenger.system(pov.game, trans.rematchOfferDeclined)
     }
     offers invalidate pov.game.id
     fuccess(List(Event.RematchOffer(by = none)))
@@ -107,7 +102,7 @@ final private class Rematcher(
           _ = rematches.cache.put(pov.gameId, nextGame.id)
           _ <- gameRepo insertDenormalized nextGame
         } yield {
-          messenger.system(pov.game, trans.rematchOfferAccepted.txt())
+          messenger.system(pov.game, trans.rematchOfferAccepted)
           onStart(nextGame.id)
           redirectEvents(nextGame)
         }
@@ -115,7 +110,7 @@ final private class Rematcher(
     }
 
   private def rematchCreate(pov: Pov): Events = {
-    messenger.system(pov.game, trans.rematchOfferSent.txt())
+    messenger.system(pov.game, trans.rematchOfferSent)
     pov.opponent.userId foreach { forId =>
       Bus.publish(lila.hub.actorApi.round.RematchOffer(pov.gameId), s"rematchFor:$forId")
     }
