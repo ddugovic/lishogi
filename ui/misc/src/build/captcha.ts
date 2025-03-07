@@ -1,9 +1,11 @@
 import * as domData from 'common/data';
 import { initOneWithState } from 'common/mini-board';
 import { reverse } from 'common/string';
-import { toBW } from 'shogiops';
+import type { Api as ShogigroundApi } from 'shogiground/api';
 import * as compat from 'shogiops/compat';
 import { parseSfen } from 'shogiops/sfen';
+import type { Role } from 'shogiops/types';
+import { toBW } from 'shogiops/util';
 import * as util from 'shogiops/variant/util';
 
 const readServerValue = (t: string): string => atob(reverse(t));
@@ -12,7 +14,7 @@ window.lishogi.ready.then(() => {
   setTimeout(() => {
     document.querySelectorAll('div.captcha').forEach((captchaEl: HTMLElement) => {
       const board = captchaEl.querySelector<HTMLElement>('.mini-board')!;
-      const hint = readServerValue(board.dataset.x!);
+      const hint = readServerValue(board.dataset.x!) as Key;
       const orientation = readServerValue(board.dataset.y!) as Color;
       const sfen = readServerValue(board.dataset.z!);
       initOneWithState(board, {
@@ -22,7 +24,7 @@ window.lishogi.ready.then(() => {
         playable: true,
         noHands: true,
       });
-      const sg = domData.get(board, 'shogiground');
+      const sg = domData.get<ShogigroundApi>(board, 'shogiground')!;
 
       const input = captchaEl.querySelector<HTMLInputElement>('input')!;
       input.value = '';
@@ -37,7 +39,6 @@ window.lishogi.ready.then(() => {
         movable: {
           free: pos.isErr,
           dests,
-          color: sg.state.orientation,
           events: {
             after: (orig: Key, dest: Key) => {
               captchaEl.classList.remove('success', 'failure');
@@ -55,12 +56,13 @@ window.lishogi.ready.then(() => {
         window.lishogi.xhr
           .text('GET', captchaEl.dataset.checkUrl!, { url: { solution } })
           .then(data => {
-            console.log('CAPTCHA:', data);
             const isSuccess = data == '1';
             captchaEl.classList.add(isSuccess ? 'success' : 'failure');
             if (isSuccess) {
-              const key = solution.slice(2, 4);
-              const piece = sg.state.pieces.get(key);
+              sg.setSquareHighlights([]);
+
+              const key = solution.slice(2, 4) as Key;
+              const piece = sg.state.pieces.get(key)!;
               const sfenStr = `${sg.getBoardSfen()} ${piece.color === 'sente' ? ' w' : ' b'}`;
               const pos = parseSfen('minishogi', sfenStr, false);
               if (pos.isOk && !pos.value.isCheckmate()) {
@@ -70,7 +72,7 @@ window.lishogi.ready.then(() => {
                       key,
                       {
                         color: piece.color,
-                        role: util.promote('minishogi')(piece.role),
+                        role: util.promote('minishogi')(piece.role as Role) || piece.role,
                         promoted: true,
                       },
                     ],

@@ -12,6 +12,7 @@
     "shogi": "workspace:*",
     "flatpickr": "catalog:",
     "shogiops": "catalog:",
+    "shogiground": "catalog:",
     "tablesort": "^5.3.0"
   },
   "devDependencies": {
