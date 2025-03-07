@@ -12,6 +12,8 @@ import lila.game.Pov
 import lila.game.RatingDiffs
 import lila.game.actorApi.AbortedBy
 import lila.game.actorApi.FinishGame
+import lila.i18n.I18nKey
+import lila.i18n.{ I18nKeys => trans }
 import lila.playban.PlaybanApi
 import lila.user.User
 import lila.user.UserRepo
@@ -69,15 +71,15 @@ final private class Finisher(
     game.playerWhoDidNotMove ?? { culprit =>
       lila.mon.round.expiration.count.increment()
       playban.noStart(Pov(game, culprit))
-      if (game.isMandatory) apply(game, _.NoStart, Some(!culprit.color))
-      else apply(game, _.Aborted, None, Some("Game aborted by server"))
+      if (game.isMandatory) apply(game, _.NoStart, winner = Some(!culprit.color))
+      else apply(game, _.Aborted, winner = none, message = trans.gameAborted.some)
     }
 
   def other(
       game: Game,
       status: Status.type => Status,
       winner: Option[Color],
-      message: Option[String] = None,
+      message: Option[I18nKey] = None,
   )(implicit proxy: GameProxy): Fu[Events] =
     apply(game, status, winner, message) >>- playban.other(game, status, winner).unit
 
@@ -115,11 +117,11 @@ final private class Finisher(
   private def apply(
       prev: Game,
       makeStatus: Status.type => Status,
-      winnerC: Option[Color],
-      message: Option[String] = None,
+      winner: Option[Color],
+      message: Option[I18nKey] = None,
   )(implicit proxy: GameProxy): Fu[Events] = {
     val status = makeStatus(Status)
-    val prog   = lila.game.Progress(prev, prev.finish(status, winnerC))
+    val prog   = lila.game.Progress(prev, prev.finish(status, winner))
     val game   = prog.game
     if (game.nonAi && game.isCorrespondence) Color.all foreach notifier.gameEnd(prog.game)
     lila.mon.game
@@ -135,8 +137,8 @@ final private class Finisher(
     proxy.save(prog) >>
       gameRepo.finish(
         id = game.id,
-        winnerColor = winnerC,
-        winnerId = winnerC map (game.player(_).userId | ""),
+        winnerColor = winner,
+        winnerId = winner map (game.player(_).userId | ""),
         status = prog.game.status,
       ) >>
       userRepo

@@ -293,12 +293,12 @@ final private[round] class RoundDuct(
 
     case Resign(playerId) =>
       handle(PlayerId(playerId)) { pov =>
-        pov.game.resignable ?? finisher.other(pov.game, _.Resign, Some(!pov.color))
+        pov.game.resignable ?? finisher.other(pov.game, _.Resign, winner = Some(!pov.color))
       }
 
     case ResignAi =>
       handleAi { pov =>
-        pov.game.resignable ?? finisher.other(pov.game, _.Resign, Some(!pov.color))
+        pov.game.resignable ?? finisher.other(pov.game, _.Resign, winner = Some(!pov.color))
       }
 
     case GoBerserk(color, promise) =>
@@ -353,8 +353,8 @@ final private[round] class RoundDuct(
     case Abandon =>
       proxy withGame { game =>
         game.abandoned ?? {
-          if (game.abortable) finisher.other(game, _.Aborted, None)
-          else finisher.other(game, _.Resign, Some(!game.player.color))
+          if (game.abortable) finisher.other(game, _.Aborted, winner = none)
+          else finisher.other(game, _.Resign, winner = Some(!game.player.color))
         }
       }
 
@@ -364,7 +364,7 @@ final private[round] class RoundDuct(
     case Cheat(color) =>
       handle { game =>
         (game.playable && !game.imported) ?? {
-          finisher.other(game, _.Cheat, Some(!color))
+          finisher.other(game, _.Cheat, winner = Some(!color))
         }
       }
     case TooManyPlies => handle(drawer force _)
@@ -448,7 +448,7 @@ final private[round] class RoundDuct(
 
     case AbortForce =>
       handle { game =>
-        game.playableEvenPaused ?? finisher.other(game, _.Aborted, None)
+        game.playableEvenPaused ?? finisher.other(game, _.Aborted, winner = none)
       }
 
     case PauseForce =>

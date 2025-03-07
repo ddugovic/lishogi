@@ -240,6 +240,8 @@ function translateMessage(t: string): string {
       return i18n('rematchOfferDeclined');
     case 'rematchOfferSent':
       return i18n('rematchOfferSent');
+    case 'drawOfferAccepted':
+      return i18n('drawOfferAccepted');
     case 'xOffersDraw':
       return i18nFormatCapitalized('xOffersDraw', colorName(color as Color, false));
     case 'drawOfferCanceled':

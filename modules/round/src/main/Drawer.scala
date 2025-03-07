@@ -1,13 +1,10 @@
 package lila.round
 
-import play.api.i18n.Lang
-
 import lila.common.Bus
 import lila.game.Event
 import lila.game.Game
 import lila.game.Pov
 import lila.game.Progress
-import lila.i18n.defaultLang
 import lila.i18n.{ I18nKeys => trans }
 
 final private[round] class Drawer(
@@ -15,12 +12,10 @@ final private[round] class Drawer(
     finisher: Finisher,
 )(implicit ec: scala.concurrent.ExecutionContext) {
 
-  implicit private val chatLang: Lang = defaultLang
-
   def yes(pov: Pov)(implicit proxy: GameProxy): Fu[Events] = pov.game.drawable ?? {
     pov match {
       case pov if pov.opponent.isOfferingDraw =>
-        finisher.other(pov.game, _.Draw, None, Some(trans.drawOfferAccepted.txt()))
+        finisher.other(pov.game, _.Draw, winner = none, message = trans.drawOfferAccepted.some)
       case Pov(g, color) if g playerCanOfferDraw color =>
         val progress = Progress(g) map { g =>
           g.updatePlayer(color, _ offerDraw g.plies)
@@ -57,11 +52,11 @@ final private[round] class Drawer(
     (pov.game.playable && pov.game.history.fourfoldRepetition) ?? finisher.other(
       pov.game,
       _.Draw,
-      None,
+      winner = none,
     )
 
   def force(game: Game)(implicit proxy: GameProxy): Fu[Events] =
-    finisher.other(game, _.Draw, None, None)
+    finisher.other(game, _.Draw, winner = none)
 
   private def publishDrawOffer(game: Game): Unit = if (game.nonAi) {
     if (game.isCorrespondence)
