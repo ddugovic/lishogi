@@ -92,8 +92,8 @@ final class TournamentPager(
 
     // scala sort is stable
     private def featured = repo.enterable.map(
-        _.filter(worthSomething).sortBy(_.startsAt.getSeconds).sortBy(calcScore).take(max),
-      )
+      _.filter(worthSomething).sortBy(_.startsAt.getSeconds).sortBy(calcScore).take(max),
+    )
 
     private def worthSomething(tour: Tournament) =
       tour.nbPlayers > 0 ||
