@@ -51,7 +51,18 @@ case class Pref(
 
   def id = _id
 
-  def themeColor = if (background == "light") "#dbd7d1" else "#2e2a24"
+  def isLightBackground =
+    (background == "light") || (background == "custom" && ~customBackground.map(_.light))
+
+  def activeCustomTheme = (theme == "custom") ?? customTheme
+
+  def activeCustomBackground = (background == "custom") ?? customBackground
+
+  def activeBgImgUrl = bgImg
+    .ifTrue(background == "transp")
+    .orElse(activeCustomBackground.map(_.bgImg))
+    .map(cssBackgroundImageValue)
+    .filterNot(_ == "none")
 
   def coordColorName = Color name coordColor
   def coordsClass    = Coords cssClassOf coords
@@ -106,8 +117,6 @@ case class Pref(
     }
 
   def isBlindfold = blindfold == Pref.Blindfold.YES
-
-  def activeBgImgUrl = bgImg.ifTrue(background == "transp").map(cssBackgroundImageValue)
 
   def customThemeOrDefault = customTheme | CustomTheme.default
 

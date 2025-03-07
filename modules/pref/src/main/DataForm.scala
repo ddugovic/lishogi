@@ -1,9 +1,9 @@
 package lila.pref
 
-import java.nio.charset.StandardCharsets.UTF_8
-
 import play.api.data.Forms._
 import play.api.data._
+
+import lila.common.Form.urlText
 
 object DataForm {
 
@@ -216,12 +216,7 @@ object DataForm {
 
   val bgImg = Form(
     single(
-      "bgImg" -> text.verifying { url =>
-        url.getBytes(UTF_8).sizeIs < 400 && (url.isEmpty || url.startsWith("https://") || url
-          .startsWith(
-            "//",
-          ))
-      },
+      "bgImg" -> urlText,
     ),
   )
 
@@ -246,21 +241,11 @@ object DataForm {
   val customTheme = Form(
     mapping(
       "boardColor" -> text(maxLength = 30),
-      "boardImg" -> text.verifying { url =>
-        url.getBytes(UTF_8).sizeIs < 400 && (url.isEmpty || url.startsWith("https://") || url
-          .startsWith(
-            "//",
-          ))
-      },
+      "boardImg"   -> urlText,
       "gridColor"  -> text(maxLength = 30),
       "gridWidth"  -> number.verifying(Set(0, 1, 2, 3) contains _),
       "handsColor" -> text(maxLength = 30),
-      "handsImg" -> text.verifying { url =>
-        url.getBytes(UTF_8).sizeIs < 400 && (url.isEmpty || url.startsWith("https://") || url
-          .startsWith(
-            "//",
-          ))
-      },
+      "handsImg"   -> urlText,
     )(CustomTheme.apply)(CustomTheme.unapply),
   )
 
@@ -268,6 +253,7 @@ object DataForm {
     mapping(
       "light"     -> boolean,
       "bgPage"    -> text(maxLength = 30),
+      "bgImg"     -> urlText,
       "font"      -> text(maxLength = 30),
       "accent"    -> text(maxLength = 30),
       "primary"   -> text(maxLength = 30),

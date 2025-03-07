@@ -33,6 +33,7 @@ object Background {
 case class CustomBackground(
     light: Boolean,
     bgPage: String,
+    bgImg: String,
     font: String,
     accent: String,
     primary: String,
@@ -44,6 +45,7 @@ case class CustomBackground(
   def toVars =
     List(
       s"--custom-bg-page: $bgPage;",
+      // s"--custom-bg-img: $bgImg;", if we remove trans bg?
       s"--custom-font: $font;",
       s"--custom-accent: $accent;",
       s"--custom-primary: $primary;",

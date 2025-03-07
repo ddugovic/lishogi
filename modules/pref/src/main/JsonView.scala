@@ -11,7 +11,7 @@ object JsonView {
     Json.obj(
       "background"         -> p.background,
       "bgImg"              -> p.bgImg,
-      "custombackground"   -> p.customBackground,
+      "customBackground"   -> p.customBackground,
       "theme"              -> p.theme,
       "customTheme"        -> p.customTheme,
       "pieceSet"           -> p.pieceSet,

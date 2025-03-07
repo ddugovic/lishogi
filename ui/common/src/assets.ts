@@ -78,8 +78,8 @@ export const loadVendorScript = (
 };
 
 export const spectrum = (): Promise<void> => {
-  loadCss(assetUrl('vendors/spectrum/spectrum.min.css'));
-  return loadScript(assetUrl('vendors/spectrum/spectrum.min.js'));
+  loadCss(assetUrl('vendors/spectrum-vanilla/spectrum.min.css'));
+  return loadScript(assetUrl('vendors/spectrum-vanilla/spectrum.min.js'));
 };
 
 export const flatpickr = (): Promise<void> => {

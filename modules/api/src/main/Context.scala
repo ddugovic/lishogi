@@ -71,10 +71,6 @@ sealed trait Context extends lila.user.UserContextWrapper {
 
   def currentBg = lila.pref.Background(pref.background)
 
-  def activeCustomTheme = (currentTheme.key == "custom") ?? pref.customTheme
-
-  def activeCustomBackground = (currentBg.key.startsWith("custom")) ?? pref.customBackground
-
   lazy val isMobileBrowser = HTTPRequest isMobile req
 
   def requiresFingerprint = isAuth && !pageData.hasFingerprint

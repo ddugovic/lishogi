@@ -5,11 +5,12 @@ import { camelToKebab } from 'common/string';
 import { debounce } from 'common/timings';
 import { i18n } from 'i18n';
 import { type VNode, h } from 'snabbdom';
-import { type Open, header } from './util';
+import { type Open, header, urlInput, validateUrl } from './util';
 
 export interface CustomBackgroundData {
   light: boolean;
   bgPage: string;
+  bgImg: string;
   font: string;
   accent: string;
   primary: string;
@@ -35,17 +36,24 @@ export const colors: ColorKey[] = [
   'red',
 ];
 
+const colorInputs = new Map<ColorKey, any>();
+
 export interface CustomBackgroundCtrl {
   set: (cbd: CustomBackgroundData) => void;
+  setBgColor: (value: string, isLight: boolean) => void;
   setColor: <K extends ColorKey>(key: K, value: CustomBackgroundData[K]) => void;
-  setShading: (isLight: boolean) => void;
+  // setShading: (isLight: boolean) => void;
+  setImage: (url: string) => void;
   data: CustomBackgroundData;
   redraw: Redraw;
   open: Open;
   loading?: 'loading' | 'done'; // load spectrum only once
 }
 
-const announceFail = () => window.lishogi.announce({ msg: 'Failed to save custom background' });
+const announceFail = (validUrl: boolean) =>
+  window.lishogi.announce({
+    msg: `Failed to save custom background${validUrl ? '' : ': URL should start with https'}`,
+  });
 
 export function ctrl(
   dataInit: CustomBackgroundData | undefined,
@@ -54,13 +62,14 @@ export function ctrl(
 ): CustomBackgroundCtrl {
   const data = {} as CustomBackgroundData;
   data.light = dataInit?.light || false;
+  data.bgImg = dataInit?.bgImg || '';
   colors.forEach(c => {
     data[c] = dataInit?.[c] || presets[0].preset[c];
   });
   const saveTheme = debounce(function (this: HTMLElement) {
     window.lishogi.xhr
       .text('POST', '/pref/customBackground', { formData: data })
-      .catch(announceFail);
+      .catch(() => announceFail(validateUrl(data.bgImg)));
   }, 750);
 
   return {
@@ -76,9 +85,20 @@ export function ctrl(
       redraw();
       saveTheme();
     },
-    setShading: (isLight: boolean) => {
-      data.light = isLight;
-      applyShading(isLight);
+    setBgColor: (value: string, isLight: boolean) => {
+      data.bgPage = value;
+      applyCustomColor('bgPage', value);
+      if (data.light !== isLight) {
+        console.log('Setting light to', isLight);
+        data.light = isLight;
+        applyShading(isLight);
+      }
+      redraw();
+      saveTheme();
+    },
+    setImage: (url: string) => {
+      data.bgImg = url;
+      applyImage(url);
       redraw();
       saveTheme();
     },
@@ -101,15 +121,20 @@ export function view(ctrl: CustomBackgroundCtrl): VNode {
         header(i18n('background'), () => ctrl.open('background')),
         h('div.list', [
           presetSelection(ctrl),
-          radioGroup(ctrl),
-          makeColorInput(ctrl, i18n('backgroundColor'), 'bgPage'),
-          makeColorInput(ctrl, 'Font:', 'font'),
-          makeColorInput(ctrl, 'color#1:', 'accent'),
-          makeColorInput(ctrl, 'color#2:', 'primary'),
-          makeColorInput(ctrl, 'color#3:', 'secondary'),
-          makeColorInput(ctrl, `${i18n('patron:lishogiPatron')}:`, 'brag'),
-          makeColorInput(ctrl, `${i18n('success')}:`, 'green'),
-          makeColorInput(ctrl, `${i18n('error.unknown')}:`, 'red'),
+          colorInput('bgPage', ctrl, i18n('backgroundColor')),
+          colorInput('font', ctrl, 'Font:'),
+          colorInput('accent', ctrl, 'color#1:'),
+          colorInput('primary', ctrl, 'color#2:'),
+          colorInput('secondary', ctrl, 'color#3:'),
+          colorInput('brag', ctrl, `${i18n('patron:lishogiPatron')}:`),
+          colorInput('green', ctrl, `${i18n('success')}:`),
+          colorInput('red', ctrl, `${i18n('error.unknown')}:`),
+          urlInput(
+            'bgImg',
+            ctrl.data.bgImg,
+            (_, url) => ctrl.setImage(url),
+            i18n('backgroundImageUrl'),
+          ),
         ]),
       ],
     );
@@ -128,10 +153,11 @@ export function view(ctrl: CustomBackgroundCtrl): VNode {
   }
 }
 
-function makeColorInput(ctrl: CustomBackgroundCtrl, title: string, key: ColorKey): VNode {
+function colorInput(key: ColorKey, ctrl: CustomBackgroundCtrl, title: string): VNode {
+  const id = `#col-pick-${key}`;
   return h('div.color-wrap', [
     h('p', title),
-    h(`input.kls-${key}`, { hook: { insert: vn => makeColorPicker(ctrl, vn, key) } }),
+    h(`input${id}`, { hook: { insert: () => makeColorPicker(ctrl, id, key) } }),
   ]);
 }
 
@@ -150,7 +176,10 @@ function presetSelection(ctrl: CustomBackgroundCtrl): VNode {
             const preset = presets[Number.parseInt((e.target as HTMLSelectElement).value)];
             ctrl.set(preset.preset);
             colors.forEach(c => {
-              $(`input.kls-${c}`).spectrum('set', preset.preset[c]);
+              const sp = colorInputs.get(c);
+              console.log('Setting ', c, 'to', preset.preset[c]);
+
+              sp.set(preset.preset[c]);
             });
           });
         }),
@@ -173,72 +202,34 @@ function presetSelection(ctrl: CustomBackgroundCtrl): VNode {
   ]);
 }
 
-function radioGroup(ctrl: CustomBackgroundCtrl): VNode {
-  const selected = ctrl.data.light ? 'light' : 'dark';
-  return h(
-    'group.radio.dual',
-    ['dark', 'light'].map(shade => {
-      const id = `dasher-shade-${shade}`;
-      const checked = shade == selected;
-      return h('div', { key: `${id}-${selected}` }, [
-        h(`input#${id}`, {
-          hook: {
-            insert: vnode => {
-              const el = vnode.elm as HTMLInputElement;
-              el.addEventListener('input', _ => {
-                ctrl.setShading(el.value === '1');
-              });
-            },
-          },
-          attrs: {
-            type: 'radio',
-            name: shade,
-            id,
-            value: shade === 'light' ? '1' : '0',
-            checked,
-          },
-        }),
-        h(
-          'label.required',
-          {
-            attrs: {
-              for: id,
-            },
-          },
-          shade === 'light' ? i18n('light') : i18n('dark'),
-        ),
-      ]);
-    }),
-  );
-}
-
-function makeColorPicker(ctrl: CustomBackgroundCtrl, vnode: VNode, key: ColorKey) {
-  const move = (color: any) => {
-    const hexColor = color.toHexString();
-    console.log(hexColor);
+function makeColorPicker(ctrl: CustomBackgroundCtrl, id: string, key: ColorKey) {
+  const move = (e: any) => {
+    const color = e.detail.color;
+    const hexColor = key === 'bgPage' ? color.toHex8String() : color.toHexString();
 
     const prevColor = ctrl.data[key] || '';
 
     if (hexColor === prevColor) return;
-    ctrl.setColor(key, hexColor);
+
+    if (key === 'bgPage') ctrl.setBgColor(hexColor, color.isLight());
+    else ctrl.setColor(key, hexColor);
   };
 
-  console.log('SEETING', ctrl.data[key]);
-
-  $(vnode.elm as HTMLElement).spectrum({
+  const sp = (window as any).Spectrum.create(id, {
     type: 'component',
     color: ctrl.data[key],
-    preferredFormat: 'hex',
-    showAlpha: false,
+    preferredFormat: key === 'bgPage' ? 'hex8' : 'hex',
+    showAlpha: key === 'bgPage',
     showPalette: false,
     showButtons: false,
     allowEmpty: false,
     top: '37px',
     move: debounce(move, 20),
   });
+  colorInputs.set(key, sp);
 }
 
-export function cssVariableName(key: ColorKey): string {
+export function cssVariableName(key: Key): string {
   return `--custom-${camelToKebab(key)}`;
 }
 
@@ -251,8 +242,15 @@ function applyShading(isLight: boolean) {
   document.documentElement.classList.add(isLight ? 'custom-light' : 'custom-dark');
 }
 
+function applyImage(url: string) {
+  document.documentElement.style.setProperty(cssVariableName('bgImg'), url ? `url(${url})` : null);
+  if (url === 'none' || url === '') document.body.classList.remove('custom-background-img');
+  else document.body.classList.add('custom-background-img');
+}
+
 function applyEverything(data: CustomBackgroundData): void {
   applyShading(data.light);
+  applyImage(data.bgImg);
   for (const k of colors) {
     applyCustomColor(k, data[k]);
   }
@@ -260,10 +258,11 @@ function applyEverything(data: CustomBackgroundData): void {
 
 const presets: { name: string; preset: CustomBackgroundData }[] = [
   {
-    name: 'gruvbox',
+    name: 'Gruvbox',
     preset: {
       light: false,
       bgPage: '#1d2021',
+      bgImg: '',
       font: '#ebdbb2',
       accent: '#fb4934',
       primary: '#83a598',
@@ -274,10 +273,11 @@ const presets: { name: string; preset: CustomBackgroundData }[] = [
     },
   },
   {
-    name: 'neon',
+    name: 'Neon',
     preset: {
       light: false,
       bgPage: '#1a1a2e',
+      bgImg: '',
       font: '#e0e0e0',
       accent: '#ff2079',
       primary: '#00ffcc',
@@ -292,6 +292,7 @@ const presets: { name: string; preset: CustomBackgroundData }[] = [
     preset: {
       light: false,
       bgPage: '#1c1c1c',
+      bgImg: '',
       font: '#f5f5f5',
       accent: '#c41e3a',
       primary: '#6589a3',
@@ -302,10 +303,11 @@ const presets: { name: string; preset: CustomBackgroundData }[] = [
     },
   },
   {
-    name: 'fantasy',
+    name: 'Fantasy',
     preset: {
       light: false,
       bgPage: '#1c2520',
+      bgImg: '',
       font: '#d9c7a3',
       accent: '#b68d40',
       primary: '#77a174',
@@ -316,10 +318,11 @@ const presets: { name: string; preset: CustomBackgroundData }[] = [
     },
   },
   {
-    name: 'nord',
+    name: 'Nord',
     preset: {
       light: false,
       bgPage: '#2e3440',
+      bgImg: '',
       font: '#d8dee9',
       accent: '#bf616a',
       primary: '#88c0d0',
@@ -330,10 +333,11 @@ const presets: { name: string; preset: CustomBackgroundData }[] = [
     },
   },
   {
-    name: 'solarized-dark',
+    name: 'Solarized dark',
     preset: {
       light: false,
       bgPage: '#002b36',
+      bgImg: '',
       font: '#c7d2d3',
       accent: '#b58900',
       primary: '#268bd2',
@@ -344,10 +348,11 @@ const presets: { name: string; preset: CustomBackgroundData }[] = [
     },
   },
   {
-    name: 'dracula',
+    name: 'Dracula',
     preset: {
       light: false,
       bgPage: '#282a36',
+      bgImg: '',
       font: '#f8f8f2',
       accent: '#ff79c6',
       primary: '#bd93f9',
@@ -358,10 +363,11 @@ const presets: { name: string; preset: CustomBackgroundData }[] = [
     },
   },
   {
-    name: 'gruvbox-light',
+    name: 'Gruvbox light',
     preset: {
       light: true,
       bgPage: '#fbf1c7',
+      bgImg: '',
       font: '#3c3836',
       accent: '#d65d0e',
       primary: '#458588',
@@ -372,10 +378,11 @@ const presets: { name: string; preset: CustomBackgroundData }[] = [
     },
   },
   {
-    name: 'solarized-light',
+    name: 'Solarized light',
     preset: {
       light: true,
       bgPage: '#fdf6e3',
+      bgImg: '',
       font: '#657b83',
       accent: '#b58900',
       primary: '#268bd2',
@@ -386,10 +393,11 @@ const presets: { name: string; preset: CustomBackgroundData }[] = [
     },
   },
   {
-    name: 'nord-light',
+    name: 'Nord light',
     preset: {
       light: true,
       bgPage: '#eceff4',
+      bgImg: '',
       font: '#4c566a',
       accent: '#bf616a',
       primary: '#5e81ac',
@@ -397,6 +405,21 @@ const presets: { name: string; preset: CustomBackgroundData }[] = [
       brag: '#d08770',
       green: '#a3be8c',
       red: '#bf616a',
+    },
+  },
+  {
+    name: 'River',
+    preset: {
+      light: true,
+      bgPage: '#c1d3c5e8',
+      bgImg: '//lishogi1.org/assets/images/background/river.jpg',
+      font: '#100f0f',
+      accent: '#758b6a',
+      primary: '#003b66',
+      secondary: '#9fbb87',
+      brag: '#6a4a0f',
+      green: '#5a7d5a',
+      red: '#c41e3a',
     },
   },
 ];

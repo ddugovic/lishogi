@@ -40,15 +40,19 @@ export function ctrl(
     { key: 'custom', name: i18n('custom') },
   ];
 
-  const announceFail = () =>
-    window.lishogi.announce({ msg: 'Failed to save background preference' });
+  const announceFail = (validUrl: boolean) =>
+    window.lishogi.announce({
+      msg: `Failed to save background preference${validUrl ? '' : ': URL should start with https'}`,
+    });
 
   return {
     list,
     get: () => data.current,
     set(c: Key) {
       data.current = c;
-      window.lishogi.xhr.text('POST', '/pref/bg', { formData: { bg: c } }).catch(announceFail);
+      window.lishogi.xhr
+        .text('POST', '/pref/bg', { formData: { bg: c } })
+        .catch(() => announceFail(false));
       applyBackground(data, list);
       if (c === 'custom') {
         loadCssPath('common.custom');
@@ -60,7 +64,7 @@ export function ctrl(
       data.image = i;
       window.lishogi.xhr
         .text('POST', '/pref/bgImg', { formData: { bgImg: i } })
-        .catch(announceFail);
+        .catch(() => announceFail(validateUrl(data.image)));
       applyBackground(data, list);
       redraw();
     },
@@ -70,6 +74,9 @@ export function ctrl(
 
 export function view(ctrl: BackgroundCtrl): VNode {
   const cur = ctrl.get();
+  const supportsCustom =
+    CSS.supports('color', 'oklch(0.5 0.2 240)') &&
+    CSS.supports('color', 'color-mix(in srgb, red, blue)');
 
   return h('div.sub.background', [
     header(i18n('background'), ctrl.close),
@@ -81,6 +88,11 @@ export function view(ctrl: BackgroundCtrl): VNode {
             class: { active: cur === bg.key },
             attrs: { 'data-icon': 'E' },
             hook: bind('click', () => ctrl.set(bg.key)),
+            disabled: bg.key === 'custom' && !supportsCustom,
+            title:
+              bg.key === 'custom' && !supportsCustom
+                ? 'Your browser does not support this'
+                : undefined,
           },
           bg.name,
         );
@@ -136,7 +148,10 @@ function applyBackground(data: BackgroundData, list: Background[]) {
   document.documentElement.classList.add(...(kls === 'transp' ? ['transp', 'dark'] : [kls]));
 
   if (key === 'transp') {
-    document.documentElement.style.setProperty('--tr-bg-url', `url(${data.image})`);
+    document.documentElement.style.setProperty('--custom-bg-img', `url(${data.image})`);
+    document.body.classList.add('custom-background-img');
+  } else if (key !== 'custom' || !data.customBackground?.bgImg) {
+    document.body.classList.remove('custom-background-img');
   }
 }
 

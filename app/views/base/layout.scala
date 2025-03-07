@@ -29,7 +29,8 @@ object layout {
       metaCsp(csp getOrElse defaultCsp)
     def metaThemeColor(implicit ctx: Context): Frag =
       raw {
-        s"""<meta name="theme-color" content="${ctx.pref.themeColor}">"""
+        s"""<meta name="theme-color" content="${if (ctx.pref.isLightBackground) "#dbd7d1"
+          else "#2e2a24"}">"""
       }
     def backgroundClass(bg: String, customBackground: Option[lila.pref.CustomBackground]) =
       customBackground
@@ -40,13 +41,16 @@ object layout {
         customTheme: Option[lila.pref.CustomTheme],
         customBackground: Option[lila.pref.CustomBackground],
         bgImgUrl: Option[String],
-    ): Option[String] =
-      (
-        zoom.map(z => s"--zoom:${z};") ++
-          bgImgUrl.map(url => s"--tr-bg-url:${url};") ++
-          customTheme.map(_.toVars) ++
-          customBackground.map(_.toVars)
-      ).reduceLeftOption(_ + _)
+    ): Option[String] = {
+      val variables = List(
+        zoom.map(z => s"--zoom:${z};"),
+        bgImgUrl.map(url => s"--custom-bg-img:${url};"),
+        customTheme.map(_.toVars),
+        customBackground.map(_.toVars),
+      ).flatten
+
+      variables.nonEmpty option variables.mkString
+    }
 
     val windowLishogi: String =
       """window.lishogi={ready:new Promise(r=>document.addEventListener("DOMContentLoaded",r)),modulesData:{}}"""
@@ -248,11 +252,11 @@ object layout {
       doctype,
       html(
         st.lang := lila.i18n.languageCode(ctx.lang),
-        cls     := backgroundClass(ctx.currentBg.key, ctx.activeCustomBackground),
+        cls     := backgroundClass(ctx.currentBg.key, ctx.pref.activeCustomBackground),
         style := cssVariables(
           zoomable option ctx.zoom,
-          ctx.activeCustomTheme,
-          ctx.activeCustomBackground,
+          ctx.pref.activeCustomTheme,
+          ctx.pref.activeCustomBackground,
           ctx.pref.activeBgImgUrl,
         ),
       )(
@@ -268,7 +272,7 @@ object layout {
             else s"[dev] ${fullTitle | s"$title | lishogi.dev"}"
           },
           cssTag("common.variables"),
-          ctx.activeCustomBackground.isDefined option cssTag("common.custom"),
+          ctx.pref.activeCustomBackground.isDefined option cssTag("common.custom"),
           cssTag("misc.site"),
           ctx.pageData.inquiry.isDefined option cssTag("user.mod.inquiry"),
           ctx.userContext.impersonatedBy.isDefined option cssTag("user.mod.impersonate"),
@@ -314,7 +318,8 @@ object layout {
         st.body(
           cls := List(
             s"${ctx.currentTheme.cssClass} coords-${ctx.pref.coordsClass}" -> true,
-            s"grid-width-${ctx.pref.gridWidth}" -> ctx.activeCustomTheme.isDefined,
+            s"grid-width-${ctx.pref.gridWidth}" -> ctx.pref.activeCustomTheme.isDefined,
+            "custom-background-img"             -> ctx.pref.activeBgImgUrl.isDefined,
             "thick-grid"                        -> ctx.pref.isUsingThickGrid,
             "clear-hands"                       -> ctx.pref.clearHands,
             "hands-background"                  -> ctx.pref.handsBackground,

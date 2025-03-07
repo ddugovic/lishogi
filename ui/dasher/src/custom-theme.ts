@@ -4,7 +4,7 @@ import { camelToKebab } from 'common/string';
 import { debounce } from 'common/timings';
 import { i18n } from 'i18n';
 import { type VNode, h } from 'snabbdom';
-import { type Open, header, validateUrl } from './util';
+import { type Open, header, urlInput, validateUrl } from './util';
 
 export interface CustomThemeData {
   boardColor: string;
@@ -26,7 +26,10 @@ export interface CustomThemeCtrl {
   loading?: 'loading' | 'done'; // load spectrum only once
 }
 
-const announceFail = () => window.lishogi.announce({ msg: 'Failed to save custom preferences' });
+const announceFail = (validUrl: boolean) =>
+  window.lishogi.announce({
+    msg: `Failed to save custom preferences${validUrl ? '' : ': URL should start with https'}`,
+  });
 
 export function ctrl(data: CustomThemeData, redraw: Redraw, open: Open): CustomThemeCtrl {
   const saveTheme = debounce(function (this: HTMLElement) {
@@ -38,7 +41,9 @@ export function ctrl(data: CustomThemeData, redraw: Redraw, open: Open): CustomT
         applyCustomTheme(key, data[key]);
       }
     });
-    window.lishogi.xhr.text('POST', '/pref/customTheme', { formData: data }).catch(announceFail);
+    window.lishogi.xhr
+      .text('POST', '/pref/customTheme', { formData: data })
+      .catch(() => announceFail(validateUrl(data.boardImg) && validateUrl(data.handsImg)));
   }, 500);
 
   return {
@@ -66,23 +71,23 @@ export function view(ctrl: CustomThemeCtrl): VNode {
         header(i18n('customTheme'), () => ctrl.open('theme')),
         h('div.board', [
           h('div.title', i18n('board')),
-          makeColorInput(ctrl, i18n('backgroundColor'), 'boardColor'),
-          makeTextInput(ctrl, i18n('backgroundImageUrl'), 'boardImg'),
+          colorInput('boardColor', ctrl, i18n('backgroundColor')),
+          urlInput<Key>('boardImg', ctrl.data.boardImg, ctrl.set, i18n('backgroundImageUrl')),
         ]),
         h('div.grid', [
           h('div.title', i18n('grid')),
-          makeSelection(ctrl, i18n('gridWidth'), [
+          gridWidthSelection(ctrl, i18n('gridWidth'), [
             i18n('none'),
             i18n('gridSlim'),
             i18n('gridThick'),
             i18n('gridVeryThick'),
           ]),
-          makeColorInput(ctrl, i18n('gridColor'), 'gridColor'),
+          colorInput('gridColor', ctrl, i18n('gridColor')),
         ]),
         h('div.hands', [
           h('div.title', i18n('hands')),
-          makeColorInput(ctrl, i18n('backgroundColor'), 'handsColor'),
-          makeTextInput(ctrl, i18n('backgroundImageUrl'), 'handsImg'),
+          colorInput('handsColor', ctrl, i18n('backgroundColor')),
+          urlInput('handsImg', ctrl.data.handsImg, ctrl.set, i18n('backgroundImageUrl')),
         ]),
       ],
     );
@@ -101,34 +106,14 @@ export function view(ctrl: CustomThemeCtrl): VNode {
   }
 }
 
-function makeColorInput(ctrl: CustomThemeCtrl, title: string, key: Key): VNode {
+function colorInput(key: Key, ctrl: CustomThemeCtrl, title: string): VNode {
   return h('div.color-wrap', [
     h('p', title),
-    h('input', { hook: { insert: vn => makeColorPicker(ctrl, vn, key) } }),
+    h('input', { hook: { insert: vn => makeColorPicker(key, ctrl, vn) } }),
   ]);
 }
 
-function makeTextInput(ctrl: CustomThemeCtrl, title: string, key: Key): VNode {
-  return h('div.url-wrap', [
-    h('p', title),
-    h('input', {
-      attrs: {
-        type: 'text',
-        placeholder: 'https://',
-        value: ctrl.data[key],
-      },
-      hook: {
-        insert: vm =>
-          $(vm.elm as HTMLInputElement).on('change keyup paste', function (this: HTMLInputElement) {
-            const url = $(this).val()?.trim()!;
-            if (validateUrl(url)) ctrl.set(key, url);
-          }),
-      },
-    }),
-  ]);
-}
-
-function makeSelection(ctrl: CustomThemeCtrl, name: string, options: string[]): VNode {
+function gridWidthSelection(ctrl: CustomThemeCtrl, name: string, options: string[]): VNode {
   return h('div.select-wrap', [
     h('p', name),
     h(
@@ -157,7 +142,7 @@ function makeSelection(ctrl: CustomThemeCtrl, name: string, options: string[]): 
   ]);
 }
 
-function makeColorPicker(ctrl: CustomThemeCtrl, vnode: VNode, key: Key) {
+function makeColorPicker(key: Key, ctrl: CustomThemeCtrl, vnode: VNode) {
   const move = (color: any) => {
     const hexColor = color.toHex8String();
     const prevColor = ctrl.data[key] as string;

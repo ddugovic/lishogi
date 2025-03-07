@@ -21,7 +21,9 @@ export function ctrl(data: NotationData, redraw: Redraw, close: Close): Notation
       data.current = n;
       window.lishogi.xhr.text('POST', '/pref/notation', { formData: { notation: n } }).then(
         () => {
-          if (confirm(i18n('pageReload'))) window.lishogi.reload;
+          if (confirm(i18n('pageReload'))) {
+            window.lishogi.reload();
+          }
         },
         () => window.lishogi.announce({ msg: 'Failed to save notation preference' }),
       );

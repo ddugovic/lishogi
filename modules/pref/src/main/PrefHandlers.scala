@@ -36,6 +36,7 @@ private object PrefHandlers {
       CustomBackground(
         light = r boolD "l",
         bgPage = r strD "b",
+        bgImg = r strD "bi",
         font = r strD "f",
         accent = r strD "a",
         primary = r strD "p",
@@ -49,6 +50,7 @@ private object PrefHandlers {
       BSONDocument(
         "l"  -> w.boolO(o.light),
         "b"  -> w.str(o.bgPage),
+        "bi" -> w.strO(o.bgImg),
         "f"  -> w.str(o.font),
         "a"  -> w.str(o.accent),
         "p"  -> w.str(o.primary),

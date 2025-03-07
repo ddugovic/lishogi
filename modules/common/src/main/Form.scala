@@ -1,5 +1,6 @@
 package lila.common
 
+import java.nio.charset.StandardCharsets.UTF_8
 import scala.util.Try
 
 import play.api.data.Field
@@ -101,6 +102,14 @@ object Form {
 
   def stringIn(choices: Set[String]) =
     cleanText.verifying(mustBeOneOf(choices), choices.contains _)
+
+  def urlText =
+    text.verifying { url =>
+      url.getBytes(UTF_8).sizeIs < 350 && (url.isEmpty || url.startsWith("https://") || url
+        .startsWith(
+          "//",
+        ))
+    }
 
   def tolerantBoolean = of[Boolean](formatter.tolerantBooleanFormatter)
 
