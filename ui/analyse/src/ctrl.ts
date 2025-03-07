@@ -160,7 +160,7 @@ export default class AnalyseCtrl {
       // and remove moves query param
       if (intHash || params.has('moves')) {
         params.delete('moves');
-        window.history.pushState(
+        window.history.replaceState(
           '',
           document.title,
           loc.pathname + (params.size ? '?' : '') + params.toString(),
