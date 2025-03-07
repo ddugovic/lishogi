@@ -57,7 +57,7 @@ final class Setup(
             config =>
               processor.ai(config)(ctx) flatMap { pov =>
                 negotiate(
-                  html = fuccess(redirectPov(pov)),
+                  html = notFound,
                   json =
                     if (getBool("redirect"))
                       fuccess(Ok(redirectPovJson(pov)))
@@ -90,7 +90,7 @@ final class Setup(
           .fold(
             err =>
               negotiate(
-                html = keyPages.home(Results.BadRequest),
+                html = notFound,
                 json = jsonFormError(err),
               ),
             config =>
@@ -99,7 +99,7 @@ final class Setup(
                   case Some(denied) =>
                     val message = lila.challenge.ChallengeDenied.translated(denied)
                     negotiate(
-                      html = BadRequest(html.site.message.challengeDenied(message)).fuccess,
+                      html = notFound,
                       json = BadRequest(jsonError(message)).fuccess,
                     )
                   case None =>
@@ -126,7 +126,7 @@ final class Setup(
                     (env.challenge.api create challenge) flatMap {
                       case true => {
                         negotiate(
-                          html = fuccess(Redirect(routes.Round.watcher(challenge.id, "sente"))),
+                          html = notFound,
                           json =
                             if (getBool("redirect"))
                               fuccess(
@@ -142,7 +142,7 @@ final class Setup(
                       }
                       case false =>
                         negotiate(
-                          html = fuccess(Redirect(routes.Lobby.home)),
+                          html = notFound,
                           json = fuccess(BadRequest(jsonError("Challenge not created"))),
                         )
                     }

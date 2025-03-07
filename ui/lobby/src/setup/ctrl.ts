@@ -309,9 +309,10 @@ export default class SetupCtrl {
     window.lishogi.xhr
       .json('POST', url, { url: { redirect: true }, formData: postData })
       .then(data => {
-        if (this.key === 'hook') this.root.setTab(this.isCorres() ? 'seeks' : 'real_time');
-        else if (this.key === 'friend' || this.key === 'ai') window.lishogi.redirect(data);
-        this.close();
+        if (this.key === 'hook') {
+          this.root.setTab(this.isCorres() ? 'seeks' : 'real_time');
+          this.close();
+        } else if (this.key === 'friend' || this.key === 'ai') window.lishogi.redirect(data);
       })
       .catch(e => {
         this.submitted = false;
