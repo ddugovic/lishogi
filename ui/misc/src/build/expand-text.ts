@@ -1,6 +1,6 @@
 import { loadScript } from 'common/assets';
 import { camelToKebab } from 'common/string';
-import { currentTheme } from 'common/theme';
+import { isLight } from 'common/theme';
 
 type LinkType = 'youtube' | 'twitter' | 'game' | 'study';
 
@@ -109,7 +109,7 @@ let twitterLoaded = false;
 function expandTwitter(a: Candidate) {
   $(a.element).replaceWith(
     $(
-      `<blockquote class="twitter-tweet" data-dnt="true" data-theme="${currentTheme()}"><a href="${
+      `<blockquote class="twitter-tweet" data-dnt="true" data-theme="${isLight ? 'light' : 'dark'}"><a href="${
         a.src
       }">${a.src}</a></blockquote>`,
     ),
@@ -250,6 +250,12 @@ function configureSrc(url: string) {
       }
     }
   }
+
+  const notation = document.body.getAttribute('data-notation');
+  if (notation) parsed.searchParams.append('notation', notation);
+
+  const colorName = document.body.getAttribute('data-color-name');
+  if (colorName) parsed.searchParams.append('colorName', colorName);
 
   return parsed.href;
 }

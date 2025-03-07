@@ -11,11 +11,13 @@ import lila.pref.CustomTheme
 case class EmbedConfig(
     bg: String,
     customBg: Option[CustomBackground],
-    board: String,
+    theme: String,
     customTheme: Option[CustomTheme],
     pieceSet: lila.pref.PieceSet,
     chuPieceSet: lila.pref.PieceSet,
     kyoPieceSet: lila.pref.PieceSet,
+    notation: String,
+    colorName: Int,
     lang: Lang,
     req: RequestHeader,
     nonce: Nonce,
@@ -43,6 +45,7 @@ object EmbedConfig {
       CustomBackground(
         light = get("bg-light").isDefined,
         bgPage = bgPage,
+        bgImg = "",
         font = ~get("bg-font"),
         accent = ~get("bg-accent"),
         primary = ~get("bg-primary"),
@@ -59,11 +62,13 @@ object EmbedConfig {
     EmbedConfig(
       bg = if (bg == "auto" && customBg.isDefined) "custom" else lila.pref.Background(bg).key,
       customBg = customBg,
-      board = lila.pref.Theme(~get("theme")).cssClass,
+      theme = lila.pref.Theme(~get("theme")).cssClass,
       customTheme = customTheme,
       pieceSet = lila.pref.PieceSet(~pieceSet),
       chuPieceSet = lila.pref.ChuPieceSet(get("chuPieceSet") | ~pieceSet),
       kyoPieceSet = lila.pref.KyoPieceSet(get("kyoPieceSet") | ~pieceSet),
+      notation = ~get("notation"),
+      colorName = ~get("colorName").flatMap(_.toIntOption),
       lang = get("lang")
         .flatMap(lila.i18n.I18nLangPicker.byQuery) | lila.i18n.I18nLangPicker(req, none),
       req = req,

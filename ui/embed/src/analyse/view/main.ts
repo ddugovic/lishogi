@@ -6,7 +6,7 @@ import { renderJumps } from './jumps';
 import { renderMoves } from './moves';
 
 export function view(ctrl: AnalyseCtrl): VNode {
-  return h('main.analyse', [
+  return h(`main.analyse.main-v-${ctrl.data.game.variant.key}`, [
     h(`div.analyse__board.main-board.mini-board.v-${ctrl.data.game.variant.key}`, {
       hook: {
         insert: vnode => {

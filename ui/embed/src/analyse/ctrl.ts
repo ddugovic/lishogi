@@ -65,6 +65,14 @@ export interface AnalyseData {
   treeParts: Tree.Node[];
   game: Game;
   orientation: Color;
+  opponent: Player;
+  player: Player;
+}
+
+interface Player {
+  id: string;
+  name: string;
+  color: Color;
 }
 
 interface Game {
@@ -88,6 +96,6 @@ interface Game {
 export interface StudyData {
   id: string;
   name: string;
-  chapter: { id: string };
+  chapter: { id: string; setup: any };
   chapters: { id: string; name: string }[];
 }

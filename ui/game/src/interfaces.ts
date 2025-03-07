@@ -7,8 +7,8 @@ export interface GameData {
   spectator?: boolean;
   tournament?: Tournament;
   simul?: Simul;
-  takebackable: boolean;
-  moretimeable: boolean;
+  takebackable?: boolean;
+  moretimeable?: boolean;
   clock?: Clock;
   correspondence?: CorrespondenceClock;
 }
@@ -66,9 +66,9 @@ export type StatusId = number;
 export interface Player {
   id: string;
   name: string;
+  color: Color;
   user?: PlayerUser;
   spectator?: boolean;
-  color: Color;
   proposingTakeback?: boolean;
   offeringRematch?: boolean;
   offeringDraw?: boolean;

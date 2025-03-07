@@ -35,7 +35,7 @@ object embed {
           vendorJsTag("shogiground", "shogiground.min.js"),
           moreJs,
         ),
-        st.body(cls := s"base highlight ${config.board}")(
+        st.body(cls := s"base highlight ${config.theme}")(
           layout.dataSoundSet     := SoundSet.silent.key,
           layout.dataAssetUrl     := env.net.assetBaseUrl,
           layout.dataAssetVersion := assetVersion.value,
@@ -43,6 +43,8 @@ object embed {
           layout.dataPieceSet     := config.pieceSet.key,
           layout.dataChuPieceSet  := config.chuPieceSet.key,
           layout.dataKyoPieceSet  := config.kyoPieceSet.key,
+          layout.dataNotation     := config.notation,
+          layout.dataColorName    := config.colorName.toString,
           body,
         ),
       ),

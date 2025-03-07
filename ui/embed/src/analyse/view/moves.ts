@@ -1,7 +1,12 @@
 import { defined, isEmpty } from 'common/common';
-import type { MaybeVNodes } from 'common/snabbdom';
+import type { MaybeVNode, MaybeVNodes } from 'common/snabbdom';
 import throttle from 'common/throttle';
+import { finished } from 'game/status';
+import statusView from 'game/view/status';
+import { i18nFormatCapitalized } from 'i18n';
+import { colorName } from 'shogi/color-name';
 import { notationsWithColor } from 'shogi/notation';
+import { isHandicap } from 'shogiops/handicaps';
 import { type Classes, type VNode, h } from 'snabbdom';
 import { path as treePath } from 'tree';
 import type { AnalyseCtrl } from '../ctrl';
@@ -214,8 +219,7 @@ export function renderMoves(ctrl: AnalyseCtrl): VNode {
   ).filter(c => !!c);
   return h(
     'div.analyse__tools',
-    h(
-      'div.analyse__moves.areplay',
+    h('div.analyse__moves.areplay', [
       h(
         'div.tview2.tview2-column',
         {
@@ -245,6 +249,30 @@ export function renderMoves(ctrl: AnalyseCtrl): VNode {
           }),
         ),
       ),
-    ),
+      renderResult(ctrl),
+    ]),
   );
+}
+
+function renderResult(ctrl: AnalyseCtrl): MaybeVNode {
+  const handicap = isHandicap({
+    rules: ctrl.data.game.variant.key,
+    sfen: ctrl.data.game.initialSfen,
+  });
+  const render = (status: string, winner?: Color) =>
+    h('div.status', [
+      status,
+      winner ? `, ${i18nFormatCapitalized('xIsVictorious', colorName(winner, handicap))}` : null,
+    ]);
+  if (finished(ctrl.data as any)) {
+    const status = statusView(ctrl.data.game.status, ctrl.data.game.winner, handicap);
+    return render(status, ctrl.data.game.winner);
+  } else if (ctrl.study?.chapter.setup.endStatus) {
+    const status = statusView(
+      ctrl.study.chapter.setup.endStatus.status,
+      ctrl.study.chapter.setup.endStatus.winner,
+      handicap,
+    );
+    return render(status, ctrl.study.chapter.setup.endStatus.winner);
+  } else return null;
 }

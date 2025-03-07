@@ -95,7 +95,8 @@ final class JsonView(
       "name" -> study.name.value,
       "chapter" -> Json
         .obj(
-          "id" -> currentChapter.id,
+          "id"    -> currentChapter.id,
+          "setup" -> currentChapter.setup,
         ),
       "chapters" -> chapters.map(chapterIdNameWrites.writes),
     )

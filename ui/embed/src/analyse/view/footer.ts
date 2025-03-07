@@ -1,6 +1,6 @@
 import { i18n, i18nFormat } from 'i18n';
-import { h } from 'snabbdom';
 import type { VNode } from 'snabbdom';
+import { h } from 'snabbdom';
 import type { AnalyseCtrl, StudyData } from '../ctrl';
 
 export function renderFooter(ctrl: AnalyseCtrl): VNode {
@@ -19,6 +19,7 @@ function renderGameFooter(ctrl: AnalyseCtrl): VNode {
 }
 
 function renderStudyFooter(study: StudyData) {
+  const params = new URLSearchParams(window.location.search);
   const url = `//${window.location.host}/study/${study.id}/${study.chapter.id}`;
 
   return h('div.analyse__footer', [
@@ -31,7 +32,7 @@ function renderStudyFooter(study: StudyData) {
             insert: vnode => {
               const el = vnode.elm as HTMLInputElement;
               el.addEventListener('change', _ => {
-                location.href = `//${window.location.host}/study/embed/${study.id}/${el.value}`;
+                location.href = `//${window.location.host}/study/embed/${study.id}/${el.value}?${params.toString()}`;
               });
             },
           },
