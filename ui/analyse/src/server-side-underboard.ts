@@ -16,8 +16,9 @@ export default function (element: HTMLElement, ctrl: AnalyseCtrl): void {
   const $panels = $('.analyse__underboard__panels > div');
   const $menu = $('.analyse__underboard__menu');
   const inputSfen = document.querySelector('.analyse__underboard__sfen') as HTMLInputElement;
+  inputSfen.value = ctrl.node.sfen;
 
-  let lastInputHash: string;
+  let lastInputHash: string = ctrl.node.sfen;
   let advChart: any;
   let timeChartLoaded = false;
 
@@ -30,7 +31,7 @@ export default function (element: HTMLElement, ctrl: AnalyseCtrl): void {
       }, 50);
     });
     li.pubsub.on('analysis.change', (sfen: Sfen, _) => {
-      const nextInputHash = `${sfen}${ctrl.bottomColor()}`;
+      const nextInputHash = sfen;
       if (sfen && nextInputHash !== lastInputHash) {
         inputSfen.value = sfen;
         lastInputHash = nextInputHash;
