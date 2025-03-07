@@ -14,7 +14,7 @@
   "homepage": "https://lishogi.org",
   "engines": {
     "node": ">=20",
-    "pnpm": ">=10"
+    "pnpm": ">=10.6"
   },
   "dependencies": {
     "@build/tsconfig": "workspace:*",
