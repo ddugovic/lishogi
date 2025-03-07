@@ -1,5 +1,7 @@
+@use 'pkg:breakpoint-sass' as breakpoint;
 @use 'pkg:common/abstract/extends';
 @use 'pkg:common/abstract/fluid-size';
+@use 'pkg:common/abstract/media-queries';
 @use 'pkg:common/abstract/mixins';
 @use 'pkg:common/theme';
 @use 'history';
@@ -44,29 +46,24 @@
     text-align: center;
   }
 
-  &__radar {
-    margin-top: 4em;
-  }
-
   &__metrics {
     display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    @include breakpoint.breakpoint(media-queries.$mq-x-small) {
+      flex-direction: row;
+    }
   }
 
   &__metric {
     @extend %box-neat, %flex-column;
 
-    $glow-gradient: linear-gradient(145deg, rgba(255%, 255%, 255%, 0.3) 0%, transparent 45%);
-
     align-items: center;
     padding: 0.4em 0 0.6em 0;
     text-transform: uppercase;
-    flex: 0 0 23.5%;
-    margin-left: 2%;
+    flex: 1;
     cursor: default;
-
-    &:first-child {
-      margin-left: 0;
-    }
 
     strong {
       @extend %roboto;
@@ -77,7 +74,6 @@
     }
 
     span {
-      color: rgba(255%, 255%, 255%, 0.8);
       letter-spacing: -1px;
       font-size: 0.9rem;
     }
@@ -89,22 +85,20 @@
       $c-fix: theme.$m-good_darken_mix_50;
       $c-fail: theme.$m-bad_darken_mix_80;
 
-      background:
-        #{$glow-gradient},
-        linear-gradient(
-          to right,
-          $c-first 0%,
-          $c-first var(--first),
-          $c-fix var(--first),
-          $c-fix var(--win),
-          $c-fail var(--win),
-          $c-fail 100%
-        );
+      background: linear-gradient(
+        to right,
+        $c-first 0%,
+        $c-first var(--first),
+        $c-fix var(--first),
+        $c-fix var(--win),
+        $c-fail var(--win),
+        $c-fail 100%
+      );
       color: theme.$c-good-over;
     }
 
     &--perf {
-      background: #{$glow-gradient} theme.$m-brag_darken_mix_85;
+      background: theme.$m-brag_darken_mix_85;
       color: theme.$c-good-over;
     }
 
@@ -116,15 +110,14 @@
       }
 
       color: theme.$c-good-over;
-      opacity: 0.7;
 
       &[href] {
         opacity: 1;
         cursor: pointer;
-        background: #{$glow-gradient} theme.$m-primary_darken_mix_80;
+        background: theme.$m-primary_darken_mix_80;
 
         &:hover {
-          background: #{$glow-gradient} theme.$c-primary;
+          background: theme.$c-primary;
           color: theme.$c-good-over;
         }
       }
@@ -151,31 +144,34 @@
 
       i {
         font-size: 4em;
-        opacity: 0.8;
         margin-right: -0.1em;
         color: theme.$c-good-over;
       }
     }
+  }
 
-    @include mixins.theme-wrap('light') {
-      &--played span {
-        color: theme.$c-font-dim !important;
+  &__global {
+    .puzzle-dashboard__metric {
+      padding: 1em 0 1.5em 0;
+      border-radius: 8px;
+
+      strong {
+        font-size: 5em;
+      }
+
+      span {
+        letter-spacing: 2px;
+        font-size: 1rem;
       }
     }
   }
 
-  &__global .puzzle-dashboard__metric {
-    padding: 1em 0 1.5em 0;
-    border-radius: 8px;
+  .puzzle-dashboard_wrap {
+    height: 500px;
+    margin-top: 4rem;
 
-    strong {
-      font-size: 5em;
-    }
-
-    span {
-      color: rgba(255%, 255%, 255%, 0.8);
-      letter-spacing: 2px;
-      font-size: 1rem;
+    .puzzle-dashboard__radar {
+      max-width: 100%;
     }
   }
 

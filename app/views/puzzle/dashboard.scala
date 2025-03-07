@@ -59,7 +59,9 @@ object dashboard {
       dash.mostPlayed.sizeIs > 2 option
         div(cls := s"${baseClass}__global")(
           metricsOf(days, PuzzleTheme.mix.key, dash.global),
-          canvas(cls := s"${baseClass}__radar"),
+          div(cls := s"${baseClass}_wrap")(
+            canvas(cls := s"${baseClass}__radar"),
+          ),
         )
     }
 
