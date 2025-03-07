@@ -98,8 +98,15 @@
   }
 }
 
-@mixin theme-wrap($theme-class) {
-  html.#{$theme-class} & {
+@mixin light-theme {
+  html.light &,
+  html.custom-light & {
+    @content;
+  }
+}
+
+@mixin has-bg-img {
+  body.custom-background-img & {
     @content;
   }
 }

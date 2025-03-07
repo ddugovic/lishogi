@@ -2,49 +2,52 @@
 
 #dasher_app .color-wrap {
   margin: 6px;
+
   p {
     margin: 6px 0 3px;
   }
+
   input {
     width: calc(100% - 35px);
   }
-  .sp-container {
-    background-color: theme.$c-bg-box;
+}
 
-    .sp-alpha {
-      border-radius: 4px;
+.sp-picker-container {
+  background-color: theme.$c-bg-box;
+
+  .sp-alpha {
+    border-radius: 4px;
+  }
+
+  .sp-alpha-handle.highlight {
+    background: theme.$c-bg-input;
+    outline: 2px solid theme.$c-bad;
+    animation: 1.3s flash-glow ease-in-out infinite;
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: -2px;
+      top: -20px;
+      border: 10px solid theme.$c-bad;
+      border-bottom: 0;
+      border-left-color: transparent;
+      border-right-color: transparent;
+      opacity: 0;
+      animation:
+        0.5s delayed-show forwards,
+        1.3s bounce ease-in-out infinite;
+      animation-delay: 3s;
     }
+  }
 
-    .sp-alpha-handle.highlight {
-      background: theme.$c-bg-input;
-      outline: 2px solid theme.$c-bad;
-      animation: 1.3s flash-glow ease-in-out infinite;
+  .sp-alpha-handle,
+  .sp-slider {
+    background: theme.$c-bg-input;
+    outline: 1px solid theme.$c-font-clearer;
+  }
 
-      &::after {
-        content: '';
-        position: absolute;
-        left: -2px;
-        top: -20px;
-        border: 10px solid theme.$c-bad;
-        border-bottom: 0;
-        border-left-color: transparent;
-        border-right-color: transparent;
-        opacity: 0;
-        animation:
-          0.5s delayed-show forwards,
-          1.3s bounce ease-in-out infinite;
-        animation-delay: 3s;
-      }
-    }
-
-    .sp-alpha-handle,
-    .sp-slider {
-      background: theme.$c-bg-input;
-      outline: 1px solid theme.$c-font-clearer;
-    }
-
-    .sp-dragger {
-      outline: 1px solid #1b1b1b;
-    }
+  .sp-dragger {
+    outline: 1px solid #1b1b1b;
   }
 }

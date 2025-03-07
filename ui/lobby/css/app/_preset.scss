@@ -32,7 +32,6 @@
     cursor: pointer;
     border: theme.$border;
     background: theme.$c-bg-action;
-
     color: theme.$c-font-clear;
 
     @include mixins.transition;

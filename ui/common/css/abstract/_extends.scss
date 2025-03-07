@@ -33,7 +33,7 @@
 %page-text {
   @extend %page-font;
 
-  @include mixins.theme-wrap('transp') {
+  @include mixins.has-bg-img {
     text-shadow: theme.$text-shadow;
   }
 }

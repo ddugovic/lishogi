@@ -45,7 +45,7 @@
 .ddloader {
   background: functions.img-url('loader/whitex1.png') no-repeat;
 
-  @include mixins.theme-wrap('light') {
+  @include mixins.light-theme {
     background: functions.img-url('loader/blackx1.png') no-repeat;
   }
 

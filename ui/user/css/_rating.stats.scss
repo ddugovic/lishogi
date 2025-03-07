@@ -31,4 +31,13 @@
       padding: 0.3em 1em 0.3em 0.7em;
     }
   }
+
+  #rating_distribution {
+    height: 500px;
+    margin-top: 2rem;
+
+    #rating_distribution_chart {
+      max-width: 100%;
+    }
+  }
 }

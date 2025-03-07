@@ -1,3 +1,5 @@
+@use 'pkg:common/abstract/mixins';
+
 .stage-img {
   &.introduction {
     background-image: url('../images/learn/introduction.svg');
@@ -102,4 +104,9 @@
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
+  filter: brightness(0.9);
+
+  @include mixins.light-theme {
+    filter: brightness(0.2);
+  }
 }

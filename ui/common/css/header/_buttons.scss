@@ -28,7 +28,7 @@
     /* we don't want a lighter dark font in the top gradient */
     color: theme.$c-font;
 
-    @include mixins.theme-wrap('transp') {
+    @include mixins.has-bg-img {
       @extend %page-text;
     }
 
@@ -87,7 +87,7 @@
   .signin {
     margin: 0 1rem;
 
-    @include mixins.theme-wrap('transp') {
+    @include mixins.has-bg-img {
       &.button-empty {
         @extend %metal;
 

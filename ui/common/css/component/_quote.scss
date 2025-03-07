@@ -27,7 +27,7 @@
       border-left: 2px solid theme.$c-border;
       transform: skew(45deg) rotate(-45deg);
 
-      @include mixins.theme-wrap('transp') {
+      @include mixins.has-bg-img {
         display: none;
       }
     }

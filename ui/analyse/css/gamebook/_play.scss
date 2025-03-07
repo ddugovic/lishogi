@@ -50,6 +50,7 @@
     justify-content: space-between;
     font-size: 1.1em;
     background: theme.$c-bg-box;
+    border: 1px solid theme.$c-font-dimmer;
     border-radius: 1rem;
     margin-top: 1em;
     position: relative;
@@ -57,10 +58,6 @@
     /* fixes firefox overflow when comment is long https://stackoverflow.com/questions/28636832/firefox-overflow-y-not-working-with-nested-flexbox */
     min-height: 0;
     max-height: 25rem;
-
-    html.dark & {
-      border: 1px solid theme.$c-font-dimmer;
-    }
 
     &::after {
       position: absolute;
@@ -71,7 +68,7 @@
       height: 15px;
       background: theme.$c-bg-box;
       border-right: 1px solid theme.$c-font-dimmer;
-      border-bottom: 1.5px solid theme.$c-font-dimmer;
+      border-bottom: 2px solid theme.$c-font-dimmer;
       transform: skew(45deg) rotate(45deg);
       z-index: 1;
     }

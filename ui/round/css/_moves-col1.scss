@@ -36,7 +36,7 @@
       color: theme.$c-font-page;
       box-shadow: 0 4px 12px #000 inset;
 
-      @include mixins.theme-wrap('light') {
+      @include mixins.light-theme {
         box-shadow: 0 4px 4px theme.$m-bg-page_c-lightness_78 inset;
       }
 
@@ -68,10 +68,6 @@
       &.active,
       &:hover {
         background: theme.$c-bg-zebra;
-        // todo
-        // @include theme-wrap('light') {
-        //   background: hsl($c-site-hue, 20%, 85%);
-        // }
       }
 
       &.active {

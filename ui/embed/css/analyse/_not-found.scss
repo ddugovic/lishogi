@@ -11,7 +11,7 @@
   bottom: 0;
   justify-content: center;
   height: 100%;
-  background: radial-gradient(circle, theme.$c-shade, theme.$c-bg-high);
+  background: var(--c-bg-zebra2);
 
   h1 {
     @extend %roboto;

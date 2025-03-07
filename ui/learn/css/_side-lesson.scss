@@ -75,11 +75,6 @@
       margin-right: 10px;
       margin-left: 2px;
       padding: 10px;
-      filter: brightness(0.9);
-
-      @include mixins.theme-wrap('light') {
-        filter: brightness(0.2);
-      }
     }
 
     &.active {

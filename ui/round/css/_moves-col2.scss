@@ -5,7 +5,7 @@
 
 .rmoves {
   @include breakpoint.breakpoint(local.$mq-col2) {
-    @include mixins.theme-wrap('transp') {
+    @include mixins.has-bg-img {
       background: theme.$c-bg-box;
     }
 

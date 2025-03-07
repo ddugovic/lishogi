@@ -13,6 +13,13 @@ $col2-panel-height: 240px;
 }
 
 .analyse__underboard {
+  @include mixins.has-bg-img {
+    @extend %box-radius-force;
+
+    background-color: theme.$c-bg-box;
+    padding-left: 1rem;
+  }
+
   &__menu {
     @extend %flex-center-nowrap;
 

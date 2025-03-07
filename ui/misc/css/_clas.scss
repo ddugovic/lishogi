@@ -318,11 +318,7 @@ $c-bg-clas-over-dim: theme.$m-white_clas_mix_80;
       }
 
       &-choices {
-        @extend %flex-center, %box-neat-force;
-
-        html.dark & {
-          box-shadow: none;
-        }
+        @extend %flex-center, %box-radius-force;
 
         flex: 1 1 auto;
         background: theme.$c-bg-box;

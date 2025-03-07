@@ -45,11 +45,6 @@
   day {
     border-radius: 6px;
     box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
-
-    html.dark & {
-      box-shadow: 0 1px 0.5px rgb(0, 0, 0);
-    }
-
     margin: 0.2em 0;
     padding: 0.5em 1em;
     color: theme.$c-font-clear;

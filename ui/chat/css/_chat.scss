@@ -7,11 +7,17 @@
 @use 'palantir';
 
 .mchat {
-  @extend %box-neat-force, %flex-column;
+  @extend %box-radius-force, %flex-column;
 
   grid-area: chat;
   justify-content: stretch;
   min-height: 15em;
+
+  // doesn't overflow top
+  $box-shadow-bottom:
+    0 2px 2px 0 rgba(0, 0, 0, 0.14),
+    0 3px 1px -2px rgba(0, 0, 0, 0.2),
+    0 1px 1px 0 rgba(0, 0, 0, 0.12);
 
   &__content {
     @extend %flex-column;
