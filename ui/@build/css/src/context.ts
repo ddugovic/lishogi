@@ -95,7 +95,7 @@ export function sassContext(): Context {
       } else updateGraph(filepath);
       const newExtracted = await extractVariables([filepath]);
       const allAffected = recImports(filepath);
-      const rebuildFiles = filterBuildFiles(allAffected);
+      const rebuildFiles = filterBuildFiles(Array.from(allAffected));
       if (Array.from(newExtracted).some(e => !extracted.has(e))) {
         console.log('Rebuilding variable files...');
         await buildVars();
@@ -220,13 +220,14 @@ export function sassContext(): Context {
     }
   }
 
-  function recImports(path: string): string[] {
+  function recImports(path: string, set = new Set<string>()): Set<string> {
+    if (set.has(path)) return set;
+    set.add(path);
+
     const paths = graph.index[path].importedBy;
-    const arr = [path];
-    paths.forEach(p => {
-      arr.push(...recImports(p));
-    });
-    return arr;
+    paths.forEach(p => recImports(p, set));
+
+    return set;
   }
 
   function findUnusedFiles(): string[] {
