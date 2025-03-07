@@ -260,6 +260,8 @@ function translateMessage(t: string): string {
       return i18n('gameResumed');
     case 'xOffersResumption':
       return i18nFormatCapitalized('xOffersResumption', colorName(color as Color, false));
+    case 'resumptionOfferCanceled':
+      return i18n('resumptionOfferCanceled');
     case 'xDeclinesResumption':
       return i18nFormatCapitalized('xDeclinesResumption', colorName(color as Color, false));
     default:
