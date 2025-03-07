@@ -11,10 +11,6 @@ import { type VNode, h } from 'snabbdom';
 import { fixed } from '../util';
 import { bg, fontClear, fontDimmer } from './colors';
 
-const isLight =
-  document.documentElement.classList.contains('light') ||
-  document.documentElement.classList.contains('custom-light');
-
 function chart<T extends 'line' | 'bar' | 'doughnut'>(
   id: string,
   key: string,
@@ -140,7 +136,7 @@ function legend(data: MyChartData): DeepPartialObject<LegendOptions<'bar'>> {
     labels: {
       usePointStyle: true,
       pointStyle: 'circle',
-      color: fontClear(isLight),
+      color: fontClear,
       font: {
         weight: 'bold',
       },
@@ -154,10 +150,10 @@ function scales(opts: MyChartOptions, nbOfLabels: number) {
   return {
     x: {
       grid: {
-        color: fontDimmer(isLight),
+        color: fontDimmer,
       },
       ticks: {
-        color: fontClear(isLight),
+        color: fontClear,
         autoSkip: !!opts.autoSkip,
         maxRotation: 90,
         minRotation: nbOfLabels >= 20 && !opts.autoSkip ? 90 : 0,
@@ -173,11 +169,11 @@ function scales(opts: MyChartOptions, nbOfLabels: number) {
     },
     y: {
       grid: {
-        color: fontDimmer(isLight),
+        color: fontDimmer,
       },
       ticks: {
         precision: 0,
-        color: fontClear(isLight),
+        color: fontClear,
         callback: (value: string): string => value + affix,
       },
       suggestedMin: 0,
@@ -203,7 +199,7 @@ function datalabels(data: MyChartData, labelsLength: number): DeepPartialObject<
     color: context => {
       const index = context.dataIndex;
       const cur = context.dataset.data[index] as number;
-      return cur >= maxValue / 8 ? 'white' : fontClear(isLight);
+      return cur >= maxValue / 8 ? 'white' : fontClear;
     },
     font: {
       weight: 'bold',
@@ -222,10 +218,10 @@ function tooltip<T extends 'bar' | 'line'>(
   return {
     animation: false,
     yAlign: 'bottom',
-    backgroundColor: bg(isLight),
-    borderColor: fontClear(isLight),
+    backgroundColor: bg,
+    borderColor: fontClear,
     borderWidth: 1,
-    titleColor: fontClear(isLight),
+    titleColor: fontClear,
     cornerRadius: 3,
     caretSize: 0,
     boxPadding: 2,
@@ -267,7 +263,7 @@ function tooltip<T extends 'bar' | 'line'>(
         pointStyle: 'circle',
         rotation: 0,
       }),
-      labelTextColor: () => fontClear(isLight),
+      labelTextColor: () => fontClear,
       labelColor: context => {
         const dataset = data.datasets[context.datasetIndex];
         const color = dataset.backgroundColor as string;
