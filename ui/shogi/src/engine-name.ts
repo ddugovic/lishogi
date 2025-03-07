@@ -1,9 +1,8 @@
+import { useJp } from 'common/common';
 import { i18nFormat } from 'i18n';
 import { isHandicap } from 'shogiops/handicaps';
 import { initialSfen, parseSfen } from 'shogiops/sfen';
 import type { Rules } from 'shogiops/types';
-
-const useJp: boolean = document.documentElement.lang === 'ja';
 
 export const EngineCode = {
   YaneuraOu: 'yn',
@@ -30,7 +29,7 @@ export function engineName(rules: Rules, sfen: Sfen | undefined, level?: number)
 }
 
 export function engineNameFromCode(code?: EngineCode, level?: number): string {
-  const name = code === EngineCode.Fairy ? 'Fairy Stockfish' : useJp ? 'やねうら王' : 'YaneuraOu';
+  const name = code === EngineCode.Fairy ? 'Fairy Stockfish' : useJp() ? 'やねうら王' : 'YaneuraOu';
   if (level) return `${name} - ${i18nFormat('levelX', level)}`;
   else return name;
 }

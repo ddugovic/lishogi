@@ -1,3 +1,4 @@
+import { memoize } from 'common/common';
 import type { Notation as sgNotation } from 'shogiground/types';
 import { makeJapaneseMoveOrDrop } from 'shogiops/notation/japanese';
 import { makeKifMoveOrDrop } from 'shogiops/notation/kif';
@@ -23,22 +24,24 @@ export const Notation = {
 } as const;
 export type Notation = (typeof Notation)[keyof typeof Notation];
 
-const notationPref = Number.parseInt(document.body.dataset.notation || '0') as Notation;
+const notationPref = memoize(
+  () => Number.parseInt(document.body.dataset.notation || '0') as Notation,
+);
 
 // Notations, that should be displayed with ☖/☗
 export function notationsWithColor(): boolean {
   const colorNotations: Notation[] = [Notation.Kawasaki, Notation.Japanese, Notation.Kif];
-  return colorNotations.includes(notationPref);
+  return colorNotations.includes(notationPref());
 }
 
 export function notationFiles(): sgNotation {
-  if (notationPref === Notation.Western) return 'hex';
-  else if (notationPref === Notation.Yorozuya) return 'dizhi';
+  if (notationPref() === Notation.Western) return 'hex';
+  else if (notationPref() === Notation.Yorozuya) return 'dizhi';
   else return 'numeric';
 }
 
 export function notationRanks(): sgNotation {
-  switch (notationPref) {
+  switch (notationPref()) {
     case Notation.Japanese:
     case Notation.Kif:
     case Notation.Yorozuya:
@@ -52,7 +55,7 @@ export function notationRanks(): sgNotation {
 }
 
 export function roleName(rules: Rules, role: Role): string {
-  switch (notationPref) {
+  switch (notationPref()) {
     case Notation.Kawasaki:
       return roleToKanji(role).replace('成', '+');
     case Notation.Japanese:
@@ -71,7 +74,7 @@ export function makeNotationWithPosition(
   md: MoveOrDrop,
   lastMoveOrDrop?: MoveOrDrop | { to: Square },
 ): string {
-  switch (notationPref) {
+  switch (notationPref()) {
     case Notation.Kawasaki:
       return makeKitaoKawasakiMoveOrDrop(pos, md, lastMoveOrDrop?.to)!;
     case Notation.Japanese:

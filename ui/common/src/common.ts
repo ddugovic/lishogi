@@ -28,5 +28,13 @@ export const requestIdleCallbackWithFallback = (f: () => void, timeout?: number)
   else requestAnimationFrame(f);
 };
 
-// use memoize
-export const useJp = (): boolean => document.documentElement.lang === 'ja';
+// Only computes a value once. The computed value must not be undefined.
+export const memoize = <A>(compute: () => A): (() => A) => {
+  let computed: A;
+  return () => {
+    if (computed === undefined) computed = compute();
+    return computed;
+  };
+};
+
+export const useJp: () => boolean = memoize(() => document.documentElement.lang === 'ja');
