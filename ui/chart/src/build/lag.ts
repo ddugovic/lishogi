@@ -1,8 +1,9 @@
 import type { ArcElement, ChartConfiguration, ChartDataset, ChartType } from 'chart.js';
+import { cssVar } from 'common/theme';
 import { fontColor, fontFamily } from '../common';
 
 declare module 'chart.js' {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-ignore
   interface PluginOptionsByType<_TType extends ChartType> {
     needle?: {
       value: number;
@@ -22,7 +23,7 @@ function main(): void {
     window.lishogi.socket.send('moveLat', true);
   });
   $('.meter canvas').each(function (this: HTMLCanvasElement, index) {
-    const colors = ['#55bf3b', '#dddf0d', '#df5353'];
+    const colors = [cssVar('--c-good'), cssVar('--c-warn'), cssVar('--c-bad')];
     const dataset: ChartDataset<'doughnut'>[] = [
       {
         data: [500, 150, 100],
@@ -43,6 +44,9 @@ function main(): void {
       options: {
         events: [],
         plugins: {
+          legend: {
+            display: false,
+          },
           title: {
             display: true,
             text: '',
@@ -54,7 +58,7 @@ function main(): void {
           },
           datalabels: {
             color: 'black',
-            formatter: (_, ctx) => ctx.chart.data.labels![ctx.dataIndex],
+            formatter: (_: any, ctx: any) => ctx.chart.data.labels![ctx.dataIndex],
           },
         },
       },
@@ -93,7 +97,7 @@ function main(): void {
     if (index === 0)
       window.lishogi.pubsub.on('socket.in.mlat', (d: number) => {
         v.server = d;
-        if (v.server <= 0) return;
+        if (v.server < 0) return;
         chart.options.plugins!.needle!.value = Math.min(750, v.server);
         chart.options.plugins!.title!.text = makeTitle(index, v.server);
         updateAnswer();
@@ -101,7 +105,7 @@ function main(): void {
     else {
       setInterval(() => {
         v.network = Math.round(window.lishogi.socket.averageLag);
-        if (v.network <= 0) return;
+        if (v.network < 0) return;
         chart.options.plugins!.needle!.value = Math.min(750, v.network);
         chart.options.plugins!.title!.text = makeTitle(index, v.network);
         updateAnswer();

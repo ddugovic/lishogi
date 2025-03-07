@@ -145,7 +145,7 @@ function main(ratingHistoryOpts: { data: string; singlePerfName: string }): void
           caretPadding: 10,
           rtl: document.dir === 'rtl',
           callbacks: {
-            title: items => dateFormat(dayjs.utc(items[0].parsed.x).toDate()),
+            title: (items: any) => dateFormat(dayjs.utc(items[0].parsed.x).toDate()),
           },
         },
         datalabels: {

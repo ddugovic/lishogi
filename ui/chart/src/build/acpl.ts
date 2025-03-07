@@ -2,17 +2,14 @@ import { winningChances } from 'ceval';
 import type { ChartConfiguration, ChartDataset, PointStyle } from 'chart.js';
 import { i18n } from 'i18n';
 import {
-  animation,
+  accent,
   axisOpts,
-  blackFill,
   fontColor,
   fontFamily,
   maybeChart,
-  orangeAccent,
   plyLine,
   selectPly,
   tooltipBgColor,
-  whiteFill,
 } from '../common';
 import division from '../division';
 import type { AcplChart, AnalyseData, Player } from '../interface';
@@ -32,7 +29,7 @@ function main(el: HTMLCanvasElement, data: AnalyseData, mainline: Tree.Node[]): 
     mainline: Tree.Node[],
   ): { acpl: ChartDataset<'line'>; moveLabels: string[]; adviceHoverColors: string[] } => {
     const pointBackgroundColors: (
-      | typeof orangeAccent
+      | typeof accent
       | typeof blurBackgroundColorWhite
       | typeof blurBackgroundColorBlack
     )[] = [];
@@ -67,9 +64,9 @@ function main(el: HTMLCanvasElement, data: AnalyseData, mainline: Tree.Node[]): 
       pointStyles.push(isBlur ? 'rect' : 'circle');
       pointSizes.push(isBlur ? 5 : 0);
       pointBackgroundColors.push(
-        isBlur ? (isSente ? blurBackgroundColorWhite : blurBackgroundColorBlack) : orangeAccent,
+        isBlur ? (isSente ? blurBackgroundColorWhite : blurBackgroundColorBlack) : accent,
       );
-      adviceHoverColors.push(glyphColor ?? orangeAccent);
+      adviceHoverColors.push(glyphColor ?? accent);
     });
     return {
       acpl: {
@@ -78,16 +75,16 @@ function main(el: HTMLCanvasElement, data: AnalyseData, mainline: Tree.Node[]): 
         borderWidth: 1,
         fill: {
           target: 'origin',
-          below: blackFill,
-          above: whiteFill,
+          below: 'black',
+          above: 'white',
         },
         pointRadius: d.player.blurs || d.opponent.blurs ? pointSizes : 0,
         pointHoverRadius: 5,
         pointHitRadius: 100,
-        borderColor: orangeAccent,
+        borderColor: accent,
         pointBackgroundColor: pointBackgroundColors,
         pointStyle: pointStyles,
-        hoverBackgroundColor: orangeAccent,
+        hoverBackgroundColor: accent,
         order: 5,
         datalabels: { display: false },
       },
@@ -113,7 +110,7 @@ function main(el: HTMLCanvasElement, data: AnalyseData, mainline: Tree.Node[]): 
         intersect: false,
       },
       scales: axisOpts(firstPly + 1, mainline.length + firstPly),
-      animations: animation(500 / (mainline.length - 1)),
+      animation: false,
       maintainAspectRatio: false,
       responsive: true,
       plugins: {
@@ -205,8 +202,8 @@ function christmasTree(chart: AcplChart, mainline: Tree.Node[], hoverColors: str
   });
   $('div.advice-summary').on('mouseleave', 'div.symbol', function (this: HTMLElement) {
     chart.setActiveElements([]);
-    chart.data.datasets[0].pointHoverBackgroundColor = orangeAccent;
-    chart.data.datasets[0].pointBorderColor = orangeAccent;
+    chart.data.datasets[0].pointHoverBackgroundColor = accent;
+    chart.data.datasets[0].pointBorderColor = accent;
     chart.update('none');
   });
 }

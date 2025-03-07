@@ -1,5 +1,5 @@
 import type { Chart, ChartConfiguration } from 'chart.js';
-import { blueLineColor, fontColor, fontFamily, tooltipBgColor } from '../common';
+import { fontColor, fontFamily, lineColor, tooltipBgColor } from '../common';
 
 function main(canvas: HTMLCanvasElement, data: number[], color: Color): Chart {
   const isSente = color === 'sente';
@@ -10,12 +10,12 @@ function main(canvas: HTMLCanvasElement, data: number[], color: Color): Chart {
       datasets: [
         {
           data: data,
-          borderColor: blueLineColor,
+          borderColor: lineColor,
           borderWidth: 1,
           backgroundColor: isSente ? 'black' : 'white',
           fill: true,
           pointHitRadius: 200,
-          pointHoverBorderColor: '#3893e8',
+          pointHoverBorderColor: lineColor,
           pointRadius: 0,
           pointHoverRadius: 5,
           spanGaps: true,

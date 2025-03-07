@@ -1,6 +1,6 @@
 import type { ChartConfiguration, ChartData, ChartDataset } from 'chart.js';
 import { i18n } from 'i18n';
-import { animation, fontFamily, gridColor, hoverBorderColor } from '../common';
+import { fontFamily, gridColor, hoverBorderColor } from '../common';
 import type { DistributionData } from '../interface';
 
 function main(data: DistributionData): void {
@@ -136,17 +136,20 @@ function main(data: DistributionData): void {
             },
           },
         },
-        animations: animation(1000 / ratings.length),
+        animation: false,
         locale: document.documentElement.lang,
         maintainAspectRatio: false,
         responsive: true,
         plugins: {
+          legend: {
+            display: false,
+          },
           tooltip: {
             titleFont: fontFamily(),
             bodyFont: fontFamily(),
             caretPadding: 8,
             callbacks: {
-              label: item => (item.datasetIndex > 1 ? item.dataset.label : undefined),
+              label: (item: any) => (item.datasetIndex > 1 ? item.dataset.label : undefined),
             },
           },
         },

@@ -2,17 +2,14 @@ import type { Chart, ChartDataset, PointStyle } from 'chart.js';
 import { i18nPluralSame } from 'i18n';
 import {
   type MovePoint,
-  animation,
   axisOpts,
-  blackFill,
-  blueLineColor,
   fontColor,
   fontFamily,
+  lineColor,
   maybeChart,
   plyLine,
   selectPly,
   tooltipBgColor,
-  whiteFill,
 } from '../common';
 import division from '../division';
 import type { AnalyseData, Player, PlyChart } from '../interface';
@@ -23,11 +20,11 @@ function movetime(el: HTMLCanvasElement, data: AnalyseData): PlyChart | undefine
   const moveCentis = data.game.moveCentis;
   if (!moveCentis) return; // imported games
   type PlotSeries = { sente: MovePoint[]; gote: MovePoint[] };
-  const moveSeries: PlotSeries = {
+  const moveSeriesPlot: PlotSeries = {
     sente: [],
     gote: [],
   };
-  const totalSeries: PlotSeries = {
+  const totalSeriesPlot: PlotSeries = {
     sente: [],
     gote: [],
   };
@@ -77,7 +74,7 @@ function movetime(el: HTMLCanvasElement, data: AnalyseData): PlyChart | undefine
 
     const seconds = (centis / 100).toFixed(centis >= 200 ? 1 : 2);
     label += `\n${i18nPluralSame('nbSeconds', Number(seconds))}`;
-    moveSeries[colorName].push(movePoint);
+    moveSeriesPlot[colorName].push(movePoint);
 
     let clock = node ? node.clock : undefined;
     if (clock === undefined) {
@@ -89,7 +86,7 @@ function movetime(el: HTMLCanvasElement, data: AnalyseData): PlyChart | undefine
     }
     if (clock) {
       label += `\n${formatClock(clock)}`;
-      totalSeries[colorName].push({
+      totalSeriesPlot[colorName].push({
         x: node ? node.ply : tree[x].ply + 1,
         y: color ? clock : -clock,
       });
@@ -104,36 +101,35 @@ function movetime(el: HTMLCanvasElement, data: AnalyseData): PlyChart | undefine
         return acc;
       }, [] as number[]),
     );
-  const totalSeriesMax = colorSeriesMax(totalSeries);
-  const moveSeriesMax = colorSeriesMax(moveSeries);
+  const totalSeriesMax = colorSeriesMax(totalSeriesPlot);
+  const moveSeriesMax = colorSeriesMax(moveSeriesPlot);
 
-  const lineBuilder = (series: PlotSeries, moveSeries: boolean): ChartDataset[] =>
+  const lineBuilder = (series: PlotSeries): ChartDataset[] =>
     colors.map(color => ({
       type: 'line',
       data: series[color].map(point => ({
         x: point.x,
-        y: point.y / (moveSeries ? moveSeriesMax : totalSeriesMax),
+        y: point.y / totalSeriesMax,
       })),
-      backgroundColor: color === 'sente' ? 'black' : 'white',
-      borderColor: moveSeries ? (color === 'sente' ? '#838383' : '#3d3d3d') : blueLineColor,
-      borderWidth: moveSeries ? 1 : 1.5,
-      pointHitRadius: moveSeries ? 0 : 200,
-      pointHoverBorderColor: blueLineColor,
+      borderColor: lineColor,
+      borderWidth: 1.5,
+      pointHitRadius: 200,
+      pointHoverBorderColor: lineColor,
       pointRadius: 0,
       pointHoverRadius: 5,
       pointStyle: undefined,
       fill: {
         target: 'origin',
-        above: moveSeries ? blackFill : 'rgba(0,0,0,0.1)',
-        below: moveSeries ? whiteFill : 'rgba(153, 153, 153, .1)',
+        above: 'rgba(0,0,0,0.1)',
+        below: 'rgba(153, 153, 153, .1)',
       },
-      order: moveSeries ? 2 : 1,
+      order: 1,
       datalabels: { display: false },
     }));
 
   const moveSeriesSet: ChartDataset[] = colors.map(color => ({
     type: 'bar',
-    data: moveSeries[color].map(point => ({ x: point.x, y: point.y / moveSeriesMax })),
+    data: moveSeriesPlot[color].map(point => ({ x: point.x, y: point.y / moveSeriesMax })),
     backgroundColor: color === 'sente' ? 'black' : 'white',
     grouped: false,
     categoryPercentage: 2,
@@ -145,7 +141,7 @@ function movetime(el: HTMLCanvasElement, data: AnalyseData): PlyChart | undefine
   }));
   const divisionLines = division(data.game.division);
   const datasets: ChartDataset[] = [...moveSeriesSet];
-  datasets.push(...lineBuilder(totalSeries, false));
+  datasets.push(...lineBuilder(totalSeriesPlot));
   datasets.push(plyLine(firstPly), ...divisionLines);
 
   const config: Chart['config'] = {
@@ -160,7 +156,7 @@ function movetime(el: HTMLCanvasElement, data: AnalyseData): PlyChart | undefine
     options: {
       maintainAspectRatio: false,
       responsive: true,
-      animations: animation(800 / labels.length - 1),
+      animation: false,
       scales: axisOpts(
         firstPly + 1,
         // Omit game-ending action to sync acpl and movetime charts

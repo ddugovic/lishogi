@@ -1,24 +1,29 @@
-import { currentTheme } from 'common/theme';
+import { cssVar } from 'common/theme';
+import { fontColor, tooltipBgColor } from '../common';
 
 function main(data: any): void {
   const canvas = document.querySelector('.puzzle-dashboard__radar') as HTMLCanvasElement;
   const d = data.radar;
-  const isDark = currentTheme() === 'dark';
   d.datasets[0] = {
     ...d.datasets[0],
     ...{
       backgroundColor: 'rgba(189,130,35,0.2)',
-      borderColor: 'rgba(189,130,35,1)',
-      pointBackgroundColor: 'rgb(189,130,35,1)',
+      borderColor: cssVar('--c-brag'),
+      pointBackgroundColor: fontColor,
     },
   };
-  const fontColor = isDark ? '#bababa' : '#4d4d4d';
-  const lineColor = 'rgba(127, 127, 127, .3)';
 
   new window.Chart(canvas, {
     type: 'radar',
     data: d,
     options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false,
+        },
+      },
       aspectRatio: 2,
       scales: {
         r: {
@@ -38,10 +43,10 @@ function main(data: any): void {
             },
           },
           grid: {
-            color: lineColor,
+            color: tooltipBgColor,
           },
           angleLines: {
-            color: lineColor,
+            color: tooltipBgColor,
           },
         },
       },
