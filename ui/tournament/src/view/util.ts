@@ -1,6 +1,6 @@
 import { initOneWithState } from 'common/mini-board';
 import { numberFormat } from 'common/number';
-import { dataIcon } from 'common/snabbdom';
+import { type MaybeVNodes, dataIcon } from 'common/snabbdom';
 import { type VNode, h } from 'snabbdom';
 import type { Arrangement } from '../interfaces';
 
@@ -31,7 +31,7 @@ export function ratio2percent(r: number): string {
   return `${Math.round(100 * r)}%`;
 }
 
-export function playerName(p: any): VNode[] | string {
+export function playerName(p: any): MaybeVNodes | string {
   return p.title ? [h('span.title', p.title), ` ${p.name}`] : p.name;
 }
 
