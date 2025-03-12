@@ -187,6 +187,7 @@
     &.play > div {
       display: flex;
       align-items: center;
+      justify-content: center;
       margin: 0 10px;
     }
 
@@ -198,6 +199,15 @@
 
     .instruction > * {
       display: block;
+    }
+
+    .instruction .title {
+      display: flex;
+
+      .color-icon {
+        font-size: 2em;
+        margin-right: 0.5rem;
+      }
     }
 
     &.play piece {

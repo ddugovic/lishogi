@@ -1,10 +1,9 @@
-import { assetUrl, loadCssPath } from 'common/assets';
+import { loadCssPath } from 'common/assets';
 import { richHTML } from 'common/rich-text';
 import { bind, dataIcon } from 'common/snabbdom';
 import { i18n, i18nFormatCapitalized } from 'i18n';
 import { colorName } from 'shogi/color-name';
 import { isHandicap } from 'shogiops/handicaps';
-import { toBlackWhite } from 'shogiops/util';
 import { type VNode, h } from 'snabbdom';
 import { iconTag } from '../../util';
 import type GamebookPlayCtrl from './gamebook-play-ctrl';
@@ -93,15 +92,8 @@ function renderFeedback(ctrl: GamebookPlayCtrl, state: State) {
       'div',
       fb === 'play'
         ? [
-            h('img', {
-              attrs: {
-                width: 64,
-                height: 64,
-                src: assetUrl(`images/${toBlackWhite(color)}Piece.svg`),
-              },
-            }),
             h('div.instruction', [
-              h('strong', i18n('yourTurn')),
+              h('div.title', [h(`i.color-icon.${color}.text`), h('strong', i18n('yourTurn'))]),
               h(
                 'em',
                 i18nFormatCapitalized(

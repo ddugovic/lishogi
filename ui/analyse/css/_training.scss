@@ -61,9 +61,15 @@
     display: block;
   }
 
-  .instruction > strong {
-    font-weight: normal;
-    font-size: 1.2em;
+  .instruction .title {
+    .color-icon {
+      font-size: 1.5em;
+    }
+
+    strong {
+      font-weight: normal;
+      font-size: 1.2em;
+    }
   }
 
   .choices {
