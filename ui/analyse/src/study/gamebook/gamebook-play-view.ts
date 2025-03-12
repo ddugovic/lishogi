@@ -38,16 +38,7 @@ export function render(ctrl: GamebookPlayCtrl): VNode {
             [h('div.content', { hook: richHTML(comment) }), hintZone(ctrl)],
           )
         : undefined,
-      h('div.floor', [
-        renderFeedback(ctrl, state),
-        h('img.mascot', {
-          attrs: {
-            width: 120,
-            height: 120,
-            src: assetUrl(`images/mascot/${mascot(ctrl)}.svg`),
-          },
-        }),
-      ]),
+      h('div.floor', [renderFeedback(ctrl, state), h(`div.mascot.${mascot(ctrl)}`)]),
     ],
   );
 }
