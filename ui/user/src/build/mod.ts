@@ -11,7 +11,10 @@ function streamLoad() {
   const callback = debounce(() => userMod($zone), 300);
   source.addEventListener('message', e => {
     if (!e.data) return;
-    const html = $('<output>').append($.parseHTML(e.data));
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(e.data, 'text/html');
+    const html = $('<output>').append($(doc.body).children());
+
     html.find('.mz-section').each(function () {
       const prev = $(`#${this.id}`);
       if (prev.length) prev.replaceWith($(this));
@@ -52,16 +55,18 @@ $toggle.on('click', () => {
 });
 
 function userMod($zone: any): void {
+  const getLocationHash = (a: HTMLAnchorElement) => a.href.replace(/.+(#\w+)$/, '$1');
+
   window.lishogi.pubsub.emit('content_loaded');
 
   $('#mz_menu > a:not(.available)').each(function (this: HTMLAnchorElement) {
-    $(this).toggleClass('available', !!$(this.href).length);
+    $(this).toggleClass('available', !!$(getLocationHash(this)).length);
   });
   makeReady('#mz_menu', el => {
     $(el)
       .find('a')
       .each(function (i) {
-        const id = (this as HTMLAnchorElement).href.replace(/.+(#\w+)$/, '$1');
+        const id = getLocationHash(this as HTMLAnchorElement);
         const n = `${i + 1}`;
         $(this).prepend(`<i>${n}</i>`);
         window.lishogi.mousetrap.bind(n, () => scrollTo(id));
