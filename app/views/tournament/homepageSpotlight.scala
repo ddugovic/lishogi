@@ -22,7 +22,7 @@ object homepageSpotlight {
             img(cls := "img", src := staticUrl(s"images/$i"))
           } getOrElse {
             spot.iconFont.fold[Frag](iconTag("g")(cls := "img")) {
-              case "\\" => img(cls := "img icon", src := staticUrl(s"images/globe.svg"))
+              case "\\" => img(cls := "img icon", src := staticUrl(s"images/icons/globe.svg"))
               case i    => iconTag(i)(cls := "img")
             }
           },

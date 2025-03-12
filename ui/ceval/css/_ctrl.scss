@@ -122,7 +122,7 @@
   }
 
   &.computing .bar span {
-    background-image: functions.img-url('bar-highlight.png');
+    background-image: functions.img-url('loader/bar-highlight.png');
     animation: bar-anim 1000s linear infinite;
   }
 
