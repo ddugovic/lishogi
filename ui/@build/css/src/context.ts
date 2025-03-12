@@ -73,6 +73,7 @@ export function sassContext(): Context {
                   normalizeWhitespace: isProd,
                   colormin: { precision: 3 },
                   discardComments: { removeAll: isProd },
+                  calc: false,
                 },
               ],
             }),
