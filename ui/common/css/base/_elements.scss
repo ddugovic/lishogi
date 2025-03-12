@@ -45,9 +45,9 @@ a {
   color: theme.$c-link;
   text-decoration: none;
 
-  &:hover,
-  &:active,
-  &:focus {
+  &:not(.disabled):hover,
+  &:not(.disabled):active,
+  &:not(.disabled):focus {
     color: theme.$c-link-hover;
   }
 }
