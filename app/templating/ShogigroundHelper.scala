@@ -13,21 +13,16 @@ import lila.game.Pov
 
 trait ShogigroundHelper {
 
-  private val sgBoard   = tag("sg-board")
-  private val sgSquares = tag("sg-squares")
-  private val sgPieces  = tag("sg-pieces")
-
-  private val sgHandTop    = tag("sg-hand-wrap")(cls := "hand-top")
-  private val sgHandBottom = tag("sg-hand-wrap")(cls := "hand-bottom")
-  private val sgHand       = tag("sg-hand")
-
   def shogiground(sit: Situation, orient: Color, @scala.annotation.unused lastUsi: List[Pos] = Nil)(
       implicit ctx: Context,
   ): Frag =
     sgWrap(sit.variant, orient) {
       frag(
-        sit.variant.supportsDrops option sgHandTop(
-          sgHand(shogigroundHandPieces(sit.variant, sit.hands(!orient), !orient)),
+        shogigroundHand(
+          Top,
+          sit.variant,
+          !orient,
+          sit.hands(!orient),
         ),
         sgBoard(
           sgSquares,
@@ -49,8 +44,11 @@ trait ShogigroundHelper {
             }
           },
         ),
-        sit.variant.supportsDrops option sgHandBottom(
-          sgHand(shogigroundHandPieces(sit.variant, sit.hands(orient), orient)),
+        shogigroundHand(
+          Bottom,
+          sit.variant,
+          orient,
+          sit.hands(orient),
         ),
       )
     }
@@ -65,20 +63,18 @@ trait ShogigroundHelper {
   def shogigroundEmpty(variant: Variant, orient: Color) =
     sgWrap(variant, orient)(
       frag(
-        variant.supportsDrops option sgHandTop(sgHand),
+        shogigroundHand(Top, variant, !orient, Hand.empty),
         sgBoard(sgSquares),
-        variant.supportsDrops option sgHandBottom(sgHand),
+        shogigroundHand(Bottom, variant, orient, Hand.empty),
       ),
     )
 
-  private def shogigroundHandPieces(variant: Variant, hand: Hand, color: Color): Frag =
-    raw {
-      variant.handRoles.map { role =>
-        s"""<sg-hp-wrap data-nb="${hand(
-            role,
-          )}"><piece class="${color.name} ${role.name}"></piece></sg-hp-wrap>"""
-      } mkString ""
-    }
+  private val sgBoard   = tag("sg-board")
+  private val sgSquares = tag("sg-squares")
+  private val sgPieces  = tag("sg-pieces")
+
+  private val sgHandWrap = tag("sg-hand-wrap")
+  private val sgHand     = tag("sg-hand")
 
   private def sgWrap(variant: Variant, orient: Color)(content: Frag): Frag =
     div(
@@ -86,5 +82,29 @@ trait ShogigroundHelper {
     )(
       content,
     )
+
+  sealed private trait Position
+  private case object Top    extends Position
+  private case object Bottom extends Position
+
+  private def shogigroundHand(
+      position: Position,
+      variant: Variant,
+      color: Color,
+      hand: Hand,
+  ): Option[Frag] =
+    variant.supportsDrops option sgHandWrap(
+      (cls := s"hand-${position.toString.toLowerCase} r-${variant.handRoles.size}"),
+    ) {
+      sgHand {
+        raw {
+          variant.handRoles.map { role =>
+            s"""<sg-hp-wrap data-nb="${hand(
+                role,
+              )}"><piece class="${color.name} ${role.name}"></piece></sg-hp-wrap>"""
+          } mkString ""
+        }
+      }
+    }
 
 }
