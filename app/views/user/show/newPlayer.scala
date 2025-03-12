@@ -35,7 +35,7 @@ object newPlayer {
         li(a(href := routes.Tournament.homeDefault(1))(trans.tournaments())),
         li(a(href := routes.Study.allDefault(1))(trans.studyMenu())),
         li(a(href := routes.Pref.form("game-display"))(trans.preferences.preferences())),
-        li("Explore the site and have fun :)"),
+        li(trans.exploreSiteAndHaveFun()),
       ),
     )
 }
