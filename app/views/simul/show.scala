@@ -19,7 +19,7 @@ object show {
   )(implicit ctx: Context) =
     views.html.base.layout(
       moreCss = cssTag("simul.show"),
-      title = sim.fullName,
+      title = sim.name,
       moreJs = frag(
         moduleJsTag(
           "simul",
@@ -48,12 +48,7 @@ object show {
           .get(variant)
           .flatMap(hs => hs.find(_.sfen.truncate == sfen.truncate))
       } yield (handicap))
-      main(
-        cls := List(
-          "simul"         -> true,
-          "simul-created" -> sim.isCreated,
-        ),
-      )(
+      main(cls := "simul")(
         st.aside(cls := "simul__side")(
           div(cls := "simul__meta")(
             div(cls := "game-infos")(
@@ -68,7 +63,7 @@ object show {
                     (isGranted(_.ManageSimul) || ctx.userId
                       .has(sim.hostId)) && sim.isCreated option frag(
                       " - ",
-                      a(href := routes.Simul.edit(sim.id), title := "Edit simul")(iconTag("%")),
+                      a(href := routes.Simul.edit(sim.id), title := trans.edit.txt())(iconTag("%")),
                     ),
                   ),
                 ),

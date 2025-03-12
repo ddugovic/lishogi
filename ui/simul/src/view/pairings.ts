@@ -1,26 +1,33 @@
 import { initOneWithState } from 'common/mini-board';
 import * as status from 'game/status';
-import { i18n, i18nFormat } from 'i18n';
-import { i18nVariant } from 'i18n/variant';
-import { h } from 'snabbdom';
+import { i18n, i18nFormat, i18nVdom } from 'i18n';
+import { type VNode, h } from 'snabbdom';
 import type SimulCtrl from '../ctrl';
 import type { Pairing } from '../interfaces';
 
-export default function (ctrl: SimulCtrl) {
+export default function (ctrl: SimulCtrl): VNode {
   return h('div.game-list.now-playing.box__pad', ctrl.data.pairings.map(miniPairing(ctrl)));
 }
 
 const miniPairing = (ctrl: SimulCtrl) => (pairing: Pairing) => {
   const game = pairing.game;
   const player = pairing.player;
-  const result =
-    pairing.game.status >= status.ids.mate
-      ? pairing.game.winner
-        ? pairing.game.winner === pairing.hostColor
-          ? i18nFormat('xWon', ctrl.data.host.name)
-          : i18nFormat('xLost', ctrl.data.host.name)
-        : i18n('draw')
-      : '*';
+  const isOver = pairing.game.status >= status.ids.mate;
+  const resultFirstLine = isOver
+    ? i18nVdom('xPlayedY', ctrl.data.host.name, h('strong', player.name))
+    : i18nVdom('xIsPlayingY', ctrl.data.host.name, h('strong', player.name));
+  const resultWinner = isOver
+    ? pairing.game.winner
+      ? pairing.game.winner === pairing.hostColor
+        ? i18nFormat('xWon', ctrl.data.host.name)
+        : i18nFormat('xLost', ctrl.data.host.name)
+      : i18n('draw')
+    : undefined;
+  const hostOutcomeKls = pairing.game.winner
+    ? pairing.game.winner === pairing.hostColor
+      ? '.win'
+      : '.loss'
+    : '';
 
   return h(
     'a',
@@ -53,16 +60,11 @@ const miniPairing = (ctrl: SimulCtrl) => (pairing: Pairing) => {
             },
           },
         },
-        [h('div', { class: { 'sg-wrap': true } })],
+        h('div.sg-wrap'),
       ),
-      h('span', { class: { vstext: true } }, [
-        h('span', { class: { vstext__pl: true } }, [i18nVariant(pairing.variant), h('br'), result]),
-        h('div', { class: { vstext__op: true } }, [
-          player.name,
-          h('br'),
-          player.title ? `${player.title} ` : '',
-          player.rating,
-        ]),
+      h(`div.vstext${hostOutcomeKls}`, [
+        h('div.top-row', resultFirstLine),
+        h('div.winner-row', resultWinner),
       ]),
     ],
   );

@@ -113,8 +113,8 @@ object side {
         } orElse game.tournamentId.map { tourId =>
           st.section(cls := "game__tournament-link")(tournamentLink(tourId))
         } orElse simul.map { sim =>
-          st.section(cls := "game__simul-link")(
-            a(href := routes.Simul.show(sim.id))(sim.fullName),
+          st.section(cls := "game__simul-link text", dataIcon := "f")(
+            a(href := routes.Simul.show(sim.id))(sim.name),
           )
         },
       )

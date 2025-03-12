@@ -91,26 +91,20 @@ final class JsonView(
           .add("patron" -> host.isPatron)
       },
       "name"       -> simul.name,
-      "fullName"   -> simul.fullName,
-      "variants"   -> simul.variants.map(variantJson(shogi.Speed(simul.clock.config.some))),
+      "variants"   -> simul.variants.map(_.key),
       "isCreated"  -> simul.isCreated,
       "isRunning"  -> simul.isRunning,
       "isFinished" -> simul.isFinished,
       "text"       -> simul.text,
     )
 
-  private def variantJson(speed: shogi.Speed)(v: shogi.variant.Variant) =
-    Json.obj(
-      "key"  -> v.key,
-      "icon" -> lila.game.PerfPicker.perfType(speed, v, none).map(_.iconChar.toString),
-    )
-
   private def playerJson(player: SimulPlayer): Fu[JsObject] =
     getLightUser(player.user) map { light =>
       Json
         .obj(
-          "id"     -> player.user,
-          "rating" -> player.rating,
+          "id"      -> player.user,
+          "rating"  -> player.rating,
+          "variant" -> player.variant.key,
         )
         .add("name" -> light.map(_.name))
         .add("title" -> light.map(_.title))

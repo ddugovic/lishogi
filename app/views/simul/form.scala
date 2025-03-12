@@ -40,12 +40,12 @@ object form {
       ctx: Context,
   ) =
     views.html.base.layout(
-      title = s"${trans.edit.txt()} ${simul.fullName}",
+      title = simul.name,
       moreCss = cssTag("simul.form"),
-      moreJs = flatpickrTag,
+      moreJs = frag(flatpickrTag, jsTag("simul.form")),
     ) {
       main(cls := "box box-pad page-small simul-form")(
-        h1(s"Edit ${simul.fullName}"),
+        h1(s"${trans.edit.txt()} ${simul.name}"),
         postForm(cls := "form3", action := routes.Simul.update(simul.id))(
           formContent(form, teams),
           form3.actions(
@@ -65,7 +65,6 @@ object form {
       form3.group(form("name"), trans.name()) { f =>
         div(
           form3.input(f),
-          " Simul",
           br,
           small(cls := "form-help")(trans.inappropriateNameWarning()),
         )
@@ -148,8 +147,6 @@ object form {
           half = true,
           help = frag(
             views.html.tournament.form.positionInputHelp,
-            br,
-            "Works only with one variant selected.",
           ).some,
         )(form3.input(_)),
       ),

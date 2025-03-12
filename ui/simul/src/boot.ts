@@ -9,7 +9,7 @@ export function boot(opts: SimulOpts, start: (opts: SimulOpts) => SimulCtrl): Si
     `/simul/${opts.data.id}/socket/v4`,
     opts.socketVersion,
     {
-      receive: (t, d) => {
+      receive: (t: string, d: any) => {
         ctrl?.socket.receive(t, d);
       },
     },

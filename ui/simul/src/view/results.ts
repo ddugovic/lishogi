@@ -1,9 +1,9 @@
 import * as status from 'game/status';
 import { i18nPluralSame } from 'i18n';
-import { h } from 'snabbdom';
+import { type VNode, h } from 'snabbdom';
 import type SimulCtrl from '../ctrl';
 
-export default function (ctrl: SimulCtrl) {
+export default function (ctrl: SimulCtrl): VNode {
   return h('div.results', [
     h(
       'div',

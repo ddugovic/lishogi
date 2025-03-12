@@ -1,7 +1,9 @@
 import { useJp } from 'common/common';
 import { modal } from 'common/modal';
-import { type MaybeVNode, bind } from 'common/snabbdom';
-import { i18n, i18nFormat } from 'i18n';
+import { getPerfIcon } from 'common/perf-icons';
+import { type MaybeVNode, type MaybeVNodes, bind } from 'common/snabbdom';
+import spinner from 'common/spinner';
+import { i18n, i18nFormat, i18nVdomPlural } from 'i18n';
 import { i18nVariant } from 'i18n/variant';
 import { h } from 'snabbdom';
 import type SimulCtrl from '../ctrl';
@@ -9,21 +11,27 @@ import type { Applicant } from '../interfaces';
 import xhr from '../xhr';
 import * as util from './util';
 
-export default function (showText: (ctrl: SimulCtrl) => MaybeVNode) {
-  return (ctrl: SimulCtrl) => {
+let openModal = false;
+let joining: Timeout | undefined = undefined;
+let withdrawing: Timeout | undefined = undefined;
+
+export default function (
+  showText: (ctrl: SimulCtrl) => MaybeVNode,
+): (ctrl: SimulCtrl) => MaybeVNodes {
+  return (ctrl: SimulCtrl): MaybeVNodes => {
     const candidates = ctrl.candidates().sort(byName);
     const accepted = ctrl.accepted().sort(byName);
     const isHost = ctrl.createdByMe();
     const variantIconFor = (a: Applicant) => {
-      const variant = ctrl.data.variants.find(v => a.variant == v.key);
-      return (
-        variant &&
-        h('td.variant', {
+      const variant = ctrl.data.variants.find(v => a.player.variant == v);
+      if (!variant || ctrl.data.variants.length === 1) return undefined;
+      else
+        return h('td.variant', {
           attrs: {
-            'data-icon': variant.icon,
+            title: i18nVariant(variant),
+            'data-icon': getPerfIcon(variant),
           },
-        })
-      );
+        });
     };
     return [
       h('div.box__top', [
@@ -32,56 +40,10 @@ export default function (showText: (ctrl: SimulCtrl) => MaybeVNode) {
           'div.box__top__actions',
           ctrl.opts.userId
             ? isHost
-              ? [startOrCancel(ctrl, accepted), randomButton(ctrl)]
+              ? hostButtons(ctrl, accepted)
               : ctrl.containsMe()
-                ? h(
-                    'a.button',
-                    {
-                      hook: bind('click', () => xhr.withdraw(ctrl.data.id)),
-                    },
-                    i18n('withdraw'),
-                  )
-                : h(
-                    `a.button.text${ctrl.teamBlock() ? '.disabled' : ''}`,
-                    {
-                      attrs: {
-                        disabled: ctrl.teamBlock(),
-                        'data-icon': 'G',
-                      },
-                      hook: ctrl.teamBlock()
-                        ? {}
-                        : bind('click', () => {
-                            if (ctrl.data.variants.length === 1)
-                              xhr.join(ctrl.data.id, ctrl.data.variants[0].key);
-                            else {
-                              modal({
-                                content: [
-                                  h(
-                                    'div.continue-with',
-                                    ctrl.data.variants.map(variant =>
-                                      h(
-                                        'button.button',
-                                        {
-                                          attrs: {
-                                            'data-variant': variant.key,
-                                          },
-                                        },
-                                        i18nVariant(variant.key),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                                onClose() {
-                                  xhr.join(ctrl.data.id, $(this).data('variant'));
-                                },
-                              });
-                            }
-                          }),
-                    },
-                    ctrl.teamBlock() && ctrl.data.team
-                      ? i18nFormat('mustBeInTeam', ctrl.data.team.name)
-                      : i18n('join'),
-                  )
+                ? withdrawButton(ctrl)
+                : joinButton(ctrl)
             : h(
                 'a.button.text',
                 {
@@ -112,8 +74,7 @@ export default function (showText: (ctrl: SimulCtrl) => MaybeVNode) {
         [
           h(
             'div.half.candidates',
-            h(
-              'table.slist.slist-pad',
+            h('table.slist', [
               h(
                 'thead',
                 h(
@@ -123,7 +84,11 @@ export default function (showText: (ctrl: SimulCtrl) => MaybeVNode) {
                     {
                       attrs: { colspan: 3 },
                     },
-                    [h('strong', candidates.length), ' candidate players'],
+                    i18nVdomPlural(
+                      'nbCandidatePlayers',
+                      candidates.length,
+                      h('strong', candidates.length),
+                    ),
                   ),
                 ),
               ),
@@ -147,8 +112,8 @@ export default function (showText: (ctrl: SimulCtrl) => MaybeVNode) {
                           ? [
                               h('a.button', {
                                 attrs: {
-                                  'data-icon': 'E',
-                                  title: 'Accept',
+                                  'data-icon': 'H',
+                                  title: i18n('accept'),
                                 },
                                 hook: bind('click', () =>
                                   xhr.accept(applicant.player.id)(ctrl.data.id),
@@ -161,11 +126,10 @@ export default function (showText: (ctrl: SimulCtrl) => MaybeVNode) {
                   );
                 }),
               ),
-            ),
+            ]),
           ),
           h('div.half.accepted', [
-            h(
-              'table.slist.user_list',
+            h('table.slist.user_list', [
               h('thead', [
                 h(
                   'tr',
@@ -174,17 +138,13 @@ export default function (showText: (ctrl: SimulCtrl) => MaybeVNode) {
                     {
                       attrs: { colspan: 3 },
                     },
-                    [h('strong', accepted.length), ' accepted players'],
+                    i18nVdomPlural(
+                      'nbAcceptedPlayers',
+                      accepted.length,
+                      h('strong', accepted.length),
+                    ),
                   ),
                 ),
-                isHost && candidates.length && !accepted.length
-                  ? [
-                      h(
-                        'tr.help',
-                        h('th', 'Now you get to accept some players, then start the simul'),
-                      ),
-                    ]
-                  : [],
               ]),
               h(
                 'tbody',
@@ -206,7 +166,8 @@ export default function (showText: (ctrl: SimulCtrl) => MaybeVNode) {
                           ? [
                               h('a.button.button-red', {
                                 attrs: {
-                                  'data-icon': '',
+                                  'data-icon': 'L',
+                                  title: i18n('decline'),
                                 },
                                 hook: bind('click', () =>
                                   xhr.reject(applicant.player.id)(ctrl.data.id),
@@ -219,60 +180,151 @@ export default function (showText: (ctrl: SimulCtrl) => MaybeVNode) {
                   );
                 }),
               ),
-            ),
+            ]),
+            isHost && accepted.length < 2 ? h('div.help', i18n('acceptPlayersStartSimul')) : null,
           ]),
         ],
       ),
+      isHost && candidates.length ? randomButton(ctrl) : null,
       ctrl.data.proverb
         ? h('blockquote.pull-quote', [
             h('p', useJp() ? ctrl.data.proverb.japanese : ctrl.data.proverb.english),
           ])
         : null,
+      openModal
+        ? modal({
+            class: 'variant-select',
+            content: [
+              h(
+                'div.continue-with',
+                ctrl.data.variants.map(variant =>
+                  h(
+                    'button.button',
+                    {
+                      hook: bind('click', () => {
+                        openModal = false;
+                        startJoining(ctrl.redraw);
+                        xhr.join(ctrl.data.id, variant);
+                      }),
+                    },
+                    [
+                      h(
+                        'span.text',
+                        {
+                          attrs: {
+                            'data-icon': getPerfIcon(variant),
+                          },
+                        },
+                        i18nVariant(variant),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+            onClose() {
+              openModal = false;
+              ctrl.redraw();
+            },
+          })
+        : undefined,
     ];
   };
 }
 
-const byName = (a: Applicant, b: Applicant) => (a.player.name > b.player.name ? 1 : -1);
-
-const randomButton = (ctrl: SimulCtrl) =>
-  ctrl.candidates().length
-    ? h(
-        'a.button.text',
-        {
-          attrs: {
-            'data-icon': 'E',
-          },
-          hook: bind('click', () => {
-            const candidates = ctrl.candidates();
-            const randomCandidate = candidates[Math.floor(Math.random() * candidates.length)];
-            xhr.accept(randomCandidate.player.id)(ctrl.data.id);
-          }),
-        },
-        'Accept random candidate',
-      )
-    : null;
-
-const startOrCancel = (ctrl: SimulCtrl, accepted: Applicant[]) =>
-  accepted.length > 1
-    ? h(
-        'a.button.button-green.text',
+const joinButton = (ctrl: SimulCtrl) =>
+  joining
+    ? h('div.jw-spinner', spinner())
+    : h(
+        `a.button.text${ctrl.teamBlock() ? '.disabled' : ''}`,
         {
           attrs: {
             'data-icon': 'G',
           },
-          hook: bind('click', () => xhr.start(ctrl.data.id)),
+          hook: ctrl.teamBlock()
+            ? {}
+            : bind('click', () => {
+                if (ctrl.data.variants.length === 1) {
+                  startJoining(ctrl.redraw);
+                  xhr.join(ctrl.data.id, ctrl.data.variants[0]);
+                } else {
+                  openModal = true;
+                  ctrl.redraw();
+                }
+              }),
         },
-        `Start (${accepted.length})`,
-      )
+        ctrl.teamBlock() && ctrl.data.team
+          ? i18nFormat('mustBeInTeam', ctrl.data.team.name)
+          : i18n('join'),
+      );
+
+const startJoining = (redraw: Redraw) => {
+  clearTimeout(joining);
+  joining = setTimeout(() => {
+    joining = undefined;
+    redraw();
+  }, 3500);
+  redraw();
+};
+
+const withdrawButton = (ctrl: SimulCtrl) =>
+  withdrawing
+    ? h('div.jw-spinner', spinner())
     : h(
-        'a.button.button-red.text',
+        'a.button',
         {
-          attrs: {
-            'data-icon': 'L',
-          },
           hook: bind('click', () => {
-            if (confirm('Delete this simul?')) xhr.abort(ctrl.data.id);
+            clearTimeout(withdrawing);
+            withdrawing = setTimeout(() => {
+              withdrawing = undefined;
+              ctrl.redraw();
+            }, 3500);
+            ctrl.redraw();
+            xhr.withdraw(ctrl.data.id);
           }),
         },
-        i18n('cancel'),
+        i18n('withdraw'),
       );
+
+const byName = (a: Applicant, b: Applicant) => (a.player.name > b.player.name ? 1 : -1);
+
+const randomButton = (ctrl: SimulCtrl) =>
+  h(
+    'a.button.text.random-accept',
+    {
+      attrs: {
+        'data-icon': 'E',
+      },
+      hook: bind('click', () => {
+        const candidates = ctrl.candidates();
+        const randomCandidate = candidates[Math.floor(Math.random() * candidates.length)];
+        xhr.accept(randomCandidate.player.id)(ctrl.data.id);
+      }),
+    },
+    i18n('acceptRandomCandidate'),
+  );
+
+const hostButtons = (ctrl: SimulCtrl, accepted: Applicant[]) => [
+  h(
+    'a.button.button-red.text',
+    {
+      attrs: {
+        'data-icon': 'L',
+      },
+      hook: bind('click', () => {
+        if (confirm(`${i18n('delete')} - ${ctrl.data.name}`)) xhr.abort(ctrl.data.id);
+      }),
+    },
+    i18n('cancel'),
+  ),
+  h(
+    `a.button.button-green.text${accepted.length < 2 ? '.disabled' : ''}`,
+    {
+      attrs: {
+        'data-icon': 'G',
+      },
+      hook: bind('click', () => xhr.start(ctrl.data.id)),
+    },
+    i18n('start'),
+  ),
+];

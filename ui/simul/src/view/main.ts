@@ -3,55 +3,47 @@ import { initAll } from 'common/mini-board';
 import { richHTML } from 'common/rich-text';
 import { onInsert } from 'common/snabbdom';
 import { i18n } from 'i18n';
-import { h } from 'snabbdom';
+import { type VNode, h } from 'snabbdom';
 import type SimulCtrl from '../ctrl';
 import created from './created';
 import pairings from './pairings';
 import results from './results';
 import * as util from './util';
 
-export default function (ctrl: SimulCtrl) {
+export default function (ctrl: SimulCtrl): VNode {
   const handler = ctrl.data.isRunning
     ? started
     : ctrl.data.isFinished
       ? finished
       : created(showText);
 
-  return h(
-    'main.simul',
-    {
-      class: {
-        'simul-created': ctrl.data.isCreated,
-      },
-    },
-    [
-      h('aside.simul__side', {
-        hook: onInsert(el => {
-          $(el).replaceWith(ctrl.opts.$side);
-          if (ctrl.opts.chat) {
-            ctrl.opts.chat.data.hostId = ctrl.data.host.id;
-            makeChat(ctrl.opts.chat);
-          }
-        }),
+  return h('main.simul', [
+    h('aside.simul__side', {
+      hook: onInsert(el => {
+        $(el).replaceWith(ctrl.opts.$side);
+        if (ctrl.opts.chat) {
+          ctrl.opts.chat.data.hostId = ctrl.data.host.id;
+          makeChat(ctrl.opts.chat);
+        }
       }),
-      h(
-        'div.simul__main.box',
-        {
-          hook: {
-            postpatch() {
-              initAll();
-            },
+    }),
+    h(
+      'div.simul__main.box',
+      {
+        hook: {
+          postpatch() {
+            initAll();
           },
         },
-        handler(ctrl),
-      ),
-      h('div.chat__members.none', {
-        hook: onInsert(el => {
-          $(el).watchers();
-        }),
+      },
+      handler(ctrl),
+    ),
+    h('div.chat__members.none', {
+      hook: onInsert(el => {
+        $(el).watchers();
       }),
-    ],
-  );
+    }),
+  ]);
 }
 
 const showText = (ctrl: SimulCtrl) =>

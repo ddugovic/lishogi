@@ -21,7 +21,7 @@ object homeInner {
         pendings.nonEmpty option frag(
           thead(
             tr(
-              th("Your pending simuls"),
+              th(trans.yourPendingSimuls()),
               th(cls := "host")(trans.host()),
               th(cls := "players")(trans.players()),
             ),
@@ -97,7 +97,7 @@ object homeInner {
   private def simTd(sim: lila.simul.Simul)(implicit lang: Lang) =
     td(cls := "header")(
       a(href := routes.Simul.show(sim.id))(
-        span(cls := "name")(sim.fullName),
+        span(cls := "name")(sim.name),
         bits.setup(sim),
       ),
     )

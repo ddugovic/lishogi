@@ -40,15 +40,12 @@
 
   @include breakpoint.breakpoint(local.$mq-col2) {
     min-width: 600px;
-
-    &:not(.simul-created) {
-      grid-template-columns: uniboard.$col2-uniboard-default-width uniboard.$col2-uniboard-table;
-      grid-template-rows: auto max-content;
-      grid-template-areas:
-        'main side'
-        'main uchat'
-        '.    uchat';
-    }
+    grid-template-columns: uniboard.$col2-uniboard-default-width uniboard.$col2-uniboard-table;
+    grid-template-rows: auto max-content;
+    grid-template-areas:
+      'main side'
+      'main uchat'
+      '.    uchat';
   }
 
   @include breakpoint.breakpoint(local.$mq-col3) {

@@ -86,3 +86,17 @@
     display: block;
   }
 }
+
+.simul-complete {
+  display: flex;
+  flex-direction: column;
+
+  .title {
+    font-size: 2rem;
+  }
+
+  div[data-icon='f'] {
+    font-size: 6rem;
+    padding: 1rem;
+  }
+}

@@ -1,4 +1,6 @@
+@use 'pkg:breakpoint-sass' as breakpoint;
 @use 'pkg:common/abstract/extends';
+@use 'pkg:common/abstract/uniboard';
 @use 'pkg:common/theme';
 
 .simul {
@@ -6,6 +8,10 @@
     @extend %flex-center-nowrap;
 
     align-items: stretch;
+
+    @include breakpoint.breakpoint(uniboard.$mq-col1-uniboard) {
+      flex-direction: column;
+    }
   }
 
   .half {
@@ -16,25 +22,45 @@
       border-right: theme.$border;
     }
 
+    @include breakpoint.breakpoint(uniboard.$mq-col1-uniboard) {
+      &:first-child {
+        border-right: none;
+      }
+    }
+
     .variant::before {
       font-size: 1.6em;
       opacity: 0.8;
     }
 
-    tr.help th {
-      padding: 4em 1.5em;
+    td {
+      span.long {
+        font-size: 0.9rem;
+      }
+
+      span.vlong {
+        font-size: 0.7rem;
+      }
+
+      &.action {
+        text-align: right;
+      }
     }
 
-    td.action {
-      text-align: right;
+    div.help {
+      padding: 2rem;
+      background: theme.$m-error_bg-box_mix_15;
+      border-bottom: theme.$border;
     }
+  }
 
-    &.candidates tr.me {
-      border-left: 10px solid theme.$c-brag;
-    }
+  .random-accept {
+    display: block;
+    margin: auto;
+    width: 50%;
 
-    &.accepted tr.me {
-      border-right: 10px solid theme.$c-brag;
+    @include breakpoint.breakpoint(uniboard.$mq-col1-uniboard) {
+      display: none;
     }
   }
 
@@ -45,5 +71,17 @@
 
   .instructions {
     text-align: center;
+  }
+
+  .variant-select {
+    min-width: 300px;
+  }
+
+  .jw-spinner {
+    .spinner {
+      margin: auto;
+      height: 32px;
+      width: 32px;
+    }
   }
 }

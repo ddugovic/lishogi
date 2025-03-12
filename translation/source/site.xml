@@ -217,6 +217,7 @@
 	</plurals>
 	<string name="confirm">Confirm</string>
 	<string name="cancel">Cancel</string>
+	<string name="start" comment="Used in buttons to mean 'Start tournament' or 'Start simul'">Start</string>
 	<string name="timeOut">Time out</string>
 	<string name="drawOfferSent">Draw offer sent</string>
 	<string name="drawOfferDeclined">Draw offer declined</string>
@@ -687,10 +688,13 @@
 	<string name="termsOfService">Terms of Service</string>
 	<string name="sourceCode">Source Code</string>
 	<string name="simultaneousExhibitions">Simultaneous exhibitions</string>
+	<string name="simulComplete">Simul complete</string>
+	<string name="backToSimul">Back to simul</string>
 	<string name="host">Host</string>
 	<string name="hostColorX">Host colour: %s</string>
 	<string name="createdSimuls">Newly created simuls</string>
 	<string name="hostANewSimul">Host a new simul</string>
+	<string name="yourPendingSimuls">Your pending simuls</string>
 	<string name="noSimulFound">Simul not found</string>
 	<string name="noSimulExplanation">This simultaneous exhibition does not exist.</string>
 	<string name="returnToSimulHomepage">Return to simul homepage</string>
@@ -1008,4 +1012,14 @@
 	<string name="timeAlmostUp" comment="Notification for correspondence games">Time is almost up!</string>
 	<string name="gameAgainstX" comment="Your game against playerX">Game vs %s</string>
 	<string name="pageReload" comment="Confirmation warning">Page needs to be reloaded</string>
+	<plurals name="nbCandidatePlayers" comment="Used in simuls - players request to join, host can accept them">
+		<item quantity="one">%s candidate player</item>
+		<item quantity="other">%s candidate players</item>
+	</plurals>
+	<plurals name="nbAcceptedPlayers" comment="Used in simuls - players request to join, host can accept them">
+		<item quantity="one">%s accepted player</item>
+		<item quantity="other">%s accepted players</item>
+	</plurals>
+	<string name="acceptPlayersStartSimul">Once you've accepted two or more players, you can start the simul.</string>
+	<string name="acceptRandomCandidate">Accept random candidate</string>
 </resources>

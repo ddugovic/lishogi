@@ -5,6 +5,9 @@
   .results {
     @extend %flex-center;
 
+    background-color: theme.$c-bg-zebra;
+    padding: 1.5rem 0;
+
     > div {
       flex: 0 0 25%;
       text-align: center;
@@ -28,10 +31,6 @@
       @extend %box-radius;
 
       box-shadow: 0 0 0 7px theme.$m-accent_alpha_neg70;
-    }
-
-    .vstext {
-      @extend %metal;
     }
   }
 }

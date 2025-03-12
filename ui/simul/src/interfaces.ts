@@ -10,13 +10,12 @@ export interface SimulOpts {
 export interface SimulData {
   id: string;
   name: string;
-  fullName: string;
   isCreated: boolean;
   isRunning: boolean;
   isFinished: boolean;
   text: string;
   host: Host;
-  variants: Variant[];
+  variants: VariantKey[];
   applicants: Applicant[];
   pairings: Pairing[];
   proverb?: {
@@ -26,11 +25,6 @@ export interface SimulData {
   team?: Team;
 }
 
-interface Variant {
-  key: VariantKey;
-  icon: string;
-}
-
 interface Team {
   id: string;
   name: string;
@@ -38,6 +32,7 @@ interface Team {
 }
 
 export interface Player extends LightUser {
+  variant: VariantKey;
   rating: number;
   provisional?: boolean;
 }
@@ -49,7 +44,6 @@ interface Host extends LightUser {
 
 export interface Applicant {
   player: Player;
-  variant: VariantKey;
   accepted: boolean;
 }
 

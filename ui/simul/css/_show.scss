@@ -28,9 +28,17 @@
     margin: 2em 0;
     grid-gap: 1rem;
 
-    .vstext .vstext__pl {
-      width: 60%;
-      max-width: 60%;
+    .vstext {
+      flex-flow: column;
+      border-bottom: 3px solid transparent;
+
+      &.win {
+        border-color: theme.$c-good;
+      }
+
+      &.loss {
+        border-color: theme.$c-bad;
+      }
     }
   }
 

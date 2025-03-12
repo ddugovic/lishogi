@@ -63,7 +63,7 @@ final class SimulApi(
       team = setup.team,
     )
     repo.create(simul, me.hasGames) >>- {
-      timeline ! (Propagate(SimulCreate(me.id, simul.id, simul.fullName)) toFollowersOf me.id)
+      timeline ! (Propagate(SimulCreate(me.id, simul.id, simul.name)) toFollowersOf me.id)
     } inject simul
   }
 
@@ -85,7 +85,7 @@ final class SimulApi(
     WithSimul(repo.findCreated, simulId) { simul =>
       if (simul.nbAccepted >= Game.maxPlayingRealtime) simul
       else {
-        timeline ! (Propagate(SimulJoin(user.id, simul.id, simul.fullName)) toFollowersOf user.id)
+        timeline ! (Propagate(SimulJoin(user.id, simul.id, simul.name)) toFollowersOf user.id)
         Variant(variantKey).filter(simul.variants.contains).fold(simul) { variant =>
           simul addApplicant SimulApplicant.make(
             SimulPlayer.make(
@@ -209,7 +209,7 @@ final class SimulApi(
     }
 
   def idToName(id: Simul.ID): Fu[Option[String]] =
-    repo find id dmap2 { _.fullName }
+    repo find id dmap2 { _.name }
 
   private def makeGame(simul: Simul, host: User)(
       pairingAndNumber: (SimulPairing, Int),

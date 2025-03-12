@@ -162,7 +162,16 @@ export function make(send: Socket.Send, ctrl: RoundController): RoundSocket {
       loadCssPath('misc.modal');
       $.modal(
         $(
-          `<p>Simul complete!</p><br /><br /><a class="button" href="/simul/${simul.id}">Back to ${simul.name} simul</a>`,
+          `<div class="simul-complete">
+            <div class="title">
+              ${i18n('simulComplete')}
+            </div>
+            <div data-icon="f">
+            </div>
+            <a class="button" href="/simul/${simul.id}">
+              ${i18n('backToSimul')}
+            </a>
+          </div>`,
         ),
       );
     },

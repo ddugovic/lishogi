@@ -1,5 +1,5 @@
 import { idleTimer } from 'common/timings';
-import type { SimulData, SimulOpts } from './interfaces';
+import type { Applicant, SimulData, SimulOpts } from './interfaces';
 import { type SimulSocket, makeSocket } from './socket';
 import xhr from './xhr';
 
@@ -33,21 +33,22 @@ export default class SimulCtrl {
     }, 10 * 1000);
   };
 
-  reload = (data: SimulData) => {
+  reload = (data: SimulData): void => {
     this.data = {
       ...data,
       team: this.data.team, // reload data does not contain the team anymore
     };
   };
 
-  teamBlock = () => !!this.data.team && !this.data.team.isIn;
-  createdByMe = () => this.opts.userId === this.data.host.id;
-  candidates = () => this.data.applicants.filter(a => !a.accepted);
-  accepted = () => this.data.applicants.filter(a => a.accepted);
-  acceptedContainsMe = () => this.accepted().some(a => a.player.id === this.opts.userId);
-  applicantsContainsMe = () => this.candidates().some(a => a.player.id === this.opts.userId);
-  containsMe = () =>
-    this.opts.userId &&
+  teamBlock = (): boolean => !!this.data.team && !this.data.team.isIn;
+  createdByMe = (): boolean => this.opts.userId === this.data.host.id;
+  candidates = (): Applicant[] => this.data.applicants.filter(a => !a.accepted);
+  accepted = (): Applicant[] => this.data.applicants.filter(a => a.accepted);
+  acceptedContainsMe = (): boolean => this.accepted().some(a => a.player.id === this.opts.userId);
+  applicantsContainsMe = (): boolean =>
+    this.candidates().some(a => a.player.id === this.opts.userId);
+  containsMe = (): boolean =>
+    !!this.opts.userId &&
     (this.applicantsContainsMe() || this.acceptedContainsMe() || this.pairingsContainMe());
-  pairingsContainMe = () => this.data.pairings.some(a => a.player.id === this.opts.userId);
+  pairingsContainMe = (): boolean => this.data.pairings.some(a => a.player.id === this.opts.userId);
 }
