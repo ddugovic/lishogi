@@ -1,6 +1,8 @@
-import { i18n } from 'i18n';
+import { i18n, i18nFormatCapitalized } from 'i18n';
 import { i18nVariant } from 'i18n/variant';
+import { colorName } from 'shogi/color-name';
 import { roleName } from 'shogi/notation';
+import { colors } from 'shogiground/constants';
 import { RULES } from 'shogiops/constants';
 import { findHandicaps, isHandicap } from 'shogiops/handicaps';
 import type { Handicap, Role, Rules } from 'shogiops/types';
@@ -12,6 +14,7 @@ import type { EditorState } from '../interfaces';
 export function tools(ctrl: EditorCtrl, state: EditorState): VNode {
   return h('div.tools', [
     variants(ctrl),
+    colorTurn(ctrl, state),
     positions(ctrl, state),
     !ctrl.data.embed ? pieceCounter(ctrl) : null,
   ]);
@@ -46,6 +49,36 @@ function variants(ctrl: EditorCtrl): VNode {
   ]);
 }
 
+function colorTurn(ctrl: EditorCtrl, state: EditorState): VNode {
+  const handicap = isHandicap({ rules: ctrl.data.variant, sfen: state.sfen });
+  return h(
+    'div.color-turn',
+    h(
+      'select',
+      {
+        attrs: { id: 'color-turn' },
+        on: {
+          change(e) {
+            ctrl.setTurn((e.target as HTMLSelectElement).value as Color);
+          },
+        },
+      },
+      colors.map(color =>
+        h(
+          'option',
+          {
+            attrs: {
+              value: color,
+              selected: color === ctrl.turn,
+            },
+          },
+          i18nFormatCapitalized('xPlays', colorName(ctrl.turn, handicap)),
+        ),
+      ),
+    ),
+  );
+}
+
 function positions(ctrl: EditorCtrl, state: EditorState): VNode {
   const position2option = (handicap: Omit<Handicap, 'rules'>): VNode =>
     h(
@@ -59,7 +92,8 @@ function positions(ctrl: EditorCtrl, state: EditorState): VNode {
       },
       `${handicap.japaneseName} (${handicap.englishName})`,
     );
-  return h('div.positions', [
+  return h(
+    'div.positions',
     h(
       'select',
       {
@@ -89,7 +123,7 @@ function positions(ctrl: EditorCtrl, state: EditorState): VNode {
         optgroup(i18n('handicaps'), findHandicaps({ rules: ctrl.rules }).map(position2option)),
       ],
     ),
-  ]);
+  );
 }
 
 function optgroup(name: string, opts: VNode[]): VNode {

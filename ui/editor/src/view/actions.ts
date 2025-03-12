@@ -1,6 +1,5 @@
 import { i18n, i18nFormatCapitalized } from 'i18n';
 import { colorName } from 'shogi/color-name';
-import { isHandicap } from 'shogiops/handicaps';
 import { initialSfen } from 'shogiops/sfen';
 import { opposite } from 'shogiops/util';
 import { handRoles } from 'shogiops/variant/util';
@@ -12,7 +11,6 @@ export function actions(ctrl: EditorCtrl, state: EditorState): VNode {
   return h('div.actions', [
     initialPosition(ctrl, state),
     clearBoard(ctrl, state),
-    colorTurn(ctrl, state),
     fillGotesHand(ctrl),
     flipBoard(ctrl),
   ]);
@@ -86,22 +84,5 @@ function flipBoard(ctrl: EditorCtrl): VNode {
       },
     },
     `${i18n('flipBoard')} (${colorName(ctrl.shogiground.state.orientation, false)})`,
-  );
-}
-
-function colorTurn(ctrl: EditorCtrl, state: EditorState): VNode {
-  const handicap = isHandicap({ rules: ctrl.data.variant, sfen: state.sfen });
-  return h(
-    `div.action.text.color-icon.${ctrl.turn}`,
-    {
-      on: {
-        click: () => {
-          ctrl.setTurn(opposite(ctrl.turn));
-          ctrl.redraw();
-        },
-      },
-      attrs: { 'data-icon': '' },
-    },
-    h('span', i18nFormatCapitalized('xPlays', colorName(ctrl.turn, handicap))),
   );
 }

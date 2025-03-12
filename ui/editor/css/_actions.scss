@@ -14,7 +14,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: calc(100% / 5);
+    width: calc(100% / 4);
     max-width: 32rem;
     height: uniboard.$col3-uniboard-controls;
     padding: 0 0.75em;
@@ -33,12 +33,8 @@
     }
 
     @include breakpoint.breakpoint(uniboard.$mq-col1-uniboard) {
-      width: calc(100% / 3);
+      width: calc(100% / 2);
       font-size: 0.85rem;
-
-      &:nth-last-child(-n + 2) {
-        flex: 1;
-      }
     }
   }
 }
