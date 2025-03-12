@@ -114,7 +114,7 @@
   }
 
   &-bottom .time {
-    @extend %box-radius-bottom, %box-shadow;
+    @extend %box-radius-bottom, %box-shadow-bottom;
   }
 
   &-correspondence .time {
