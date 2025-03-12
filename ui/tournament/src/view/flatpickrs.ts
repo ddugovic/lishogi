@@ -13,8 +13,6 @@ export function flatpickrInput(
     attrs: {
       disabled,
       placeholder: !disabled ? 'Suggest time for game' : '',
-      'data-enable-time': 'true',
-      'data-time_24h': 'true',
     },
     hook: {
       insert: (node: VNode) => {
@@ -25,6 +23,8 @@ export function flatpickrInput(
             dateFormat: 'U',
             altInput: true,
             altFormat: 'Z',
+            enableTime: true,
+            time_24hr: true,
             formatDate: (date, format) => {
               if (utc()) date = adjustDateToLocal(date);
 
@@ -45,7 +45,6 @@ export function flatpickrInput(
             position: 'above center',
             locale: document.documentElement.lang as any,
           });
-          console.log('fInstance: ', fInstance);
           if (scheduledAt) {
             const scheduledDate = new Date(scheduledAt);
             const finalDate = utc() ? adjustDateToUTC(scheduledDate) : scheduledDate;

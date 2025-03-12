@@ -38,6 +38,8 @@ window.lishogi.ready.then(() => {
       dateFormat: 'Z',
       altInput: true,
       altFormat: 'Y-m-d h:i K',
+      enableTime: true,
+      time_24hr: true,
       disableMobile: true,
       locale: document.documentElement.lang as any,
     });
