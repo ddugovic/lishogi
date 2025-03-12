@@ -154,6 +154,7 @@ function main(opts: CoordinatesOpts): void {
         })
         .then(html => {
           $side.find('.scores').html(html);
+          opts.points[color].push(score);
           showCharts();
         });
   };

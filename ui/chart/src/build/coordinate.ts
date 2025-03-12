@@ -23,6 +23,7 @@ function main(canvas: HTMLCanvasElement, data: number[], color: Color): Chart {
       ],
     },
     options: {
+      animation: false,
       layout: {
         padding: 10,
       },
