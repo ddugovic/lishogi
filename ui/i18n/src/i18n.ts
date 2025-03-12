@@ -4,6 +4,7 @@ import type { I18nKey } from './i18n-keys';
 const i18nRecord: Record<string, string> = (window.lishogi as any).i18n || {};
 const quantity: (c: number) => 'zero' | 'one' | 'two' | 'few' | 'many' | 'other' =
   (window.lishogi as any).quantity || (() => 'other');
+const defaultQuantity = (o: number) => (o == 1 ? 'one' : 'other');
 
 export const i18n = (key: I18nKey): string => {
   return i18nRecord[key] || key;
@@ -34,7 +35,8 @@ export const i18nFormatCapitalized = (key: I18nKey, ...args: any[]): string => {
 
 const i18nPlural = (key: I18nKey, count: number, ...args: any[]): string => {
   const pluralKey = `${key}|${quantity(count)}`;
-  const str = i18nRecord[pluralKey] || i18nRecord[key];
+  const str =
+    i18nRecord[pluralKey] || i18nRecord[`${key}|${defaultQuantity(count)}`] || i18nRecord[key];
   return str ? interpolate(str, args) : `${key} ${count} ${args.join(', ')}`;
 };
 
@@ -59,11 +61,12 @@ const vdomInterpolate = (str: string, args: any[]): string[] => {
 
 export const i18nVdom = (key: I18nKey, ...args: any[]): string[] => {
   const str = i18nRecord[key];
-  return str ? vdomInterpolate(str, args) : [`${key} ${args.join(', ')}`];
+  return str ? vdomInterpolate(str, args) : [key];
 };
 
 export const i18nVdomPlural = (key: I18nKey, count: number, ...args: any[]): string[] => {
   const pluralKey = `${key}|${quantity(count)}`;
-  const str = i18nRecord[pluralKey] || i18nRecord[key];
-  return str ? vdomInterpolate(str, args) : [`${key} ${count} ${args.join(', ')}`];
+  const str =
+    i18nRecord[pluralKey] || i18nRecord[`${key}|${defaultQuantity(count)}`] || i18nRecord[key];
+  return str ? vdomInterpolate(str, args) : [`${key} ${count}`];
 };
