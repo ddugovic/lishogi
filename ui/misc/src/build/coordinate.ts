@@ -1,5 +1,6 @@
 import { capitalize } from 'common/string';
 import { colorName } from 'shogi/color-name';
+import { handRoles } from 'shogiops/variant/util';
 
 interface CoordinatesOpts {
   colorPref: 'random' | Color;
@@ -47,6 +48,10 @@ function main(opts: CoordinatesOpts): void {
       ground = window.Shogiground(
         {
           activeColor: undefined,
+          hands: {
+            roles: handRoles('standard'),
+            inlined: true,
+          },
           coordinates: { enabled: false },
           blockTouchScroll: true,
           drawable: { enabled: false },
