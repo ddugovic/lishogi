@@ -7,7 +7,6 @@ export function notifyApp(): typeof window.lishogi.notifyApp {
   const $toggle = $('#notify-toggle');
   const isVisible = () => $('#notify-app').is(':visible');
   const permissionChanged = () => {
-    console.log('permissionChanged', instance);
     $toggle
       .find('span')
       .attr(

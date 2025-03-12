@@ -3,9 +3,8 @@
 @use '../theme/gen/theme';
 
 .vstext {
-  @extend %flex-between-nowrap, %nowrap-hidden, %box-radius-bottom;
+  @extend %flex-between-nowrap, %nowrap-hidden;
 
-  border-radius: 0 variables.$box-radius-size;
   padding: 0.3em 0.6em;
   color: theme.$c-font;
 
