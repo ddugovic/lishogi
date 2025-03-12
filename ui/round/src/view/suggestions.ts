@@ -27,10 +27,18 @@ export function impasse(ctrl: RoundController): MaybeVNode {
         h('ul.impasse-list', [
           h('li', [
             `${i18n('enteringKing')}: `,
-            h('span', { attrs: { 'data-icon': i.sente.king ? 'K' : 'L' } }),
+            h(`span${i.sente.king ? '.good' : ''}`, {
+              attrs: { 'data-icon': i.sente.king ? 'K' : 'L' },
+            }),
           ]),
-          h('li', [`${i18n('invadingPieces')}: `, `${i.sente.nbOfPieces}/10`]),
-          h('li', [`${i18n('totalImpasseValue')}: `, `${i.sente.pieceValue}/28`]),
+          h('li', [
+            `${i18n('invadingPieces')}: `,
+            h(`span${i.sente.nbOfPieces >= 10 ? '.good' : ''}`, `${i.sente.nbOfPieces}/10`),
+          ]),
+          h('li', [
+            `${i18n('totalImpasseValue')}: `,
+            h(`span${i.sente.pieceValue >= 28 ? '.good' : ''}`, `${i.sente.pieceValue}/28`),
+          ]),
         ]),
       ),
       h(
@@ -38,10 +46,18 @@ export function impasse(ctrl: RoundController): MaybeVNode {
         h('ul.impasse-list', [
           h('li', [
             `${i18n('enteringKing')}: `,
-            h('span.good', { attrs: { 'data-icon': i.gote.king ? 'K' : 'L' } }),
+            h(`span${i.gote.king ? '.good' : ''}`, {
+              attrs: { 'data-icon': i.gote.king ? 'K' : 'L' },
+            }),
           ]),
-          h('li', [`${i18n('invadingPieces')}: `, `${i.gote.nbOfPieces}/10`]),
-          h('li', [`${i18n('totalImpasseValue')}: `, `${i.gote.pieceValue}/27`]),
+          h('li', [
+            `${i18n('invadingPieces')}: `,
+            h(`span${i.gote.nbOfPieces >= 10 ? '.good' : ''}`, `${i.gote.nbOfPieces}/10`),
+          ]),
+          h('li', [
+            `${i18n('totalImpasseValue')}: `,
+            h(`span${i.gote.pieceValue >= 27 ? '.good' : ''}`, `${i.gote.pieceValue}/27`),
+          ]),
         ]),
       ),
     ]),
