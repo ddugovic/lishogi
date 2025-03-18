@@ -1,8 +1,3 @@
 {
-  "extends": "@build/tsconfig",
-  "compilerOptions": {
-    "noImplicitAny": false,
-    "noImplicitThis": false,
-    "lib": ["DOM", "ES2017", "DOM.iterable"]
-  }
+  "extends": "@config/tsconfig"
 }

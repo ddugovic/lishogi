@@ -17,8 +17,9 @@
     "composite": true,
     "isolatedDeclarations": true,
     "isolatedModules": true,
+    "verbatimModuleSyntax": true,
     "target": "ES2017",
-    "lib": ["DOM", "ES2017"],
+    "lib": ["DOM", "DOM.Iterable", "ES2017"],
     "types": ["lishogi", "jquery"]
   },
   "include": ["${configDir}/src"]

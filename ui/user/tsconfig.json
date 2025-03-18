@@ -1,7 +1,3 @@
 {
-  "extends": "@build/tsconfig",
-  "compilerOptions": {
-    "noImplicitAny": false,
-    "noImplicitReturns": false
-  }
+  "extends": "@config/tsconfig"
 }

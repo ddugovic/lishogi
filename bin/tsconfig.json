@@ -1,5 +1,5 @@
 {
-  "extends": "@build/tsconfig/build",
+  "extends": "@config/tsconfig/build",
   "compilerOptions": {
     "rootDir": "scripts"
   },
