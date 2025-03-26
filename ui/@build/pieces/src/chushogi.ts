@@ -1,7 +1,8 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import dedent from 'dedent';
-import { type Theme, colors, types } from './util.js';
+import type { PieceSet } from './types.js';
+import { categorizePieceSets, colors, dasherCss, readImageAsBase64, types } from './util.js';
 
 const roles = [
   'lance',
@@ -44,19 +45,6 @@ const roles = [
   'sidemoverpromoted',
   'verticalmoverpromoted',
   'rookpromoted',
-];
-
-const regular: Theme[] = [
-  ['Chu_Ryoko_1Kanji', 'svg'],
-  ['Chu_Intl', 'svg'],
-  ['Chu_Eigetsu_Gyoryu', 'png'],
-  ['Chu_FCZ', 'svg'],
-];
-
-const bidirectional: Theme[] = [
-  ['Chu_Mnemonic', 'svg'],
-  ['Chu_Intl_BnW', 'svg'],
-  ['Chu_Firi', 'svg'],
 ];
 
 function sameUpDownM(role: string): boolean {
@@ -147,9 +135,9 @@ function classes(color: string, role: string): string {
   }
 }
 
-function extraCss(name: string, ext: string): string {
+function extraCss(pieceSet: PieceSet): string {
   const cssClasses: string[] = [];
-  if (ext === 'png') {
+  if (pieceSet.ext === 'png') {
     cssClasses.push(
       '.v-chushogi piece { will-change: transform !important; background-repeat: unset !important; }',
     );
@@ -157,63 +145,65 @@ function extraCss(name: string, ext: string): string {
     cssClasses.push('.v-chushogi piece { will-change: auto; background-repeat: no-repeat; }');
   }
 
-  if (name === 'Chu_Mnemonic') {
+  if (pieceSet.name === 'mnemonic') {
     cssClasses.push('.v-chushogi piece { background-size: contain !important; }');
   }
   return cssClasses.join('\n');
 }
 
 export function chushogi(sourceDir: string, destDir: string): void {
-  for (const [name, ext] of regular) {
+  const pieceSets = categorizePieceSets(sourceDir);
+
+  for (const pieceSet of pieceSets.regular) {
     const cssClasses = colors.flatMap(color =>
       roles.map(role => {
         const piece = `${color === 'sente' ? '0_' : '1_'}${role.toUpperCase()}`;
-        const file = path.join(sourceDir, name, `${piece}.${ext}`);
-        const image = fs.readFileSync(file);
-        const base64 = image.toString('base64');
-        return `${classes(color, role)} {background-image:url('data:image/${types[ext]}${base64}') !important;}`;
+        const file = path.join(sourceDir, pieceSet.name, `${piece}.${pieceSet.ext}`);
+        const base64 = readImageAsBase64(file);
+        return `${classes(color, role)} {background-image:url('data:image/${types[pieceSet.ext]}${base64}') !important;}`;
       }),
     );
 
-    cssClasses.push(extraCss(name, ext));
+    cssClasses.push(extraCss(pieceSet));
     cssClasses.push(''); // trailing new line
 
-    fs.writeFileSync(path.join(destDir, `${name}.css`), cssClasses.join('\n'));
+    fs.writeFileSync(path.join(destDir, `${pieceSet.name}.css`), cssClasses.join('\n'));
   }
 
-  for (const [name, ext] of bidirectional) {
+  for (const pieceSet of pieceSets.bidirectional) {
     const rolesWithoutTama = roles.filter(role => role !== 'tama');
     const cssClasses = ['-1', '']
       .flatMap(up =>
         colors.flatMap(color =>
           rolesWithoutTama.map(role => {
             const piece = `${color === 'sente' ? '0_' : '1_'}${role.toUpperCase()}${up}`;
-            const file = path.join(sourceDir, name, `${piece}.${ext}`);
+            const file = path.join(sourceDir, pieceSet.name, `${piece}.${pieceSet.ext}`);
 
-            if (!(name === 'Chu_Mnemonic' && up === '-1' && sameUpDownM(role))) {
-              try {
-                const image = fs.readFileSync(file);
-                const base64 = image.toString('base64');
+            if (!(pieceSet.name === 'mnemonic' && up === '-1' && sameUpDownM(role))) {
+              const base64 = readImageAsBase64(file);
 
-                if (sameUpDownM(role) && name === 'Chu_Mnemonic') {
-                  return `${classesMnemonic(color, role)} {background-image:url('data:image/${types[ext]}${base64}') !important;}`;
-                } else {
-                  return `${classesWithOrientation(color, role, up.length !== 0)} {background-image:url('data:image/${types[ext]}${base64}') !important;}`;
-                }
-              } catch (error) {
-                console.error(`Error processing file ${file}:`, error);
-                return '';
+              if (sameUpDownM(role) && pieceSet.name === 'mnemonic') {
+                return `${classesMnemonic(color, role)} {background-image:url('data:image/${types[pieceSet.ext]}${base64}') !important;}`;
+              } else {
+                return `${classesWithOrientation(color, role, up.length !== 0)} {background-image:url('data:image/${types[pieceSet.ext]}${base64}') !important;}`;
               }
             }
             return '';
           }),
         ),
       )
-      .filter(css => css !== ''); // Remove empty strings
+      .filter(css => !!css);
 
-    cssClasses.push(extraCss(name, ext));
+    cssClasses.push(extraCss(pieceSet));
     cssClasses.push(''); // trailing new line
 
-    fs.writeFileSync(path.join(destDir, `${name}.css`), cssClasses.join('\n'));
+    fs.writeFileSync(path.join(destDir, `${pieceSet.name}.css`), cssClasses.join('\n'));
   }
+
+  const dasher: string[] = [];
+  for (const pieceSet of [...pieceSets.regular, ...pieceSets.bidirectional]) {
+    const file = path.join(sourceDir, pieceSet.name, `0_KIRIN.${pieceSet.ext}`);
+    dasher.push(dasherCss(file, pieceSet, 'chushogi'));
+  }
+  fs.writeFileSync(path.join(destDir, 'lishogi.dasher.css'), dasher.join('\n'));
 }

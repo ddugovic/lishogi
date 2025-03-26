@@ -1,0 +1,85 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { otherLangs } from './constants.js';
+import { parseXmls } from './parser/xml.js';
+import type { I18nObj } from './types.js';
+
+interface TranslationManager {
+  init: () => Promise<void>;
+  update: (filepath: string) => Promise<void>;
+  source: () => I18nObj;
+  dest: () => Map<string, I18nObj>;
+}
+
+export async function createXmlManager(rootDir: string): Promise<TranslationManager> {
+  const translationDir = path.join(rootDir, 'translation');
+  const sourceDir = path.join(translationDir, 'source');
+  const destDir = path.join(translationDir, 'dest');
+
+  let sourceI18n: I18nObj = {};
+  const destI18n = new Map<string, I18nObj>();
+
+  async function initSources(): Promise<void> {
+    const sourceFiles = (await fs.readdir(sourceDir))
+      .filter(file => file.endsWith('.xml'))
+      .sort((a, b) => (a === 'site.xml' ? -1 : b === 'site.xml' ? 1 : 0));
+    sourceI18n = await parseXmls(
+      sourceFiles.map(sf => {
+        return { name: categoryName(sf), path: path.join(sourceDir, sf) };
+      }),
+    );
+    console.log('Parsed translation source directory');
+
+    await fs.writeFile(
+      path.join(rootDir, '/ui/@types/lishogi/i18n.d.ts'),
+      dtsFile(rootDir, sourceI18n),
+    );
+    console.log('Generated i18n dts file');
+  }
+
+  async function initDests(): Promise<void> {
+    destI18n.clear();
+    const categoryDirs = await fs.readdir(destDir);
+    for (const lang of otherLangs) {
+      const i18n = await parseXmls(
+        categoryDirs.map(cd => {
+          return { name: categoryName(cd), path: path.join(destDir, cd, `${lang}.xml`) };
+        }),
+      );
+      destI18n.set(lang, i18n);
+    }
+    console.log('Parsed translation dest directory');
+  }
+
+  return {
+    init: async () => {
+      await Promise.all([initSources(), initDests()]);
+    },
+    update: async filepath => {
+      if (filepath.startsWith(sourceDir)) await initSources();
+      else if (filepath.startsWith(destDir)) await initDests();
+    },
+    source: () => sourceI18n,
+    dest: () => destI18n,
+  };
+}
+
+function dtsFile(rootDir: string, sourceI18n: I18nObj): string {
+  return `// Generated with ${path.relative(rootDir, import.meta.filename)}
+
+// biome-ignore format: Auto generated
+declare global {
+  type I18nKey =
+${Object.keys(sourceI18n)
+  .map(k => `    | '${k}'`)
+  .join('\n')};
+}
+
+export {};
+`;
+}
+
+function categoryName(name: string): string {
+  const noExt = path.basename(name, '.xml'); // if file is given
+  return noExt === 'class' ? 'clas' : noExt;
+}

@@ -1,28 +1,37 @@
-import { execSync } from 'node:child_process';
-import { existsSync, mkdirSync } from 'node:fs';
+import { mkdir, rm } from 'node:fs/promises';
 import * as path from 'node:path';
+import { getRootDir } from '@build/helpers/workspace-packages';
 import { chushogi } from './chushogi.js';
 import { kyotoshogi } from './kyotoshogi.js';
 import { standard } from './standard.js';
+import type { PieceSetVariant } from './types.js';
+import { variants } from './util.js';
 
-function main() {
-  const lilaDir = path.dirname(execSync('pnpm root -w').toString().trim());
-  const sourceDir = path.join(lilaDir, 'public/piece/');
-  const destDir = path.join(lilaDir, 'public/piece-css/');
+async function main() {
+  try {
+    const rootDir = await getRootDir();
+    const assetsDir = path.join(import.meta.dirname, '../assets');
+    const baseDestDir = path.join(rootDir, 'public/piece-css/');
 
-  if (!existsSync(destDir)) mkdirSync(destDir);
+    function build(variant: PieceSetVariant): void {
+      const fn =
+        variant === 'chushogi' ? chushogi : variant === 'kyotoshogi' ? kyotoshogi : standard;
 
-  console.time('Standard themes');
-  standard(sourceDir, destDir);
-  console.timeEnd('Standard themes');
+      fn(path.join(assetsDir, variant), path.join(baseDestDir, variant));
 
-  console.time('Kyotoshogi themes');
-  kyotoshogi(sourceDir, destDir);
-  console.timeEnd('Kyotoshogi themes');
+      console.log(`Generated ${variant} piece css`);
+    }
 
-  console.time('Chushogi themes');
-  chushogi(sourceDir, destDir);
-  console.timeEnd('Chushogi themes');
+    await rm(baseDestDir, { recursive: true, force: true });
+    await Promise.all(variants.map(v => mkdir(path.join(baseDestDir, v), { recursive: true })));
+
+    variants.forEach(v => build(v));
+
+    process.exit(0);
+  } catch (err) {
+    console.error(err);
+    process.exit(1);
+  }
 }
 
-main();
+await main();

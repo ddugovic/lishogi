@@ -3,12 +3,12 @@
   "private": true,
   "license": "AGPL-3.0-or-later",
   "type": "module",
-  "devDependencies": {
-    "@types/node": "catalog:",
-    "dedent": "^1.5.3",
-    "tsx": "catalog:"
+  "dependencies": {
+    "@build/helpers": "workspace:*",
+    "dedent": "^1.5.3"
   },
   "scripts": {
-    "build": "tsx ./src/main.ts"
+    "build": "tsx ./src/main.ts",
+    "build:watch": "tsx watch --clear-screen=false --include ../../../pnpm-lock.yaml --include assets ./src/main.ts"
   }
 }

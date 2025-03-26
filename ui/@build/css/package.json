@@ -3,19 +3,16 @@
   "private": true,
   "license": "AGPL-3.0-or-later",
   "type": "module",
-  "devDependencies": {
-    "@build/wrapper": "workspace:*",
-    "@types/node": "catalog:",
+  "dependencies": {
+    "@build/helpers": "workspace:*",
     "autoprefixer": "^10.4.20",
     "cssnano": "^7.0.6",
-    "fast-glob": "^3.3.3",
     "postcss": "^8.5.3",
     "sass-embedded": "^1.85.1",
-    "sass-graph-ts": "^5.1.0",
-    "tsx": "catalog:"
+    "sass-graph-ts": "^5.1.0"
   },
   "scripts": {
-    "type-check": "tsc --noEmit",
-    "build": "tsx ./src/index.ts"
+    "build": "tsx ./src/main.ts",
+    "build:watch": "tsx watch --clear-screen=false ./src/main.ts --watch"
   }
 }

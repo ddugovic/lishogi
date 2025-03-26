@@ -1,0 +1,17 @@
+{
+  "name": "@build/helpers",
+  "private": true,
+  "license": "AGPL-3.0-or-later",
+  "type": "module",
+  "exports": {
+    "./*": {
+      "types": "./src/*.ts",
+      "import": "./src/*.ts"
+    }
+  },
+  "dependencies": {
+    "fast-glob": "^3.3.3",
+    "@pnpm/find-workspace-dir": "^1000.1.0",
+    "@pnpm/workspace.find-packages": "^1000.0.16"
+  }
+}

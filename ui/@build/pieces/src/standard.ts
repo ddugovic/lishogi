@@ -1,45 +1,8 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import dedent from 'dedent';
-import { type RoleDict, type Theme, colors, types } from './util.js';
-
-const regular: Theme[] = [
-  ['1Kanji_3D', 'svg'],
-  ['2Kanji_3D', 'svg'],
-  ['doubutsu', 'svg'],
-  ['international', 'svg'],
-  ['Intl_Colored_2D', 'svg'],
-  ['Intl_Colored_3D', 'svg'],
-  ['Intl_Shadowed', 'svg'],
-  ['Intl_Monochrome_2D', 'svg'],
-  ['Intl_Wooden_3D', 'svg'],
-  ['Intl_Portella', 'png'],
-  ['kanji_brown', 'svg'],
-  ['kanji_light', 'svg'],
-  ['Kanji_Guide_Shadowed', 'svg'],
-  ['kanji_red_wood', 'svg'],
-  ['orangain', 'svg'],
-  ['simple_kanji', 'svg'],
-  ['Vald_opt', 'svg'],
-  ['Valdivia', 'svg'],
-  ['Logy_Games', 'svg'],
-  ['Shogi_cz', 'svg'],
-  ['Ryoko_1Kanji', 'svg'],
-  ['Shogi_FCZ', 'svg'],
-  ['Portella', 'png'],
-  ['Portella_2Kanji', 'png'],
-  ['western', 'svg'],
-  ['Engraved_cz', 'svg'],
-  ['pixel', 'png'],
-];
-
-const bidirectional: Theme[] = [
-  ['shogi_BnW', 'svg'],
-  ['Engraved_cz_BnW', 'svg'],
-  ['joyful', 'png'],
-  ['characters', 'png'],
-  ['Firi', 'svg'],
-];
+import type { PieceSet, RoleDict } from './types.js';
+import { categorizePieceSets, colors, dasherCss, readImageAsBase64, types } from './util.js';
 
 const roleDict: RoleDict = {
   FU: 'pawn',
@@ -119,19 +82,19 @@ function classes(color: string, role: string): string {
   }
 }
 
-function extraCss(name: string, ext: string): string {
+function extraCss(pieceSet: PieceSet): string {
   const cssClasses: string[] = [];
-  if (name === 'pixel') {
+  if (pieceSet.name === 'pixel') {
     cssClasses.push('piece { image-rendering: pixelated; }');
     cssClasses.push('.v-chushogi piece, .v-kyotoshogi piece { image-rendering: unset; }');
   }
 
-  if (name === 'characters') {
+  if (pieceSet.name === 'characters') {
     cssClasses.push('piece { background-size: contain; }');
     cssClasses.push('.v-chushogi piece, .v-kyotoshogi piece { background-size: cover; }');
   }
 
-  if (ext === 'png') {
+  if (pieceSet.ext === 'png') {
     cssClasses.push('piece { will-change: transform; background-repeat: unset; }');
     cssClasses.push(
       '.v-chushogi piece, .v-kyotoshogi piece { will-change: auto; background-repeat: no-repeat; }',
@@ -142,43 +105,49 @@ function extraCss(name: string, ext: string): string {
 }
 
 export function standard(sourceDir: string, destDir: string): void {
+  const pieceSets = categorizePieceSets(sourceDir);
   const roles = Object.keys(roleDict);
 
-  for (const [name, ext] of regular) {
+  for (const pieceSet of pieceSets.regular) {
     const cssClasses = colors.flatMap(color =>
       roles.map(role => {
         const piece = `${color === 'sente' ? '0' : '1'}${role}`;
-        const file = path.join(sourceDir, name, `${piece}.${ext}`);
-        const image = fs.readFileSync(file);
-        const base64 = image.toString('base64');
+        const file = path.join(sourceDir, pieceSet.name, `${piece}.${pieceSet.ext}`);
+        const base64 = readImageAsBase64(file);
         const cls = classes(color, roleDict[role]);
-        return `${cls} {background-image:url('data:image/${types[ext]}${base64}')}`;
+        return `${cls} {background-image:url('data:image/${types[pieceSet.ext]}${base64}')}`;
       }),
     );
 
-    cssClasses.push(extraCss(name, ext));
+    cssClasses.push(extraCss(pieceSet));
     cssClasses.push(''); // trailing new line
 
-    fs.writeFileSync(path.join(destDir, `${name}.css`), cssClasses.join('\n'));
+    fs.writeFileSync(path.join(destDir, `${pieceSet.name}.css`), cssClasses.join('\n'));
   }
 
-  for (const [name, ext] of bidirectional) {
+  for (const pieceSet of pieceSets.bidirectional) {
     const cssClasses = ['-1', ''].flatMap(up =>
       colors.flatMap(color =>
         roles.map(role => {
           const piece = `${color === 'sente' ? '0' : '1'}${role}${up}`;
-          const file = path.join(sourceDir, name, `${piece}.${ext}`);
-          const image = fs.readFileSync(file);
-          const base64 = image.toString('base64');
+          const file = path.join(sourceDir, pieceSet.name, `${piece}.${pieceSet.ext}`);
+          const base64 = readImageAsBase64(file);
           const cls = classesWithOrientation(color, roleDict[role], up.length !== 0);
-          return `${cls} {background-image:url('data:image/${types[ext]}${base64}')}`;
+          return `${cls} {background-image:url('data:image/${types[pieceSet.ext]}${base64}')}`;
         }),
       ),
     );
 
-    cssClasses.push(extraCss(name, ext));
+    cssClasses.push(extraCss(pieceSet));
     cssClasses.push(''); // trailing new line
 
-    fs.writeFileSync(path.join(destDir, `${name}.css`), cssClasses.join('\n'));
+    fs.writeFileSync(path.join(destDir, `${pieceSet.name}.css`), cssClasses.join('\n'));
   }
+
+  const dasher: string[] = [];
+  for (const pieceSet of [...pieceSets.regular, ...pieceSets.bidirectional]) {
+    const file = path.join(sourceDir, pieceSet.name, `0KI.${pieceSet.ext}`);
+    dasher.push(dasherCss(file, pieceSet, 'standard'));
+  }
+  fs.writeFileSync(path.join(destDir, 'lishogi.dasher.css'), dasher.join('\n'));
 }

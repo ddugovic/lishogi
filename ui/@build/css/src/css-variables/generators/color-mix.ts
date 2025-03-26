@@ -1,12 +1,18 @@
 import { writeFile } from 'node:fs/promises';
-import path from 'node:path';
+import * as path from 'node:path';
+import { signature } from '../constants.js';
 
 export async function generateColorMixVariables(
-  extracted: Set<string>,
+  rootDir: string,
+  extracted: string[],
   outDir: string,
 ): Promise<void> {
-  let output = 'html {';
-  output += Array.from(extracted)
+  let output = `${signature} ${path.relative(rootDir, import.meta.filename)}
+    
+html {
+`;
+
+  output += extracted
     .map(name => {
       const mixFunction = generateColorMixFunction(name);
       return mixFunction ? `  --${name}: ${mixFunction}` : null;
@@ -80,7 +86,7 @@ function generateColorMixFunction(variableName: string): string | null {
     return `oklch(from ${processColorName(colorName)} l c h / ${alphaValue});`;
   }
 
-  console.log(`Couldn't properly parse: ${variableName}`);
+  console.warn(`Couldn't properly parse: ${variableName}`);
 
   return null;
 }

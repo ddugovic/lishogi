@@ -1,21 +1,8 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import dedent from 'dedent';
-import { type RoleDict, type Theme, colors, types } from './util.js';
-
-const regular: Theme[] = [
-  ['Kyo_doubutsu', 'svg'],
-  ['Kyo_joyful', 'png'],
-  ['Kyo_orangain', 'svg'],
-  ['Kyo_Kanji', 'svg'],
-  ['Kyo_simple_kanji', 'svg'],
-  ['Kyo_Intl', 'svg'],
-  ['Kyo_international', 'svg'],
-  ['Kyo_Logy_Games', 'svg'],
-  ['Kyo_Ryoko_1Kanji', 'svg'],
-];
-
-const bidirectional: Theme[] = [];
+import type { PieceSet, RoleDict } from './types.js';
+import { categorizePieceSets, colors, dasherCss, readImageAsBase64, types } from './util.js';
 
 const roleDict: RoleDict = {
   FU: 'pawn',
@@ -90,10 +77,10 @@ function classes(color: string, role: string): string {
   }
 }
 
-function extraCss(_name: string, ext: string): string {
+function extraCss(pieceSet: PieceSet): string {
   const cssClasses: string[] = [];
 
-  if (ext === 'png') {
+  if (pieceSet.ext === 'png') {
     cssClasses.push(
       '.v-kyotoshogi piece { will-change: transform !important; background-repeat: unset !important; }',
     );
@@ -102,45 +89,51 @@ function extraCss(_name: string, ext: string): string {
 }
 
 export function kyotoshogi(sourceDir: string, destDir: string): void {
+  const pieceSets = categorizePieceSets(sourceDir);
   const roles = Object.keys(roleDict);
 
-  for (const [name, ext] of regular) {
+  for (const pieceSet of pieceSets.regular) {
     const cssClasses = colors.flatMap(color =>
       roles.map(role => {
         const piece = `${color === 'sente' ? '0' : '1'}${role}`;
-        const file = path.join(sourceDir, name, `${piece}.${ext}`);
-        const image = fs.readFileSync(file);
-        const base64 = image.toString('base64');
+        const file = path.join(sourceDir, pieceSet.name, `${piece}.${pieceSet.ext}`);
+        const base64 = readImageAsBase64(file);
         const cls = classes(color, roleDict[role]);
-        return `${cls} {background-image:url('data:image/${types[ext]}${base64}')!important;}`;
+        return `${cls} {background-image:url('data:image/${types[pieceSet.ext]}${base64}')!important;}`;
       }),
     );
 
-    cssClasses.push(extraCss(name, ext));
+    cssClasses.push(extraCss(pieceSet));
     cssClasses.push(''); // trailing new line
 
-    fs.writeFileSync(path.join(destDir, `${name}.css`), cssClasses.join('\n'));
+    fs.writeFileSync(path.join(destDir, `${pieceSet.name}.css`), cssClasses.join('\n'));
   }
 
-  for (const [name, ext] of bidirectional) {
+  for (const pieceSet of pieceSets.bidirectional) {
     const cssClasses = ['-1', '']
       .flatMap(up =>
         colors.flatMap(color =>
           roles.map(role => {
             const piece = `${color === 'sente' ? '0' : '1'}${role}${up}`;
-            const file = path.join(sourceDir, name, `${piece}.${ext}`);
-            const image = fs.readFileSync(file);
-            const base64 = image.toString('base64');
+            const file = path.join(sourceDir, pieceSet.name, `${piece}.${pieceSet.ext}`);
+            const base64 = readImageAsBase64(file);
             const cls = classesWithOrientation(color, roleDict[role], up.length !== 0);
-            return `${cls} {background-image:url('data:image/${types[ext]}${base64}')!important;}`;
+            return `${cls} {background-image:url('data:image/${types[pieceSet.ext]}${base64}')!important;}`;
           }),
         ),
       )
       .filter(css => css !== '');
 
-    cssClasses.push(extraCss(name, ext));
+    cssClasses.push(extraCss(pieceSet));
     cssClasses.push(''); // trailing new line
 
-    fs.writeFileSync(path.join(destDir, `${name}.css`), cssClasses.join('\n'));
+    fs.writeFileSync(path.join(destDir, `${pieceSet.name}.css`), cssClasses.join('\n'));
   }
+
+  const dasher: string[] = [];
+  for (const pieceSet of [...pieceSets.regular, ...pieceSets.bidirectional]) {
+    const file = path.join(sourceDir, pieceSet.name, `0KY.${pieceSet.ext}`);
+    dasher.push(dasherCss(file, pieceSet, 'kyotoshogi'));
+  }
+  fs.writeFileSync(path.join(destDir, 'lishogi.dasher.css'), dasher.join('\n'));
 }

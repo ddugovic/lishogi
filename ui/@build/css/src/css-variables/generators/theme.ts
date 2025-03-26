@@ -1,19 +1,21 @@
 import { writeFile } from 'node:fs/promises';
-import path from 'node:path';
-import { prefix, signature, themes } from './constants.js';
-import { type ThemeRecord, defaultTheme } from './types.js';
+import * as path from 'node:path';
+import { prefix, signature, themes } from '../constants.js';
+import { type ThemeRecord, defaultTheme } from '../types.js';
 
-export async function generateCssVariables(
+export async function generateThemeVariables(
+  rootDir: string,
   themeVars: ThemeRecord,
-  extracted: Set<string>,
+  extracted: string[],
   outDir: string,
 ): Promise<void> {
-  themes.forEach(async theme => {
-    let output = `${signature}
+  for (const theme of themes) {
+    let output = `${signature} ${path.relative(rootDir, import.meta.filename)}
+
 @use 'sass:color';
 @use '../util' as *;
 @use '../${defaultTheme}' as *;
-${theme !== defaultTheme ? `@use '../${theme}' as *` : ''};
+${theme !== defaultTheme ? `@use '../${theme}' as *;` : ''}
 `;
 
     const sel = theme === defaultTheme ? 'html' : `html.${theme}`;
@@ -29,18 +31,18 @@ ${theme !== defaultTheme ? `@use '../${theme}' as *` : ''};
         !value.includes('c-') &&
         themeVars[defaultTheme][name] === value
       )
-        console.warn('Redundant variable repetition:', `$${name}: ${value}`, 'in', theme);
+        console.warn(`Redundant variable repetition: $${name}: ${value}in ${theme}`);
       output += cssVariable(name, value);
     });
 
-    Array.from(extracted).forEach(name => {
+    extracted.forEach(name => {
       const v = colorFunction(name, varKeys);
       if (v) output += cssVariable(name, v);
     });
     output += '}\n\n';
 
     await writeFile(path.join(outDir, `_${theme}-vars.scss`), output);
-  });
+  }
 }
 
 function cssVariable(name: string, value: string): string {
@@ -63,14 +65,13 @@ function colorFunction(variable: string, themeKeys: string[]): string | undefine
   const colors = parts.slice(0, -2).map(p => themifyColor(p));
 
   if (!colors.some(c => themeKeys.includes(c.split('$')[1]))) {
-    // console.log('Skipping', variable, 'for', theme, 'theme');
     return;
   }
 
   const mixDups = new Set<string>();
   if (func === 'mix') {
     const normalized = normalizeMixVariable(colors, percentage);
-    if (mixDups.has(normalized)) console.warn('Found duplicates:', normalized);
+    if (mixDups.has(normalized)) console.warn(`Found duplicates: ${normalized}`);
     else mixDups.add(normalized);
 
     return `color.mix(${[colors[0], colors[1], `${percentage}%`].join(',')})`;

@@ -4,7 +4,7 @@
   "license": "AGPL-3.0-or-later",
   "type": "module",
   "dependencies": {
-    "@liskadan/sliding-puzzles": "^0.1.0",
+    "@build/helpers": "workspace:*",
     "@yaireo/tagify": "catalog:",
     "balloon-css": "^1.2.0",
     "fairy-stockfish-nnue.wasm": "1.1.8",
@@ -16,12 +16,8 @@
     "sortablejs": "^1.15.6",
     "spectrum-vanilla": "^1.1.1"
   },
-  "devDependencies": {
-    "@types/node": "catalog:",
-    "tsx": "catalog:"
-  },
   "scripts": {
-    "type-check": "tsc --noEmit",
-    "build": "tsx ./src/index.ts"
+    "build": "tsx ./src/main.ts",
+    "build:watch": "tsx watch --clear-screen=false --include ../../../pnpm-lock.yaml --include assets ./src/main.ts"
   }
 }

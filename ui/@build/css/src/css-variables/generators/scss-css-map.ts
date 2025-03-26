@@ -1,13 +1,14 @@
-import fs from 'node:fs';
-import path from 'node:path';
-import { signature } from './constants.js';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+import { signature } from '../constants.js';
 
-export async function generateScssMap(
+export async function generateScssCssMap(
+  rootDir: string,
   themes: Record<string, Record<string, string>>,
-  extracted: Set<string>,
+  extracted: string[],
   outDir: string,
 ): Promise<void> {
-  let output = `${signature}\n`;
+  let output = `${signature} ${path.relative(rootDir, import.meta.filename)}\n\n`;
 
   const themeKeys = new Set();
   Object.values(themes).forEach(theme => {
@@ -18,11 +19,9 @@ export async function generateScssMap(
     output += `$${k}: var(--${k});\n`;
   }
 
-  Array.from(extracted)
-    .sort()
-    .forEach(name => {
-      output += `$${name}: var(--${name});\n`;
-    });
+  extracted.forEach(name => {
+    output += `$${name}: var(--${name});\n`;
+  });
 
   await fs.promises.writeFile(path.join(outDir, '_theme.scss'), output);
 }

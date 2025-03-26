@@ -1,7 +1,7 @@
 import * as fs from 'node:fs';
-import path from 'node:path';
-import { themes } from './constants.js';
-import type { ThemeRecord } from './types.js';
+import * as path from 'node:path';
+import { themes } from '../constants.js';
+import type { ThemeRecord } from '../types.js';
 
 export async function parseThemes(themeDir: string): Promise<ThemeRecord> {
   const themeRec = {} as ThemeRecord;
