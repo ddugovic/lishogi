@@ -4,13 +4,15 @@
   "license": "AGPL-3.0-or-later",
   "type": "module",
   "dependencies": {
+    "@liskadan/sliding-puzzles": "^0.2.0",
     "@textcomplete/core": "catalog:",
     "@textcomplete/textarea": "catalog:",
     "breakpoint-sass": "catalog:",
     "canvas-confetti": "^1.9.3",
     "common": "workspace:*",
-    "shogi": "workspace:*",
     "flatpickr": "catalog:",
+    "shogi": "workspace:*",
+    "i18n": "workspace:*",
     "shogiops": "catalog:",
     "shogiground": "catalog:",
     "tablesort": "^5.3.0"

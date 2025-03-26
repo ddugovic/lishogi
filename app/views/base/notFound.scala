@@ -12,14 +12,8 @@ object notFound {
   def apply()(implicit ctx: Context) =
     layout(
       title = trans.pageNotFound.txt(),
-      moreCss = frag(
-        cssTag("misc.not-found"),
-        vendorCssTag("sliding-puzzles", "hakoirimusume.css"),
-      ),
-      moreJs = frag(
-        vendorJsTag("sliding-puzzles", "sliding-puzzles.min.js"),
-        jsTag("misc.hakoirimusume"),
-      ),
+      moreCss = cssTag("misc.not-found"),
+      moreJs = jsTag("misc.hakoirimusume"),
     ) {
       main(cls := "not-found page-small box box-pad")(
         header(
@@ -27,9 +21,7 @@ object notFound {
           div(
             strong(trans.pageNotFound.txt()),
             p(
-              "Return to ",
-              a(href := routes.Lobby.home)("the homepage"),
-              span(cls := "or-play")(" or play this mini-game"),
+              a(href := routes.Lobby.home)(trans.returnToHomepage()),
             ),
           ),
         ),
@@ -37,15 +29,12 @@ object notFound {
           p(
             cls := "objective",
           )(
-            "Your objective is to help the king escape through the bottom hole in the board.",
+            trans.hakoiriMusumeExplanation(),
           ),
           div(id := "game"),
           div(cls := "game-help")(
-            div(
-              span(id := "move-cnt"),
-              "moves",
-            ),
-            button(id := "reset", "RESET"),
+            span(id   := "move-cnt"),
+            button(id := "reset", trans.reset()),
           ),
           p(cls := "credits")(
             a(

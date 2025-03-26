@@ -1,10 +1,12 @@
-declare const SlidingPuzzles: any;
+import { SlidingPuzzles } from '@liskadan/sliding-puzzles';
+import type { Situation } from '@liskadan/sliding-puzzles/situations';
+import { i18nPluralSame } from 'i18n';
 
-function solution(s: any): boolean {
-  return s.pieces.find(p => p.name === 'K').position === 13;
+function solution(s: Situation): boolean {
+  return s.pieces.find(p => p.name === 'K')!.position === 13;
 }
 
-function win(s: any): void {
+function win(s: Situation): void {
   setTimeout(() => {
     const wscreen = document.createElement('div');
     wscreen.classList.add('win');
@@ -12,16 +14,20 @@ function win(s: any): void {
   }, 50);
 }
 
-function move(s: any): void {
+function updateMoveCnt(nb: number): void {
   const mcnt = document.getElementById('move-cnt');
-  if (mcnt) mcnt.innerHTML = `${s.moves} `;
+  if (mcnt) mcnt.innerHTML = i18nPluralSame('nbMoves', nb);
+}
+
+function move(s: Situation): void {
+  updateMoveCnt(s.moves);
 }
 
 function startPuzzle(): void {
-  const mcnt = document.getElementById('move-cnt');
-  if (mcnt) mcnt.innerHTML = '0 ';
+  updateMoveCnt(0);
+
   SlidingPuzzles(
-    document.getElementById('game'),
+    document.getElementById('game')!,
     'G1 K K G2/G1 K K G2/B S S R/B N L R/ P1 . . P2',
     {
       solution: solution,
