@@ -84,9 +84,9 @@ def build_dag():
                 toWrite = toWrite + '\n'
         file.write(toWrite)
 
-    print("Creating dag.png...")
+    print("Creating server-dag.png...")
     pydot_graph = nx.nx_pydot.to_pydot(dag)
-    pydot_graph.write_png("../doc/dag.png")
+    pydot_graph.write_png("../doc/server-dag.png")
     
     print("DONE!")
 
