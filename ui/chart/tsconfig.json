@@ -1,3 +1,6 @@
 {
-  "extends": "@config/tsconfig"
+  "extends": "@config/tsconfig",
+  "compilerOptions": {
+    "skipLibCheck": true
+  }
 }
