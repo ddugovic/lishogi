@@ -1,4 +1,4 @@
-import { loadCompiledScript } from 'common/assets';
+import { loadLishogiScript } from 'common/assets';
 import { spinnerHtml } from 'common/spinner';
 import { escapeHtml } from 'common/string';
 import { i18n } from 'i18n';
@@ -57,8 +57,8 @@ export default function (element: HTMLElement, ctrl: AnalyseCtrl): void {
         `<div id="acpl-chart-container"><canvas id="acpl-chart"></canvas></div>${loading ? chartLoader() : ''}`,
       );
     else if (loading && !$('#acpl-chart-container-loader').length) $panel.append(chartLoader());
-    loadCompiledScript('chart').then(() => {
-      loadCompiledScript('chart.acpl').then(() => {
+    loadLishogiScript('chart').then(() => {
+      loadLishogiScript('chart.acpl').then(() => {
         li.modules.chartAcpl!($('#acpl-chart')[0] as HTMLCanvasElement, data, ctrl.mainline);
       });
     });
@@ -70,8 +70,8 @@ export default function (element: HTMLElement, ctrl: AnalyseCtrl): void {
     $menu.find(`[data-panel="${panel}"]`).addClass('active');
     $panels.removeClass('active').filter(`.${panel}`).addClass('active');
     if (panel == 'move-times' && !timeChartLoaded)
-      loadCompiledScript('chart').then(() => {
-        loadCompiledScript('chart.movetime').then(() => {
+      loadLishogiScript('chart').then(() => {
+        loadLishogiScript('chart.movetime').then(() => {
           timeChartLoaded = true;
           li.modules.chartMovetime!(
             $('#movetimes-chart')[0] as HTMLCanvasElement,

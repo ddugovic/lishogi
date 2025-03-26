@@ -1,4 +1,4 @@
-import { loadCompiledScript } from 'common/assets';
+import { loadLishogiScript } from 'common/assets';
 
 export function setup(): void {
   window.lishogi.pubsub.on('speech.enabled', onSpeechChange);
@@ -6,7 +6,7 @@ export function setup(): void {
 }
 
 function onSpeechChange(enabled: boolean): void {
-  if (!window.lishogi.modules.speech && enabled) loadCompiledScript('speech');
+  if (!window.lishogi.modules.speech && enabled) loadLishogiScript('speech');
   else if (window.lishogi.modules.speech && !enabled) window.lishogi.modules.speech = undefined;
 }
 

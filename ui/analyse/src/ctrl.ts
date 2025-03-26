@@ -5,8 +5,8 @@ import type { CevalCtrl, EvalMeta, NodeEvals } from 'ceval/types';
 import { isEvalBetter } from 'ceval/util';
 import {
   loadChushogiPieceSprite,
-  loadCompiledScript,
   loadKyotoshogiPieceSprite,
+  loadLishogiScript,
 } from 'common/assets';
 import { type Prop, defined, prop, requestIdleCallbackWithFallback } from 'common/common';
 import { analysis } from 'common/links';
@@ -203,7 +203,7 @@ export default class AnalyseCtrl {
 
     li.pubsub.on('sound_set', (set: string) => {
       if (!this.music && set === 'music')
-        loadCompiledScript('misc.music').then(() => {
+        loadLishogiScript('misc.music').then(() => {
           this.music = window.lishogi.modules.miscMusic();
         });
       if (this.music && set !== 'music') this.music = null;

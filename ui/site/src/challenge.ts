@@ -1,4 +1,4 @@
-import { loadCompiledScript, loadCssPath } from 'common/assets';
+import { loadCssPath, loadLishogiScript } from 'common/assets';
 import { initiatingHtml } from './util';
 
 export function challengeApp(): typeof window.lishogi.challengeApp {
@@ -13,7 +13,7 @@ export function challengeApp(): typeof window.lishogi.challengeApp {
     booted = true;
     $('#challenge-app').html(initiatingHtml);
     loadCssPath('challenge');
-    loadCompiledScript('challenge').then(() => {
+    loadLishogiScript('challenge').then(() => {
       instance = window.lishogi.modules.challenge!({
         data: data,
         show: () => {

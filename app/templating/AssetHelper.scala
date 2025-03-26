@@ -53,7 +53,7 @@ trait AssetHelper { self: I18nHelper with SecurityHelper =>
     )
 
   def jsTag(name: String): Frag =
-    jsAt(s"compiled/lishogi.${name}${minifiedAssets ?? ".min"}.js")
+    jsAt(s"js/lishogi.${name}${minifiedAssets ?? ".min"}.js")
 
   private def moduleName(name: String): String =
     name.split("[.-]").toList match {
@@ -89,8 +89,8 @@ trait AssetHelper { self: I18nHelper with SecurityHelper =>
   lazy val fingerprintTag    = vendorJsTag("fipr", "fipr.js")
   lazy val tagifyTag         = vendorJsTag("tagify", "tagify.min.js")
 
-  def translationJsTag(name: String)(implicit lang: Lang): Frag =
-    jsAt(s"translation/${name}/${lang.code}.js")
+  def i18nJsTag(name: String)(implicit lang: Lang): Frag =
+    jsAt(s"i18n/${name}/${lang.code}.js")
 
   private def pieceSprite(name: String, filePath: String): Frag =
     link(
@@ -102,15 +102,15 @@ trait AssetHelper { self: I18nHelper with SecurityHelper =>
 
   def defaultPieceSprite(implicit ctx: Context): Frag = defaultPieceSprite(ctx.currentPieceSet)
   def defaultPieceSprite(ps: lila.pref.PieceSet): Frag =
-    pieceSprite("piece-sprite", s"piece-css/$ps.css")
+    pieceSprite("piece-sprite", s"piece-css/standard/$ps.css")
 
   def chuPieceSprite(implicit ctx: Context): Frag = chuPieceSprite(ctx.currentChuPieceSet)
   def chuPieceSprite(ps: lila.pref.PieceSet): Frag =
-    pieceSprite("chu-piece-sprite", s"piece-css/$ps.css")
+    pieceSprite("chu-piece-sprite", s"piece-css/chushogi/$ps.css")
 
   def kyoPieceSprite(implicit ctx: Context): Frag = kyoPieceSprite(ctx.currentKyoPieceSet)
   def kyoPieceSprite(ps: lila.pref.PieceSet): Frag =
-    pieceSprite("kyo-piece-sprite", s"piece-css/$ps.css")
+    pieceSprite("kyo-piece-sprite", s"piece-css/kyotoshogi/$ps.css")
 
   def basicCsp(implicit req: RequestHeader): ContentSecurityPolicy = {
     val assets = if (req.secure) s"https://$assetDomain" else assetDomain.value

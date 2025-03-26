@@ -1,4 +1,4 @@
-import { loadCompiledScript, loadCssPath } from 'common/assets';
+import { loadCssPath, loadLishogiScript } from 'common/assets';
 import { escapeHtml } from 'common/string';
 
 function main(opts: { $wrap: JQuery; toggle: () => void }): void {
@@ -67,7 +67,7 @@ function help() {
 }
 
 function getDasher(cb: (dasher: any) => void) {
-  loadCompiledScript('dasher').then(() => {
+  loadLishogiScript('dasher').then(() => {
     window.lishogi.modules.dasher!({
       playing: $('body').hasClass('playing'),
     }).then(cb);

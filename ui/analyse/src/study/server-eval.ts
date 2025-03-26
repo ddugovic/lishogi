@@ -1,4 +1,4 @@
-import { loadCompiledScript } from 'common/assets';
+import { loadLishogiScript } from 'common/assets';
 import { requestIdleCallbackWithFallback } from 'common/common';
 import { bind, onInsert } from 'common/snabbdom';
 import spinner from 'common/spinner';
@@ -45,8 +45,8 @@ export function view(ctrl: ServerEval): VNode {
   const chart = h(`canvas.study__server-eval.ready.${analysis.id}`, {
     hook: onInsert((el: HTMLCanvasElement) => {
       requestIdleCallbackWithFallback(() => {
-        loadCompiledScript('chart').then(() => {
-          loadCompiledScript('chart.acpl').then(() => {
+        loadLishogiScript('chart').then(() => {
+          loadLishogiScript('chart.acpl').then(() => {
             ctrl.chart = window.lishogi.modules.chartAcpl!(el, ctrl.root.data, mainline);
           });
         });

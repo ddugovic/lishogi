@@ -1,4 +1,4 @@
-import { loadCompiledScript } from 'common/assets';
+import { loadLishogiScript } from 'common/assets';
 import { type Prop, defined, prop } from 'common/common';
 import * as modal from 'common/modal';
 import { bind, bindSubmit, onInsert } from 'common/snabbdom';
@@ -190,7 +190,7 @@ export function view(ctrl: StudyChapterNewFormCtrl): VNode {
                   hook: {
                     insert(vnode) {
                       Promise.all([
-                        loadCompiledScript('lishogi.editor'),
+                        loadLishogiScript('lishogi.editor'),
                         window.lishogi.xhr.json('GET', '/editor.json', {
                           url: { sfen: ctrl.root.node.sfen },
                         }),

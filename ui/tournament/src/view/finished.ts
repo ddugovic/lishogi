@@ -1,5 +1,5 @@
-import { loadCompiledScript } from 'common/assets';
-import type { MaybeVNodes } from 'common/snabbdom';
+import { loadLishogiScript } from 'common/assets';
+import type { MaybeVNode, MaybeVNodes } from 'common/snabbdom';
 import { once } from 'common/storage';
 import { i18n, i18nFormatCapitalized } from 'i18n';
 import { colorName } from 'shogi/color-name';
@@ -23,7 +23,7 @@ function confetti(data: TournamentData): MaybeVNode {
     return h('canvas#confetti', {
       hook: {
         insert: vnode =>
-          loadCompiledScript('misc.confetti').then(() => {
+          loadLishogiScript('misc.confetti').then(() => {
             window.lishogi.modules.miscConfetti(vnode.elm as HTMLCanvasElement);
           }),
       },

@@ -1,4 +1,4 @@
-import { loadCompiledScript } from 'common/assets';
+import { loadLishogiScript } from 'common/assets';
 import viewStatus from 'game/view/status';
 import { i18nFormatCapitalized } from 'i18n';
 import { colorName } from 'shogi/color-name';
@@ -13,7 +13,7 @@ export function setup(ctrl: RoundController): void {
 function onSpeechChange(ctrl: RoundController) {
   return (enabled: boolean) => {
     if (!window.lishogi.modules.speech && enabled)
-      loadCompiledScript('speech').then(() => status(ctrl));
+      loadLishogiScript('speech').then(() => status(ctrl));
     else if (window.lishogi.modules.speech && !enabled) window.lishogi.modules.speech = undefined;
   };
 }

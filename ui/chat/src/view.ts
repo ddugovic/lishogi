@@ -1,4 +1,4 @@
-import { loadCompiledScript } from 'common/assets';
+import { loadLishogiScript } from 'common/assets';
 import { bind } from 'common/snabbdom';
 import { i18n } from 'i18n';
 import { type VNode, h } from 'snabbdom';
@@ -37,7 +37,7 @@ function renderPalantir(ctrl: ChatCtrl) {
         hook: bind('click', () => {
           if (!p.loaded) {
             p.loaded = true;
-            loadCompiledScript('palantir').then(() => {
+            loadLishogiScript('palantir').then(() => {
               p.instance = window.lishogi.modules.palantir({
                 uid: ctrl.data.userId,
                 redraw: ctrl.redraw,

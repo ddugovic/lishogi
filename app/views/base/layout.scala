@@ -310,7 +310,7 @@ object layout {
           ctx.requiresFingerprint option fingerprintTag,
           vendorSiteJs,
           shogiground option vendorJsTag("shogiground", "shogiground.min.js"),
-          translationJsTag("core"),
+          i18nJsTag("core"),
           jsTag("site"),
           moreJs,
           ctx.pageData.inquiry.isDefined option jsTag("misc.inquiry"),

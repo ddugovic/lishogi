@@ -1,4 +1,4 @@
-import { loadCompiledScript, loadCssPath } from 'common/assets';
+import { loadCssPath, loadLishogiScript } from 'common/assets';
 import { initiatingHtml } from './util';
 
 export function notifyApp(): typeof window.lishogi.notifyApp {
@@ -29,7 +29,7 @@ export function notifyApp(): typeof window.lishogi.notifyApp {
     booted = true;
     $('#notify-app').html(initiatingHtml);
     loadCssPath('notify');
-    loadCompiledScript('notify').then(() => {
+    loadLishogiScript('notify').then(() => {
       instance = window.lishogi.modules.notify!({
         data: data,
         incoming: incoming,

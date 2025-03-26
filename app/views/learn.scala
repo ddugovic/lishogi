@@ -17,7 +17,7 @@ object index {
       title = s"${learnShogi.txt()} - ${byPlaying.txt()}",
       moreCss = cssTag("learn"),
       moreJs = frag(
-        translationJsTag("learn"),
+        i18nJsTag("learn"),
         moduleJsTag(
           "learn",
           Json.obj(

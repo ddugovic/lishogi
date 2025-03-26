@@ -16,7 +16,7 @@ object embed {
       title = s"${trans.noGameFound.txt()}",
       moreCss = cssTag("embed.analyse"),
       moreJs = frag(
-        translationJsTag("core"),
+        i18nJsTag("core"),
         moduleJsTag(
           "embed.analyse",
           Json.obj(

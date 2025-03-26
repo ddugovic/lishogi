@@ -1,4 +1,4 @@
-import { assetUrl, compiledScriptPath, loadCompiledScript, loadCssPath } from 'common/assets';
+import { assetUrl, lishogiScriptPath, loadCssPath, loadLishogiScript } from 'common/assets';
 import { initAll as initMiniBoards, update as updateMiniBoard } from 'common/mini-board';
 import { announce } from './announce';
 import { challengeApp } from './challenge';
@@ -128,7 +128,7 @@ export function init(): void {
         $dasher.html(initiatingHtml);
         const playing = $('body').hasClass('playing');
         loadCssPath('dasher');
-        loadCompiledScript('dasher').then(() => {
+        loadLishogiScript('dasher').then(() => {
           $dasher.empty();
           window.lishogi.modules.dasher!({ playing });
         });
@@ -144,7 +144,7 @@ export function init(): void {
       const boot = () => {
         if (booted) return;
         booted = true;
-        loadCompiledScript('misc.cli').then(() =>
+        loadLishogiScript('misc.cli').then(() =>
           window.lishogi.modules.miscCli!({ $wrap, toggle }),
         );
       };
@@ -316,7 +316,7 @@ export function init(): void {
   if ('serviceWorker' in navigator && 'Notification' in window && 'PushManager' in window) {
     try {
       const workerUrl = new URL(
-        assetUrl(compiledScriptPath('service-worker'), {
+        assetUrl(lishogiScriptPath('service-worker'), {
           sameDomain: true,
         }),
         self.location.href,

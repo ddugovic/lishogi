@@ -1,4 +1,4 @@
-import { loadCompiledScript } from 'common/assets';
+import { loadLishogiScript } from 'common/assets';
 import { onInsert } from 'common/snabbdom';
 import { i18nFormat } from 'i18n';
 import { anim } from 'shogiground/anim';
@@ -135,7 +135,7 @@ export function render(ctrl: KeyboardMove): VNode {
         autocomplete: 'off',
       },
       hook: onInsert((input: HTMLInputElement) =>
-        loadCompiledScript('keyboard-move').then(() => {
+        loadLishogiScript('keyboard-move').then(() => {
           ctrl.registerHandler(
             window.lishogi.modules.keyboardMove!({
               input,

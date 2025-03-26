@@ -27,7 +27,7 @@ object show {
       title = trans.puzzles.txt(),
       moreCss = cssTag("puzzle"),
       moreJs = frag(
-        translationJsTag("puzzle"),
+        i18nJsTag("puzzle"),
         moduleJsTag(
           "puzzle",
           Json

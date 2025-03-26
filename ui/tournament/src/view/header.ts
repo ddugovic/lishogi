@@ -1,22 +1,22 @@
 import { assetUrl } from 'common/assets';
-import { dataIcon } from 'common/snabbdom';
+import { type MaybeVNode, dataIcon } from 'common/snabbdom';
 import { i18n } from 'i18n';
 import { type VNode, h } from 'snabbdom';
 import type TournamentController from '../ctrl';
 
-function startClock(time) {
+function startClock(time: number) {
   return {
-    insert: vnode => $(vnode.elm as HTMLElement).clock({ time: time }),
+    insert: (vnode: VNode) => $(vnode.elm as HTMLElement).clock({ time: time }),
   };
 }
 
 const oneDayInSeconds = 60 * 60 * 24;
 
-function hasFreq(freq, d) {
+function hasFreq(freq: string, d: any) {
   return d.schedule && d.schedule.freq === freq;
 }
 
-function clock(d): VNode | undefined {
+function clock(d: any): MaybeVNode {
   if (d.isFinished) return;
   if (d.secondsToFinish) {
     if (d.secondsToFinish > oneDayInSeconds)
@@ -60,10 +60,10 @@ function clock(d): VNode | undefined {
         },
         [h('span.shy', i18n('starting')), h('span.time.text')],
       );
-  }
+  } else return;
 }
 
-function image(d): VNode | undefined {
+function image(d: any): VNode | undefined {
   if (d.isFinished) return;
   if (hasFreq('shield', d) || hasFreq('marathon', d)) return;
   const s = d.spotlight;

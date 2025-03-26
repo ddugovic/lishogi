@@ -19,7 +19,7 @@ object embed {
       title = s"${s.name} ${chapter.name}",
       moreCss = cssTag("embed.analyse"),
       moreJs = frag(
-        translationJsTag("core"),
+        i18nJsTag("core"),
         moduleJsTag(
           "embed.analyse",
           Json.obj(
