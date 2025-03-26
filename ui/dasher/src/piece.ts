@@ -1,4 +1,4 @@
-import { assetUrl } from 'common/assets';
+import { assetUrl, loadCss } from 'common/assets';
 import { i18n } from 'i18n';
 import { i18nVariant } from 'i18n/variant';
 import { type VNode, h } from 'snabbdom';
@@ -35,30 +35,32 @@ export function ctrl(
 ): PieceCtrl {
   const isChushogi = !!document.body.querySelector('.main-v-chushogi');
   const isKyotoshogi = !isChushogi && !!document.body.querySelector('.main-v-kyotoshogi');
+  const initialTab = isChushogi ? 'chushogi' : isKyotoshogi ? 'kyotoshogi' : 'standard';
+  loadCssPieces(initialTab);
   return {
     std: std,
     chu: chu,
     kyo: kyo,
-    activeTab: isChushogi ? 'chushogi' : isKyotoshogi ? 'kyotoshogi' : 'standard',
+    activeTab: initialTab,
     setActiveTab(s: Tab) {
       this.activeTab = s;
+      loadCssPieces(this.activeTab);
       redraw();
       if (s !== 'standard') window.scrollTo(0, 0);
     },
     set(key: PieceSetKey) {
-      if (isChu(key)) chu.current = key;
-      else if (isKyo(key)) kyo.current = key;
+      if (this.activeTab === 'chushogi') chu.current = key;
+      else if (this.activeTab === 'kyotoshogi') kyo.current = key;
       else std.current = key;
 
-      applyPiece(key);
+      applyPiece(key, this.activeTab);
+
+      const prefix = variantPrefix(this.activeTab);
+      const path = prefix ? `${prefix}PieceSet` : 'pieceSet';
       window.lishogi.xhr
-        .text(
-          'POST',
-          `/pref/${isChu(key) ? 'chuPieceSet' : isKyo(key) ? 'kyoPieceSet' : 'pieceSet'}`,
-          {
-            formData: { set: key },
-          },
-        )
+        .text('POST', `/pref/${path}`, {
+          formData: { set: key },
+        })
         .catch(() => window.lishogi.announce({ msg: 'Failed to save piece set preference' }));
       redraw();
     },
@@ -77,11 +79,14 @@ export function view(ctrl: PieceCtrl): VNode {
           if (pieceSet) ctrl.set(pieceSet);
         }),
       },
-      ctrl.activeTab === 'chushogi'
-        ? h('div.list', ctrl.chu.list.map(pieceView(ctrl.chu.current)))
-        : ctrl.activeTab === 'kyotoshogi'
-          ? h('div.list', ctrl.kyo.list.map(pieceView(ctrl.kyo.current)))
-          : h('div.list', ctrl.std.list.map(pieceView(ctrl.std.current))),
+      h(
+        `div.list.tab-${ctrl.activeTab}`,
+        ctrl.activeTab === 'chushogi'
+          ? ctrl.chu.list.map(pieceView(ctrl.chu.current))
+          : ctrl.activeTab === 'kyotoshogi'
+            ? ctrl.kyo.list.map(pieceView(ctrl.kyo.current))
+            : ctrl.std.list.map(pieceView(ctrl.std.current)),
+      ),
     ),
     h(
       'a.piece-tabs',
@@ -102,31 +107,6 @@ export function view(ctrl: PieceCtrl): VNode {
   ]);
 }
 
-function pieceImage(key: PieceSetKey) {
-  const piece = isChu(key) ? '0_KIRIN' : isKyo(key) ? '0KY' : '0KI';
-  return `piece/${key}/${piece}.${isPngPiece(key) ? 'png' : 'svg'}`;
-}
-
-function isChu(key: PieceSetKey): boolean {
-  return key.startsWith('Chu_');
-}
-function isKyo(key: PieceSetKey): boolean {
-  return key.startsWith('Kyo_');
-}
-
-function isPngPiece(key: PieceSetKey): boolean {
-  return [
-    'Portella',
-    'Portella_2Kanji',
-    'Intl_Portella',
-    'joyful',
-    'pixel',
-    'Chu_Eigetsu_Gyoryu',
-    'Kyo_joyful',
-    'characters',
-  ].includes(key);
-}
-
 function pieceView(current: PieceSetKey) {
   return (p: PieceSet) =>
     h(
@@ -135,23 +115,24 @@ function pieceView(current: PieceSetKey) {
         attrs: { title: p.name, 'data-value': p.key },
         class: { active: current === p.key },
       },
-      [
-        h('piece', {
-          attrs: {
-            style: `background-image:url(${assetUrl(pieceImage(p.key))}); will-change: ${
-              isPngPiece(p.key) && p.key !== 'pixel' ? 'transform' : 'auto'
-            }`,
-          },
-        }),
-      ],
+      h('piece'),
     );
 }
 
-function applyPiece(key: PieceSetKey) {
-  const sprite = $(`#${isChu(key) ? 'chu-' : isKyo(key) ? 'kyo-' : ''}piece-sprite`);
+function applyPiece(key: PieceSetKey, tab: Tab) {
+  const prefix = variantPrefix(tab);
+  const sprite = $(`#${prefix ? `${prefix}-` : ''}piece-sprite`);
   if (sprite.length) sprite.attr('href', sprite.attr('href')!.replace(/\w+\.css/, `${key}.css`));
 
-  if (isChu(key)) document.body.dataset.chuPieceSet = key;
-  else if (isKyo(key)) document.body.dataset.kyoPieceSet = key;
+  if (tab === 'chushogi') document.body.dataset.chuPieceSet = key;
+  else if (tab === 'kyotoshogi') document.body.dataset.kyoPieceSet = key;
   else document.body.dataset.pieceSet = key;
+}
+
+function loadCssPieces(tab: Tab): Promise<void> {
+  return loadCss(assetUrl(`piece-css/${tab}/lishogi.dasher.css`));
+}
+
+function variantPrefix(tab: Tab): string {
+  return tab === 'standard' ? '' : tab.slice(0, 3);
 }

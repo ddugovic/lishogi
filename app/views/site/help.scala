@@ -64,7 +64,7 @@ object help {
         li(
           strong("pieceSet"),
           ": ",
-          (lila.pref.PieceSet.all ::: lila.pref.ChuPieceSet.all ::: lila.pref.KyoPieceSet.all)
+          lila.pref.PieceSet.all
             .map(_.key)
             .mkString(", "),
         ),
@@ -82,7 +82,7 @@ object help {
           val args =
             """style="width: 400px; height: calc(400px / 9 * 11 / 11 * 12 + 2vmin);" allowtransparency="true" frameborder="0""""
           frag(
-            h1(id := "embed-tv")("Embed Lishogi TV in your site"),
+            h2(id := "embed-tv")("Embed Lishogi TV in your site"),
             div(cls := "center")(raw(s"""<iframe src="/tv/frame?theme=wood" $args></iframe>""")),
             p("Add the following HTML to your site:"),
             p(cls := "copy-zone")(
@@ -106,7 +106,7 @@ object help {
           val args =
             """style="width: 400px; height: calc(400px / 9 * 11 / 11 * 12 + 2vmin);" allowtransparency="true" frameborder="0""""
           frag(
-            h1(id := "embed-puzzle")("Embed the daily puzzle in your site"),
+            h2(id := "embed-puzzle")("Embed the daily puzzle in your site"),
             div(cls := "center")(
               raw(s"""<iframe src="/training/frame?theme=wood" $args></iframe>"""),
             ),
@@ -132,7 +132,7 @@ object help {
         div(cls := "box box-pad developers body") {
           val args = """style="width: 600px; height: 397px;" frameborder="0""""
           frag(
-            h1(id := "embed-study")("Embed a shogi analysis in your site"),
+            h2(id := "embed-study")("Embed a shogi analysis in your site"),
             raw(
               s"""<iframe src="/study/embed/O591ZfdK/ciASxN2A?bg=auto&theme=auto" $args></iframe>""",
             ),
@@ -149,7 +149,7 @@ object help {
         div(cls := "box box-pad developers body") {
           val args = """style="width: 600px; height: 397px;" frameborder="0""""
           frag(
-            h1("Embed a shogi game in your site"),
+            h2("Embed a shogi game in your site"),
             raw(s"""<iframe src="/embed/sFbJtorq?bg=auto&theme=auto" $args></iframe>"""),
             p(
               raw(
@@ -164,7 +164,7 @@ object help {
         },
         br,
         div(cls := "box box-pad developers body")(
-          h1("HTTP API"),
+          h2("HTTP API"),
           p(
             raw(
               """WIP - Lishogi exposes a RESTish HTTP/JSON API that you are welcome to use. Read the <a href="/api" class="blue">HTTP API documentation (WIP)</a>.""",
