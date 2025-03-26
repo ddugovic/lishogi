@@ -1,4 +1,4 @@
-import { cssVar } from 'common/theme';
+import { cssVar } from 'common/styles';
 import { fontColor, tooltipBgColor } from '../common';
 
 function main(data: any): void {

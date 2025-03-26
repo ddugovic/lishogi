@@ -1,6 +1,6 @@
 import { loadScript } from 'common/assets';
 import { camelToKebab } from 'common/string';
-import { isLight } from 'common/theme';
+import { isLight } from 'common/styles';
 
 type LinkType = 'youtube' | 'twitter' | 'game' | 'study';
 

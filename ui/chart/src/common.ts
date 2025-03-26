@@ -1,5 +1,5 @@
 import type { Chart, ChartDataset, ChartOptions } from 'chart.js';
-import { cssVar } from 'common/theme';
+import { cssVar } from 'common/styles';
 
 export interface MovePoint {
   y: number;

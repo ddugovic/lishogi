@@ -1,5 +1,5 @@
 import type { ArcElement, ChartConfiguration, ChartDataset, ChartType } from 'chart.js';
-import { cssVar } from 'common/theme';
+import { cssVar } from 'common/styles';
 import { fontColor, fontFamily } from '../common';
 
 declare module 'chart.js' {

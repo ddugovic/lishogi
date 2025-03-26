@@ -1,4 +1,4 @@
-import { cssVar } from 'common/theme';
+import { cssVar } from 'common/styles';
 
 export const green: string = cssVar('--c-good');
 export const red: string = cssVar('--c-bad');
