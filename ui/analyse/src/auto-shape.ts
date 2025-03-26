@@ -1,4 +1,4 @@
-import { winningChances } from 'ceval';
+import * as winningChances from 'ceval/winning-chances';
 import type { DrawShape } from 'shogiground/draw';
 import { opposite } from 'shogiground/util';
 import type { Role } from 'shogiops/types';
@@ -141,7 +141,7 @@ const prependDropShadow = (svgBase: string) =>
 //   Inkscape's output includes unnecessary attributes which can be cleaned up with https://lean-svg.netlify.app.
 //   Wrap it by `transform="translate(...) scale(...)"` so that it sits at the right top corner.
 //   Small tweak (e.g. changing color, scaling size, etc...) can be done by directly modifying svg below.
-const glyphToSvg = {
+const glyphToSvg: Record<string, string> = {
   // Inaccuracy
   '?!': prependDropShadow(`
 <g transform="translate(77 -18) scale(0.4)">

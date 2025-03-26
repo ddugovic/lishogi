@@ -1,4 +1,5 @@
-import { view as cevalView, renderEval as normalizeEval } from 'ceval';
+import { renderEval as normalizeEval } from 'ceval/util';
+import * as cevalView from 'ceval/view';
 import { defined } from 'common/common';
 import type { MaybeVNodes } from 'common/snabbdom';
 import { notationsWithColor } from 'shogi/notation';

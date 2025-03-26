@@ -1,4 +1,4 @@
-import { renderEval as normalizeEval } from 'ceval';
+import { renderEval as normalizeEval } from 'ceval/util';
 import { defined } from 'common/common';
 import type { MaybeVNode, MaybeVNodes } from 'common/snabbdom';
 import throttle from 'common/throttle';

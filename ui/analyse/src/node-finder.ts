@@ -1,4 +1,4 @@
-import { winningChances } from 'ceval';
+import * as winningChances from 'ceval/winning-chances';
 import { defined } from 'common/common';
 
 function hasCompChild(node: Tree.Node): boolean {

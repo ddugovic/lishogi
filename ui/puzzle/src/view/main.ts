@@ -1,4 +1,4 @@
-import { view as cevalView } from 'ceval';
+import * as cevalView from 'ceval/view';
 import { bindMobileMousedown } from 'common/mobile';
 import { bindNonPassive, onInsert } from 'common/snabbdom';
 import stepwiseScroll from 'common/wheel';

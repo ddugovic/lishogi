@@ -1,4 +1,5 @@
-import { type CevalCtrl, winningChances } from 'ceval';
+import type { CevalCtrl } from 'ceval/types';
+import * as winningChances from 'ceval/winning-chances';
 import type { Api as SgApi } from 'shogiground/api';
 import type { DrawShape } from 'shogiground/draw';
 import { opposite } from 'shogiground/util';

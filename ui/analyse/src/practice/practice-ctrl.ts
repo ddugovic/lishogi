@@ -1,4 +1,5 @@
-import { type Eval, winningChances } from 'ceval';
+import type { Eval } from 'ceval/types';
+import * as winningChances from 'ceval/winning-chances';
 import { type Prop, prop, requestIdleCallbackWithFallback } from 'common/common';
 import { path as treePath } from 'tree';
 import type AnalyseCtrl from '../ctrl';

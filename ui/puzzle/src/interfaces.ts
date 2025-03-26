@@ -1,4 +1,4 @@
-import type { CevalCtrl, NodeEvals } from 'ceval';
+import type { CevalCtrl, NodeEvals } from 'ceval/types';
 import type { Prop } from 'common/common';
 import type { Deferred } from 'common/defer';
 import type { StoredBooleanProp } from 'common/storage';

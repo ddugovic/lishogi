@@ -4,11 +4,9 @@
   "license": "AGPL-3.0-or-later",
   "type": "module",
   "exports": {
-    ".": {
-      "types": "./dist/main.d.ts",
-      "import": "./dist/main.js"
-    },
     "./*": {
+      "types": "./src/*.ts",
+      "import": "./src/*.ts",
       "sass": "./css/_*.scss"
     }
   },

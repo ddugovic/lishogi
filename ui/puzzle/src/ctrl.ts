@@ -1,4 +1,6 @@
-import { type CevalCtrl, ctrl as cevalCtrl } from 'ceval';
+import cevalCtrl from 'ceval/ctrl';
+import { cevalRestarter } from 'ceval/restarter';
+import type { CevalCtrl } from 'ceval/types';
 import { prop, requestIdleCallbackWithFallback } from 'common/common';
 import { defer } from 'common/defer';
 import { storedProp } from 'common/storage';
@@ -107,6 +109,7 @@ export default function (opts: PuzzleOpts, redraw: Redraw): Controller {
 
     if (opts.pref.keyboardMove) instanciateKeyboard();
     instanciateCeval();
+    cevalRestarter();
   }
 
   function position(): Shogi {

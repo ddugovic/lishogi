@@ -1,4 +1,4 @@
-import { view as cevalView } from 'ceval';
+import * as cevalView from 'ceval/view';
 import { makeChat } from 'chat';
 import { defined } from 'common/common';
 import { bindMobileMousedown, hasTouchEvents } from 'common/mobile';

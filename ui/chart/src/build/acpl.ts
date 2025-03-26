@@ -1,4 +1,4 @@
-import { winningChances } from 'ceval';
+import * as winningChances from 'ceval/winning-chances';
 import type { ChartConfiguration, ChartDataset, PointStyle } from 'chart.js';
 import { i18n } from 'i18n';
 import {

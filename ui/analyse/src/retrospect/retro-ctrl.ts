@@ -1,4 +1,4 @@
-import { winningChances } from 'ceval';
+import * as winningChances from 'ceval/winning-chances';
 import { isEmpty, prop } from 'common/common';
 import { opposite } from 'shogiground/util';
 import { path as treePath } from 'tree';

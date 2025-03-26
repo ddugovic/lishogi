@@ -1,11 +1,8 @@
 import type { Result } from '@badrap/result';
-import {
-  type CevalCtrl,
-  type EvalMeta,
-  type NodeEvals,
-  ctrl as cevalCtrl,
-  isEvalBetter,
-} from 'ceval';
+import cevalCtrl from 'ceval/ctrl';
+import { cevalRestarter } from 'ceval/restarter';
+import type { CevalCtrl, EvalMeta, NodeEvals } from 'ceval/types';
+import { isEvalBetter } from 'ceval/util';
 import {
   loadChushogiPieceSprite,
   loadCompiledScript,
@@ -179,6 +176,7 @@ export default class AnalyseCtrl {
     this.shogiground = Shogiground();
     this.onToggleComputer();
     this.startCeval();
+    cevalRestarter();
     const evalParam = params.get('evaluation') || params.get('eval');
     if (defined(evalParam)) {
       requestIdleCallbackWithFallback(() => this.ensureCevalState(evalParam === '1'));
