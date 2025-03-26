@@ -11,12 +11,7 @@
     "debounce-promise": "catalog:"
   },
   "devDependencies": {
-    "@types/yaireo__tagify": "catalog:"
-  },
-  "scripts": {
-    "type-check": "tsc --noEmit"
-  },
-  "lishogi": {
-    "bundle": true
+    "@types/yaireo__tagify": "catalog:",
+    "@types/debounce-promise": "catalog:"
   }
 }

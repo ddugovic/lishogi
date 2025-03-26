@@ -5,23 +5,16 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/main.d.ts",
-      "import": "./dist/main.js"
+      "types": "./src/main.ts",
+      "import": "./src/main.ts"
     },
     "./*": {
-      "types": "./dist/*.d.ts",
-      "import": "./dist/*.js",
+      "types": "./src/*.ts",
+      "import": "./src/*.ts",
       "sass": "./css/_*.scss"
     }
   },
   "dependencies": {
     "common": "workspace:*"
-  },
-  "scripts": {
-    "clean": "del dist",
-    "type-check": "tsc --noEmit"
-  },
-  "lishogi": {
-    "compile": true
   }
 }

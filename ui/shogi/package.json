@@ -5,8 +5,8 @@
   "type": "module",
   "exports": {
     "./*": {
-      "types": "./dist/*.d.ts",
-      "import": "./dist/*.js"
+      "types": "./src/*.ts",
+      "import": "./src/*.ts"
     }
   },
   "dependencies": {
@@ -14,12 +14,5 @@
     "i18n": "workspace:*",
     "shogiops": "catalog:",
     "shogiground": "catalog:"
-  },
-  "scripts": {
-    "clean": "del dist",
-    "type-check": "tsc --noEmit"
-  },
-  "lishogi": {
-    "compile": true
   }
 }

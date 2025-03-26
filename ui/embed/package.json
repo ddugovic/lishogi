@@ -13,11 +13,5 @@
     "snabbdom": "catalog:",
     "shogiops": "catalog:",
     "shogiground": "catalog:"
-  },
-  "scripts": {
-    "type-check": "tsc --noEmit"
-  },
-  "lishogi": {
-    "bundle": true
   }
 }

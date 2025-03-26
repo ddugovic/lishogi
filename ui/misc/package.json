@@ -19,11 +19,5 @@
   },
   "devDependencies": {
     "@types/canvas-confetti": "^1.9.0"
-  },
-  "scripts": {
-    "type-check": "tsc --noEmit"
-  },
-  "lishogi": {
-    "bundle": true
   }
 }

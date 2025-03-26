@@ -25,17 +25,15 @@
     "./shogiground/*": {
       "sass": "./css/shogiground/_*.scss"
     },
-    "./theme": {
-      "types": "./dist/theme.d.ts",
-      "import": "./dist/theme.js",
-      "sass": "./css/theme/gen/_theme.scss"
-    },
     "./vendor/*": {
       "sass": "./css/vendor/_*.scss"
     },
+    "./theme": {
+      "sass": "./css/theme/generated/_theme.scss"
+    },
     "./*": {
-      "types": "./dist/*.d.ts",
-      "import": "./dist/*.js",
+      "types": "./src/*.ts",
+      "import": "./src/*.ts",
       "sass": "./css/_*.scss"
     }
   },
@@ -44,12 +42,5 @@
     "shogiground": "catalog:",
     "shogiops": "catalog:",
     "snabbdom": "catalog:"
-  },
-  "scripts": {
-    "clean": "del dist && del css/theme/gen",
-    "type-check": "tsc --noEmit"
-  },
-  "lishogi": {
-    "compile": true
   }
 }

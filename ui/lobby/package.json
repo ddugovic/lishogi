@@ -15,11 +15,5 @@
   },
   "devDependencies": {
     "@types/debounce-promise": "catalog:"
-  },
-  "scripts": {
-    "type-check": "tsc --noEmit"
-  },
-  "lishogi": {
-    "bundle": true
   }
 }

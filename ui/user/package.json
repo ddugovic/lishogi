@@ -11,11 +11,5 @@
   },
   "devDependencies": {
     "@types/qrcode": "^1.5.5"
-  },
-  "scripts": {
-    "type-check": "tsc --noEmit"
-  },
-  "lishogi": {
-    "bundle": true
   }
 }

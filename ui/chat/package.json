@@ -5,11 +5,11 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/main.d.ts",
-      "import": "./dist/main.js"
+      "types": "./src/main.ts",
+      "import": "./src/main.ts"
     },
     "./interfaces": {
-      "types": "./dist/interfaces.d.ts"
+      "types": "./src/interfaces.ts"
     },
     "./*": {
       "sass": "./css/_*.scss"
@@ -21,12 +21,5 @@
     "i18n": "workspace:*",
     "snabbdom": "catalog:",
     "shogi": "workspace:"
-  },
-  "scripts": {
-    "clean": "del dist",
-    "type-check": "tsc --noEmit"
-  },
-  "lishogi": {
-    "compile": true
   }
 }

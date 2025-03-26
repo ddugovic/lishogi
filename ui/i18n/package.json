@@ -5,22 +5,15 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/i18n.d.ts",
-      "import": "./dist/i18n.js"
+      "types": "./src/i18n.ts",
+      "import": "./src/i18n.ts"
     },
     "./*": {
-      "types": "./dist/*.d.ts",
-      "import": "./dist/*.js"
+      "types": "./src/*.ts",
+      "import": "./src/*.ts"
     }
   },
   "dependencies": {
     "common": "workspace:*"
-  },
-  "scripts": {
-    "clean": "del dist",
-    "type-check": "tsc --noEmit"
-  },
-  "lishogi": {
-    "compile": true
   }
 }

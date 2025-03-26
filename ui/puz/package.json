@@ -5,8 +5,8 @@
   "type": "module",
   "exports": {
     "./*": {
-      "types": "./dist/*.d.ts",
-      "import": "./dist/*.js",
+      "types": "./src/*.ts",
+      "import": "./src/*.ts",
       "sass": "./css/_*.scss"
     }
   },
@@ -17,12 +17,5 @@
     "shogiground": "catalog:",
     "shogiops": "catalog:",
     "snabbdom": "catalog:"
-  },
-  "scripts": {
-    "clean": "del dist",
-    "type-check": "tsc --noEmit"
-  },
-  "lishogi": {
-    "compile": true
   }
 }

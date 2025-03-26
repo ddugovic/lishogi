@@ -6,11 +6,5 @@
   "dependencies": {
     "common": "workspace:*",
     "i18n": "workspace:*"
-  },
-  "scripts": {
-    "type-check": "tsc --noEmit"
-  },
-  "lishogi": {
-    "bundle": true
   }
 }

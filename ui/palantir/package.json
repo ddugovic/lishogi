@@ -7,10 +7,7 @@
     "common": "workspace:*",
     "peerjs": "^1.5.4"
   },
-  "scripts": {
-    "type-check": "tsc --noEmit"
-  },
-  "lishogi": {
-    "bundle": true
+  "devDependencies": {
+    "snabbdom": "catalog:"
   }
 }

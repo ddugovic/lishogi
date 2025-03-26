@@ -5,11 +5,5 @@
   "type": "module",
   "devDependencies": {
     "types-serviceworker": "^0.0.1"
-  },
-  "scripts": {
-    "type-check": "tsc --noEmit"
-  },
-  "lishogi": {
-    "bundle": true
   }
 }

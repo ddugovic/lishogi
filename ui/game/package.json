@@ -5,24 +5,17 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/game.d.ts",
-      "import": "./dist/game.js"
+      "types": "./src/game.ts",
+      "import": "./src/game.ts"
     },
     "./*": {
-      "types": "./dist/*.d.ts",
-      "import": "./dist/*.js"
+      "types": "./src/*.ts",
+      "import": "./src/*.ts"
     }
   },
   "dependencies": {
     "common": "workspace:*",
     "shogi": "workspace:*",
     "i18n": "workspace:*"
-  },
-  "scripts": {
-    "clean": "del dist",
-    "type-check": "tsc --noEmit"
-  },
-  "lishogi": {
-    "compile": true
   }
 }

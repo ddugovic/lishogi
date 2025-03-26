@@ -8,11 +8,5 @@
     "common": "workspace:*",
     "i18n": "workspace:*",
     "snabbdom": "catalog:"
-  },
-  "scripts": {
-    "type-check": "tsc --noEmit"
-  },
-  "lishogi": {
-    "bundle": true
   }
 }

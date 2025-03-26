@@ -9,11 +9,5 @@
     "i18n": "workspace:*",
     "shogi": "workspace:*",
     "snabbdom": "catalog:"
-  },
-  "scripts": {
-    "type-check": "tsc --noEmit"
-  },
-  "lishogi": {
-    "bundle": true
   }
 }

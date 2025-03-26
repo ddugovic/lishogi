@@ -20,12 +20,5 @@
     "shogiground": "catalog:",
     "shogiops": "catalog:",
     "snabbdom": "catalog:"
-  },
-  "scripts": {
-    "clean": "del dist",
-    "type-check": "tsc --noEmit"
-  },
-  "lishogi": {
-    "compile": true
   }
 }

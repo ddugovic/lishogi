@@ -14,11 +14,5 @@
     "shogiops": "catalog:",
     "snabbdom": "catalog:",
     "tree": "workspace:*"
-  },
-  "scripts": {
-    "type-check": "tsc --noEmit"
-  },
-  "lishogi": {
-    "bundle": true
   }
 }
