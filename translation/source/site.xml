@@ -104,6 +104,7 @@
 	<string name="topGames">Top games</string>
 	<string name="noGameFound">No game found</string>
 	<string name="pageNotFound">Page not found</string>
+	<string name="returnToHomepage">Return to homepage</string>
 	<string name="maybeIncludeMoreGamesFromThePreferencesMenu">Maybe include more games from the preferences menu?</string>
 	<string name="openingExplorer">Opening explorer</string>
 	<string name="xOpeningExplorer">%s opening explorer</string>
@@ -1023,4 +1024,5 @@
 	<string name="acceptPlayersStartSimul">Once you've accepted two or more players, you can start the simul.</string>
 	<string name="acceptRandomCandidate">Accept random candidate</string>
 	<string name="exploreSiteAndHaveFun">Explore the site and have fun :)</string>
+	<string name="hakoiriMusumeExplanation" comment="Mini game on 404 pages">Help the king escape through the bottom opening of the board by sliding the pieces.</string>
 </resources>
