@@ -234,8 +234,15 @@ function configureSrc(url: string) {
     }
   }
 
-  const pieceSet = document.body.dataset.pieceSet;
-  if (pieceSet) parsed.searchParams.append('pieceSet', pieceSet);
+  const addPieceSet = (variant: string) => {
+    const defaultPieceSet = 'ryoko_1kanji';
+    const pieceSet = document.body.dataset[variant];
+    if (pieceSet && pieceSet !== defaultPieceSet) parsed.searchParams.append(variant, pieceSet);
+  };
+
+  addPieceSet('pieceSet');
+  addPieceSet('chuPieceSet');
+  addPieceSet('kyoPieceSet');
 
   const bg = document.body.getAttribute('data-theme');
   if (bg) {
