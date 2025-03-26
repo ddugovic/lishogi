@@ -11,13 +11,11 @@ project/target
 .metals
 
 # ui stuff
-/public/compiled
+/public/js
 /public/css
+/public/i18n
 /public/piece-css
 /public/vendors
-/public/translation
-/ui/common/css/theme/gen
-dist/
 node_modules/
 tsconfig.tsbuildinfo
 .stylelintcache

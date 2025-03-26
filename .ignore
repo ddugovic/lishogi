@@ -1,11 +1,11 @@
 # search ignores
 translation/dest
+public/js
+public/css
+public/i18n
+public/piece-css
+public/vendors
 public/font
 public/images
-public/piece
-public/piece-css
 public/sound
-public/vendors
-public/compiled
-public/translation
-public/css
+ui/@build/**/assets
