@@ -15,7 +15,7 @@ function join(ctrl: TournamentController, password?: string, team?: string) {
     })
     .then(res => {
       if (!res.ok)
-        res.json().then(t => {
+        res.json().then((t: any) => {
           if (t.error) alert(t.error);
           else window.lishogi.reload();
         });

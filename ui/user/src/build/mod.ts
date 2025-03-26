@@ -1,5 +1,6 @@
 import { spinnerHtml } from 'common/spinner';
 import { debounce } from 'common/timings';
+// @ts-ignore
 import tablesort from 'tablesort';
 
 const $toggle = $('.mod-zone-toggle');
@@ -43,9 +44,9 @@ function reloadZone() {
   streamLoad();
 }
 
-function scrollTo(el) {
+function scrollTo(el: string) {
   const offset = $('#inquiry').length ? -50 : 50;
-  window.scrollTo(0, document.querySelector(el).offsetTop + offset);
+  window.scrollTo(0, document.querySelector<HTMLElement>(el)!.offsetTop + offset);
 }
 
 $toggle.on('click', () => {
@@ -155,8 +156,8 @@ const onScroll = () =>
   });
 
 (() => {
-  const cleanNumber = i => i.replace(/[^\-?0-9.]/g, '');
-  const compareNumber = (a, b) => {
+  const cleanNumber = (i: string) => i.replace(/[^\-?0-9.]/g, '');
+  const compareNumber = (a: any, b: any) => {
     a = Number.parseFloat(a);
     b = Number.parseFloat(b);
 
@@ -168,10 +169,10 @@ const onScroll = () =>
 
   tablesort.extend(
     'number',
-    item => {
+    (item: any) => {
       return item.match(/^[-+]?(\d)*-?([,\.]){0,1}-?(\d)+([E,e][\-+][\d]+)?%?$/); // Number
     },
-    (a, b) => compareNumber(cleanNumber(b), cleanNumber(a)),
+    (a: any, b: any) => compareNumber(cleanNumber(b), cleanNumber(a)),
   );
 })();
 

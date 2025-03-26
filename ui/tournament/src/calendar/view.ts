@@ -8,7 +8,7 @@ import { type VNode, h } from 'snabbdom';
 import type { Ctrl, Lanes, Tournament } from './interfaces';
 
 function tournamentClass(tour: Tournament, day: Date) {
-  const classes = {
+  const classes: Record<string, boolean> = {
     rated: tour.rated,
     casual: !tour.rated,
     'max-rating': tour.hasMaxRating,
@@ -18,7 +18,7 @@ function tournamentClass(tour: Tournament, day: Date) {
   return classes;
 }
 
-function iconOf(tour, perfIcon) {
+function iconOf(tour: any, perfIcon: string): string {
   return tour.schedule && tour.schedule.freq === 'shield' ? '5' : perfIcon;
 }
 
@@ -121,7 +121,7 @@ function renderTimeline() {
 }
 
 // converts Date to "%H:%M" with leading zeros
-function timeString(hour) {
+function timeString(hour: number) {
   return `0${hour}`.slice(-2);
 }
 

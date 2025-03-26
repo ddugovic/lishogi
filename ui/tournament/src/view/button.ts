@@ -101,9 +101,10 @@ export function joinWithdraw(ctrl: TournamentController): MaybeVNode {
       },
       i18n('signIn'),
     );
-  if (ctrl.data.isDenied) return h('div.fbt.denied', i18n('denied'));
+  else if (ctrl.data.isDenied) return h('div.fbt.denied', i18n('denied'));
   else if (!ctrl.data.isFinished)
     return isIn(ctrl) || ctrl.data.isCandidate ? withdraw(ctrl) : join(ctrl);
+  else return null;
 }
 
 export function managePlayers(ctrl: TournamentController): MaybeVNode {
@@ -129,4 +130,5 @@ export function managePlayers(ctrl: TournamentController): MaybeVNode {
       },
       !ctrl.isOrganized() ? i18n('managePlayers') : undefined,
     );
+  else return null;
 }

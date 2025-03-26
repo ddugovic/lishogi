@@ -8,7 +8,7 @@ window.lishogi.ready.then(() => {
     }, 50);
   });
   if (window.FileReader) {
-    function readFile(file, encoding) {
+    function readFile(file: Blob, encoding: string) {
       if (!file) return;
       const reader = new FileReader();
       reader.onload = e => {

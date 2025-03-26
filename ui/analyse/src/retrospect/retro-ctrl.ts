@@ -1,5 +1,5 @@
 import * as winningChances from 'ceval/winning-chances';
-import { isEmpty, prop } from 'common/common';
+import { type Prop, isEmpty, prop } from 'common/common';
 import { opposite } from 'shogiground/util';
 import { path as treePath } from 'tree';
 import type AnalyseCtrl from '../ctrl';
@@ -8,12 +8,13 @@ import { evalSwings } from '../node-finder';
 export interface RetroCtrl {
   isSolving(): boolean;
   [key: string]: any;
+  feedback: Prop<Feedback>;
   variant: VariantKey;
   initialSfen: Sfen | undefined;
   offset: number;
 }
 
-type Feedback = 'find' | 'eval' | 'win' | 'fail' | 'view';
+export type Feedback = 'find' | 'eval' | 'win' | 'fail' | 'view';
 
 export function make(root: AnalyseCtrl, color: Color): RetroCtrl {
   let candidateNodes: Tree.Node[] = [];

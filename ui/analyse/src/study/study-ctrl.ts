@@ -3,6 +3,7 @@ import { storedProp } from 'common/storage';
 import throttle from 'common/throttle';
 import { debounce } from 'common/timings';
 import { makeNotation } from 'shogi/notation';
+import type { Config } from 'shogiground/config';
 import { path as treePath } from 'tree';
 import type AnalyseCtrl from '../ctrl';
 import { CommentForm } from './comment-form';
@@ -158,7 +159,7 @@ export default function (
     redraw,
   );
 
-  function addChapterId(req) {
+  function addChapterId(req: any) {
     req.ch = vm.chapterId;
     return req;
   }
@@ -206,11 +207,20 @@ export default function (
     vm.mode.sticky =
       (vm.mode.sticky && s.features.sticky) || (!data.features.sticky && s.features.sticky);
     if (vm.mode.sticky) vm.behind = 0;
-    'position name visibility features settings chapter likes liked description'
-      .split(' ')
-      .forEach(key => {
-        data[key] = s[key];
-      });
+    const keys: (keyof StudyData)[] = [
+      'position',
+      'name',
+      'visibility',
+      'features',
+      'settings',
+      'chapter',
+      'likes',
+      'liked',
+      'description',
+    ];
+    keys.forEach(key => {
+      (data as any)[key] = s[key];
+    });
     chapterDesc.set(data.chapter.description);
     studyDesc.set(data.description);
     document.title = data.name;
@@ -302,8 +312,8 @@ export default function (
   }
   instanciateGamebookPlay();
 
-  function mutateSgConfig(config) {
-    config.drawable.onChange = (shapes: Tree.Shape[]) => {
+  function mutateSgConfig(config: Config) {
+    config.drawable!.onChange = (shapes: Tree.Shape[]) => {
       if (vm.mode.write) {
         ctrl.tree.setShapes(shapes, ctrl.path);
         makeChange(
@@ -318,7 +328,7 @@ export default function (
     };
   }
 
-  function wrongChapter(serverData) {
+  function wrongChapter(serverData: any) {
     if (serverData.p.chapterId !== vm.chapterId) {
       // sticky should really be on the same chapter
       if (vm.mode.sticky && serverData.sticky) xhrReload();
@@ -341,8 +351,8 @@ export default function (
   const likeToggler = debounce(() => send('like', { liked: data.liked }), 1000);
   const rematcher = debounce(yes => send('rematch', { yes: yes }), 1000, true);
 
-  const socketHandlers = {
-    path(d) {
+  const socketHandlers: Record<string, any> = {
+    path(d: any) {
       const position = d.p;
       const who = d.w;
       setMemberActive(who);
@@ -358,7 +368,7 @@ export default function (
       ctrl.userJump(position.path);
       redraw();
     },
-    addNode(d) {
+    addNode(d: any) {
       const position = d.p;
       const node = d.n;
       const who = d.w;
@@ -392,7 +402,7 @@ export default function (
         ctrl.jump(newPath);
       redraw();
     },
-    deleteNode(d) {
+    deleteNode(d: any) {
       const position = d.p;
       const who = d.w;
       setMemberActive(who);
@@ -404,7 +414,7 @@ export default function (
       if (vm.mode.sticky) ctrl.jump(ctrl.path);
       redraw();
     },
-    promote(d) {
+    promote(d: any) {
       const position = d.p;
       const who = d.w;
       setMemberActive(who);
@@ -416,18 +426,18 @@ export default function (
       redraw();
     },
     reload: xhrReload,
-    changeChapter(d) {
+    changeChapter(d: any) {
       setMemberActive(d.w);
       if (!vm.mode.sticky) vm.behind++;
       data.position = d.p;
       if (vm.mode.sticky) xhrReload();
       else redraw();
     },
-    updateChapter(d) {
+    updateChapter(d: any) {
       setMemberActive(d.w);
       xhrReload();
     },
-    descChapter(d) {
+    descChapter(d: any) {
       setMemberActive(d.w);
       if (d.w && d.w.s === li.sri) return;
       if (data.chapter.id === d.chapterId) {
@@ -436,19 +446,19 @@ export default function (
       }
       redraw();
     },
-    descStudy(d) {
+    descStudy(d: any) {
       setMemberActive(d.w);
       if (d.w && d.w.s === li.sri) return;
       data.description = d.desc;
       studyDesc.set(d.desc);
       redraw();
     },
-    setTopics(d) {
+    setTopics(d: any) {
       setMemberActive(d.w);
       data.topics = d.topics;
       redraw();
     },
-    addChapter(d) {
+    addChapter(d: any) {
       setMemberActive(d.w);
       if (d.s && !vm.mode.sticky) vm.behind++;
       if (d.s) data.position = d.p;
@@ -458,12 +468,12 @@ export default function (
       }
       xhrReload();
     },
-    members(d) {
+    members(d: any) {
       members.update(d);
       configureAnalysis();
       redraw();
     },
-    chapters(d) {
+    chapters(d: any) {
       chapters.list(d);
       if (!currentChapter()) {
         vm.chapterId = d[0].id;
@@ -471,7 +481,7 @@ export default function (
       }
       redraw();
     },
-    shapes(d) {
+    shapes(d: any) {
       const position = d.p;
       const who = d.w;
       setMemberActive(who);
@@ -481,10 +491,10 @@ export default function (
       if (ctrl.path === position.path) ctrl.setShapes(d.s);
       redraw();
     },
-    validationError(d) {
+    validationError(d: any) {
       alert(d.error);
     },
-    setComment(d) {
+    setComment(d: any) {
       const position = d.p;
       const who = d.w;
       setMemberActive(who);
@@ -492,13 +502,13 @@ export default function (
       ctrl.tree.setCommentAt(d.c, position.path);
       redraw();
     },
-    setTags(d) {
+    setTags(d: any) {
       setMemberActive(d.w);
       if (d.chapterId !== vm.chapterId) return;
       data.chapter.tags = d.tags;
       redraw();
     },
-    deleteComment(d) {
+    deleteComment(d: any) {
       const position = d.p;
       const who = d.w;
       setMemberActive(who);
@@ -506,7 +516,7 @@ export default function (
       ctrl.tree.deleteCommentAt(d.id, position.path);
       redraw();
     },
-    glyphs(d) {
+    glyphs(d: any) {
       const position = d.p;
       const who = d.w;
       setMemberActive(who);
@@ -515,7 +525,7 @@ export default function (
       if (ctrl.path === position.path) ctrl.setAutoShapes();
       redraw();
     },
-    clock(d) {
+    clock(d: any) {
       const position = d.p;
       const who = d.w;
       setMemberActive(who);
@@ -523,7 +533,7 @@ export default function (
       ctrl.tree.setClockAt(d.c, position.path);
       redraw();
     },
-    forceVariation(d) {
+    forceVariation(d: any) {
       const position = d.p;
       const who = d.w;
       setMemberActive(who);
@@ -531,12 +541,12 @@ export default function (
       ctrl.tree.forceVariationAt(position.path, d.force);
       redraw();
     },
-    conceal(d) {
+    conceal(d: any) {
       if (wrongChapter(d)) return;
       data.chapter.conceal = d.ply;
       redraw();
     },
-    liking(d) {
+    liking(d: any) {
       data.likes = d.l.likes;
       if (d.w && d.w.s === li.sri) data.liked = d.l.me;
       redraw();
@@ -544,17 +554,17 @@ export default function (
     following_onlines: members.inviteForm.setFollowings,
     following_leaves: members.inviteForm.delFollowing,
     following_enters: members.inviteForm.addFollowing,
-    crowd(d) {
+    crowd(d: any) {
       members.setSpectators(d.users);
     },
-    rematchOffer(d) {
+    rematchOffer(d: any) {
       if (data.postGameStudy) {
-        if (d.by) data.postGameStudy.rematches[d.by] = true;
+        if (d.by) data.postGameStudy.rematches[d.by as Color] = true;
         else data.postGameStudy.rematches.sente = data.postGameStudy.rematches.gote = false;
       }
       redraw();
     },
-    rematch(d) {
+    rematch(d: any) {
       window.lishogi.redirect(d.g);
     },
     error(msg: string) {

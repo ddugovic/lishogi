@@ -274,7 +274,7 @@ function middleButtons(
                 },
               },
             });
-          } else null;
+          } else return null;
         }),
       ),
     ),

@@ -7,7 +7,7 @@ import { opposite } from 'shogiops/util';
 import { type VNode, h } from 'snabbdom';
 import type AnalyseCtrl from '../ctrl';
 import { renderIndexAndMove } from '../move-view';
-import type { RetroCtrl } from './retro-ctrl';
+import type { Feedback, RetroCtrl } from './retro-ctrl';
 
 function skipOrViewSolution(ctrl: RetroCtrl) {
   return h('div.choices', [
@@ -235,7 +235,7 @@ const feedback = {
   },
 };
 
-function renderFeedback(root: AnalyseCtrl, fb) {
+function renderFeedback(root: AnalyseCtrl, fb: Feedback) {
   const ctrl: RetroCtrl = root.retro!;
   const current = ctrl.current();
   if (ctrl.isSolving() && current && root.path !== current.prev.path)

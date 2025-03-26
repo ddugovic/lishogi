@@ -32,6 +32,7 @@ function scrollToMeButton(ctrl: TournamentController): VNode | undefined {
       },
       hook: bind('mousedown', ctrl.toggleFocusOnMe, ctrl.redraw),
     });
+  else return;
 }
 
 export function renderPager(ctrl: TournamentController, pag: PageData): MaybeVNodes {
@@ -67,4 +68,5 @@ export function players(ctrl: TournamentController): PageData {
 
 export function myPage(ctrl: TournamentController): number | undefined {
   if (ctrl.data.me) return Math.floor((ctrl.data.me.rank - 1) / maxPerPage) + 1;
+  else return;
 }

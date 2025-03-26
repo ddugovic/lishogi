@@ -24,7 +24,7 @@ function tableClick(ctrl: TournamentController): (e: Event) => void {
   };
 }
 
-function playerNameStanding(_ctrl: TournamentController, player) {
+function playerNameStanding(_ctrl: TournamentController, player: any) {
   const userId = player.name.toLowerCase();
   return h(
     'div',
@@ -156,7 +156,7 @@ export function standing(ctrl: TournamentController, klass?: string): VNode {
   ]);
 }
 
-function podiumUsername(p) {
+function podiumUsername(p: any) {
   return h(
     'a.text.ulpt.user-link',
     {
@@ -166,7 +166,7 @@ function podiumUsername(p) {
   );
 }
 
-function podiumStats(p, games: Arrangement[]): VNode {
+function podiumStats(p: any, games: Arrangement[]): VNode {
   const userId = p.id;
   const gamesOfPlayer = games.filter(a => arrangementHasUser(a, userId));
   return h('table.stats', [
@@ -188,8 +188,9 @@ function podiumStats(p, games: Arrangement[]): VNode {
   ]);
 }
 
-function podiumPosition(p, pos, games: Arrangement[]): VNode | undefined {
+function podiumPosition(p: any, pos: string, games: Arrangement[]): MaybeVNode {
   if (p) return h(`div.${pos}`, [h('div.trophy'), podiumUsername(p), podiumStats(p, games)]);
+  else return;
 }
 
 export function podium(ctrl: TournamentController): VNode {

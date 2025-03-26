@@ -198,7 +198,7 @@ export function view(ctrl: StudyChapterNewFormCtrl): VNode {
                         data.embed = true;
                         data.options = {
                           orientation: currentChapter.setup.orientation,
-                          onChange: (sfen, variant, orientation) => {
+                          onChange: (sfen: string, variant: VariantKey, orientation: Color) => {
                             ctrl.vm.editorSfen(sfen);
                             ctrl.vm.editorVariant(variant);
                             ctrl.vm.editorOrientation(orientation);

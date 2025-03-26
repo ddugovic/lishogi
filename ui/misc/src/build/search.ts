@@ -12,9 +12,14 @@ window.lishogi.ready.then(() => {
     return us;
   }
 
-  function userChoices(row) {
+  function userChoices(row: HTMLElement) {
     const options = ["<option value=''></option>"];
-    const isSelected = (row, rowClassName, user, dataKey): string => {
+    const isSelected = (
+      row: HTMLElement,
+      rowClassName: string,
+      user: string,
+      dataKey: string,
+    ): string => {
       const player = $form.data(dataKey);
       return row.classList.contains(rowClassName) && player.length && user == player
         ? 'selected'

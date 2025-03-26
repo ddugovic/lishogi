@@ -1,12 +1,9 @@
 import { reverse } from 'common/string';
 import Peer from 'peerjs';
-import type { PalantirOpts, State } from '../interface';
+import type { VNode } from 'snabbdom';
+import type { Palantir, PalantirOpts, State } from '../interface';
 
-function main(opts: PalantirOpts):
-  | undefined
-  | {
-      render: (h: any) => any;
-    } {
+function main(opts: PalantirOpts): Palantir | undefined {
   const devices = navigator.mediaDevices;
   if (!devices) {
     alert('Voice chat requires navigator.mediaDevices');
@@ -73,7 +70,7 @@ function main(opts: PalantirOpts):
         log('call.close');
         stopCall(call);
       })
-      .on('error', e => {
+      .on('error', (e: any) => {
         log(`call.error: ${e}`);
         stopCall(call);
       });
@@ -126,26 +123,26 @@ function main(opts: PalantirOpts):
       peer = undefined;
     }
     if (myStream) {
-      myStream.getTracks().forEach(t => t.stop());
+      myStream.getTracks().forEach((t: any) => t.stop());
       myStream = undefined;
     }
     setState('off');
   }
 
-  function connectionsTo(peerId) {
+  function connectionsTo(peerId: any) {
     return peer?.connections[peerId] || [];
   }
-  function findOpenConnectionTo(peerId) {
-    return connectionsTo(peerId).find(c => c.open);
+  function findOpenConnectionTo(peerId: any) {
+    return connectionsTo(peerId).find((c: any) => c.open);
   }
-  function closeOtherConnectionsTo(peerId) {
+  function closeOtherConnectionsTo(peerId: any) {
     const conns = connectionsTo(peerId);
     for (let i = 0; i < conns.length - 1; i++) conns[i].close();
   }
   function closeDisconnectedCalls() {
     if (peer) {
       for (const otherPeer in peer.connections) {
-        peer.connections[otherPeer].forEach(c => {
+        peer.connections[otherPeer].forEach((c: any) => {
           if (c.peerConnection && c.peerConnection.connectionState == 'disconnected') {
             log(`close disconnected call to ${c.peer}`);
             c.close();
@@ -202,7 +199,7 @@ function main(opts: PalantirOpts):
                 'data-count': state == 'on' ? connections.length + 1 : 0,
               },
               hook: {
-                insert(vnode) {
+                insert(vnode: VNode) {
                   (vnode.elm as HTMLElement).addEventListener('click', () =>
                     peer ? stop() : start(),
                   );
@@ -214,7 +211,7 @@ function main(opts: PalantirOpts):
                   h(`audio.palantir__audio.${c.peer}`, {
                     attrs: { autoplay: true },
                     hook: {
-                      insert(vnode) {
+                      insert(vnode: VNode) {
                         (vnode.elm as HTMLAudioElement).srcObject = c.remoteStream;
                       },
                     },

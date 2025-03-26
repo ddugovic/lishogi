@@ -16,7 +16,7 @@ function tableClick(ctrl: TournamentController): (e: Event) => void {
   };
 }
 
-function pointsTag(ctrl: TournamentController, arr: Arrangement, player) {
+function pointsTag(ctrl: TournamentController, arr: Arrangement, player: any) {
   const player2 = ctrl.data.standing.players.find(
     p => p.id === (arr.user1.id === player.id ? arr.user2.id : arr.user1.id),
   );
@@ -40,7 +40,7 @@ function pointsTag(ctrl: TournamentController, arr: Arrangement, player) {
   );
 }
 
-function playerTr(ctrl: TournamentController, player, rank: number) {
+function playerTr(ctrl: TournamentController, player: any, rank: number) {
   const arrs = ctrl.data.standing.arrangements.filter(
     a => a.status && a.status >= ids.mate && arrangementHasUser(a, player.id),
   );

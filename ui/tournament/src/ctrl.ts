@@ -210,7 +210,7 @@ export default class TournamentController {
   join = (password?: string, team?: string): any => {
     this.joinWithTeamSelector = false;
     if (!this.data.verdicts.accepted)
-      return this.data.verdicts.list.forEach(v => {
+      return this.data.verdicts.list.forEach((v: any) => {
         if (v.verdict !== 'ok') alert(v.verdict);
       });
     if (this.data.teamBattle && !team && !this.data.me) {

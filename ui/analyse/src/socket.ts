@@ -1,5 +1,6 @@
 import { ops as treeOps } from 'tree';
 import type AnalyseCtrl from './ctrl';
+import type { ServerEvalData } from './interfaces';
 
 interface Handlers {
   [key: string]: any; // #TODO
@@ -30,7 +31,7 @@ export function make(send: Socket.Send, ctrl: AnalyseCtrl): Socket {
     return undefined;
   }
 
-  function addStudyData(req, isWrite = false): void {
+  function addStudyData(req: any, isWrite = false): void {
     const c = currentChapterId();
     if (c) {
       req.ch = c;
@@ -43,7 +44,7 @@ export function make(send: Socket.Send, ctrl: AnalyseCtrl): Socket {
   }
 
   const handlers: Handlers = {
-    node(data) {
+    node(data: any) {
       clearTimeout(anaUsiTimeout);
       // no strict equality here!
       if (data.ch == currentChapterId()) ctrl.addNode(data.node, data.path);
@@ -53,7 +54,7 @@ export function make(send: Socket.Send, ctrl: AnalyseCtrl): Socket {
       clearTimeout(anaUsiTimeout);
       ctrl.reset();
     },
-    sfen(e) {
+    sfen(e: any) {
       if (
         ctrl.forecast &&
         e.id === ctrl.data.game.id &&
@@ -62,22 +63,22 @@ export function make(send: Socket.Send, ctrl: AnalyseCtrl): Socket {
         ctrl.forecast.reloadToLastPly();
       }
     },
-    analysisProgress(data) {
+    analysisProgress(data: ServerEvalData) {
       ctrl.mergeAnalysisData(data);
     },
-    evalHit(e) {
+    evalHit(e: Tree.ServerEval) {
       ctrl.evalCache.onCloudEval(e);
     },
-    crowd(d) {
+    crowd(d: any) {
       ctrl.evalCache.upgradable(d.nb > 2);
     },
   };
 
-  function withoutStandardVariant(obj) {
+  function withoutStandardVariant(obj: any) {
     if (obj.variant === 'standard') delete obj.variant;
   }
 
-  function sendAnaUsi(req) {
+  function sendAnaUsi(req: any) {
     clearTimeout(anaUsiTimeout);
     withoutStandardVariant(req);
     addStudyData(req, true);

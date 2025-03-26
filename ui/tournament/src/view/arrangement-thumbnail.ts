@@ -41,5 +41,5 @@ export function arrangementThumbnail(
         ),
       ],
     );
-  else null;
+  else return null;
 }

@@ -18,7 +18,7 @@ import { podium as rPodium, standing as rStanding, recents } from './robin';
 import teamInfo from './team-info';
 import { numberRow } from './util';
 
-function confetti(data: TournamentData): VNode | undefined {
+function confetti(data: TournamentData): MaybeVNode {
   if (data.me && data.isRecentlyFinished && once(`tournament.end.canvas.${data.id}`))
     return h('canvas#confetti', {
       hook: {
@@ -28,6 +28,7 @@ function confetti(data: TournamentData): VNode | undefined {
           }),
       },
     });
+  else return null;
 }
 
 function stats(data: TournamentData): VNode {

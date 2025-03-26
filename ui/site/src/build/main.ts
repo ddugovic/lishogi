@@ -54,13 +54,14 @@ lishogi.StrongSocket = StrongSocket;
 
 (window.lishogi as any).modules = {};
 window.lishogi.registerModule = (name: string, func: (...args: any[]) => any) => {
-  window.lishogi.modules[name] = func;
+  (window.lishogi.modules as any)[name] = func;
 };
 
 lishogi.ready.then(() => {
   init();
   Object.keys(window.lishogi.modulesData).forEach(key => {
-    window.lishogi.modules[key]!(window.lishogi.modulesData[key]);
+    if ((window.lishogi.modules as any)[key])
+      (window.lishogi.modules as any)[key](window.lishogi.modulesData[key]);
   });
   initSocket();
 });

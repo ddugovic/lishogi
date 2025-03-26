@@ -6,7 +6,7 @@ import type LobbyController from '../../ctrl';
 import type { Hook, Seek } from '../../interfaces';
 import { action, isHook } from '../../util';
 
-function percents(v) {
+function percents(v: number) {
   return `${v}%`;
 }
 

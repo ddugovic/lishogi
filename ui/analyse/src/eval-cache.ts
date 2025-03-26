@@ -69,7 +69,7 @@ interface Opts {
 }
 
 export function make(opts: Opts): EvalCache {
-  const fetchedBySfen = {};
+  const fetchedBySfen: Record<string, Tree.ServerEval | undefined> = {};
   const upgradable = prop(false);
   return {
     onCeval: throttle(1000, () => {

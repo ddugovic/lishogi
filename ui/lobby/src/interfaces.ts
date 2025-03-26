@@ -1,3 +1,5 @@
+import type { EngineCode } from 'shogi/engine-name';
+
 export type Sort = 'rating' | 'time' | 'rating-reverse' | 'time-reverse';
 export type Mode = 'list' | 'chart';
 export type Tab = 'presets' | 'real_time' | 'seeks' | 'now_playing';
@@ -51,6 +53,31 @@ export interface LobbyOpts extends Untyped {
 export interface LobbyData extends Untyped {
   hooks: Hook[];
   seeks: Seek[];
+  nowPlaying: Game[];
+}
+
+export interface Game {
+  fullId: string;
+  gameId: string;
+  sfen: string;
+  color: Color;
+  lastMove?: string;
+  variant: Variant;
+  speed: string;
+  perf: string;
+  rated: boolean;
+  hasMoved: boolean;
+  opponent: {
+    id?: string;
+    username?: string;
+    rating?: number;
+    ai?: number;
+    aiCode?: EngineCode;
+  };
+  isMyTurn: boolean;
+  secondsLeft?: number;
+  tournamentId?: string;
+  winner?: string;
 }
 
 export interface Preset {

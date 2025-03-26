@@ -1,5 +1,6 @@
 import { Textcomplete } from '@textcomplete/core';
 import { TextareaEditor } from '@textcomplete/textarea';
+// @ts-ignore
 import tablesort from 'tablesort';
 
 window.lishogi.ready.then(() => {
@@ -39,7 +40,7 @@ window.lishogi.ready.then(() => {
               .then(
                 (res: any) => {
                   const current = currentUserIds();
-                  callback(res.result.filter(t => !current.includes(t.id)));
+                  callback(res.result.filter((t: any) => !current.includes(t.id)));
                 },
                 _ => callback([]),
               );
@@ -51,11 +52,11 @@ window.lishogi.ready.then(() => {
     ]);
   });
 
-  function cleanNumber(i) {
+  function cleanNumber(i: string) {
     return i.replace(/[^\-?0-9.]/g, '');
   }
 
-  function compareNumber(a, b) {
+  function compareNumber(a: any, b: any) {
     a = Number.parseFloat(a);
     b = Number.parseFloat(b);
 
@@ -67,9 +68,9 @@ window.lishogi.ready.then(() => {
 
   tablesort.extend(
     'number',
-    item => {
+    (item: any) => {
       return item.match(/^[-+]?(\d)*-?([,\.]){0,1}-?(\d)+([E,e][\-+][\d]+)?%?$/); // Number
     },
-    (a, b) => compareNumber(cleanNumber(b), cleanNumber(a)),
+    (a: any, b: any) => compareNumber(cleanNumber(b), cleanNumber(a)),
   );
 });

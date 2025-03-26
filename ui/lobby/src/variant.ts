@@ -1,7 +1,7 @@
 import { i18n } from 'i18n';
 import { i18nVariant } from 'i18n/variant';
 
-function storageKey(key) {
+function storageKey(key: VariantKey) {
   return `lobby.variant.${key}`;
 }
 

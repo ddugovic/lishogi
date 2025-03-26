@@ -8,11 +8,11 @@ import { playerName, preloadUserTips, ratio2percent, player as renderPlayer } fr
 
 const scoreTagNames = ['score', 'streak', 'double'];
 
-function scoreTag(s) {
+function scoreTag(s: any) {
   return h(scoreTagNames[(s[1] || 1) - 1], [Array.isArray(s) ? s[0] : s]);
 }
 
-function playerTr(ctrl: TournamentController, player) {
+function playerTr(ctrl: TournamentController, player: any) {
   const userId = player.name.toLowerCase();
   const nbScores = player.sheet.scores.length;
   const battle = ctrl.data.teamBattle;
@@ -54,7 +54,7 @@ function playerTr(ctrl: TournamentController, player) {
   );
 }
 
-function podiumUsername(p) {
+function podiumUsername(p: any) {
   return h(
     'a.text.ulpt.user-link',
     {
@@ -64,7 +64,7 @@ function podiumUsername(p) {
   );
 }
 
-function podiumStats(p): VNode {
+function podiumStats(p: any): VNode {
   const nb = p.nb;
   return h('table.stats', [
     p.performance ? h('tr', [h('th', i18n('performance')), h('td', p.performance)]) : null,
@@ -78,8 +78,9 @@ function podiumStats(p): VNode {
   ]);
 }
 
-function podiumPosition(p, pos): VNode | undefined {
+function podiumPosition(p: any, pos: string): VNode | undefined {
   if (p) return h(`div.${pos}`, [h('div.trophy'), podiumUsername(p), podiumStats(p)]);
+  else return;
 }
 
 let lastBody: MaybeVNodes | undefined;

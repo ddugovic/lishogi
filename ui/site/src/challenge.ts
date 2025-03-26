@@ -8,7 +8,7 @@ export function challengeApp(): typeof window.lishogi.challengeApp {
   $toggle.one('mouseover click', () => {
     load();
   });
-  const load = (data?) => {
+  const load = (data?: any) => {
     if (booted) return;
     booted = true;
     $('#challenge-app').html(initiatingHtml);
@@ -19,7 +19,7 @@ export function challengeApp(): typeof window.lishogi.challengeApp {
         show: () => {
           if (!$('#challenge-app').is(':visible')) $toggle.trigger('click');
         },
-        setCount: nb => {
+        setCount: (nb: number) => {
           $toggle.find('span').attr('data-count', nb);
         },
         pulse: () => {

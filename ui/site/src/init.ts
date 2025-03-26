@@ -37,7 +37,7 @@ export function init(): void {
         timeago.render([].slice.call(document.getElementsByClassName('timeago'), 0, 99)),
       );
     }
-    function setTimeago(interval) {
+    function setTimeago(interval: number) {
       renderTimeago();
       setTimeout(() => setTimeago(interval * 1.1), interval);
     }
@@ -93,7 +93,7 @@ export function init(): void {
       const $p = $(this).parent();
       $p.toggleClass('shown');
       setTimeout(() => {
-        const handler = e => {
+        const handler = (e: JQuery.ClickEvent) => {
           if ($.contains($p[0], e.target)) return;
           $p.removeClass('shown');
           $('html').off('click', handler);

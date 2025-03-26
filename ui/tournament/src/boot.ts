@@ -11,7 +11,7 @@ export function boot(
     `/tournament/${opts.data.id}/socket/v4`,
     opts.data.socketVersion,
     {
-      receive: (t, d) => ctrl?.socket.receive(t, d),
+      receive: (t: string, d: any) => ctrl?.socket.receive(t, d),
     },
   );
   opts.socketSend = window.lishogi.socket.send;

@@ -45,7 +45,7 @@ function lishogiOrchestra() {
     );
   }
 
-  const play = (instrument, pitch) => {
+  const play = (instrument: string, pitch: number) => {
     pitch = Math.round(Math.max(0, Math.min(maxPitch, pitch)));
     if (instrument === 'swells') pitch = Math.floor(pitch / 8);
     if (currentNotes < noteOverlap) {
@@ -67,12 +67,12 @@ function lishogiOrchestra() {
 function playMusic(): { jump: (node: Tree.Node) => void } {
   const orchestra = lishogiOrchestra();
 
-  const isPawn = notation => {
+  const isPawn = (notation: string | undefined) => {
     return notation && (notation.includes('P') || notation.includes('歩'));
   };
 
   // support 12x12 board
-  const rankToInt = file => {
+  const rankToInt = (file: string) => {
     return 'abcdefghijkl'.indexOf(file);
   };
 

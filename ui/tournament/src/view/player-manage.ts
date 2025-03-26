@@ -34,7 +34,7 @@ function playerManagement(ctrl: TournamentController): VNode {
                     tour: ctrl.data.id,
                     focus: false,
                     minLength: 3,
-                    onSelect(v) {
+                    onSelect(v: any) {
                       if (confirm(i18n('notReversible'))) {
                         ctrl.playerKick(v.id);
                       }

@@ -1,7 +1,7 @@
 import { renderEval as normalizeEval } from 'ceval/util';
 import * as cevalView from 'ceval/view';
 import { defined } from 'common/common';
-import type { MaybeVNodes } from 'common/snabbdom';
+import type { MaybeVNode, MaybeVNodes } from 'common/snabbdom';
 import { notationsWithColor } from 'shogi/notation';
 import { type VNode, h } from 'snabbdom';
 import { renderTime } from './clocks';
@@ -29,7 +29,7 @@ export function renderGlyphs(glyphs: Tree.Glyph[]): VNode {
   );
 }
 
-function renderEval(e): VNode {
+function renderEval(e: MaybeVNode): VNode {
   return h('eval', e);
 }
 

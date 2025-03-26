@@ -17,7 +17,7 @@ export function makeCtrl(
   const previouslyInvited = storedSet<string>('study.previouslyInvited', 10);
   let followings: string[] = [];
   let spectators: string[] = [];
-  function updateFollowings(f) {
+  function updateFollowings(f: (fs: string[]) => string[]) {
     followings = f(followings);
     if (open()) redraw();
   }
@@ -82,7 +82,7 @@ export function view(ctrl: StudyInviteFormCtrl): VNode {
           hook: onInsert<HTMLInputElement>(el => {
             window.lishogi.userAutocomplete($(el), {
               tag: 'span',
-              onSelect(v) {
+              onSelect(v: any) {
                 ctrl.invite(v.name);
                 $(el).typeahead('close');
                 el.value = '';

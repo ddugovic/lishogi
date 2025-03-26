@@ -37,7 +37,7 @@ let selectedType: string;
 
 type TagRow = (string | VNode)[];
 
-function renderTags(chapter: StudyChapter, submit, types: string[]): VNode {
+function renderTags(chapter: StudyChapter, submit: any, types: string[]): VNode {
   let rows: TagRow[] = [];
   const wantedTags = chapter.tags.filter(t => !unwantedTags.includes(t[0]));
   const handicap = isHandicap({ rules: chapter.setup.variant.key, sfen: chapter.initialSfen });
@@ -142,7 +142,7 @@ function doRender(root: StudyCtrl): VNode {
 }
 
 function translateTag(tag: string, handicap: boolean): string {
-  const transformString = str => `${str[0].toLowerCase()}${str.slice(1)}`;
+  const transformString = (str: string) => `${str[0].toLowerCase()}${str.slice(1)}`;
   if (tag === 'Sente' || tag === 'Gote') {
     return colorName(tag.toLowerCase() as Color, handicap);
   } else if (tag.startsWith('Sente') || tag.startsWith('Gote')) {
@@ -153,8 +153,8 @@ function translateTag(tag: string, handicap: boolean): string {
 export function view(root: StudyCtrl): VNode {
   const chapter = root.tags.getChapter();
   const tagKey = chapter.tags
-    .filter(t => !unwantedTags.includes(t[0]))
-    .map(t => t[1])
+    .filter((t: any) => !unwantedTags.includes(t[0]))
+    .map((t: any) => t[1])
     .join(',');
   const key =
     chapter.id + root.data.name + chapter.name + root.data.likes + tagKey + root.vm.mode.write;
@@ -176,7 +176,7 @@ function i18nColorTag(tag: string, handicap: boolean): string {
   }
 }
 
-const tagI18n = {
+const tagI18n: Record<string, string> = {
   startTag: i18n('study:startTag'),
   endTag: i18n('study:endTag'),
   siteTag: i18n('study:siteTag'),

@@ -6,7 +6,7 @@ import type { Duel, DuelPlayer, DuelTeams, TeamBattle } from '../interfaces';
 import { teamName } from './battle';
 import { miniBoard, player as renderPlayer } from './util';
 
-function featuredPlayer(player) {
+function featuredPlayer(player: any) {
   return h('div.tour__featured__player', [
     h('strong', `#${player.rank}`),
     renderPlayer(player, true, true, false),
@@ -21,7 +21,7 @@ function featuredPlayer(player) {
   ]);
 }
 
-function featured(f): VNode {
+function featured(f: any): VNode {
   return h('div.tour__featured', [
     featuredPlayer(f[opposite(f.color)]),
     miniBoard(f),

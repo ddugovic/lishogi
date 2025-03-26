@@ -55,7 +55,7 @@ export default class SetupCtrl {
     this.root.redraw();
   }
 
-  set(key: string, value: string | number | boolean): void {
+  set<K extends SetupDataKey>(key: K, value: SetupData[K]): void {
     if (key === 'handicap') {
       this.data.sfen = value as string;
     }
@@ -71,12 +71,11 @@ export default class SetupCtrl {
     this.data[key] = value;
 
     this.updateData();
-    console.log('data after set:', this.data);
 
     this.redraw();
   }
 
-  selected(key: string): string | number {
+  selected<K extends SetupDataKey>(key: K): SetupData[K] {
     return this.data[key];
   }
 

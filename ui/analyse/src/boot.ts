@@ -13,7 +13,7 @@ export function replay(opts: AnalyseOpts, start: (opts: AnalyseOpts) => AnalyseC
     params: {
       userTv: data.userTv?.id,
     },
-    receive: (t, d) => {
+    receive: (t: string, d: any) => {
       ctrl?.socket.receive(t, d);
     },
     events: {},
@@ -31,7 +31,7 @@ export function study(opts: AnalyseOpts, start: (opts: AnalyseOpts) => AnalyseCt
   let ctrl: AnalyseCtrl | undefined = undefined;
 
   window.lishogi.socket = new window.lishogi.StrongSocket(opts.socketUrl, opts.socketVersion, {
-    receive: (t, d) => {
+    receive: (t: string, d: any) => {
       ctrl?.socket.receive(t, d);
     },
   });
@@ -48,7 +48,7 @@ export function analysis(
   let ctrl: AnalyseCtrl | undefined = undefined;
 
   window.lishogi.socket = new window.lishogi.StrongSocket('/analysis/socket/v4', false, {
-    receive: (t, d) => {
+    receive: (t: string, d: any) => {
       ctrl?.socket.receive(t, d);
     },
   });
@@ -67,7 +67,7 @@ export function practice(
 ): AnalyseCtrl {
   let ctrl: AnalyseCtrl | undefined = undefined;
   window.lishogi.socket = new window.lishogi.StrongSocket('/analysis/socket/v4', false, {
-    receive: (t, d) => {
+    receive: (t: string, d: any) => {
       ctrl?.socket.receive(t, d);
     },
   });

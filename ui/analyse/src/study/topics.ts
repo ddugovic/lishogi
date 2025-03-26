@@ -70,7 +70,7 @@ export function formView(ctrl: TopicsCtrl, userId?: string): VNode {
         {
           hook: bindSubmit(_ => {
             const tags = tagify?.value;
-            tags && ctrl.save(tags.map(t => t.value));
+            tags && ctrl.save(tags.map((t: any) => t.value));
           }, ctrl.redraw),
         },
         [
@@ -100,7 +100,7 @@ function setupTagify(elm: HTMLTextAreaElement, userId?: string) {
     tagify = new window.Tagify(elm, { pattern: /.{2,}/, maxTags: 30 });
     const tagi = tagify;
     let abortCtrl: AbortController | undefined; // for aborting the call
-    tagi.on('input', e => {
+    tagi.on('input', (e: any) => {
       const term = (e.detail as Tagify.TagData).value.trim();
       if (term.length < 2) return;
       tagi.settings.whitelist.length = 0; // reset the whitelist

@@ -7,7 +7,7 @@ import type TournamentController from '../ctrl';
 import { teamName } from './battle';
 import { numberRow, playerName, player as renderPlayer } from './util';
 
-function result(win, stat): string {
+function result(win: boolean, stat: number): string {
   switch (win) {
     case true:
       return '1';
@@ -18,7 +18,7 @@ function result(win, stat): string {
   }
 }
 
-function playerTitle(player) {
+function playerTitle(player: any) {
   return h('h2', [
     h('span.rank', player.rank ? `${player.rank}. ` : ''),
     renderPlayer(player, true, false, false),
@@ -35,14 +35,15 @@ function setup(vnode: VNode) {
 export default function (ctrl: TournamentController): VNode {
   const data = ctrl.playerInfo.data;
   const tag = 'div.tour__player-info.tour__actor-info';
-  console.log('PPPP:', !data, data?.player?.id !== ctrl.playerInfo.id);
 
   if (!data || data.player.id !== ctrl.playerInfo.id)
     return h(tag, [h('div.stats', [playerTitle(ctrl.playerInfo.player), spinner()])]);
   const nb = data.player.nb;
   const poa = data.pairings || data.arrangements;
   const poaLen = poa.length;
-  const avgOp = poaLen ? Math.round(poa.reduce((a, b) => a + b.op.rating, 0) / poaLen) : undefined;
+  const avgOp = poaLen
+    ? Math.round(poa.reduce((a: any, b: any) => a + b.op.rating, 0) / poaLen)
+    : undefined;
   return h(
     tag,
     {
@@ -98,7 +99,7 @@ export default function (ctrl: TournamentController): VNode {
               if (href) window.open(href, '_blank');
             }),
           },
-          poa.map((p, i) => {
+          poa.map((p: any, i: number) => {
             const res = result(p.win, p.status);
             return h(
               `tr.glpt.${res === '1' ? ' win' : res === '0' ? ' loss' : ''}`,

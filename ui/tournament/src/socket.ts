@@ -7,11 +7,11 @@ export interface TournamentSocket {
 }
 
 export default function (send: Socket.Send, ctrl: TournamentController): TournamentSocket {
-  const handlers = {
+  const handlers: Record<string, any> = {
     reload() {
       setTimeout(ctrl.askReload, Math.floor(Math.random() * 4000));
     },
-    redirect(fullId) {
+    redirect(fullId: string) {
       ctrl.redirectFirst(fullId.slice(0, 8), true);
       return true;
     },

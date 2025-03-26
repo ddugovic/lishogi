@@ -24,7 +24,7 @@ export function notifyApp(): typeof window.lishogi.notifyApp {
 
   permissionChanged();
 
-  const load = (data?, incoming?) => {
+  const load = (data?: any, incoming?: any) => {
     if (booted) return;
     booted = true;
     $('#notify-app').html(initiatingHtml);

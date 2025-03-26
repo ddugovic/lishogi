@@ -27,11 +27,11 @@ export default function boot(
     history.replaceState(null, '', '/');
   };
   window.lishogi.socket = new window.lishogi.StrongSocket('/lobby/socket/v4', false, {
-    receive: (t, d) => {
+    receive: (t: string, d: any) => {
       ctrl?.socket.receive(t, d);
     },
     events: {
-      n: (_nbUsers, msg) => {
+      n: (_nbUsers: number, msg: any) => {
         nbUserSpread(msg.d);
         setTimeout(() => {
           nbRoundSpread(msg.r);
@@ -43,19 +43,19 @@ export default function boot(
           window.lishogi.pubsub.emit('content_loaded');
         });
       },
-      featured: o => {
+      featured: (o: any) => {
         $('.lobby__tv').html(o.html);
         window.lishogi.pubsub.emit('content_loaded');
       },
-      redirect: e => {
+      redirect: (e: any) => {
         ctrl?.setRedirecting();
         window.lishogi.redirect(e);
       },
-      tournaments: data => {
+      tournaments: (data: string) => {
         $('#enterable_tournaments').html(data);
         window.lishogi.pubsub.emit('content_loaded');
       },
-      sfen: e => {
+      sfen: (e: any) => {
         window.lishogi.StrongSocket.defaultParams.events.sfen(e);
         ctrl?.gameActivity(e.id);
       },
@@ -126,13 +126,13 @@ export default function boot(
 function spreadNumber(selector: string, nbSteps: number) {
   const el = document.querySelector(selector) as HTMLElement;
   let previous = Number.parseInt(el.getAttribute('data-count')!);
-  const display = (prev, cur, it) => {
+  const display = (prev: number, cur: number, it: number) => {
     el.textContent = numberFormat(
       Math.round((prev * (nbSteps - 1 - it) + cur * (it + 1)) / nbSteps),
     );
   };
   let timeouts: number[] = [];
-  return (nb, overrideNbSteps?) => {
+  return (nb: number, overrideNbSteps?: number) => {
     if (!el || (!nb && nb !== 0)) return;
     if (overrideNbSteps) nbSteps = Math.abs(overrideNbSteps);
     timeouts.forEach(clearTimeout);

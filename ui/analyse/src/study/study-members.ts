@@ -26,7 +26,7 @@ interface Opts {
   redraw(): void;
 }
 
-function memberActivity(onIdle) {
+function memberActivity(onIdle: () => void) {
   let timeout: Timeout;
   const schedule = () => {
     if (timeout) clearTimeout(timeout);
@@ -290,7 +290,7 @@ export function view(ctrl: StudyCtrl): VNode {
     },
     [
       ...ordered
-        .map(member => {
+        .map((member: any) => {
           const confing = members.confing() === member.user.id;
           return [
             h(
@@ -304,7 +304,7 @@ export function view(ctrl: StudyCtrl): VNode {
             confing ? memberConfig(member) : null,
           ];
         })
-        .reduce((a, b) => a.concat(b), []),
+        .reduce((a: any, b: any) => a.concat(b), []),
       canInvite && ordered.length < members.max
         ? h(
             'div.add',

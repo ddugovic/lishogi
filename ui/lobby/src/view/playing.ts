@@ -7,8 +7,8 @@ import { handRoles } from 'shogiops/variant/util';
 import { type VNode, h } from 'snabbdom';
 import type LobbyController from '../ctrl';
 
-function timer(pov) {
-  const date = Date.now() + pov.secondsLeft * 1000;
+function timer(secondsLeft: number) {
+  const date = Date.now() + secondsLeft * 1000;
   return h(
     'time.timeago',
     {
@@ -75,7 +75,7 @@ export default function (ctrl: LobbyController): VNode {
               'span.indicator',
               pov.isMyTurn
                 ? pov.secondsLeft && pov.hasMoved
-                  ? timer(pov)
+                  ? timer(pov.secondsLeft)
                   : [i18n('yourTurn')]
                 : h('span', '\xa0'),
             ),
