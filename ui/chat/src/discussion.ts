@@ -1,6 +1,5 @@
 import * as enhance from 'common/rich-text';
 import { i18n, i18nFormatCapitalized } from 'i18n';
-import type { I18nKey } from 'i18n/i18n-keys';
 import { colorName } from 'shogi/color-name';
 import { type VNode, type VNodeData, h, thunk } from 'snabbdom';
 import type { ChatCtrl, Line } from './interfaces';

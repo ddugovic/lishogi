@@ -1,5 +1,4 @@
 import { capitalize } from 'common/string';
-import type { I18nKey } from './i18n-keys';
 
 const i18nRecord: Record<string, string> = (window.lishogi as any).i18n || {};
 const quantity: (c: number) => 'zero' | 'one' | 'two' | 'few' | 'many' | 'other' =
