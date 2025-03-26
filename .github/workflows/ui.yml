@@ -32,15 +32,15 @@ jobs:
           version: ${{ steps.pnpm-version.outputs.pnpm_version }}
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: package.json
           cache: 'pnpm'
       - name: 'Install pnpm dependencies'
         run: pnpm install
       - name: 'Build'
-        run: pnpm build:ui
+        run: pnpm ui:build
       - name: 'Type check'
-        run: pnpm type-check
+        run: pnpm ui:type-check
       - name: 'Lint'
-        run: pnpm lint
+        run: pnpm ui:lint
       - name: 'Format'
-        run: pnpm format
+        run: pnpm ui:format

@@ -10,8 +10,6 @@ catalog:
   'breakpoint-sass': 'github:WandererXII/breakpoint#4.x'
   'chart.js': ^4.4.8
   'flatpickr': ^4.6.13
-  '@types/node': ^20.17.12
-  'tsx': ^4.19.3
   '@textcomplete/core': '^0.1.13'
   '@textcomplete/textarea': '^0.1.13'
   '@yaireo/tagify': '^4.33.1'
