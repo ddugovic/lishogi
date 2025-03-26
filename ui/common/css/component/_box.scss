@@ -3,7 +3,7 @@
 @use '../abstract/fluid-size';
 @use '../abstract/mixins';
 @use '../abstract/uniboard';
-@use '../theme/gen/theme';
+@use '../theme/generated/theme';
 
 .box {
   @extend %box-shadow;

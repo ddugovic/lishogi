@@ -1,7 +1,7 @@
 @use '../abstract/extends';
 @use '../abstract/mixins';
 @use '../abstract/variables';
-@use '../theme/gen/theme';
+@use '../theme/generated/theme';
 
 .number-menu {
   display: flex;

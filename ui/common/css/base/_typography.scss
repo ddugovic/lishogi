@@ -1,6 +1,6 @@
 @use '../abstract/extends';
 @use '../abstract/fluid-size' as *;
-@use '../theme/gen/theme';
+@use '../theme/generated/theme';
 
 html {
   -webkit-font-smoothing: antialiased;

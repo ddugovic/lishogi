@@ -3,7 +3,7 @@
 @use '../abstract/media-queries';
 @use '../abstract/variables';
 @use '../abstract/z-index' as z;
-@use '../theme/gen/theme';
+@use '../theme/generated/theme';
 @use 'topnav-hidden';
 @use 'topnav-visible';
 @use 'title';

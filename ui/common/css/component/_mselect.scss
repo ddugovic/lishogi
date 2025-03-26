@@ -5,7 +5,7 @@
 @use '../abstract/variables';
 @use '../abstract/z-index' as z;
 @use '../base/scrollbar';
-@use '../theme/gen/theme';
+@use '../theme/generated/theme';
 
 $c-mselect: theme.$c-primary;
 

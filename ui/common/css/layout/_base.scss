@@ -3,7 +3,7 @@
 @use '../abstract/media-queries';
 @use '../abstract/uniboard';
 @use '../abstract/variables';
-@use '../theme/gen/theme';
+@use '../theme/generated/theme';
 
 body {
   --site-header-height: #{variables.$site-header-short-height};

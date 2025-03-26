@@ -1,6 +1,6 @@
 @use 'pkg:breakpoint-sass' as breakpoint;
 @use '../abstract/uniboard';
-@use '../theme/gen/theme';
+@use '../theme/generated/theme';
 
 body.resizing {
   user-select: none;

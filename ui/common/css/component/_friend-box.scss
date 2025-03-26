@@ -4,7 +4,7 @@
 @use '../abstract/mixins';
 @use '../abstract/variables';
 @use '../abstract/z-index' as z;
-@use '../theme/gen/theme';
+@use '../theme/generated/theme';
 
 #friend_box {
   display: none;

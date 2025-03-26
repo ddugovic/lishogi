@@ -2,7 +2,7 @@
 @use 'media-queries';
 @use 'mixins';
 @use 'z-index' as z;
-@use '../theme/gen/theme';
+@use '../theme/generated/theme';
 @forward 'flex';
 @forward 'box';
 

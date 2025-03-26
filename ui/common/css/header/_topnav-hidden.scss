@@ -3,7 +3,7 @@
 @use '../abstract/mixins';
 @use '../abstract/variables';
 @use '../abstract/z-index' as z;
-@use '../theme/gen/theme';
+@use '../theme/generated/theme';
 
 @include breakpoint.breakpoint(media-queries.$mq-topnav-hidden) {
   .topnav-toggle {

@@ -3,7 +3,7 @@
 @use '../abstract/media-queries';
 @use '../abstract/mixins';
 @use '../abstract/z-index' as z;
-@use '../theme/gen/theme';
+@use '../theme/generated/theme';
 
 .subnav {
   a {

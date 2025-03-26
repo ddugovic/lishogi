@@ -1,6 +1,6 @@
 @use '../abstract/mixins';
 @use '../abstract/extends';
-@use '../theme/gen/theme';
+@use '../theme/generated/theme';
 
 .fbt {
   @extend %button-none;

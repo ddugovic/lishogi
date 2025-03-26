@@ -1,6 +1,6 @@
 @use '../abstract/extends';
 @use '../abstract/mixins';
-@use '../theme/gen/theme';
+@use '../theme/generated/theme';
 
 .tt-menu {
   @extend %box-radius, %popup-shadow;

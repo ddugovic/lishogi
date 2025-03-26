@@ -1,5 +1,5 @@
 @use '../abstract/extends';
-@use '../theme/gen/theme';
+@use '../theme/generated/theme';
 
 .is::before,
 [data-icon]::before,

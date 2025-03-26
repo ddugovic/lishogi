@@ -1,7 +1,7 @@
 @use 'pkg:breakpoint-sass' as breakpoint;
 @use '../abstract/extends';
 @use '../abstract/media-queries';
-@use '../theme/gen/theme';
+@use '../theme/generated/theme';
 
 .form3 .captcha {
   @extend %flex-wrap;

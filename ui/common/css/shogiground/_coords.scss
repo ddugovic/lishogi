@@ -1,7 +1,7 @@
 @use 'pkg:breakpoint-sass' as breakpoint;
 @use '../abstract/fluid-size' as *;
 @use '../abstract/uniboard';
-@use '../theme/gen/theme';
+@use '../theme/generated/theme';
 @use 'coords-colors';
 
 coords {
