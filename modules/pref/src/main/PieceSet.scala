@@ -13,6 +13,8 @@ sealed trait PieceSetBase {
 
   val all: List[PieceSet]
 
+  val default: PieceSet
+
   lazy val allByKey = all map { p =>
     p.key -> p
   } toMap
@@ -29,8 +31,10 @@ object PieceSetBase {
 
 object PieceSet extends PieceSetBase {
 
+  val default = PieceSetBase.default
+
   val all = List(
-    PieceSetBase.default,
+    default,
     new PieceSet("kanji_light", "Kanji Light"),
     new PieceSet("kanji_brown", "Kanji Brown"),
     new PieceSet("orangain", "orangain"),
@@ -68,8 +72,10 @@ object PieceSet extends PieceSetBase {
 
 object ChuPieceSet extends PieceSetBase {
 
+  val default = PieceSetBase.default
+
   val all = List(
-    PieceSetBase.default,
+    default,
     new PieceSet("eigetsu_gyoryu", "Eigetsu Gyoryu"),
     new PieceSet("intl", "International"),
     new PieceSet("fcz", "Czech"),
@@ -82,8 +88,10 @@ object ChuPieceSet extends PieceSetBase {
 
 object KyoPieceSet extends PieceSetBase {
 
+  val default = PieceSetBase.default
+
   val all = List(
-    PieceSetBase.default,
+    default,
     new PieceSet("orangain", "orangain"),
     new PieceSet("kanji", "Kanji with promotions"),
     new PieceSet("intl", "International with promotions"),
