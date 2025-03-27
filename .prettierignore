@@ -1,16 +1,17 @@
 # scalafmt
 /app
 /modules
-project
-target
+/project
+/target
 
 # misc
 /conf
 /public
 /translation
-local
+/ui/**/generated
+/ui/**/assets
 pnpm-lock.yaml
 
 # biome js
-ui/**/*.ts
-bin/**/*.ts
+/ui/**/src/**/*.ts
+/bin/scripts/**/*.ts
