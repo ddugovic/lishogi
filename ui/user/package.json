@@ -7,7 +7,7 @@
     "breakpoint-sass": "catalog:",
     "common": "workspace:*",
     "qrcode": "^1.5.4",
-    "tablesort": "^5.3.0"
+    "tablesort": "^5.5.0"
   },
   "devDependencies": {
     "@types/qrcode": "^1.5.5"

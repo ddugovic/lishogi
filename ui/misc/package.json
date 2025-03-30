@@ -11,11 +11,11 @@
     "canvas-confetti": "^1.9.3",
     "common": "workspace:*",
     "flatpickr": "catalog:",
-    "shogi": "workspace:*",
     "i18n": "workspace:*",
-    "shogiops": "catalog:",
+    "shogi": "workspace:*",
     "shogiground": "catalog:",
-    "tablesort": "^5.3.0"
+    "shogiops": "catalog:",
+    "tablesort": "^5.5.0"
   },
   "devDependencies": {
     "@types/canvas-confetti": "^1.9.0"

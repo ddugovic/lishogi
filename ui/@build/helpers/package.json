@@ -10,8 +10,8 @@
     }
   },
   "dependencies": {
-    "fast-glob": "^3.3.3",
     "@pnpm/find-workspace-dir": "^1000.1.0",
-    "@pnpm/workspace.find-packages": "^1000.0.16"
+    "@pnpm/workspace.find-packages": "^1000.0.18",
+    "fast-glob": "^3.3.3"
   }
 }

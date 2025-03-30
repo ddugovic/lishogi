@@ -19,7 +19,7 @@
     "breakpoint-sass": "catalog:",
     "common": "workspace:*",
     "i18n": "workspace:*",
-    "snabbdom": "catalog:",
-    "shogi": "workspace:"
+    "shogi": "workspace:^",
+    "snabbdom": "catalog:"
   }
 }
