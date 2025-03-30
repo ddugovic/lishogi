@@ -15,7 +15,7 @@ object Dependencies {
 
   val shogi     = "io.github.WandererXII" %% "scalashogi"           % "12.2.0"
   val hasher    = "com.roundeights"       %% "hasher"               % "1.2.1"
-  val jodaTime  = "joda-time"              % "joda-time"            % "2.13.0"
+  val jodaTime  = "joda-time"              % "joda-time"            % "2.13.1"
   val maxmind   = "com.sanoma.cda"        %% "maxmind-geoip2-scala" % "1.3.1-THIB"
   val scrimage  = "com.sksamuel.scrimage"  % "scrimage-core"        % "4.3.0"
   val scaffeine = "com.github.blemale"    %% "scaffeine"            % "5.3.0" % "compile"
