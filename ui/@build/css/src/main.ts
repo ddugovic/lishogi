@@ -29,7 +29,7 @@ await workspaceBuildConductor('css', async (rootDir: string, pkgs: Project[], ou
     onChange: async (event: WatchEventType, filepath: string) => {
       if (filepath.includes('/generated/')) return;
 
-      if (event === 'rename') graph.init();
+      if (event === 'rename') graph.reinit();
       else graph.update(filepath);
 
       await cssVariableBuilder.update(filepath);

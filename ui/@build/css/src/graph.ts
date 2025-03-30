@@ -3,13 +3,13 @@ import path from 'node:path';
 import { SassGraph } from 'sass-graph-ts';
 
 interface Graph {
-  init: () => void;
+  reinit: () => void;
   update: (path: string) => void;
   impacted: (path: string) => string[];
 }
 
 export function createGraph(rootDir: string): Graph {
-  let graph: SassGraph;
+  let graph: SassGraph = initGraph(rootDir);
 
   function recImports(path: string, set: Set<string>): Set<string> {
     if (set.has(path)) return set;
@@ -22,7 +22,7 @@ export function createGraph(rootDir: string): Graph {
   }
 
   return {
-    init: () => {
+    reinit: () => {
       graph = initGraph(rootDir);
     },
     update: (path: string): void => {

@@ -92,7 +92,8 @@ await workspaceBuildConductor('i18n', async (rootDir: string, pkgs: Project[], o
       if (pkg) {
         const oldKeys = i18nPackagesMap.get(pkg.manifest.name)!;
         const newKeys = await extractI18nKeysFromPackage(pkg);
-        if (oldKeys.size === newKeys.size && [...oldKeys].every(el => newKeys.has(el))) {
+        const isSame = oldKeys.size === newKeys.size && [...oldKeys].every(el => newKeys.has(el));
+        if (!isSame) {
           i18nPackagesMap.set(pkg.manifest.name, newKeys);
           await bundleI18ns();
         }

@@ -55,7 +55,10 @@ export async function createCssVariableBuilder(
     const isSameSet =
       oldExtracted.size === newExtracted.size && [...oldExtracted].every(x => newExtracted.has(x));
 
-    if (!isSameSet) await build();
+    if (!isSameSet) {
+      extractedByFile.set(filepath, newExtracted);
+      await build();
+    }
   };
 
   return {
