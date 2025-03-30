@@ -129,8 +129,8 @@ function applyPiece(key: PieceSetKey, tab: Tab) {
   else document.body.dataset.pieceSet = key;
 }
 
-function loadCssPieces(tab: Tab): Promise<void> {
-  return loadCss(assetUrl(`piece-css/${tab}/lishogi.dasher.css`));
+function loadCssPieces(tab: Tab): void {
+  loadCss(assetUrl(`piece-css/${tab}/lishogi.dasher.css`));
 }
 
 function variantPrefix(tab: Tab): string {

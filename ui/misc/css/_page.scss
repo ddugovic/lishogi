@@ -12,6 +12,11 @@
       line-height: 2.5em;
     }
 
+    h2:first-child {
+      margin-top: 0;
+      border-bottom: none;
+    }
+
     p,
     ul,
     ol {
