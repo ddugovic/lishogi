@@ -35,7 +35,7 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "ui:build": "pnpm run --parallel build",
-    "ui:build:watch": "pnpm run --parallel build --watch",
+    "ui:build:watch": "pnpm run --parallel build:watch",
     "ui:lint": "biome check && knip && stylelint **/*.scss --cache --ignore-path .gitignore",
     "ui:lint:fix": "biome check --write && knip --fix && stylelint **/*.scss --cache --ignore-path .gitignore --fix",
     "ui:type-check": "pnpm -F './ui/*' -F './ui/@build/*' exec tsc --noEmit",
