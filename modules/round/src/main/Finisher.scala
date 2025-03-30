@@ -55,9 +55,13 @@ final private class Finisher(
       !game.isCorrespondence && !Uptime
         .startedSinceSeconds(120) && game.movedAt.isBefore(Uptime.startedAt)
     ) {
-      logger.info(s"Aborting game last played before JVM boot: ${game.id}")
-      if (game.arrangementId.isDefined) forcePause(game)
-      else other(game, _.Aborted, none)
+      if (game.arrangementId.isDefined) {
+        logger.info(s"Pausing tour game last played before JVM boot: ${game.id}")
+        forcePause(game)
+      } else {
+        logger.info(s"Aborting game last played before JVM boot: ${game.id}")
+        other(game, _.Aborted, none)
+      }
     } else {
       val winner = Some(!game.player.color)
       apply(game, _.Outoftime, winner) >>-

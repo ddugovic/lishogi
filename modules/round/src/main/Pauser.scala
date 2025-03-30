@@ -84,11 +84,15 @@ final private[round] class Pauser(
               prog.game.id,
               prog.game.pausedSeconds,
               prog.game.userIds.distinct,
+              prog.game.clock
+                .filter(_.isRunning)
+                .fold(60)(clk => (clk.estimateTotalSeconds / 60) atLeast 1),
             ) inject (
               prog.game.usis.lastOption
                 .filter(usi => Some(usi) == g.sealedUsi && g.plies < prog.game.plies)
                 .fold {
-                  messenger.system(g, "Couldn't play sealed move") // should never happen
+                  if (g.sealedUsi.isDefined)
+                    messenger.system(g, "Couldn't play sealed move") // should never happen
                   Left(prog.events)
                     .withRight[(shogi.format.usi.Usi, Progress)]
                 } { usi =>

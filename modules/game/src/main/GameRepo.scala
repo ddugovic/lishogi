@@ -330,14 +330,14 @@ final class GameRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCont
       ),
     )
 
-  def resume(id: ID, pausedSeconds: Option[Int], userIds: List[User.ID]) =
+  def resume(id: ID, pausedSeconds: Option[Int], userIds: List[User.ID], checkAtMinutes: Int) =
     coll.update.one(
       $id(id),
       nonEmptyMod(
         "$set",
         $doc(
           F.status        -> Status.Started.id,
-          F.checkAt       -> DateTime.now.plusHours(1),
+          F.checkAt       -> DateTime.now.plusMinutes(checkAtMinutes),
           F.playingUids   -> (userIds.nonEmpty).option(userIds),
           F.pausedSeconds -> pausedSeconds,
         ),

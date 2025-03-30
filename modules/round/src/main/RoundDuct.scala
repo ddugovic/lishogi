@@ -429,8 +429,8 @@ final private[round] class RoundDuct(
             g.clock.fold(Progress(g)) { clock =>
               g.withClock {
                 clock
-                  .giveTime(g.turnColor, Centis(10000))
-                  .giveTime(!g.turnColor, Centis(4000))
+                  .giveTime(g.turnColor, Centis.ofSeconds(120))
+                  .giveTime(!g.turnColor, Centis.ofSeconds(60))
               }
             }
           }
@@ -449,12 +449,6 @@ final private[round] class RoundDuct(
     case AbortForce =>
       handle { game =>
         game.playableEvenPaused ?? finisher.other(game, _.Aborted, winner = none)
-      }
-
-    case PauseForce =>
-      handle { game =>
-        println("PauseForce")
-        game.playable ?? finisher.forcePause(game)
       }
 
     case BotConnected(color, v) =>

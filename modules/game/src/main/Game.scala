@@ -202,37 +202,35 @@ case class Game(
   def resume =
     if (!paused) this
     else {
-      val shogiAfterSealedUsi = sealedUsi.flatMap(u => shogi(u).toOption)
-      val newShogi            = shogiAfterSealedUsi.getOrElse(shogi)
-      val pSeconds            = (nowSeconds - movedAt.getSeconds).toInt atLeast 0
+      val pSeconds = (nowSeconds - movedAt.getSeconds).toInt atLeast 0
       val resumed = copy(
-        // clock was already updated, make sure proper color is set
-        shogi = newShogi.copy(clock = clock.map(_.copy(color = newShogi.situation.color).start)),
         status = Status.Started,
         sealedUsi = none,
         pausedSeconds = pausedSeconds.map(_ + pSeconds).orElse(pSeconds.some),
-        movedAt = DateTime.now,
+        movedAt = DateTime.now, // necessary even when sealed usi was not played - for corres clock
       )
 
-      if (shogiAfterSealedUsi.isDefined) resumed
-      else
-        resumed.copy(
-          binaryMoveTimes = binaryMoveTimes.map { binary =>
-            val moveTimes = BinaryFormat.moveTime.read(binary, playedPlies)
-            BinaryFormat.moveTime.write(moveTimes)
-          },
-          loadClockHistory = _ =>
-            clockHistory.map { ch =>
-              (ch.update(newShogi.color, _.dropRight(1)))
-            },
-        )
+      sealedUsi
+        .flatMap(u => shogi(u).toOption)
+        .fold {
+          resumed.copy(
+            shogi = shogi.copy(clock = clock.map(_.start)),
+          )
+        } { newShogi =>
+          resumed.copy(
+            // clock was already updated, make sure proper color is set
+            shogi = newShogi.copy(clock = clock.map(_.copy(color = newShogi.situation.color).start)),
+          )
+        }
     }
 
   def forcePause =
     copy(
+      shogi = shogi.copy(clock = clock.map(_.hardStop)),
       sentePlayer = sentePlayer.removePauseOffer,
       gotePlayer = gotePlayer.removePauseOffer,
       status = Status.Paused,
+      movedAt = DateTime.now,
     )
 
   def pauseAndSealUsi(
