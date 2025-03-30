@@ -25,7 +25,6 @@ html.transp {
   --c-font-page: #{$c-font-clearer};
   --c-page-input: #{$c-bg-box};
   --text-shadow: #{0.5px 1px 1px #000};
-  --m-accent_bg-action_mix_50: #{color.mix($c-accent,$c-bg-action,50%)};
   --m-accent_bg-box_mix_10: #{color.mix($c-accent,$c-bg-box,10%)};
   --m-accent_bg-box_mix_12: #{color.mix($c-accent,$c-bg-box,12%)};
   --m-accent_bg-box_mix_15: #{color.mix($c-accent,$c-bg-box,15%)};

@@ -52,8 +52,8 @@
     }
 
     &:hover {
-      background: theme.$m-accent_bg-action_mix_50;
-      color: theme.$c-font-clearer;
+      background: theme.$c-accent;
+      color: theme.$c-accent-over;
 
       &.isReady::before {
         opacity: 0.5;

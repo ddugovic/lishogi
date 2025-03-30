@@ -90,7 +90,6 @@ html {
   --m-accent_alpha_neg40: #{color.adjust($c-accent,$alpha:-0.4)};
   --m-accent_alpha_neg50: #{color.adjust($c-accent,$alpha:-0.5)};
   --m-accent_alpha_neg70: #{color.adjust($c-accent,$alpha:-0.7)};
-  --m-accent_bg-action_mix_50: #{color.mix($c-accent,$c-bg-action,50%)};
   --m-accent_bg-box_mix_10: #{color.mix($c-accent,$c-bg-box,10%)};
   --m-accent_bg-box_mix_12: #{color.mix($c-accent,$c-bg-box,12%)};
   --m-accent_bg-box_mix_15: #{color.mix($c-accent,$c-bg-box,15%)};

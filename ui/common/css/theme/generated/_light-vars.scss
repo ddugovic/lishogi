@@ -61,7 +61,6 @@ html.light {
   --c-warn: #{$c-brag};
   --metal-shadow: #{0 1px 0 white};
   --text-shadow: #{0 1px 0 $c-font-shadow};
-  --m-accent_bg-action_mix_50: #{color.mix($c-accent,$c-bg-action,50%)};
   --m-accent_bg-box_mix_10: #{color.mix($c-accent,$c-bg-box,10%)};
   --m-accent_bg-box_mix_12: #{color.mix($c-accent,$c-bg-box,12%)};
   --m-accent_bg-box_mix_15: #{color.mix($c-accent,$c-bg-box,15%)};

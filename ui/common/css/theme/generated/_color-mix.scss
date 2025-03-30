@@ -5,7 +5,6 @@ html {
   --m-accent_alpha_neg40: oklch(from var(--c-accent) l c h / 0.6);
   --m-accent_alpha_neg50: oklch(from var(--c-accent) l c h / 0.5);
   --m-accent_alpha_neg70: oklch(from var(--c-accent) l c h / 0.3);
-  --m-accent_bg-action_mix_50: color-mix(in srgb, var(--c-accent) 50%, var(--c-bg-action) 50%);
   --m-accent_bg-box_mix_10: color-mix(in srgb, var(--c-accent) 10%, var(--c-bg-box) 90%);
   --m-accent_bg-box_mix_12: color-mix(in srgb, var(--c-accent) 12%, var(--c-bg-box) 88%);
   --m-accent_bg-box_mix_15: color-mix(in srgb, var(--c-accent) 15%, var(--c-bg-box) 85%);
