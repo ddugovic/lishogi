@@ -38,14 +38,15 @@ object form {
 
   def edit(form: Form[SimulForm.Setup], teams: List[LightTeam], simul: Simul)(implicit
       ctx: Context,
-  ) =
+  ) = {
+    val title = s"${trans.edit.txt()} - ${simul.name}"
     views.html.base.layout(
-      title = simul.name,
+      title = title,
       moreCss = cssTag("simul.form"),
       moreJs = frag(flatpickrTag, jsTag("simul.form")),
     ) {
       main(cls := "box box-pad page-small simul-form")(
-        h1(s"${trans.edit.txt()} ${simul.name}"),
+        h1(title),
         postForm(cls := "form3", action := routes.Simul.update(simul.id))(
           formContent(form, teams),
           form3.actions(
@@ -55,6 +56,7 @@ object form {
         ),
       )
     }
+  }
 
   private def formContent(form: Form[SimulForm.Setup], teams: List[LightTeam])(implicit
       ctx: Context,

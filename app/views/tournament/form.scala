@@ -47,9 +47,10 @@ object form {
 
   def edit(tour: Tournament, form: Form[_], myTeams: List[lila.hub.LightTeam])(implicit
       ctx: Context,
-  ) =
+  ) = {
+    val title = s"${trans.edit.txt()} - ${tour.trans}"
     views.html.base.layout(
-      title = tour.trans,
+      title = title,
       moreCss = cssTag("tournament.form"),
       moreJs = frag(
         flatpickrTag,
@@ -59,7 +60,7 @@ object form {
       val fields = new TourFields(form, tour.some)
       main(cls := "page-small")(
         div(cls := "tour__form box box-pad")(
-          h1(trans.edit.txt(), " ", tour.trans),
+          h1(title),
           postForm(cls := "form3", action := routes.Tournament.update(tour.id))(
             form3.globalError(form),
             allFieldsets(form, fields, teams = myTeams, tour = tour.some),
@@ -76,6 +77,7 @@ object form {
         ),
       )
     }
+  }
 
   def allFieldsets(
       form: Form[_],
