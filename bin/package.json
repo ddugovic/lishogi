@@ -10,6 +10,6 @@
   "scripts": {
     "trans-dump": "tsx ./scripts/trans.ts",
     "trans-lint": "./scripts/trans-lint.py ../translation/dest/*/*.xml",
-    "module-deps": "./scripts/module-deps.py"
+    "module-deps": "PYTHONHASHSEED=0 ./scripts/module-deps.py"
   }
 }
