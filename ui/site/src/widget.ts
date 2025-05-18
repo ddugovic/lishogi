@@ -168,7 +168,7 @@ export function initWidgets(): void {
       const tick = () => {
         const remaining = target - Date.now();
         if (remaining <= 0) clearInterval(this.interval);
-        timeEl.innerHTML = this._formatMs(remaining);
+        timeEl.innerHTML = this._formatMs(remaining, target);
       };
       this.interval = setInterval(tick, 1000);
       tick();
@@ -176,14 +176,17 @@ export function initWidgets(): void {
 
     _pad: x => (x < 10 ? '0' : '') + x,
 
-    _formatMs: function (msTime) {
-      const date = new Date(Math.max(0, msTime + 500));
+    _formatMs: function (msTime, target) {
+      const ms = Math.max(0, msTime + 500);
 
-      const hours = date.getUTCHours();
-      const minutes = date.getUTCMinutes();
-      const seconds = date.getUTCSeconds();
+      const seconds: number = Math.floor(ms / 1000) % 60;
+      const minutes: number = Math.floor(ms / (1000 * 60)) % 60;
+      const hours: number = Math.floor(ms / (1000 * 60 * 60));
 
-      if (hours > 0) {
+      if (hours > 72) {
+        const date = new Date(target);
+        return date.toLocaleString();
+      } else if (hours > 0) {
         return `${hours}:${this._pad(minutes)}:${this._pad(seconds)}`;
       } else {
         return `${minutes}:${this._pad(seconds)}`;
