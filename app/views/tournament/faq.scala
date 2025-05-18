@@ -9,30 +9,38 @@ import lila.app.ui.ScalatagsTemplate._
 
 object faq {
 
-  import trans.arena._
-
-  def page(implicit ctx: Context) =
+  def page(format: lila.tournament.Format)(implicit ctx: Context) =
     views.html.base.layout(
       title = trans.faq.faqAbbreviation.txt(),
-      moreCss = cssTag("misc.page"),
+      moreCss = frag(
+        cssTag("misc.page"),
+        cssTag("tournament.faq"),
+      ),
+      moreJs = jsTag("tournament.faq"),
     ) {
       main(cls := "page-menu")(
         home.menu("faq"),
         div(cls := "page-menu__content box box-pad")(
           h1(trans.faq.faqAbbreviation()),
-          div(cls := "body")(
-            div(cls := "arena")(
-              apply(lila.tournament.Format.Arena),
+          div(cls := "format-selector")(
+            lila.tournament.Format.all.map(f =>
+              div(
+                cls              := s"format-button${(f.key == format.key) ?? " selected"}",
+                attr("data-key") := f.key,
+              )(f.trans),
             ),
-            div(cls := "robin")(
-              apply(lila.tournament.Format.Robin),
+          ),
+          div(cls := "body")(
+            lila.tournament.Format.all.map(f =>
+              div(cls := s"${f.key}${(f.key != format.key) ?? " none"}")(
+                apply(f),
+              ),
             ),
           ),
         ),
       )
     }
 
-// TODO
   def apply(
       format: lila.tournament.Format,
       rated: Option[Boolean] = None,
@@ -40,49 +48,80 @@ object faq {
   )(implicit
       ctx: Context,
   ) =
-    if (format == lila.tournament.Format.Robin)
-      frag(
-        privateId.map { id =>
-          frag(
-            h2(trans.arena.thisIsPrivate()),
-            p(trans.arena.shareUrl(s"$netBaseUrl${routes.Tournament.show(id)}")), // XXX
-          )
-        },
-        h2(trans.arena.isItRated()),
-        rated match {
-          case Some(true)  => p(trans.arena.isRated())
-          case Some(false) => p(trans.arena.isNotRated())
-          case None        => p(trans.arena.someRated())
-        },
-      )
-    else
-      frag(
-        privateId.map { id =>
-          frag(
-            h2(trans.arena.thisIsPrivate()),
-            p(trans.arena.shareUrl(s"$netBaseUrl${routes.Tournament.show(id)}")), // XXX
-          )
-        },
-        p(trans.arena.willBeNotified()),
-        h2(trans.arena.isItRated()),
-        rated match {
-          case Some(true)  => p(trans.arena.isRated())
-          case Some(false) => p(trans.arena.isNotRated())
-          case None        => p(trans.arena.someRated())
-        },
-        h2(howAreScoresCalculated()),
-        p(howAreScoresCalculatedAnswer()),
-        h2(berserk()),
-        p(berserkAnswer()),
-        h2(howIsTheWinnerDecided()),
-        p(howIsTheWinnerDecidedAnswer()),
-        h2(howDoesPairingWork()),
-        p(howDoesPairingWorkAnswer()),
-        h2(howDoesItEnd()),
-        p(howDoesItEndAnswer()),
-        h2(otherRules()),
-        p(thereIsACountdown()),
-        p(drawingWithinNbMoves.pluralSame(10)),
-        p(drawStreak(30)),
-      )
+    frag(
+      privateId.map { id =>
+        frag(
+          h3(trans.arena.thisIsPrivate()),
+          p(trans.arena.shareUrl(s"$netBaseUrl${routes.Tournament.show(id)}")),
+        )
+      },
+      format match {
+        case lila.tournament.Format.Arena     => arena
+        case lila.tournament.Format.Robin     => robin
+        case lila.tournament.Format.Organized => organized
+      },
+      h3(trans.arena.isItRated()),
+      rated match {
+        case Some(true)  => p(trans.arena.isRated())
+        case Some(false) => p(trans.arena.isNotRated())
+        case None        => p(trans.arena.someRated())
+      },
+    )
+
+  private def arena(implicit
+      ctx: Context,
+  ) =
+    frag(
+      h3(trans.arena.howAreScoresCalculated()),
+      p(trans.arena.howAreScoresCalculatedAnswer()),
+      h3(trans.arena.berserk()),
+      p(trans.arena.berserkAnswer()),
+      h3(trans.arena.howIsTheWinnerDecided()),
+      p(trans.arena.howIsTheWinnerDecidedAnswer()),
+      h3(trans.arena.howDoesPairingWork()),
+      p(trans.arena.howDoesPairingWorkAnswer()),
+      h3(trans.arena.howDoesItEnd()),
+      p(trans.arena.howDoesItEndAnswer()),
+      h3(trans.arena.otherRules()),
+      p(trans.arena.thereIsACountdown()),
+      p(trans.arena.drawingWithinNbMoves.pluralSame(10)),
+      p(trans.arena.drawStreak(30)),
+    )
+
+  private def robin(implicit
+      ctx: Context,
+  ) = frag(
+    h3(trans.tourArrangements.howDoesRoundRobinWork()),
+    p(
+      trans.tourArrangements.howDoesRoundRobinWorkAnswer(trans.tourArrangements.startGameNow.txt()),
+    ),
+    h3(trans.tourArrangements.howToPlayGames()),
+    p(trans.tourArrangements.howToPlayGamesAnswer(trans.tourArrangements.startGameNow.txt())),
+    h3(trans.tourArrangements.roundRobinScoring()),
+    p(trans.tourArrangements.roundRobinScoringAnswer()),
+    h3(trans.tourArrangements.roundRobinWinner()),
+    p(trans.tourArrangements.roundRobinWinnerAnswer()),
+    h3(trans.arena.howDoesItEnd()),
+    p(trans.arena.howDoesItEndAnswer()),
+  )
+
+  private def organized(implicit
+      ctx: Context,
+  ) = frag(
+    h3(trans.tourArrangements.howDoOrganizedTournamentsWork()),
+    p(
+      trans.tourArrangements.howDoOrganizedTournamentsWorkAnswer(
+        trans.tourArrangements.startGameNow.txt(),
+      ),
+    ),
+    h3(trans.tourArrangements.whoStartsMatches()),
+    p(trans.tourArrangements.whoStartsMatchesAnswer(trans.tourArrangements.startGameNow.txt())),
+    h3(trans.tourArrangements.organizedScoring()),
+    p(trans.tourArrangements.organizedScoringAnswer()),
+    h3(trans.arena.howIsTheWinnerDecided()),
+    p(trans.arena.howIsTheWinnerDecidedAnswer()),
+    h3(trans.arena.howDoesItEnd()),
+    p(trans.arena.howDoesItEndAnswer()),
+  )
+
 }

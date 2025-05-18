@@ -1,6 +1,5 @@
 package controllers
 
-import scala.annotation.nowarn
 import scala.concurrent.duration._
 
 import play.api.libs.json._
@@ -69,9 +68,11 @@ final class Tournament(
     }
   }
 
-  def help(@nowarn("cat=unused") sysStr: Option[String]) =
+  def help =
     Open { implicit ctx =>
-      Ok(html.tournament.faq.page).fuccess
+      val format =
+        get("format").flatMap(lila.tournament.Format.byKey) | lila.tournament.Format.Arena
+      Ok(html.tournament.faq.page(format)).fuccess
     }
 
   def leaderboard =
