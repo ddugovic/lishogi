@@ -95,11 +95,6 @@ function main(opts: CoordinatesOpts): void {
   };
   showCharts();
 
-  const centerRight = () => {
-    $right.css('top', `${256 - $right.height()! / 2}px`);
-  };
-  centerRight();
-
   const clearCoords = () => {
     $.each($coords, (_i, e) => {
       e.text('');
@@ -136,7 +131,6 @@ function main(opts: CoordinatesOpts): void {
   const stop = () => {
     clearCoords();
     $trainer.removeClass('play');
-    centerRight();
     $trainer.removeClass('wrong');
     $currentColor.text('');
     ground.set({
@@ -226,7 +220,6 @@ function main(opts: CoordinatesOpts): void {
     $timer.removeClass('hurry');
     showColor();
     clearCoords();
-    centerRight();
     score = 0;
     $score.text(score);
     $bar.css('width', 0);

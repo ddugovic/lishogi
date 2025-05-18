@@ -306,7 +306,7 @@ const randomButton = (ctrl: SimulCtrl) =>
 
 const hostButtons = (ctrl: SimulCtrl, accepted: Applicant[]) => [
   h(
-    'a.button.button-red.text',
+    'button.button.button-red.text',
     {
       attrs: {
         'data-icon': 'L',
@@ -318,7 +318,7 @@ const hostButtons = (ctrl: SimulCtrl, accepted: Applicant[]) => [
     i18n('cancel'),
   ),
   h(
-    `a.button.button-green.text${accepted.length < 2 ? '.disabled' : ''}`,
+    `button.button.button-green.text${accepted.length < 2 ? '.disabled' : ''}`,
     {
       attrs: {
         'data-icon': 'G',

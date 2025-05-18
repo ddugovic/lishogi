@@ -37,7 +37,6 @@ export function boot(
           );
       },
       endData() {
-        console.log('enddata boot'); // todo
         window.lishogi.xhr
           .text('GET', `${data.tv ? '/tv' : ''}/${data.game.id}/${data.player.color}/sides`)
           .then(html => {

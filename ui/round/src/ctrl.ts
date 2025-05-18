@@ -593,7 +593,6 @@ export default class RoundController {
   };
 
   endWithData = (o: ApiEnd): void => {
-    console.log('endWithData ctrl'); // todo
     const d = this.data;
     d.game.winner = o.winner;
     d.game.status = o.status;

@@ -58,7 +58,7 @@ function controls(ctrl: Controller): VNode {
       h('div.jumps', [
         jumpButton('W', 'first', !node.ply),
         jumpButton('Y', 'prev', !node.ply),
-        jumpButton('X', 'next', !nextNode, goNext),
+        jumpButton('X', 'next', !nextNode),
         jumpButton('V', 'last', !nextNode, goNext),
       ]),
     ],

@@ -97,6 +97,7 @@ interface TournamentRanks {
 interface Tournament {
   id: string;
   berserkable: boolean;
+  format: 'arena' | 'robin' | 'organized';
   ranks?: TournamentRanks;
   running?: boolean;
   nbSecondsForFirstMove?: number;

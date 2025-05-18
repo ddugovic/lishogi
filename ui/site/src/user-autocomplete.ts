@@ -64,7 +64,9 @@ export function userAutocomplete($input: JQuery, opts: UserCompleteOpts): Promis
     if (opts.focus) $input.trigger('focus');
     if (opts.onSelect)
       $input
-        .on('typeahead:select', (_, sel) => opts.onSelect?.(sel))
+        .on('typeahead:select', (_, sel) => {
+          opts.onSelect?.(sel);
+        })
         .on('keypress', function (e) {
           if (e.which == 10 || e.which == 13) opts.onSelect?.($(this).val());
         });
