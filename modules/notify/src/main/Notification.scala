@@ -99,6 +99,18 @@ case class TournamentReminder(
     date: DateTime,
 ) extends NotificationContent("tournamentReminder")
 
+case class ArrangementReminder(
+    id: String,
+    tid: String,
+    users: List[String],
+) extends NotificationContent("arrangementReminder")
+
+case class ArrangementConfirmation(
+    id: String,
+    tid: String,
+    user: String,
+) extends NotificationContent("arrangementConfirmation")
+
 case class GameEnd(
     gameId: GameEnd.GameId,
     opponentId: Option[GameEnd.OpponentId],

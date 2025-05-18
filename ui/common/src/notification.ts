@@ -17,7 +17,7 @@ function notify(msg: string | (() => string)) {
   const storage = window.lishogi.storage.make('just-notified');
   if (document.hasFocus() || Date.now() - Number.parseInt(storage.get()!, 10) < 1000) return;
   storage.set(`${Date.now()}`);
-  if ($.isFunction(msg)) msg = msg();
+  if (typeof msg === 'function') msg = msg();
   const notification = new Notification('lishogi.org', {
     icon: assetUrl('logo/lishogi-favicon-256.png', {
       noVersion: true,

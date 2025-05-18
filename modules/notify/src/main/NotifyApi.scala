@@ -21,7 +21,6 @@ final class NotifyApi(
 
   import BSONHandlers.NotificationBSONHandler
   import BSONHandlers.NotifiesHandler
-  import jsonHandlers._
 
   def getNotifications(userId: Notification.Notifies, page: Int): Fu[Paginator[Notification]] =
     Paginator(
@@ -111,6 +110,7 @@ final class NotifyApi(
   private def notifyUser(notifies: Notification.Notifies): Funit =
     getNotificationsAndCount(notifies, 1) map { msg =>
       import play.api.libs.json.Json
+      import jsonHandlers.andUnreadWrites
       Bus.publish(SendTo(notifies.value, "notifications", Json toJson msg), "socketUsers")
     }
 }

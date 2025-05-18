@@ -40,9 +40,9 @@ export default function ctrl(opts: NotifyOpts, redraw: Redraw): Ctrl {
     opts.pulse();
     if (!li.quietMode) li.sound.play('newPM');
     const text = asText(notif);
-    const pushSubsribed =
+    const pushSubscribed =
       Number.parseInt(li.storage.get('push-subscribed2') || '0', 10) + 86400000 >= Date.now(); // 24h
-    if (!pushSubsribed && text) notify(text);
+    if (!pushSubscribed && text) notify(text);
   }
 
   function loadPage(page: number) {

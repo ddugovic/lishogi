@@ -61,6 +61,31 @@ export const renderers: Renderers = {
     },
     text: _ => 'Tournament you signed up for is coming up',
   },
+  arrangementReminder: {
+    html: n => {
+      return generic(n, `/tournament/${n.content.tid}#${n.content.id}`, 'p', [
+        h('span', [h('strong', [i18n('tourArrangements:yourUpcomingGames')]), drawTime(n)]),
+        h('span', [
+          i18nFormat(
+            'tourArrangements:upcomingGameWithX',
+            (n.content.users as { name: string }[]).find(
+              (u: any) => u.name.toLowerCase() !== document.body.dataset.user,
+            )?.name,
+          ),
+        ]),
+      ]);
+    },
+    text: _ => 'Arranged match is coming up',
+  },
+  arrangementConfirmation: {
+    html: n => {
+      return generic(n, `/tournament/${n.content.tid}#${n.content.id}`, 'p', [
+        h('span', [h('strong', [i18n('tourArrangements:gameScheduling')]), drawTime(n)]),
+        h('span', i18nFormat('tourArrangements:xAcceptedTime', userFullName(n.content.user))),
+      ]);
+    },
+    text: _ => 'Opponent confirmed the time you suggested',
+  },
   reportedBanned: {
     html: n =>
       generic(n, undefined, '', [
