@@ -29,10 +29,19 @@ await workspaceBuildConductor('css', async (rootDir: string, pkgs: Project[], ou
     onChange: async (event: WatchEventType, filepath: string) => {
       if (filepath.includes('/generated/')) return;
 
+      console.log(`Change detected in: ${filepath}`);
+
       if (event === 'rename') graph.reinit();
       else graph.update(filepath);
 
-      await cssVariableBuilder.update(filepath);
+      const rebuildVars = await cssVariableBuilder.update(filepath);
+      if (rebuildVars) {
+        const themeFiles = (await glob(path.join(rootDir, '/**/common/css/build/*.scss'))).filter(
+          buildFilesFilter,
+        );
+        console.log('Rebuilding theme files');
+        themeFiles.map(file => builder.build(file));
+      }
 
       const impacted = graph.impacted(filepath).filter(buildFilesFilter);
       await Promise.all(impacted.map(file => builder.build(file)));

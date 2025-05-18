@@ -94,10 +94,14 @@ await workspaceBuildConductor('i18n', async (rootDir: string, pkgs: Project[], o
         const newKeys = await extractI18nKeysFromPackage(pkg);
         const isSame = oldKeys.size === newKeys.size && [...oldKeys].every(el => newKeys.has(el));
         if (!isSame) {
+          console.log(`Change detected in: ${filepath}`);
           i18nPackagesMap.set(pkg.manifest.name, newKeys);
           await bundleI18ns();
         }
-      } else await bundleI18ns();
+      } else {
+        console.log(`Change detected in: ${filepath}`);
+        await bundleI18ns();
+      }
     },
     stop: async () => {},
     watchPaths: ['src', `${rootDir}/translation`],

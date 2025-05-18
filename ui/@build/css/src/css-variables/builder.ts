@@ -10,7 +10,7 @@ import { parseThemes } from './parsers/theme.js';
 
 type CssVariableBuilder = {
   build: () => Promise<void>;
-  update: (filepath: string) => Promise<void>;
+  update: (filepath: string) => Promise<boolean>;
 };
 
 export async function createCssVariableBuilder(
@@ -55,10 +55,11 @@ export async function createCssVariableBuilder(
     const isSameSet =
       oldExtracted.size === newExtracted.size && [...oldExtracted].every(x => newExtracted.has(x));
 
-    if (!isSameSet) {
+    if (!isSameSet || filepath.includes(themeDir)) {
       extractedByFile.set(filepath, newExtracted);
       await build();
-    }
+      return true;
+    } else return false;
   };
 
   return {

@@ -15,8 +15,10 @@ export function createGraph(rootDir: string): Graph {
     if (set.has(path)) return set;
     set.add(path);
 
-    const paths = graph.index[path].importedBy;
-    paths.forEach(p => recImports(p, set));
+    if (graph.index[path]) {
+      const paths = graph.index[path].importedBy;
+      paths.forEach(p => recImports(p, set));
+    }
 
     return set;
   }
@@ -28,7 +30,10 @@ export function createGraph(rootDir: string): Graph {
     update: (path: string): void => {
       if (!graph.index[path]) graph = initGraph(rootDir);
       else {
-        const fileImports = SassGraph.parseFile(path, { extensions: ['scss'] }).index[path].imports;
+        const fileImports = SassGraph.parseFile(path, {
+          extensions: ['scss'],
+          resolver: localPkgSchemeResolver(rootDir),
+        }).index[path].imports;
 
         for (const dep of graph.index[path].imports) {
           if (!fileImports.includes(dep)) {

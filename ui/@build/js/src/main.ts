@@ -45,6 +45,8 @@ await workspaceBuildConductor('js', async (_rootDir: string, pkgs: Project[], ou
       const pkg = getPackageFromPath(pkgs, filepath)!;
       const impacted = findImpactedPackages(pkg, pkgs);
 
+      console.log(`Change detected in: ${filepath}`);
+
       if (!filepath?.endsWith('.ts') || event === 'rename') {
         await Promise.all(impacted.map(i => clearOne(i)));
         const filesToDelete = await glob(path.join(outdir, `lishogi.${pkg.manifest.name}.*`));
