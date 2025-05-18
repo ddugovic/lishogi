@@ -118,11 +118,12 @@ object replay {
         moduleJsTag(
           "analyse",
           Json.obj(
-            "mode"   -> "replay",
-            "data"   -> data,
-            "userId" -> ctx.userId,
-            "chat"   -> chatJson,
-            "hunter" -> isGranted(_.Hunter),
+            "mode"     -> "replay",
+            "data"     -> data,
+            "userId"   -> ctx.userId,
+            "playerId" -> ctx.userId.flatMap(userId => pov.game.playerByUserId(userId).map(_.id)),
+            "chat"     -> chatJson,
+            "hunter"   -> isGranted(_.Hunter),
           ),
         ),
       ),
