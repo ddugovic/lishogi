@@ -224,18 +224,21 @@ function inputs(ctrl: AnalyseCtrl): VNode | undefined {
           },
         }),
       ]),
-      h(
-        'div.form-help.text',
-        {
-          attrs: { 'data-icon': '' },
-        },
-        [
-          i18n('shareMainlineUrl'),
-          ctrl.mainline.length > 300
-            ? h('span.error', `MAX: ${i18nPluralSame('nbMoves', 300)}`)
-            : null,
-        ],
-      ),
+      h('div.pair', [
+        h('div.name'), // just for proper spacing
+        h(
+          'div.form-help.text',
+          {
+            attrs: { 'data-icon': '' },
+          },
+          [
+            i18n('shareMainlineUrl'),
+            ctrl.mainline.length > 300
+              ? h('span.error', `MAX: ${i18nPluralSame('nbMoves', 300)}`)
+              : null,
+          ],
+        ),
+      ]),
     ]),
   ]);
 }
