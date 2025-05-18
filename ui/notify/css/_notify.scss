@@ -51,11 +51,11 @@
     position: relative;
 
     &:hover {
-      background: theme.$c-bg-zebra;
+      background: theme.$c-bg-zebra2;
 
       i {
-        color: theme.$c-link;
-        opacity: 0.9;
+        color: theme.$c-font-clear;
+        opacity: 1;
       }
     }
 

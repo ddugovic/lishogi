@@ -70,6 +70,8 @@
 
       &.active,
       &:hover {
+        color: theme.$c-font-page;
+
         &::after {
           transform: scale(1);
         }

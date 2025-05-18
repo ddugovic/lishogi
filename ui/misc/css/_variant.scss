@@ -17,7 +17,7 @@
 .variants {
   padding: 1em 0;
 
-  .variant {
+  a.variant {
     @extend %flex-center;
 
     color: theme.$c-font;

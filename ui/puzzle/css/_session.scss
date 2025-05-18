@@ -13,7 +13,6 @@
     flex: 0 0 2.3em;
     height: 1.6em;
     margin: 0.4em 0.5em 0 0;
-    color: #fff;
     opacity: 0.85;
     font-size: 0.85em;
     font-weight: bold;
@@ -28,10 +27,12 @@
 
     &.result-true {
       background: theme.$c-good;
+      color: theme.$c-good-over;
     }
 
     &.result-false {
       background: theme.$c-bad;
+      color: theme.$c-bad-over;
 
       &.result-empty::before {
         content: 'L';
@@ -40,10 +41,12 @@
 
     &.current {
       background: theme.$c-brag;
+      color: theme.$c-brag-over;
     }
 
     &.session-new {
       background: theme.$c-link;
+      color: theme.$c-link-over;
     }
 
     &:hover {

@@ -1,3 +1,5 @@
+@use 'pkg:common/theme';
+
 .retro-box {
   .title {
     display: flex;
@@ -32,8 +34,8 @@
   .continue {
     display: flex;
     font-size: 1.3em;
-    background: rgba(56, 147, 232, 0.8);
-    color: #fff;
+    background: theme.$c-primary;
+    color: theme.$c-primary-over;
     align-items: center;
     justify-content: center;
     text-transform: uppercase;
@@ -41,7 +43,7 @@
   }
 
   .continue:hover {
-    background: rgba(56, 147, 232, 1);
+    background: theme.$m-primary_lightness_10;
   }
 
   .continue i::before {

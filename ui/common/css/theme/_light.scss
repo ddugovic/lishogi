@@ -26,6 +26,7 @@ $c-primary-glow: hsl(199deg, 92%, 85%);
 
 $c-secondary-dim: c-whiter($c-secondary, 17%);
 $c-secondary-dimmer: c-whiter($c-secondary, 40%);
+$c-secondary-clear: c-blacker($c-secondary, 17%);
 
 $c-accent-dim: c-whiter($c-accent, 17%);
 $c-accent-clear: c-blacker($c-accent, 17%);

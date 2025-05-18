@@ -12,14 +12,14 @@
 
   @media (hover: hover) {
     &:hover:not(.disabled):not([disabled]) {
-      background: theme.$m-secondary_bg-box_mix_75;
-      color: #fff;
+      background: theme.$c-secondary;
+      color: theme.$c-secondary-over;
     }
   }
 
   &.active {
     background: theme.$c-secondary !important;
-    color: #fff;
+    color: theme.$c-secondary-over;
   }
 
   &.disabled,

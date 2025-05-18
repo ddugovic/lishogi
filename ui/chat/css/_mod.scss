@@ -9,12 +9,12 @@
     justify-content: space-between;
     flex: 0 0 auto;
     background: theme.$c-accent;
-    color: #fff;
+    color: theme.$c-accent-over;
     padding: 0.4em 10px;
     line-height: 1.4em;
 
     a {
-      color: #fff;
+      color: theme.$c-accent-over;
     }
   }
 

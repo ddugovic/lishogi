@@ -35,6 +35,7 @@ html.custom-dark {
   --c-secondary-over: #fff; // fallback
   --c-secondary-dim: color-mix(in srgb, var(--c-secondary) 80%, black);
   --c-secondary-dimmer: color-mix(in srgb, var(--c-secondary) 70%, black);
+  --c-secondary-clear: color-mix(in srgb, var(--c-secondary) 80%, white);
   --c-brag-over: #fff; // fallback
   --c-good: var(--c-green);
   --c-good-over: #fff; // fallback

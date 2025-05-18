@@ -28,6 +28,11 @@ input[type='range'] {
     outline: none;
   }
 
+  &:disabled {
+    pointer-events: none;
+    opacity: 0.7;
+  }
+
   &::-webkit-slider-runnable-track {
     @include range-track;
   }

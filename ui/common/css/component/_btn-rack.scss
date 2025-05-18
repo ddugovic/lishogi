@@ -55,7 +55,7 @@
     &.active {
       @extend %active;
 
-      color: #fff;
+      color: theme.$c-accent-over;
     }
   }
 }

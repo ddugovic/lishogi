@@ -79,7 +79,7 @@
 
     &.current a {
       background: theme.$m-accent_bg-box_mix_70;
-      color: #fff;
+      color: theme.$c-accent-over;
       opacity: 1 !important;
     }
 

@@ -19,16 +19,16 @@ html {
   --c-bg-header-dropdown: #{$c-bg-popup};
   --c-bg-high: #{hsl($c-site-hue, 5%, 14%)};
   --c-bg-input: #{c-light($c-bg-page, 13%)};
-  --c-bg-low: #{hsl($c-site-hue, 5%, 21%)};
+  --c-bg-low: #{hsl($c-site-hue, 5%, 22%)};
   --c-bg-metal: #{$c-bg-zebra};
   --c-bg-metal-hover: #{$c-bg-zebra2};
-  --c-bg-page: #{hsl($c-site-hue, 8%, 7%)};
+  --c-bg-page: #{hsl($c-site-hue, 8%, 6%)};
   --c-bg-popup: #{$c-bg-low};
   --c-bg-zebra: #{hsl($c-site-hue, 3%, 18%)};
   --c-bg-zebra2: #{hsl($c-site-hue, 3%, 23%)};
   --c-blunder: #{hsl(0deg, 69%, 60%)};
   --c-blunder-clear: #{hsl(0deg, 100%, 60%)};
-  --c-body-gradient: #{hsl($c-site-hue, 5%, 16%)};
+  --c-body-gradient: #{hsl($c-site-hue, 5%, 15%)};
   --c-border: #{hsl(0deg, 0%, 25%)};
   --c-border-page: #{hsl(0deg, 0%, 22%)};
   --c-bot: #{$c-fancy};
@@ -76,6 +76,7 @@ html {
   --c-primary-over: #{#fff};
   --c-red: #{hsl(0deg, 60%, 50%)};
   --c-secondary: #{hsl(88deg, 62%, 37%)};
+  --c-secondary-clear: #{c-whiter($c-secondary, 20%)};
   --c-secondary-dim: #{c-blacker($c-secondary, 20%)};
   --c-secondary-dimmer: #{c-blacker($c-secondary, 40%)};
   --c-secondary-over: #{#fff};
@@ -86,7 +87,6 @@ html {
   --metal-shadow: #{none};
   --sente-symbol: '☖';
   --text-shadow: #{none};
-  --m-accent_alpha_neg30: #{color.adjust($c-accent,$alpha:-0.3)};
   --m-accent_alpha_neg40: #{color.adjust($c-accent,$alpha:-0.4)};
   --m-accent_alpha_neg50: #{color.adjust($c-accent,$alpha:-0.5)};
   --m-accent_alpha_neg70: #{color.adjust($c-accent,$alpha:-0.7)};
@@ -94,7 +94,6 @@ html {
   --m-accent_bg-box_mix_12: #{color.mix($c-accent,$c-bg-box,12%)};
   --m-accent_bg-box_mix_15: #{color.mix($c-accent,$c-bg-box,15%)};
   --m-accent_bg-box_mix_70: #{color.mix($c-accent,$c-bg-box,70%)};
-  --m-accent_bg-box_mix_90: #{color.mix($c-accent,$c-bg-box,90%)};
   --m-accent_bg-popup_mix_10: #{color.mix($c-accent,$c-bg-popup,10%)};
   --m-bad_bg-box_mix_10: #{color.mix($c-bad,$c-bg-box,10%)};
   --m-bad_bg-box_mix_30: #{color.mix($c-bad,$c-bg-box,30%)};
@@ -124,7 +123,6 @@ html {
   --m-brag_bg-box_mix_20: #{color.mix($c-brag,$c-bg-box,20%)};
   --m-brag_bg-page_mix_60: #{color.mix($c-brag,$c-bg-page,60%)};
   --m-brag_darken_mix_85: #{color.mix($c-brag,$c-darken,85%)};
-  --m-brag_shade_mix_80: #{color.mix($c-brag,$c-shade,80%)};
   --m-clas_bg-box_mix_10: #{color.mix($c-clas,$c-bg-box,10%)};
   --m-clas_bg-box_mix_80: #{color.mix($c-clas,$c-bg-box,80%)};
   --m-clas_white_mix_86: #{color.mix($c-clas,white,86%)};
@@ -147,16 +145,17 @@ html {
   --m-good_bg-high_mix_80: #{color.mix($c-good,$c-bg-high,80%)};
   --m-good_darken_mix_50: #{color.mix($c-good,$c-darken,50%)};
   --m-good_darken_mix_85: #{color.mix($c-good,$c-darken,85%)};
+  --m-good_lightness_4: #{color.adjust($c-good,$lightness:4%)};
   --m-link_alpha_neg60: #{color.adjust($c-link,$alpha:-0.6)};
   --m-link_bg-box_mix_10: #{color.mix($c-link,$c-bg-box,10%)};
   --m-link_bg-box_mix_15: #{color.mix($c-link,$c-bg-box,15%)};
   --m-link_bg-box_mix_20: #{color.mix($c-link,$c-bg-box,20%)};
-  --m-link_bg-box_mix_70: #{color.mix($c-link,$c-bg-box,70%)};
   --m-link_bg-box_mix_80: #{color.mix($c-link,$c-bg-box,80%)};
   --m-link_bg-page_mix_20: #{color.mix($c-link,$c-bg-page,20%)};
   --m-link_black_mix_70: #{color.mix($c-link,black,70%)};
   --m-link_font_mix_35: #{color.mix($c-link,$c-font,35%)};
   --m-primary_alpha_neg80: #{color.adjust($c-primary,$alpha:-0.8)};
+  --m-primary_alpha_neg85: #{color.adjust($c-primary,$alpha:-0.85)};
   --m-primary_bg-box_mix_10: #{color.mix($c-primary,$c-bg-box,10%)};
   --m-primary_bg-box_mix_12: #{color.mix($c-primary,$c-bg-box,12%)};
   --m-primary_bg-box_mix_15: #{color.mix($c-primary,$c-bg-box,15%)};
@@ -167,7 +166,7 @@ html {
   --m-primary_bg-box_mix_60: #{color.mix($c-primary,$c-bg-box,60%)};
   --m-primary_bg-box_mix_70: #{color.mix($c-primary,$c-bg-box,70%)};
   --m-primary_bg-box_mix_80: #{color.mix($c-primary,$c-bg-box,80%)};
-  --m-primary_bg-popup_mix_50: #{color.mix($c-primary,$c-bg-popup,50%)};
+  --m-primary_bg-box_mix_90: #{color.mix($c-primary,$c-bg-box,90%)};
   --m-primary_bg-zebra2_mix_20: #{color.mix($c-primary,$c-bg-zebra2,20%)};
   --m-primary_black_mix_80: #{color.mix($c-primary,black,80%)};
   --m-primary_darken_mix_80: #{color.mix($c-primary,$c-darken,80%)};
@@ -184,7 +183,6 @@ html {
   --m-secondary_bg-box_mix_40: #{color.mix($c-secondary,$c-bg-box,40%)};
   --m-secondary_bg-box_mix_50: #{color.mix($c-secondary,$c-bg-box,50%)};
   --m-secondary_bg-box_mix_70: #{color.mix($c-secondary,$c-bg-box,70%)};
-  --m-secondary_bg-box_mix_75: #{color.mix($c-secondary,$c-bg-box,75%)};
   --m-secondary_bg-header-dropdown_mix_15: #{color.mix($c-secondary,$c-bg-header-dropdown,15%)};
   --m-secondary_bg-header-dropdown_mix_27: #{color.mix($c-secondary,$c-bg-header-dropdown,27%)};
   --m-secondary_bg-header-dropdown_mix_36: #{color.mix($c-secondary,$c-bg-header-dropdown,36%)};
@@ -192,7 +190,6 @@ html {
   --m-secondary_bg-page_mix_80: #{color.mix($c-secondary,$c-bg-page,80%)};
   --m-secondary_bg-popup_mix_10: #{color.mix($c-secondary,$c-bg-popup,10%)};
   --m-secondary_bg-zebra_mix_10: #{color.mix($c-secondary,$c-bg-zebra,10%)};
-  --m-secondary_lightness_4: #{color.adjust($c-secondary,$lightness:4%)};
   --m-white_accent_mix_20: #{color.mix(white,$c-accent,20%)};
   --m-white_brag_mix_20: #{color.mix(white,$c-brag,20%)};
   --m-white_clas_mix_80: #{color.mix(white,$c-clas,80%)};

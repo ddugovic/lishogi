@@ -17,7 +17,7 @@
   justify-content: center;
   line-height: 2;
   background: theme.$c-good;
-  color: #fff;
+  color: theme.$c-good-over;
 
   &-top {
     border-top-right-radius: variables.$box-radius-size;

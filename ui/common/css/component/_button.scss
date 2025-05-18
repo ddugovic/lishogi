@@ -11,6 +11,7 @@
   border: none;
   cursor: pointer;
   text-align: center;
+  user-select: none;
 
   @include mixins.transition;
 
@@ -46,15 +47,17 @@
   }
 
   &-green {
-    background: theme.$c-secondary;
+    background: theme.$c-good;
+    color: theme.$c-good-over;
 
     &:not(.disabled):hover {
-      background: theme.$m-secondary_lightness_4;
+      background: theme.$m-good_lightness_4;
     }
   }
 
   &-red {
     background: theme.$c-error;
+    color: theme.$c-error-over;
 
     &:not(.disabled):hover {
       background: theme.$m-error_lightness_11;
@@ -90,7 +93,7 @@
 
     &.button-green,
     &.button-green:hover {
-      color: theme.$c-secondary;
+      color: theme.$c-good;
     }
   }
 
@@ -108,18 +111,18 @@
 
   &.disabled {
     opacity: 0.5;
-    cursor: not-allowed;
+    pointer-events: none;
   }
 
   &.active {
     @extend %active;
 
-    color: #fff;
+    color: theme.$c-accent-over;
   }
 
   &.active:not(.disabled):hover {
     @extend %active-hover;
 
-    color: #fff;
+    color: theme.$c-accent-over;
   }
 }

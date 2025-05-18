@@ -14,9 +14,14 @@
     margin: 120px auto 0 auto;
   }
 
-  .time-selector-buttons button {
-    display: inline-flex;
-    text-transform: uppercase;
-    border: theme.$border;
+  .time-selector-buttons {
+    margin-top: 0.5rem;
+    margin-left: 0.5rem;
+
+    button {
+      display: inline-flex;
+      text-transform: uppercase;
+      border: theme.$border;
+    }
   }
 }

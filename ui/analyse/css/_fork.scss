@@ -30,7 +30,7 @@
   move:hover,
   &:not(:hover) move.selected {
     background: theme.$c-primary;
-    color: #fff;
+    color: theme.$c-primary-over;
   }
 
   glyph {

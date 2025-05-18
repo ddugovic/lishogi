@@ -51,7 +51,7 @@
     }
 
     &:hover glyph {
-      color: #fff;
+      color: theme.$c-primary-over;
     }
   }
 }

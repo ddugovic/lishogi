@@ -7,8 +7,6 @@
 @use '../base/scrollbar';
 @use '../theme/generated/theme';
 
-$c-mselect: theme.$c-primary;
-
 .mselect {
   position: relative;
   white-space: nowrap;
@@ -31,7 +29,7 @@ $c-mselect: theme.$c-primary;
 
       content: 'u';
       font-size: 70%;
-      color: $c-mselect;
+      color: theme.$c-primary;
       margin-left: 0.4em;
       margin-inline: 0.4em 0;
     }
@@ -59,24 +57,26 @@ $c-mselect: theme.$c-primary;
 
     @include mixins.transition(transform);
 
-    .current {
-      background: $c-mselect;
-      color: #fff;
-    }
-
-    > * {
+    a {
       white-space: nowrap;
       display: block;
-      padding: 0.45rem 1rem;
+      padding: 0.45rem calc(1rem - 6px);
+      border-left: 3px solid transparent;
+
+      &.current {
+        color: theme.$c-primary-over;
+        background: theme.$c-primary;
+        border-color: theme.$c-primary-over;
+      }
 
       @include mixins.transition;
 
-      color: $c-mselect;
+      color: theme.$c-primary;
       background: theme.$c-bg-popup;
 
-      &:not(.current):hover {
-        color: theme.$c-font-clear; // todo
-        background: theme.$m-primary_bg-popup_mix_50;
+      &:hover {
+        color: theme.$c-primary-over;
+        background: theme.$c-primary;
       }
 
       &::before {

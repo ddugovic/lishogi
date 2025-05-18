@@ -1,6 +1,8 @@
 @use 'pkg:common/theme';
 
-#modal-overlay {
+#modal-wrap.study__invite {
+  min-width: 30em;
+
   .study-option {
     display: flex;
     flex-direction: column;

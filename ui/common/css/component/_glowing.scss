@@ -1,19 +1,16 @@
 @use '../theme/generated/theme';
 
 @keyframes glowing {
-  42% {
-    background: none;
-  }
-
   50% {
     background: theme.$m-link_bg-box_mix_20;
-  }
-
-  58% {
-    background: none;
   }
 }
 
 .glowing {
+  color: theme.$c-font-clear;
   animation: glowing 2s ease-in-out infinite;
+
+  &:hover {
+    animation: none;
+  }
 }

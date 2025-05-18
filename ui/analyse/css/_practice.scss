@@ -20,13 +20,13 @@
 
   &.goodMove .progress div {
     background: theme.$c-good;
-    color: #fff;
+    color: theme.$c-good-over;
   }
 
   &.inaccuracy .title,
   &.inaccuracy .progress div {
     background: theme.$c-brag;
-    color: #fff;
+    color: theme.$c-brag-over;
   }
 
   &.mistake .title,
@@ -34,7 +34,7 @@
   &.mistake .progress div,
   &.blunder .progress div {
     background: theme.$c-bad;
-    color: #fff;
+    color: theme.$c-bad-over;
   }
 
   .comment .wait {
@@ -50,7 +50,6 @@
   .verdict::before {
     width: 30px;
     height: 100%;
-    color: #fff;
     margin-right: 7px;
     text-align: center;
     font-size: 1.4em;
@@ -62,6 +61,7 @@
 
     &::before {
       background: theme.$c-good;
+      color: theme.$c-good-over;
       content: '!';
     }
   }
@@ -71,6 +71,7 @@
 
     &::before {
       background: theme.$c-inaccuracy;
+      color: #fff;
       content: '?!';
     }
   }
@@ -80,6 +81,7 @@
 
     &::before {
       background: theme.$c-mistake;
+      color: #fff;
       content: '?';
     }
   }
@@ -89,6 +91,7 @@
 
     &::before {
       background: theme.$c-bad;
+      background: theme.$c-bad-over;
       content: '??';
     }
   }

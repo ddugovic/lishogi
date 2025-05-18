@@ -62,7 +62,7 @@ body {
     position: absolute;
     z-index: 9999;
     background: theme.$c-accent;
-    color: #fff;
+    color: theme.$c-accent-over;
     font-weight: bold;
     padding: 1em;
     content: 'COL 1';

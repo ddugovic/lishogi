@@ -1,0 +1,40 @@
+@keyframes rubber-band {
+  0% {
+    transform: scale3d(1, 1, 1);
+  }
+
+  6% {
+    transform: scale3d(1.25, 0.75, 1);
+  }
+
+  8% {
+    transform: scale3d(0.75, 1.25, 1);
+  }
+
+  10% {
+    transform: scale3d(1.15, 0.85, 1);
+  }
+
+  13% {
+    transform: scale3d(0.95, 1.05, 1);
+  }
+
+  15% {
+    transform: scale3d(1.05, 0.95, 1);
+  }
+
+  20% {
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+.rubber-band {
+  overflow: hidden;
+
+  span {
+    display: block;
+    position: relative;
+    z-index: 2; // blurs pieces otherwise
+    animation: rubber-band 4s infinite;
+  }
+}

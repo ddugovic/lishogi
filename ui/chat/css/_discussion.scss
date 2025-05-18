@@ -87,6 +87,7 @@
     border-top: theme.$border;
     border-radius: 0;
     padding: 3px 20px 3px 4px;
+    background: unset;
 
     &.whisper {
       color: theme.$c-good;

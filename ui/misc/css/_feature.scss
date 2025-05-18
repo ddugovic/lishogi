@@ -6,7 +6,7 @@
 .features {
   .check,
   .green {
-    color: theme.$c-good;
+    color: theme.$c-font-clear;
   }
 
   table {
@@ -62,11 +62,10 @@
   .explanation {
     @extend %box-radius;
 
-    text-shadow: 1px 1px 1px #000;
     margin: 3em 10% 1em 10%;
     padding: 2em 3em 3em 3em;
-    background: theme.$c-good;
-    color: theme.$c-good-over;
+    background: theme.$c-brag;
+    color: theme.$c-brag-over;
     font-size: 1.3em;
 
     strong {
@@ -76,11 +75,13 @@
     .button {
       margin-top: 1em;
       display: block;
+      background: theme.$c-brag-over;
+      color: theme.$c-brag;
     }
   }
 
   .button {
-    color: #fff;
+    color: theme.$c-primary-over;
     text-transform: none;
   }
 

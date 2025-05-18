@@ -35,6 +35,7 @@ html.custom-light {
   --c-secondary-over: #fff; // fallback
   --c-secondary-dim: color-mix(in srgb, var(--c-secondary) 83%, white);
   --c-secondary-dimmer: color-mix(in srgb, var(--c-secondary) 70%, white);
+  --c-secondary-clear: color-mix(in srgb, var(--c-secondary) 83%, black);
   --c-brag-over: #fff; // fallback
   --c-good: var(--c-green);
   --c-good-over: #fff; // fallback

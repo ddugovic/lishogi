@@ -87,8 +87,6 @@
     margin: 2em 0;
 
     .form-help {
-      @include mixins.hand-width(margin-left);
-
       font-size: 90%;
       margin-top: 0.25rem;
       color: theme.$c-font-dim;

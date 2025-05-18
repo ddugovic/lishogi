@@ -28,38 +28,6 @@
         &.active {
           box-shadow: none;
         }
-
-        @keyframes button-glowing {
-          0% {
-            opacity: 0;
-          }
-
-          60% {
-            opacity: 0.2;
-          }
-
-          85% {
-            opacity: 0;
-          }
-        }
-
-        &.glowing {
-          position: relative;
-          animation: none;
-
-          &::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            pointer-events: none;
-            background: theme.$c-primary;
-            opacity: 0;
-            animation: button-glowing 2s ease-in-out infinite;
-          }
-        }
       }
 
       a {

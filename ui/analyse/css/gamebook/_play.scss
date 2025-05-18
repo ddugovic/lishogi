@@ -2,37 +2,8 @@
 @use 'pkg:common/abstract/extends';
 @use 'pkg:common/abstract/mixins';
 @use 'pkg:common/abstract/uniboard';
+@use 'pkg:common/component/rubber-band';
 @use 'pkg:common/theme';
-
-@keyframes rubber-band {
-  0% {
-    transform: scale3d(1, 1, 1);
-  }
-
-  6% {
-    transform: scale3d(1.25, 0.75, 1);
-  }
-
-  8% {
-    transform: scale3d(0.75, 1.25, 1);
-  }
-
-  10% {
-    transform: scale3d(1.15, 0.85, 1);
-  }
-
-  13% {
-    transform: scale3d(0.95, 1.05, 1);
-  }
-
-  15% {
-    transform: scale3d(1.05, 0.95, 1);
-  }
-
-  20% {
-    transform: scale3d(1, 1, 1);
-  }
-}
 
 .gamebook {
   @extend %flex-column;
@@ -160,7 +131,6 @@
       @extend %box-neat;
 
       font-size: 2em;
-      color: #fff;
       cursor: pointer;
       opacity: 0.85;
 
@@ -168,10 +138,6 @@
 
       &:hover {
         opacity: 1;
-      }
-
-      &.com span {
-        animation: rubber-band 7s infinite;
       }
     }
 
@@ -181,7 +147,7 @@
     }
 
     &.play strong {
-      font-size: 1.5em;
+      font-size: 1.5rem;
     }
 
     &.play > div {
@@ -205,8 +171,11 @@
       display: flex;
 
       .color-icon {
-        font-size: 2em;
         margin-right: 0.5rem;
+
+        &::before {
+          font-size: 2rem;
+        }
       }
     }
 
@@ -218,12 +187,13 @@
     }
 
     &.bad {
-      background: #dc322f;
+      background: theme.$c-bad;
+      color: theme.$c-bad-over;
     }
 
     &.good {
-      background: #639b24 !important;
-      color: #fff;
+      background: theme.$c-good;
+      color: theme.$c-good-over;
     }
 
     &.end {
@@ -234,7 +204,7 @@
         @extend %flex-column;
 
         flex: 1 1 100%;
-        background: theme.$m-primary_bg-box_mix_80;
+        background: theme.$c-primary;
         color: theme.$c-primary-over;
         font-size: 1.2em;
         align-items: center;
@@ -260,7 +230,7 @@
         }
 
         &:hover {
-          background: theme.$c-primary;
+          background: theme.$m-primary_lightness_10;
         }
       }
     }

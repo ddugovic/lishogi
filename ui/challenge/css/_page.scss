@@ -50,9 +50,8 @@ $c-challenge: theme.$c-secondary;
   }
 
   .details {
-    @extend %flex-between;
+    @extend %flex-between, %box-radius;
 
-    border-radius: 99px;
     background: theme.$m-secondary_bg-box_mix_10;
     border: 1px solid $c-challenge;
     padding: 0.5em 1.1em;
@@ -65,7 +64,7 @@ $c-challenge: theme.$c-secondary;
     }
 
     > div {
-      @extend %flex-center, %roboto;
+      @extend %flex-center;
 
       &::before {
         color: $c-challenge;
@@ -90,7 +89,6 @@ $c-challenge: theme.$c-secondary;
     .mode {
       font-weight: bold;
       color: $c-challenge;
-      text-transform: uppercase;
       justify-content: flex-end;
     }
   }

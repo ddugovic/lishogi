@@ -44,9 +44,9 @@
       right: 0;
       top: -3px;
       border-radius: 8px;
-      color: #fff;
       text-decoration: none;
       background: theme.$c-accent;
+      color: theme.$c-accent-over;
       border-bottom: 5px solid $act-confirm-shade;
       text-shadow: 0 -1px $act-confirm-shade;
 

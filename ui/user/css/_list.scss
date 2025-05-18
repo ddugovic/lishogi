@@ -4,6 +4,7 @@
 @use 'pkg:common/theme';
 
 $c-lead: theme.$c-brag;
+$c-lead-over: theme.$c-brag-over;
 $user-list-width: 30ch;
 
 .community {
@@ -73,10 +74,10 @@ $user-list-width: 30ch;
         text-transform: uppercase;
         margin: 0;
         background: $c-lead;
-        color: #fff;
+        color: $c-lead-over;
 
         a {
-          color: #fff;
+          color: $c-lead-over;
         }
       }
 

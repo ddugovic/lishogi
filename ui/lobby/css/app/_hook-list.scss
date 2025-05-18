@@ -21,7 +21,7 @@
 
     &.join:hover td {
       background: theme.$m-accent_alpha_neg50;
-      color: #fff;
+      color: theme.$c-accent-over;
     }
 
     &:not(.disabled):hover ::before {

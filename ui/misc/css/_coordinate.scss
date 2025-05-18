@@ -113,7 +113,7 @@ $mq-col3: uniboard.$mq-col3-uniboard;
     grid-template-areas:
       'side . board    . table'
       'side . board    . button'
-      '.    . progress . .';
+      'side . progress . .';
     grid-template-rows: fit-content(0);
     grid-template-columns:
       uniboard.$col3-uniboard-side variables.$block-gap var(--col3-uniboard-main-size)
@@ -172,13 +172,9 @@ $mq-col3: uniboard.$mq-col3-uniboard;
     font-size: 160px;
     font-weight: bold;
     pointer-events: none;
-    color: #eee;
-    text-shadow: 0 10px 10px #444;
-    opacity: 0.8;
-  }
-
-  #next_coord0 {
     color: #fff;
+    text-shadow: 0 10px 10px #222;
+    opacity: 0.9;
   }
 
   #next_coord1 {
@@ -214,9 +210,12 @@ $mq-col3: uniboard.$mq-col3-uniboard;
   }
 
   &.play .coord-trainer__button .current-color {
+    display: flex;
+    align-items: center;
     font-size: 3rem;
 
     &::before {
+      font-size: 4rem;
       font-family: lishogi;
       margin-right: 2rem;
       vertical-align: middle;

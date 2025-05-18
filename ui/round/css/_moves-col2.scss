@@ -34,7 +34,7 @@
 
       &:hover {
         background: theme.$c-primary;
-        color: #fff;
+        color: theme.$c-primary-over;
       }
 
       &.active {
