@@ -36,7 +36,7 @@ const fetchWrap = (
     body: body,
   }).then(res => {
     if (res.ok) return res;
-    throw res.statusText;
+    throw res;
   });
 };
 
