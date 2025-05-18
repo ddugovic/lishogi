@@ -6,14 +6,10 @@
   "dependencies": {
     "breakpoint-sass": "catalog:",
     "common": "workspace:*",
-    "debounce-promise": "catalog:",
     "i18n": "workspace:*",
     "shogi": "workspace:*",
     "shogiground": "catalog:",
     "shogiops": "catalog:",
     "snabbdom": "catalog:"
-  },
-  "devDependencies": {
-    "@types/debounce-promise": "catalog:"
   }
 }

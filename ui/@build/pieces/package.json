@@ -5,7 +5,7 @@
   "type": "module",
   "dependencies": {
     "@build/helpers": "workspace:*",
-    "dedent": "^1.5.3"
+    "dedent": "^1.6.0"
   },
   "scripts": {
     "build": "tsx ./src/main.ts",
