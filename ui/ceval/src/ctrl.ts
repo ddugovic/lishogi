@@ -279,7 +279,7 @@ export default function (opts: CevalOpts): CevalCtrl {
       else if (technology == 'hce')
         worker = new ThreadedWasmWorker({
           baseName: 'stockfish',
-          baseUrl: 'vendors/fairy/',
+          baseUrl: 'vendors/fairy-stockfish-nnue.wasm/',
           module: 'Stockfish',
           version: 'b02c912',
           wasmMemory: sharedWasmMemory(2048, maxWasmPages(2048)),
