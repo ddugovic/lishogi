@@ -44,7 +44,7 @@ object dashboard {
                   },
                   "datasets" -> Json.arr(
                     Json.obj(
-                      "label" -> "Performance",
+                      "label" -> trans.performance.txt(),
                       "data" -> mostPlayed.map { case (_, results) =>
                         results.performance
                       },
