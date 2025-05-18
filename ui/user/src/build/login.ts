@@ -22,20 +22,27 @@ function load($f: JQuery): void {
           if (res === 'InvalidTotpToken') $f.find('.two-factor .error').show();
         } else location.href = res.startsWith('ok:') ? res.slice(3) : '/';
       })
-      .catch(err => {
+      .catch(error => {
         try {
-          const el = $(err.responseText).find(selector);
-          if (el.length) {
-            $f.replaceWith(el);
-            load($(selector));
-          } else {
-            alert(
-              err.responseText || `${err.statusText}. Please wait some time before trying again.`,
-            );
-            $f.find('.submit').prop('disabled', false);
-          }
+          const res = error as Response;
+          res.text().then(responseText => {
+            try {
+              const el = $(responseText).find(selector);
+              if (el.length) {
+                $f.replaceWith(el);
+                load($(selector));
+              } else {
+                alert(
+                  responseText || `${res.statusText}. Please wait some time before trying again.`,
+                );
+                $f.find('.submit').prop('disabled', false);
+              }
+            } catch {
+              $f.html(responseText);
+            }
+          });
         } catch {
-          $f.html(err.responseText);
+          alert(`Error occured - ${error}`);
         }
       });
     return false;

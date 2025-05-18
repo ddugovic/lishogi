@@ -313,11 +313,24 @@ export default class SetupCtrl {
           this.close();
         } else if (this.key === 'friend' || this.key === 'ai') window.lishogi.redirect(data);
       })
-      .catch(e => {
+      .catch(error => {
         this.submitted = false;
-        this.error = e;
-        console.error(`Failed to create game - ${e}`);
-        this.redraw();
+        try {
+          const res = error as Response;
+          res
+            .json()
+            .then((body: any) => {
+              this.error = JSON.stringify(body.error);
+              this.redraw();
+            })
+            .catch(() => {
+              console.error('Error parsing:', res);
+              this.error = res.statusText;
+              this.redraw();
+            });
+        } catch {
+          console.error(error);
+        }
       });
   };
 

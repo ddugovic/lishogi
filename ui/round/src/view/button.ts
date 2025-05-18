@@ -51,9 +51,6 @@ function postGameStudyForm(ctrl: RoundController): VNode {
       hook: util.onInsert(el => {
         $(el).on('submit', e => {
           e.preventDefault();
-          const formData = $(e.target).serialize();
-          console.log(formData); // todo
-
           debounce(
             () => {
               window.lishogi.xhr
@@ -65,7 +62,14 @@ function postGameStudyForm(ctrl: RoundController): VNode {
                     window.location.href = res.redirect;
                   }
                 })
-                .catch(res => alert(`${res.statusText} - ${res.error}`));
+                .catch(error => {
+                  try {
+                    const res = error as Response;
+                    alert(`${res.statusText} - ${res.status}`);
+                  } catch {
+                    console.error(error);
+                  }
+                });
             },
             1000,
             true,

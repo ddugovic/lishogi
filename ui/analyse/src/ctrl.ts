@@ -505,7 +505,14 @@ export default class AnalyseCtrl {
         this.redraw();
       })
       .catch(error => {
-        alert(error.responseText);
+        try {
+          const res = error as Response;
+          res.text().then(t => {
+            alert(t);
+          });
+        } catch {
+          alert(`Cannot import notation - ${error}`);
+        }
         this.redirecting = false;
         this.redraw();
       });
