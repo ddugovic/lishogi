@@ -12,7 +12,7 @@ import lila.tournament.Tournament
 trait TournamentHelper { self: I18nHelper with DateHelper with UserHelper =>
 
   def tournamentIdToName(id: String)(implicit lang: Lang) =
-    env.tournament.getTourName get id getOrElse trans.tournament.txt()
+    env.tournament.getTourName get id getOrElse s"${trans.tournament.txt()} $id"
 
   def tournamentLink(tourId: String)(implicit lang: Lang): Frag =
     a(
