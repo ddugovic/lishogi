@@ -45,7 +45,10 @@ object theme {
                     )
                   },
                   cat.key == "puzzle:origin" option
-                    a(cls := "puzzle-themes__link", href := routes.Puzzle.ofPlayer())(
+                    a(
+                      cls  := "puzzle-themes__link",
+                      href := routes.Puzzle.ofPlayer(ctx.me.map(_.username)),
+                    )(
                       span(
                         h3("Player games"),
                         span(

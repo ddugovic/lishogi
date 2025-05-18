@@ -968,6 +968,20 @@ final class TournamentApi(
       }
   }
 
+  def arrangemenstUpcoming(user: User, page: Int): Fu[Paginator[Arrangement]] =
+    Paginator(
+      adapter = arrangementRepo.upcomingAdapter(user),
+      currentPage = page,
+      maxPerPage = MaxPerPage(20),
+    )
+
+  def arrangemenstUpdated(user: User, page: Int): Fu[Paginator[Arrangement]] =
+    Paginator(
+      adapter = arrangementRepo.updatedAdapter(user),
+      currentPage = page,
+      maxPerPage = MaxPerPage(20),
+    )
+
   def visibleByTeam(teamId: TeamID, nbPast: Int, nbNext: Int): Fu[Tournament.PastAndNext] =
     tournamentRepo.finishedByTeam(teamId, nbPast) zip
       tournamentRepo.upcomingByTeam(teamId, nbNext) map

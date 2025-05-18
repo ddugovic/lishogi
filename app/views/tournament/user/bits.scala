@@ -11,61 +11,85 @@ import lila.user.User
 
 object bits {
 
-  def best(u: User, pager: Paginator[lila.tournament.LeaderboardApi.TourEntry])(implicit
-      ctx: Context,
+  def best(query: String, user: User, pager: Paginator[lila.tournament.LeaderboardApi.TourEntry])(
+      implicit ctx: Context,
   ) =
     layout(
-      u,
-      title = s"${u.username} best tournaments",
+      query = query,
+      userOpt = user.some,
       path = "best",
       moreJs = infiniteScrollTag,
     ) {
-      views.html.tournament.user.list(u, "best", pager, "BEST")
+      views.html.tournament.user.list(user, "best", pager, "BEST")
     }
 
-  def recent(u: User, pager: Paginator[lila.tournament.LeaderboardApi.TourEntry])(implicit
-      ctx: Context,
+  def recent(query: String, user: User, pager: Paginator[lila.tournament.LeaderboardApi.TourEntry])(
+      implicit ctx: Context,
   ) =
     layout(
-      u,
-      title = s"${u.username} recent tournaments",
+      query = query,
+      userOpt = user.some,
       path = "recent",
       moreJs = infiniteScrollTag,
     ) {
-      views.html.tournament.user.list(u, "recent", pager, pager.nbResults.toString)
+      views.html.tournament.user.list(user, "recent", pager, pager.nbResults.toString)
     }
 
-  def layout(u: User, title: String, path: String, moreJs: Frag = emptyFrag)(
+  def empty(query: String, path: String)(implicit ctx: Context) = layout(
+    query,
+    none,
+    path,
+  )(
+    div(cls := "notours")(
+      if (query.isEmpty && ctx.isAnon)
+        div(cls := "button-wrap")(
+          a(
+            cls  := "button",
+            href := routes.Auth.signup.url,
+          )(trans.signUp()),
+        )
+      else "User not found",
+    ),
+  )
+
+  def layout(query: String, userOpt: Option[User], path: String, moreJs: Frag = emptyFrag)(
       body: Frag,
   )(implicit ctx: Context) = {
     val paths = List(
-      ("created", trans.tourCreated()),
-      ("recent", trans.tourRecent()),
-      ("best", trans.bestResults()),
-      ("chart", trans.stats()),
-      ("upcoming", trans.tourUpcoming()),
+      ("created", trans.tourCreated.txt()),
+      ("recent", trans.tourRecent.txt()),
+      ("best", trans.bestResults.txt()),
+      ("chart", trans.stats.txt()),
+      ("upcoming", trans.tourUpcoming.txt()),
     )
+    val curPath = paths.find(_._1 == path)
     views.html.base.layout(
-      title = title,
+      title = (for {
+        u <- userOpt
+        p <- curPath
+      } yield s"${u.username} - ${p._2}").getOrElse(trans.pageNotFound.txt()),
       moreCss = cssTag("tournament.user"),
-      moreJs = frag(
-        jsTag("tournament.user"),
-        moreJs,
-      ),
+      moreJs = moreJs,
     ) {
       main(cls := "page-menu")(
         views.html.tournament.home.menu("user"),
         div(cls := "page-menu__content box")(
-          div(cls := "tournamen-search")(
+          form(
+            action := routes.UserTournament.ofPlayer(path),
+            method := "get",
+            cls    := "form3 complete-parent",
+          )(
             st.input(
               name         := "name",
-              value        := u.username,
+              value        := query,
               cls          := "form-control user-autocomplete",
               placeholder  := trans.clas.lishogiUsername.txt(),
               autocomplete := "off",
               dataTag      := "span",
             ),
-            button(cls := "button")(trans.study.searchByUsername.txt()),
+            submitButton(cls := s"button${(path == "upcoming") ?? " disabled"}")(
+              trans.study.searchByUsername(),
+            ),
           ),
           div(cls := "angle-content")(
             div(cls := "number-menu number-menu--tabs menu-box-pop")(
@@ -74,9 +98,10 @@ object bits {
                   cls := List(
                     s"nm-item to-${ps._1}" -> true,
                     "active"               -> (ps._1 == path),
-                    "disabled"             -> (!ctx.is(u) && ps._1 == "upcoming"),
+                    "none" -> (!userOpt.exists(u => ctx.is(u)) && ps._1 == "upcoming"),
                   ),
-                  href := routes.UserTournament.path(u.username, ps._1),
+                  href := routes.UserTournament
+                    .ofPlayer(ps._1, userOpt.map(_.username).orElse(query.some).filter(_.nonEmpty)),
                 )(ps._2)
               },
             ),

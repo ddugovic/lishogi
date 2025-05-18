@@ -8,24 +8,28 @@ import lila.user.User
 
 object chart {
 
-  def apply(u: User, data: lila.tournament.LeaderboardApi.ChartData)(implicit ctx: Context) =
+  def apply(query: String, user: User, data: lila.tournament.LeaderboardApi.ChartData)(implicit
+      ctx: Context,
+  ) =
     bits.layout(
-      u,
-      title = s"${u.username} tournaments",
+      query = query,
+      userOpt = user.some,
       path = "chart",
     ) {
       div(cls := "tournament-stats")(
-        h1(cls := "box__pad")(userLink(u, withOnline = true), " tournament stats"),
-        p(cls := "box__pad")(
-          "The rank avg is a percentage of your ranking. Lower is better.",
-          br,
-          "For instance, being ranked 3 in a tournament of 100 players = 3%. ",
-          "Being ranked 10 in a tournament of 1000 players = 1%.",
-        ),
-        p(cls := "box__pad")(
-          "All averages on this page are ",
-          a(href := "http://dictionary.reference.com/help/faq/language/d72.html")("medians"),
-          ".",
+        div(cls := "box__pad")(
+          h1(userLink(user, withOnline = true), " tournament stats"),
+          p(
+            "The rank avg is a percentage of your ranking. Lower is better.",
+            br,
+            "For instance, being ranked 3 in a tournament of 100 players = 3%. ",
+            "Being ranked 10 in a tournament of 1000 players = 1%.",
+          ),
+          p(
+            "All averages on this page are ",
+            a(href := "http://dictionary.reference.com/help/faq/language/d72.html")("medians"),
+            ".",
+          ),
         ),
         table(cls := "slist slist-pad perf-results")(
           thead(

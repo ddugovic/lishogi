@@ -38,8 +38,6 @@ GET   /@/:username/following           controllers.Relation.following(username: 
 GET   /@/:username/followers           controllers.Relation.followers(username: String, page: Int ?= 1)
 GET   /rel/blocks                      controllers.Relation.blocks(page: Int ?= 1)
 
-# User subpages
-GET   /@/:username/tournaments/:path   controllers.UserTournament.path(username: String, path: String, page: Int ?= 1)
 
 # User
 GET   /api/stream/:username/mod        controllers.User.mod(username: String)
@@ -252,6 +250,9 @@ GET   /tournament/help                        controllers.Tournament.help(system
 GET   /tournament/leaderboard                 controllers.Tournament.leaderboard
 GET   /tournament/shields                     controllers.Tournament.shields
 GET   /tournament/shields/:categ              controllers.Tournament.categShields(categ: String)
+GET   /tournament/of-player/:path             controllers.UserTournament.ofPlayer(path: String, name: Option[String] ?= None, page: Int ?= 1)
+GET   /@/:name/tournaments/:path              controllers.UserTournament.bc(path: String, name: String)
+GET   /tournament/arrangements/:path          controllers.UserTournament.arrangements(path: String, page: Int ?= 1)
 
 # Tournament CRUD
 GET   /tournament/manager                     controllers.TournamentCrud.index(page: Int ?= 1)

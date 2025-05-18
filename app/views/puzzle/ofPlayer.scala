@@ -36,7 +36,6 @@ object ofPlayer {
               placeholder  := trans.clas.lishogiUsername.txt(),
               autocomplete := "off",
               dataTag      := "span",
-              autofocus,
             ),
             submitButton(cls := "button")(trans.puzzle.searchPuzzles.txt()),
           ),
@@ -72,7 +71,15 @@ object ofPlayer {
                       pagerNext(pager, np => s"${routes.Puzzle.ofPlayer(u.username.some, np).url}"),
                     ),
                   )
-              case (_, _) => emptyFrag
+              case (_, _) =>
+                if (query.isEmpty && ctx.isAnon)
+                  div(cls := "button-wrap")(
+                    a(
+                      cls  := "button",
+                      href := routes.Auth.signup.url,
+                    )(trans.signUp()),
+                  )
+                else p("User not found")
             },
           ),
         ),

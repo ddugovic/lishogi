@@ -2,9 +2,9 @@ package views
 package html.puzzle
 
 import controllers.routes
-import play.api.i18n.Lang
 import play.api.libs.json.Json
 
+import lila.api.Context
 import lila.app.templating.Environment._
 import lila.app.ui.ScalatagsTemplate._
 import lila.puzzle.PuzzleTheme
@@ -40,7 +40,7 @@ object bits {
       )
   }
 
-  def pageMenu(active: String, days: Int = 30)(implicit lang: Lang) =
+  def pageMenu(active: String, days: Int = 30)(implicit ctx: Context) =
     st.nav(cls := "page-menu__menu subnav")(
       a(href := routes.Puzzle.home)(
         trans.puzzles(),
@@ -66,10 +66,10 @@ object bits {
       a(cls := active.active("history"), href := routes.Puzzle.history(1))(
         trans.puzzle.history(),
       ),
-      a(cls := active.active("player"), href := routes.Puzzle.ofPlayer())(
+      a(cls := active.active("player"), href := routes.Puzzle.ofPlayer(ctx.me.map(_.username)))(
         trans.puzzle.fromMyGames(),
       ),
-      a(cls := active.active("submitted"), href := routes.Puzzle.submitted())(
+      a(cls := active.active("submitted"), href := routes.Puzzle.submitted(ctx.me.map(_.username)))(
         trans.puzzle.submissions(),
       ),
     )

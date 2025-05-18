@@ -102,9 +102,9 @@ final class Puzzle(
   def ofPlayer(name: Option[String], page: Int) =
     Open { implicit ctx =>
       val fixed = name.map(_.trim).filter(_.nonEmpty)
-      fixed.??(env.user.repo.enabledNamed) orElse fuccess(ctx.me) flatMap { user =>
-        user.?? { env.puzzle.api.puzzle.of(_, page) dmap some } map { puzzles =>
-          Ok(views.html.puzzle.ofPlayer(~fixed, user, puzzles))
+      fixed.fold(fuccess(ctx.me))(env.user.repo.enabledNamed) flatMap { userOpt =>
+        userOpt.?? { env.puzzle.api.puzzle.of(_, page) dmap some } map { puzzles =>
+          Ok(views.html.puzzle.ofPlayer(~fixed, userOpt, puzzles))
         }
       }
     }
@@ -348,7 +348,7 @@ final class Puzzle(
   def submitted(name: Option[String], page: Int) =
     Open { implicit ctx =>
       val fixed = name.map(_.trim).filter(_.nonEmpty)
-      fixed.??(env.user.repo.enabledNamed) orElse fuccess(ctx.me) flatMap { userOpt =>
+      fixed.fold(fuccess(ctx.me))(env.user.repo.enabledNamed) flatMap { userOpt =>
         userOpt ?? { u =>
           (env.puzzle.api.puzzle.submitted(u, page) zip env.fishnet.api.queuedPuzzles(
             u.id,

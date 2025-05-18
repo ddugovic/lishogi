@@ -13,22 +13,24 @@ object created {
 
   private val path = "created"
 
-  def apply(u: User, pager: Paginator[lila.tournament.Tournament])(implicit ctx: Context) =
+  def apply(query: String, user: User, pager: Paginator[lila.tournament.Tournament])(implicit
+      ctx: Context,
+  ) =
     bits.layout(
-      u = u,
-      title = s"${u.username} recent tournaments",
+      query = query,
+      userOpt = user.some,
       path = path,
       moreJs = infiniteScrollTag,
     ) {
       if (pager.nbResults == 0)
-        div(cls := "box-pad")(u.username, " hasn't created any tournament yet!")
+        div(cls := "box-pad")(user.username, " hasn't created any tournament yet!")
       else
         div(cls := "tournament-list")(
           table(cls := "slist")(
             thead(
               tr(
                 th(cls := "count")(pager.nbResults),
-                th(colspan := 2)(h1(userLink(u, withOnline = true), " tournaments")),
+                th(colspan := 2)(h1(userLink(user, withOnline = true), " tournaments")),
                 th(trans.winner()),
                 th(trans.players()),
               ),
@@ -37,15 +39,18 @@ object created {
               pager.nextPage.map { np =>
                 tr(
                   th(cls := "pager none")(
-                    a(rel := "next", href := routes.UserTournament.path(u.username, path, np))(
-                      "Next",
+                    a(
+                      rel  := "next",
+                      href := routes.UserTournament.ofPlayer(path, user.username.some, np),
+                    )(
+                      trans.next(),
                     ),
                   ),
                 )
               },
               pager.currentPageResults.map { t =>
                 tr(cls := "paginated")(
-                  td(cls := "icon")(iconTag(tournamentIconChar(t))),
+                  td(cls := "icon")(tournamentIcon(t)),
                   views.html.tournament.list.header(t),
                   td(momentFromNow(t.startsAt)),
                   td(cls := "winner")(

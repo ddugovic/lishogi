@@ -21,10 +21,6 @@
 
       padding: 0;
 
-      &:hover {
-        transform: translateX(3px);
-      }
-
       a {
         padding: 1em;
         display: block;
@@ -62,24 +58,33 @@
     .icon i {
       padding-left: 1rem;
       font-size: 4em;
-      opacity: 0.6;
-
-      &.arena {
-        color: theme.$c-brag;
-      }
-
-      &.robin {
-        color: theme.$c-primary-dim;
-      }
-
-      &.organized {
-        color: theme.$c-accent-dim;
-      }
     }
+  }
+
+  .notours {
+    text-align: center;
+    padding: 1rem;
   }
 
   .tour-scheduled .icon i {
     color: theme.$c-brag;
+  }
+}
+
+.slist {
+  .icon i {
     opacity: 0.8;
+
+    &.arena {
+      color: theme.$c-font-clear;
+    }
+
+    &.robin {
+      color: theme.$c-accent;
+    }
+
+    &.organized {
+      color: theme.$c-primary;
+    }
   }
 }

@@ -9,28 +9,30 @@ import lila.user.User
 
 object upcoming {
 
-  def apply(u: User, pager: Paginator[lila.tournament.Tournament])(implicit ctx: Context) =
+  def apply(query: String, user: User, pager: Paginator[lila.tournament.Tournament])(implicit
+      ctx: Context,
+  ) =
     bits.layout(
-      u = u,
-      title = s"${u.username} upcoming tournaments",
+      query = query,
+      userOpt = user.some,
       path = "upcoming",
     ) {
       if (pager.nbResults == 0)
-        div(cls := "box-pad")(u.username, " hasn't joined any tournament yet!")
+        div(cls := "box-pad")(user.username, " hasn't joined any tournament yet!")
       else
         div(cls := "tournament-list")(
           table(cls := "slist")(
             thead(
               tr(
                 th(cls := "count")(pager.nbResults),
-                th(colspan := 2)(h1(userLink(u, withOnline = true), " upcoming tournaments")),
+                th(colspan := 2)(h1(userLink(user, withOnline = true), " upcoming tournaments")),
                 th(trans.players()),
               ),
             ),
             tbody(
               pager.currentPageResults.map { t =>
                 tr(
-                  td(cls := "icon")(iconTag(tournamentIconChar(t))),
+                  td(cls := "icon")(tournamentIcon(t)),
                   views.html.tournament.list.header(t),
                   td(momentFromNow(t.startsAt)),
                   td(cls := "text", dataIcon := "r")(t.nbPlayers.localize),

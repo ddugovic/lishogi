@@ -21,7 +21,7 @@ object submitted {
       ctx: Context,
   ) =
     views.html.base.layout(
-      title = user.fold("Submitted puzzles")(u => s"Submitted puzzles from ${u.username}"),
+      title = s"${trans.puzzle.submissions.txt()}${user.map(u => s" - ${u.username}")}",
       moreCss = cssTag("puzzle.page"),
       moreJs = infiniteScrollTag,
     )(
@@ -40,11 +40,10 @@ object submitted {
               placeholder  := trans.clas.lishogiUsername.txt(),
               autocomplete := "off",
               dataTag      := "span",
-              autofocus,
             ),
             submitButton(cls := "button")(trans.puzzle.searchPuzzles.txt()),
           ),
-          a(
+          ctx.isAuth option a(
             cls      := "button button-green submit-puzzle",
             dataIcon := "O",
             href     := routes.Puzzle.newPuzzlesForm.url,
@@ -84,7 +83,15 @@ object submitted {
                       pagerNext(pager, np => s"${routes.Puzzle.submitted(u.username.some, np).url}"),
                     ),
                   )
-              case (_, _) => emptyFrag
+              case (_, _) =>
+                if (query.isEmpty && ctx.isAnon)
+                  div(cls := "button-wrap")(
+                    a(
+                      cls  := "button",
+                      href := routes.Auth.signup.url,
+                    )(trans.signUp()),
+                  )
+                else p("User not found")
             },
           ),
         ),

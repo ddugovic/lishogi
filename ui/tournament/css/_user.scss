@@ -6,17 +6,32 @@ h1 {
   margin: 0.7em 0;
 }
 
-.tournamen-search {
-  display: flex;
-  padding: 1rem;
-
-  input {
-    margin-right: 1rem;
-  }
-}
-
 .page-menu__content {
   background: theme.$c-bg-zebra;
+
+  form {
+    display: flex;
+    padding: 1rem;
+
+    input {
+      margin-right: 1em;
+      width: 30ch;
+      display: inline-block;
+    }
+  }
+
+  .notours {
+    padding: 1rem;
+
+    .button-wrap {
+      display: flex;
+      justify-content: center;
+
+      .button {
+        margin-top: 1rem;
+      }
+    }
+  }
 }
 
 .tournament-list {
@@ -59,6 +74,10 @@ h1 {
       color: theme.$c-font;
       padding: 1em;
       display: block;
+
+      &:hover {
+        color: theme.$c-link-hover;
+      }
     }
 
     .name {
@@ -86,6 +105,13 @@ h1 {
 }
 
 .tournament-stats {
+  background: theme.$c-bg-box;
+
+  h1 {
+    margin-top: 0;
+    padding-top: 1rem;
+  }
+
   .perf-results {
     margin-top: 3em;
 

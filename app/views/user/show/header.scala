@@ -53,7 +53,7 @@ object header {
             splitNumber(trans.nbFollowers.pluralSame(info.nbFollowers)),
           ),
           u.noBot option a(
-            href       := routes.UserTournament.path(u.username, "recent"),
+            href       := routes.UserTournament.ofPlayer("recent", u.username.some),
             cls        := "nm-item tournament_stats",
             dataToints := u.toints,
           )(

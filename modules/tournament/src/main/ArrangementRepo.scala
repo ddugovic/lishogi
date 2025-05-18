@@ -2,6 +2,7 @@ package lila.tournament
 
 import org.joda.time.DateTime
 import reactivemongo.akkastream.cursorProducer
+import reactivemongo.api.ReadPreference
 import reactivemongo.api.bson._
 
 import lila.db.dsl._
@@ -171,5 +172,24 @@ final class ArrangementRepo(coll: Coll)(implicit
       )
     }
   }
+
+  private[tournament] def upcomingAdapter(user: User) =
+    new lila.db.paginator.Adapter[Arrangement](
+      collection = coll,
+      selector = selectUser(user.id) ++ selectWithoutGame ++
+        $doc(Arrangement.BSONFields.scheduledAt $gt DateTime.now.minusHours(24)),
+      projection = none,
+      sort = $sort asc Arrangement.BSONFields.scheduledAt,
+      readPreference = ReadPreference.secondaryPreferred,
+    )
+
+  private[tournament] def updatedAdapter(user: User) =
+    new lila.db.paginator.Adapter[Arrangement](
+      collection = coll,
+      selector = selectUser(user.id) ++ selectWithoutGame,
+      projection = none,
+      sort = $sort desc Arrangement.BSONFields.updatedAt,
+      readPreference = ReadPreference.secondaryPreferred,
+    )
 
 }

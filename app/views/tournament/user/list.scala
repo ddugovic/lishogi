@@ -32,10 +32,13 @@ object list {
             ),
           ),
           tbody(cls := "infinitescroll")(
-            pagerNextTable(pager, np => routes.UserTournament.path(u.username, path, np).url),
+            pagerNextTable(
+              pager,
+              np => routes.UserTournament.ofPlayer(path, u.username.some, np).url,
+            ),
             pager.currentPageResults.map { e =>
               tr(cls := List("paginated" -> true, "scheduled" -> e.tour.isScheduled))(
-                td(cls := "icon")(iconTag(tournamentIconChar(e.tour))),
+                td(cls := "icon")(tournamentIcon(e.tour)),
                 td(cls := "header")(
                   a(href := routes.Tournament.show(e.tour.id))(
                     span(cls := "name")(e.tour.trans),
