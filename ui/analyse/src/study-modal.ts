@@ -1,6 +1,6 @@
 import { modal } from 'common/modal';
 import { bind, onInsert } from 'common/snabbdom';
-// import { debounce } from 'common/timings';
+import { debounce } from 'common/timings';
 import { i18n } from 'i18n';
 import { type VNode, h } from 'snabbdom';
 import type AnalyseCtrl from './ctrl';
@@ -34,7 +34,6 @@ function standardStudyForm(ctrl: AnalyseCtrl): VNode {
   );
 }
 
-// todo
 function postGameStudyForm(ctrl: AnalyseCtrl): VNode {
   return h(
     'form',
@@ -42,26 +41,29 @@ function postGameStudyForm(ctrl: AnalyseCtrl): VNode {
       hook: onInsert(el => {
         el.addEventListener('submit', (e: any) => {
           e.preventDefault();
-          const formData = $(e.target).serialize();
-          console.log('FORMDMAD1:', formData);
-          // todo
-          console.log('FORMDMAD2:', window.lishogi.xhr.formToXhr(e.target));
-          // debounce(
-          //   () => {
-          //     window.lishogi.xhr.formToXhr(e)
-          //       .then(res => {
-          //         if (res.redirect) {
-          //           window.lishogi.properReload = true;
-          //           window.location.href = res.redirect;
-          //         }
-          //       })
-          //       .catch(res => {
-          //         alert(`${res.statusText} - ${res.error}`);
-          //       });
-          //   },
-          //   1000,
-          //   true
-          // )();
+          debounce(
+            () => {
+              window.lishogi.xhr
+                .formToXhr(e)
+                .then(res => res.json())
+                .then(res => {
+                  if (res.redirect) {
+                    window.lishogi.properReload = true;
+                    window.location.href = res.redirect;
+                  }
+                })
+                .catch(error => {
+                  try {
+                    const res = error as Response;
+                    alert(`${res.statusText} - ${res.status}`);
+                  } catch {
+                    console.error(error);
+                  }
+                });
+            },
+            1000,
+            true,
+          )();
         });
       }),
     },
