@@ -34,4 +34,7 @@ trait TournamentHelper { self: I18nHelper with DateHelper with UserHelper =>
       case Some(Schedule.Freq.Unique)   => "☗"
       case _ => tour.spotlight.flatMap(_.iconFont) | tour.perfType.iconChar.toString
     }
+
+  def tournamentIcon(tour: Tournament): Frag =
+    i(cls := tour.format.key, dataIcon := tournamentIconChar(tour))
 }
