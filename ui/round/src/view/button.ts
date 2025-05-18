@@ -282,6 +282,7 @@ function rematchButtons(ctrl: RoundController): MaybeVNodes {
         class: {
           me,
           glowing: them,
+          'rubber-band': them,
           disabled: !me && !(d.opponent.onGame || (!d.clock && d.player.user && d.opponent.user)),
         },
         attrs: {
@@ -340,6 +341,7 @@ export function resume(ctrl: RoundController): MaybeVNode {
         class: {
           me,
           glowing: them,
+          'rubber-band': them,
           disabled: !me && !(d.opponent.onGame || (!d.clock && d.player.user && d.opponent.user)),
         },
         attrs: {
@@ -593,8 +595,11 @@ export function backToTournament(ctrl: RoundController): VNode | undefined {
   return d.tournament?.running
     ? h('div.follow-up', [
         h(
-          'a.text.fbt.strong.glowing',
+          'a.text.fbt.strong',
           {
+            class: {
+              glowing: d.tournament.format === 'arena',
+            },
             attrs: {
               'data-icon': 'G',
               href: `/tournament/${d.tournament.id}`,
@@ -603,16 +608,18 @@ export function backToTournament(ctrl: RoundController): VNode | undefined {
           },
           i18n('backToTournament'),
         ),
-        h(
-          'form',
-          {
-            attrs: {
-              method: 'post',
-              action: `/tournament/${d.tournament.id}/withdraw`,
-            },
-          },
-          [h('button.text.fbt.weak', util.justIcon('Z'), i18n('pause'))],
-        ),
+        d.tournament.format === 'arena'
+          ? h(
+              'form',
+              {
+                attrs: {
+                  method: 'post',
+                  action: `/tournament/${d.tournament.id}/withdraw`,
+                },
+              },
+              [h('button.text.fbt.weak', util.justIcon('Z'), i18n('pause'))],
+            )
+          : undefined,
         analysisButton(ctrl),
       ])
     : undefined;

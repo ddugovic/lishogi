@@ -71,7 +71,7 @@ function renderFeedback(ctrl: GamebookPlayCtrl, state: State) {
   const color = ctrl.root.turnColor();
   if (fb === 'bad')
     return h(
-      `div.feedback.act.bad${state.comment ? '.com' : ''}`,
+      `div.feedback.act.bad${state.comment ? '.com.rubber-band' : ''}`,
       {
         hook: bind('click', ctrl.retry),
       },
@@ -79,11 +79,11 @@ function renderFeedback(ctrl: GamebookPlayCtrl, state: State) {
     );
   if (fb === 'good' && state.comment)
     return h(
-      'div.feedback.act.good.com',
+      'div.feedback.act.good.com.rubber-band',
       {
         hook: bind('click', ctrl.next),
       },
-      [h('span.text', { attrs: dataIcon('G') }, 'Next'), h('kbd', '<space>')],
+      [h('span.text', { attrs: dataIcon('G') }, i18n('next')), h('kbd', '<space>')],
     );
   if (fb === 'end') return renderEnd(ctrl);
   return h(
