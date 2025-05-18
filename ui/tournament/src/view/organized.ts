@@ -3,7 +3,7 @@ import { ids } from 'game/status';
 import { i18n } from 'i18n';
 import { type VNode, h } from 'snabbdom';
 import type TournamentController from '../ctrl';
-import type { Arrangement, PageData } from '../interfaces';
+import type { Arrangement, ArrangementPlayer, PageData } from '../interfaces';
 import { arrangementHasUser, preloadUserTips, player as renderPlayer } from './util';
 
 function tableClick(ctrl: TournamentController): (e: Event) => void {
@@ -16,7 +16,7 @@ function tableClick(ctrl: TournamentController): (e: Event) => void {
   };
 }
 
-function pointsTag(ctrl: TournamentController, arr: Arrangement, player: any) {
+function pointsTag(ctrl: TournamentController, arr: Arrangement, player: ArrangementPlayer) {
   const player2 = ctrl.data.standing.players.find(
     p => p.id === (arr.user1.id === player.id ? arr.user2.id : arr.user1.id),
   );
@@ -40,7 +40,7 @@ function pointsTag(ctrl: TournamentController, arr: Arrangement, player: any) {
   );
 }
 
-function playerTr(ctrl: TournamentController, player: any, rank: number) {
+function playerTr(ctrl: TournamentController, player: ArrangementPlayer, rank: number) {
   const arrs = ctrl.data.standing.arrangements.filter(
     a => a.status && a.status >= ids.mate && arrangementHasUser(a, player.id),
   );
@@ -53,8 +53,8 @@ function playerTr(ctrl: TournamentController, player: any, rank: number) {
         long: arrs.length > 35,
         xlong: arrs.length > 80,
         active: ctrl.playerInfo.id === player.id,
+        kicked: !!player.kicked,
       },
-      hook: bind('click', _ => ctrl.showPlayerInfo(player), ctrl.redraw),
     },
     [
       h(
@@ -62,8 +62,8 @@ function playerTr(ctrl: TournamentController, player: any, rank: number) {
         player.withdraw
           ? h('i', {
               attrs: {
-                'data-icon': 'Z',
-                title: i18n('pause'),
+                'data-icon': player.kicked ? 'L' : 'Z',
+                title: player.kicked ? i18n('denied') : i18n('pause'),
               },
             })
           : rank,
@@ -73,7 +73,7 @@ function playerTr(ctrl: TournamentController, player: any, rank: number) {
         'td.sheet',
         arrs.map(a => pointsTag(ctrl, a, player)),
       ),
-      h('td.total', h('strong', player.score)),
+      h('td.total', h('strong', player.kicked ? '-' : player.score)),
     ],
   );
 }
@@ -81,7 +81,7 @@ function playerTr(ctrl: TournamentController, player: any, rank: number) {
 let lastBody: MaybeVNodes | undefined;
 export function standing(ctrl: TournamentController, pag: PageData, klass?: string): VNode {
   const tableBody = pag.currentPageResults
-    ? pag.currentPageResults.map((res, i) => playerTr(ctrl, res, i + 1))
+    ? pag.currentPageResults.map((res, i) => playerTr(ctrl, res as ArrangementPlayer, i + 1))
     : lastBody;
   if (pag.currentPageResults) lastBody = tableBody;
   return h(
@@ -103,12 +103,14 @@ export function standing(ctrl: TournamentController, pag: PageData, klass?: stri
 }
 
 export function organizeArrangementButton(ctrl: TournamentController): MaybeVNode {
-  if (!ctrl.isCreator()) return;
+  if (!ctrl.isCreator() || ctrl.data.isFinished) return;
   return h(
     'button.fbt.text',
     {
-      hook: bind('click', () => ctrl.showOrganizerArrangement(), ctrl.redraw),
+      hook: bind('click', () => {
+        ctrl.showOrganizerArrangement(ctrl.newArrangementSettings());
+      }),
     },
-    'Create new game',
+    i18n('createAGame'),
   );
 }

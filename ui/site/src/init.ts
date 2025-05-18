@@ -46,9 +46,10 @@ export function init(): void {
 
     function renderFlatpickr() {
       if (window.flatpickr) {
-        document
-          .querySelectorAll('.flatpickr--init')
-          .forEach(el => window.flatpickr(el, { enableTime: true, time_24hr: true }));
+        document.querySelectorAll('.flatpickr--init').forEach(el => {
+          const fp = window.flatpickr(el, { enableTime: true, time_24hr: true });
+          if (el.classList.contains('flatpickr--disabled')) fp._input.disabled = true;
+        });
       }
     }
     setTimeout(renderFlatpickr, 200);

@@ -29,6 +29,7 @@ private[tournament] case class Player(
   def is(other: Player): Boolean = is(other.userId)
 
   def magicScore = (score * 10000 + (order | (performanceOption | rating))) * (if (kicked) 0 else 1)
+  def scoreNotKicked = if (kicked) 0 else score
 
   def performanceOption = performance > 0 option performance
 }

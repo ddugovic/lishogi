@@ -5,21 +5,14 @@ import type TournamentController from '../ctrl';
 import * as pagination from '../pagination';
 import * as tour from '../tournament';
 import { standing } from './arena';
+import { allUpcomingAndOngoing, yourUpcoming } from './arrangement';
 import { teamStanding } from './battle';
 import { arenaControls, organizedControls, robinControls } from './controls';
 import header from './header';
 import type { ViewHandler } from './main';
 import { standing as oStanding } from './organized';
 import playerInfo from './player-info';
-import {
-  howDoesThisWork,
-  playing,
-  standing as rStanding,
-  recents,
-  upcoming,
-  yourCurrent,
-  yourUpcoming,
-} from './robin';
+import { standing as rStanding } from './robin';
 import tourTable from './table';
 import teamInfo from './team-info';
 
@@ -44,7 +37,6 @@ const name = 'started';
 function main(ctrl: TournamentController): MaybeVNodes {
   const gameId = ctrl.myGameId();
   const pag = pagination.players(ctrl);
-  console.log('pag', pag);
   if (ctrl.isArena())
     return [
       header(ctrl),
@@ -54,27 +46,14 @@ function main(ctrl: TournamentController): MaybeVNodes {
       standing(ctrl, pag, 'started'),
     ];
   else if (ctrl.isRobin())
-    return [
-      header(ctrl),
-      robinControls(ctrl),
-      rStanding(ctrl, 'started'),
-      yourCurrent(ctrl),
-      yourUpcoming(ctrl),
-      playing(ctrl),
-      recents(ctrl),
-      howDoesThisWork(),
-    ];
+    return [header(ctrl), robinControls(ctrl), rStanding(ctrl, 'started'), yourUpcoming(ctrl)];
   else
     return [
       header(ctrl),
       organizedControls(ctrl, pag),
       oStanding(ctrl, pag, 'started'),
-      yourCurrent(ctrl),
       yourUpcoming(ctrl),
-      upcoming(ctrl),
-      playing(ctrl),
-      recents(ctrl),
-      howDoesThisWork(),
+      allUpcomingAndOngoing(ctrl),
     ];
 }
 

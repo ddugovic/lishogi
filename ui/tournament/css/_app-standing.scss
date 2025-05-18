@@ -38,6 +38,16 @@
     @include mixins.transition;
 
     user-select: none;
+
+    &.kicked {
+      .rank {
+        color: theme.$c-bad;
+      }
+
+      .player .name {
+        text-decoration: line-through;
+      }
+    }
   }
 
   .loading tbody {
@@ -117,7 +127,7 @@
   }
 
   streak {
-    color: theme.$c-secondary;
+    color: theme.$c-good;
     /* font-weight: bold; */
   }
 

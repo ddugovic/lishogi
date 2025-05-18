@@ -31,7 +31,7 @@ final private[tournament] class Cached(
     },
     default = _ => none,
     strategy = Syncache.WaitAfterUptime(20 millis),
-    expireAfter = Syncache.ExpireAfterAccess(20 minutes),
+    expireAfter = Syncache.ExpireAfterAccess(25 minutes),
   )
 
   def ranking(tour: Tournament): Fu[Ranking] =
@@ -146,7 +146,7 @@ final private[tournament] class Cached(
       playerRepo
         .allByTour(tourId)
         .flatMap(
-          _.sortBy(p => p.order.getOrElse(p.magicScore))
+          _.sortBy(p => p.order.getOrElse(-p.magicScore))
             .map(JsonView.arrangementPlayerJson(lightUserApi, _))
             .sequenceFu,
         )

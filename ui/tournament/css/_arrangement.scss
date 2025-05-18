@@ -1,246 +1,219 @@
 @use 'pkg:common/abstract/extends';
 @use 'pkg:common/theme';
 
-.arrangement {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  max-width: 875px;
-  margin: 1rem auto;
-  padding-bottom: 1rem;
+#modal-wrap.arrangement__modal {
+  width: 30em;
+  padding: 0;
 
-  &.flipped {
-    flex-direction: column-reverse;
-  }
+  .values {
+    text-align: left;
+    margin: 0.5rem 0;
 
-  .arr-user {
-    @extend %metal;
-
-    display: flex;
-    flex-wrap: wrap;
-    font-size: 1.1rem;
-    outline: theme.$border;
-    outline-offset: -1px;
-    border-radius: 3px;
-
-    &.winner {
-      border-color: theme.$c-good;
+    .title {
+      font-weight: bold;
+      color: theme.$c-font-dim;
     }
 
-    &.loser {
-      border-color: theme.$c-bad;
-    }
-
-    &.bottom {
-      @extend %box-shadow;
-    }
-
-    .user-link {
-      min-width: 15rem;
-      padding: 1.25rem;
-      margin: auto;
-      text-align: center;
-
-      &.long {
-        letter-spacing: -0.7px;
-      }
-
-      .rating {
-        font-style: italic;
-        font-size: 1rem;
-        opacity: 0.9;
-      }
-    }
-
-    .actions {
-      display: flex;
-      justify-content: flex-end;
-      flex: 1;
-      border-top: theme.$border;
-      border-top-style: dashed;
-
-      input {
-        flex: 1;
-        appearance: none;
-        background-color: transparent;
-        outline: none;
-        font: inherit;
-        font-size: 1rem;
-        color: inherit;
-        padding: 0 1rem;
-        margin: 0;
-        margin-left: auto;
-        text-align: center;
-        display: block;
-      }
-
-      .flatpickr {
-        &:focus {
-          outline: none;
-        }
-
-        cursor: pointer;
-
-        &[disabled] {
-          cursor: auto;
-        }
-      }
-
-      .user-button {
-        @extend %flex-center;
-
-        color: theme.$c-font;
-        padding: 0 1rem;
-        cursor: pointer;
-
-        @keyframes blink {
-          0%,
-          100% {
-            color: inherit;
-          }
-
-          50% {
-            color: theme.$c-good;
-          }
-        }
-
-        @keyframes blink-clear {
-          0%,
-          100% {
-            color: inherit;
-          }
-
-          50% {
-            color: theme.$c-bad;
-          }
-        }
-
-        &.action {
-          &.confirm {
-            color: theme.$c-good;
-            animation: blink 1s infinite;
-          }
-
-          &.clear {
-            color: theme.$c-bad;
-            animation: blink-clear 1s infinite;
-          }
-        }
-
-        &:hover,
-        &.active {
-          color: theme.$c-link;
-
-          &.confirm {
-            color: theme.$c-good;
-          }
-
-          &.clear {
-            color: theme.$c-bad;
-          }
-        }
-
-        &.disabled {
-          pointer-events: none;
-          color: theme.$c-font-dimmer;
-        }
-      }
-
-      & > * {
-        border: theme.$border;
-        border-width: 0 0 0 1px;
-        border-style: dashed;
-        height: 4rem;
-      }
+    .value {
+      margin: 0 0.5rem;
+      color: theme.$c-font-clear;
     }
   }
 
-  .arr-agreed {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: theme.$c-bg-box;
-    min-height: 5rem;
-    height: calc(
-      100vh - var(--site-header-height) - var(--site-header-margin) - 7em - 6rem - 2 * 6rem
-    );
-    max-height: 25rem;
-    border: theme.$border;
-    border-width: 0 1px 0 1px;
-
-    & > * {
-      flex: 1;
-      height: 100%;
+  .arr-modal {
+    .arr-header {
+      background: theme.$c-bg-zebra;
+      border-bottom: theme.$border;
+      padding: 1rem;
     }
 
-    .infos {
+    .arr-users {
       display: flex;
       flex-direction: column;
-      justify-content: space-around;
-      border-right: theme.$border;
-      padding: 0.75rem;
 
-      .info-line {
+      .arr-user {
         width: 100%;
+        padding: 1rem 2rem;
 
-        .title {
-          font-size: 1.1rem;
-          font-weight: bold;
-          text-align: center;
-          padding: 2px;
+        &-bottom {
+          background: theme.$c-bg-zebra;
+          border-top: theme.$border;
+          border-bottom: theme.$border;
         }
 
-        .value {
-          text-align: center;
+        .arr-name {
+          display: flex;
+          font-size: 2rem;
+          padding-bottom: 0.5rem;
+
+          .user-link {
+            .rating {
+              font-size: 1.25rem;
+              color: theme.$c-font-dimmer;
+            }
+          }
+
+          .message {
+            margin-left: auto;
+            font-size: 1rem;
+            color: theme.$c-font;
+            align-self: center;
+
+            &:hover {
+              color: theme.$c-link;
+            }
+          }
+
+          .points {
+            margin-left: auto;
+            font-weight: bold;
+
+            &.winner {
+              color: theme.$c-good;
+            }
+
+            &.loser {
+              color: theme.$c-bad;
+            }
+          }
+        }
+
+        .actions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+
+          input {
+            flex-basis: 100%;
+          }
+
+          button {
+            flex: 1;
+          }
+        }
+
+        .my-actions {
+          button.pressed {
+            @extend %active-inset-shadow;
+
+            background-color: theme.$c-primary-dim;
+            text-shadow: none;
+          }
+
+          .arr-calendar {
+            flex: 1;
+
+            &-wrap {
+              min-height: 300px;
+            }
+
+            &-buttons {
+              display: flex;
+              gap: 0.5rem;
+            }
+
+            input.flatpickr.form-control {
+              display: none;
+            }
+
+            .flatpickr-calendar {
+              margin-bottom: 0.5rem;
+            }
+          }
         }
       }
     }
 
-    .game-button {
+    .total-section {
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      padding: 0 0.5rem;
-      position: relative;
 
-      .button {
-        display: block;
+      .values {
+        padding: 0.5rem 2rem;
+      }
+
+      .fbt {
+        width: 100%;
+        padding: 1.5rem 0;
+        border-top: theme.$border;
+        border-bottom: theme.$border;
+        margin-bottom: 0.5rem;
+        background-color: theme.$c-bg-zebra;
         font-size: 1.1rem;
-        margin: 1rem auto;
-        background-color: theme.$c-accent;
+        color: theme.$c-font-clearer;
+
+        &.go-to-game {
+          @extend %box-radius-bottom;
+
+          border-bottom: none;
+          margin-bottom: 0;
+        }
+
+        &:hover {
+          background: theme.$c-primary;
+          color: theme.$c-primary-over;
+        }
+      }
+
+      .arr-start-wrap {
+        padding-bottom: 1rem;
+
+        .help {
+          font-size: 0.9rem;
+          font-style: italic;
+        }
+      }
+
+      .edit-button {
+        margin: 0 1rem 1rem 1rem;
+      }
+    }
+  }
+}
+
+.arrs-list-wrap {
+  background: theme.$c-bg-zebra;
+  border-top: theme.$border;
+  border-bottom: theme.$border;
+  margin-top: 2rem;
+
+  .arrs-title {
+    padding: 2rem;
+  }
+
+  .arrs-list {
+    .arr-line {
+      display: flex;
+      padding: 1rem 2rem;
+      justify-content: space-between;
+      border-bottom: theme.$border;
+      cursor: pointer;
+
+      .arr-name {
+        font-weight: bold;
+        margin-right: 1rem;
+      }
+
+      &:nth-child(odd) {
+        background: theme.$c-bg-zebra;
+      }
+
+      &:first-child {
+        border-top: theme.$border;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &:hover {
+        background: theme.$c-accent;
         color: theme.$c-accent-over;
       }
-
-      .warning {
-        color: theme.$c-font-dim;
-        font-size: 0.9rem;
-        font-style: italic;
-        text-align: center;
-      }
     }
+  }
 
-    .history {
-      border-left: theme.$border;
-
-      .history-inner {
-        height: 100%;
-        padding: 0.5rem;
-        padding-right: 0;
-        overflow-y: scroll;
-
-        .line {
-          padding: 0.3rem 0;
-          font-size: 0.9rem;
-
-          span {
-            font-weight: bold;
-          }
-
-          time {
-            font-style: italic;
-          }
-        }
-      }
-    }
+  .notours {
+    padding: 0 2rem 2rem 2rem;
   }
 }

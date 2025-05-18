@@ -110,15 +110,14 @@ export function joinWithdraw(ctrl: TournamentController): MaybeVNode {
 export function managePlayers(ctrl: TournamentController): MaybeVNode {
   if (ctrl.isCreator() && !ctrl.data.isFinished)
     return h(
-      'button.fbt.manage-player.data-count',
+      'button.fbt.manage-player',
       {
         class: {
           text: !ctrl.isOrganized(),
         },
         attrs: {
-          disabled: ctrl.data.isFinished,
+          disabled: !!ctrl.data.isFinished,
           'data-icon': 'f',
-          'data-count': ctrl.data.candidates?.length || 0,
         },
         hook: bind(
           'click',
@@ -128,7 +127,9 @@ export function managePlayers(ctrl: TournamentController): MaybeVNode {
           ctrl.redraw,
         ),
       },
-      !ctrl.isOrganized() ? i18n('managePlayers') : undefined,
+      !ctrl.isOrganized()
+        ? `${i18n('managePlayers')}${ctrl.data.candidates?.length ? ` (${ctrl.data.candidates.length})` : ''}`
+        : undefined,
     );
   else return null;
 }

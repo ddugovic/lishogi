@@ -15,9 +15,10 @@ function main(opts: TournamentOpts): TournamentController {
 function start(opts: TournamentOpts): TournamentController {
   const element = document.querySelector('main.tour')!;
 
-  opts.classes = element.getAttribute('class');
+  opts.classes = element.getAttribute('class')!;
   opts.$side = $('.tour__side').clone();
   opts.$faq = $('.tour__faq').clone();
+  opts.$desc = $('.tour__desc').clone();
 
   const ctrl = new makeCtrl(opts, redraw);
 

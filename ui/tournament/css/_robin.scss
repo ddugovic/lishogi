@@ -41,6 +41,10 @@ main.arr-table {
             color: theme.$c-font-dimmer !important;
           }
         }
+
+        &.me {
+          background-color: theme.$m-primary_alpha_neg85;
+        }
       }
 
       td,
@@ -49,6 +53,10 @@ main.arr-table {
         height: $cell-size;
         border: 1px solid theme.$c-font-dimmer;
         text-align: center;
+
+        &.me {
+          background-color: theme.$m-primary_alpha_neg85;
+        }
       }
 
       th {
@@ -97,9 +105,6 @@ main.arr-table {
         overflow: hidden;
 
         thead {
-          position: relative;
-          z-index: 2;
-
           tr th {
             max-width: $cell-size;
 
@@ -123,15 +128,15 @@ main.arr-table {
               &.same {
                 cursor: unset;
                 pointer-events: none;
-                opacity: 0.6;
                 position: relative;
-                // background-color: $c-shade;
+
                 &::before,
                 &::after {
                   content: '';
                   position: absolute;
                   background-color: theme.$c-font-dimmer;
                   transform-origin: center;
+                  opacity: 0.6;
                 }
 
                 &::before {
@@ -151,28 +156,10 @@ main.arr-table {
                 }
               }
 
-              &.h {
-                animation: highlight 5s ease;
-                animation-fill-mode: both;
-
-                @keyframes highlight {
-                  0% {
-                    background-color: transparent;
-                  }
-
-                  50% {
-                    background-color: theme.$m-accent_alpha_neg30;
-                  }
-
-                  100% {
-                    background-color: transparent;
-                  }
-                }
-              }
-
               & > div {
                 z-index: 100;
                 margin: auto;
+                pointer-events: none;
               }
 
               & .p {
@@ -214,6 +201,25 @@ main.arr-table {
                 background-color: theme.$c-bad !important;
               }
 
+              & .pre-sched {
+                &::before {
+                  content: '';
+                  position: absolute;
+                  top: 0;
+                  right: 0;
+                  width: 0;
+                  height: 0;
+                  border-left: 7px solid transparent;
+                  border-top: 7px solid theme.$c-font-dimmer;
+                }
+              }
+
+              & .sched {
+                &::before {
+                  border-top: 7px solid theme.$c-primary;
+                }
+              }
+
               &:first-child {
                 border-left: none;
               }
@@ -227,7 +233,8 @@ main.arr-table {
 
                 &::before {
                   content: '';
-                  background-color: rgba(255, 137, 11, 0.1);
+                  background-color: theme.$c-accent;
+                  opacity: 0.2;
                   height: 100%;
                   left: -5000px;
                   position: absolute;
@@ -238,7 +245,8 @@ main.arr-table {
 
                 &::after {
                   content: '';
-                  background-color: rgba(255, 137, 11, 0.1);
+                  background-color: theme.$c-accent;
+                  opacity: 0.2;
                   height: 10000px;
                   left: 0;
                   position: absolute;
@@ -247,8 +255,14 @@ main.arr-table {
                   pointer-events: none;
                 }
 
-                & > div {
-                  border: theme.$border;
+                & > div.d {
+                  border-bottom-color: theme.$c-accent-over;
+                }
+
+                & > div.p,
+                & > div.w,
+                & > div.l {
+                  outline: 1px solid theme.$c-accent-over;
                 }
               }
             }

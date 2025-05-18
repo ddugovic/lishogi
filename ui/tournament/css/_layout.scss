@@ -36,6 +36,10 @@ $chat-optimal-size: calc(
     grid-area: main;
   }
 
+  &__pad {
+    min-height: 30rem;
+  }
+
   .chat__members {
     grid-area: uchat;
   }
@@ -77,15 +81,18 @@ $chat-optimal-size: calc(
     }
   }
 
-  &.robin {
+  &.robin,
+  &.organized {
     .tour__main {
       overflow: auto;
     }
-    // @include breakpoint($mq-col3) {
-    //   grid-template-columns: $col3-uniboard-side 70vw;
-    //   grid-template-areas:
-    //     'side  main'
-    //     'uchat main';
-    // }
+
+    @include breakpoint.breakpoint(local.$mq-col3) {
+      grid-template-areas:
+        'side  main main'
+        'uchat main main'
+        'table main main'
+        '. main main';
+    }
   }
 }

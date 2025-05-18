@@ -42,14 +42,13 @@ object bits {
         tr(
           td(cls := "name")(
             a(
-              cls      := "text",
+              cls      := s"text ${tour.format}",
               dataIcon := tournamentIconChar(tour),
               href     := routes.Tournament.show(tour.id),
             )(
               tour.trans,
             ),
           ),
-          // td(tour.format.trans),
           tour.schedule.fold(td) { s =>
             td(momentFromNow(s.at))
           },

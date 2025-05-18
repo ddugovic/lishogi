@@ -73,13 +73,6 @@
     }
   }
 
-  .description {
-    @extend %break-word;
-
-    max-height: 20vh;
-    overflow-y: auto;
-  }
-
   .tour__prize {
     @extend %box-radius;
 

@@ -100,15 +100,24 @@ object home {
       a(cls := active.active("finished"), href := routes.Tournament.finished(Order.Started.key, 1))(
         trans.finished(),
       ),
-      ctx.me map { me =>
-        a(cls := active.active("user"), href := routes.UserTournament.path(me.username, "created"))(
-          trans.myTournaments(),
+      a(
+        cls  := active.active("user"),
+        href := routes.UserTournament.ofPlayer("created", ctx.me.map(_.username)),
+      )(
+        trans.myTournaments(),
+      ),
+      ctx.isAuth option {
+        a(
+          cls  := active.active("arrangements"),
+          href := routes.UserTournament.arrangements("upcoming", 1),
+        )(
+          trans.tourArrangements.myArrangedGames(),
         )
       },
       a(cls := active.active("calendar"), href := routes.Tournament.calendar)(
         trans.tournamentCalendar(),
       ),
-      a(cls := active.active("faq"), href := routes.Tournament.help("arena".some))(
+      a(cls := active.active("faq"), href := routes.Tournament.help)(
         trans.faq.faqAbbreviation(),
       ),
     )

@@ -18,9 +18,8 @@ case class Arrangement(
     winner: Option[lila.user.User.ID] = none,
     plies: Option[Int] = none,
     scheduledAt: Option[DateTime] = none,
-    allowGameBefore: Option[Int] = none, // minutes
     lockedScheduledAt: Boolean = false,
-    history: Arrangement.History = Arrangement.History.empty,
+    lastNotified: Option[DateTime] = none,
 ) {
 
   def users = List(user1, user2)
@@ -42,93 +41,59 @@ case class Arrangement(
     else this
 
   def isWithinTolerance(date1: DateTime, date2: DateTime, toleranceSeconds: Int): Boolean =
-    Math.abs(date1.getMillis - date2.getMillis) <= toleranceSeconds * 60000
-
-  def canGameStart =
-    (scheduledAt, allowGameBefore) match {
-      case (Some(scheduled), Some(minutes)) =>
-        DateTime.now.plusMinutes(minutes).isAfter(scheduled)
-      case _ => true
-    }
+    Math.abs(date1.getMillis - date2.getMillis) <= toleranceSeconds * 1000
 
   def setScheduledAt(userId: lila.user.User.ID, userScheduledAt: Option[DateTime]) = {
-    val prevScheduledAt     = user(userId).flatMap(_.scheduledAt)
     val opponentScheduledAt = opponentUser(userId).flatMap(_.scheduledAt)
     val updated             = updateUser(userId, _.copy(scheduledAt = userScheduledAt))
 
     userScheduledAt.fold {
       updated.copy(
         scheduledAt = none,
-        history = prevScheduledAt.fold(history)(psa =>
-          history.add(userId.some, psa.some, Arrangement.History.remove),
-        ),
       )
     } { usa =>
       opponentScheduledAt
-        .filter(isWithinTolerance(_, usa, 60))
+        .filter(isWithinTolerance(_, usa, Arrangement.scheduleTolerance))
         .fold {
           updated.copy(
             scheduledAt = none,
-            history = history.add(userId.some, usa.some, Arrangement.History.propose),
           )
         } { osa =>
           updated.copy(
-            scheduledAt = opponentScheduledAt,
-            history = history.add(userId.some, osa.some, Arrangement.History.accept),
+            scheduledAt = osa.some,
           )
         }
     }
   }
 
-  def setReadyAt(userId: lila.user.User.ID, userReadyAt: Option[DateTime]) = {
-    val prevReadyAt = user(userId).flatMap(_.readyAt)
-    val updated     = updateUser(userId, _.copy(readyAt = userReadyAt))
-
-    userReadyAt.fold {
-      updated.copy(
-        history =
-          if (prevReadyAt.isDefined)
-            history.add(userId.some, userReadyAt, Arrangement.History.notReady)
-          else history,
-      )
-    } { ura =>
-      updated.copy(history =
-        if (prevReadyAt.exists(isWithinTolerance(_, ura, 25)))
-          history
-        else history.add(userId.some, userReadyAt, Arrangement.History.ready),
-      )
-    }
-  }
+  def setReadyAt(userId: lila.user.User.ID, userReadyAt: Option[DateTime]) =
+    updateUser(userId, _.copy(readyAt = userReadyAt))
 
   def startGame(gid: lila.game.Game.ID, color: Color) = {
     val now = DateTime.now
     copy(
-      user1 = user1.clearall,
-      user2 = user2.clearall,
+      user1 = user1.clearAll,
+      user2 = user2.clearAll,
       gameId = gid.some,
       startedAt = now.some,
-      color = color.some,
-      history = history.add(none, now.some, Arrangement.History.starts),
+      color = color.some, // same color after abandoned games
     )
   }
 
   def setSettings(settings: Arrangement.Settings) =
-    copy(
-      name = settings.name,
-      color = settings.color,
-      points = settings.points,
-      scheduledAt = settings.scheduledAt,
-      allowGameBefore = settings.allowGameBefore,
-      lockedScheduledAt = settings.scheduledAt.isDefined,
-    )
-
-  def opponentIsReady(userId: lila.user.User.ID, maxSeconds: Int): Boolean = {
-    val oppReady =
-      ((user1.id == userId).option(user2) orElse (user2.id == userId).option(user1))
-        .flatMap(_.readyAt)
-    val cutoff = DateTime.now.minusSeconds(maxSeconds)
-    oppReady.exists(_ isAfter cutoff)
-  }
+    if (gameId.isDefined)
+      copy(
+        name = settings.name,
+        // points = settings.points, // once we do point recalculation
+      )
+    else
+      copy(
+        name = settings.name,
+        color = settings.color,
+        points = settings.points,
+        scheduledAt = settings.scheduledAt,
+        lockedScheduledAt = settings.scheduledAt.isDefined,
+      )
 
   def hasGame = gameId.isDefined
 
@@ -139,6 +104,10 @@ case class Arrangement(
 
 object Arrangement {
 
+  // seconds
+  val scheduleTolerance = 60
+  val readyTolerance    = 20
+
   type ID = String
 
   case class User(
@@ -146,7 +115,10 @@ object Arrangement {
       readyAt: Option[DateTime],
       scheduledAt: Option[DateTime],
   ) {
-    def clearall = copy(scheduledAt = none, readyAt = none)
+    def clearAll = copy(scheduledAt = none, readyAt = none)
+
+    def isReady =
+      readyAt.exists(_ isAfter DateTime.now.minusSeconds(Arrangement.readyTolerance))
   }
 
   case class Settings(
@@ -154,7 +126,6 @@ object Arrangement {
       color: Option[Color],
       points: Option[Points],
       scheduledAt: Option[DateTime],
-      allowGameBefore: Option[Int],
   )
 
   case class Points(loss: Int, draw: Int, win: Int)
@@ -173,30 +144,6 @@ object Arrangement {
         }
         case _ => None
       }
-  }
-
-  case class History(list: List[History.Entry]) extends AnyVal {
-    def add(userId: Option[lila.user.User.ID], dateTime: Option[DateTime], action: History.Action) =
-      History(
-        (s"${~userId}${History.separator}${dateTime.fold("")(_.getSeconds.toString)}${History.separator}$action"
-          .take(100) :: list).take(History.max),
-      )
-
-  }
-  object History {
-    val separator = ";"
-    val max       = 10
-    type Entry = String
-
-    type Action = String
-    val accept: Action   = "A"
-    val remove: Action   = "M"
-    val propose: Action  = "P"
-    val ready: Action    = "R"
-    val notReady: Action = "N"
-    val starts: Action   = "S"
-
-    val empty = History(Nil)
   }
 
   case class Lookup(
@@ -225,4 +172,26 @@ object Arrangement {
         scheduledAt = none,
       ),
     )
+
+  object BSONFields {
+    val id                = "_id"
+    val tourId            = "t"
+    val users             = "u"
+    val u1ReadyAt         = "r1"
+    val u2ReadyAt         = "r2"
+    val u1ScheduledAt     = "d1"
+    val u2ScheduledAt     = "d2"
+    val name              = "n"
+    val color             = "c"
+    val points            = "pt"
+    val gameId            = "g"
+    val startedAt         = "st"
+    val status            = "s"
+    val winner            = "w"
+    val plies             = "p"
+    val scheduledAt       = "d"
+    val lockedScheduledAt = "l"
+    val updatedAt         = "ua"
+    val lastNotified      = "ln"
+  }
 }

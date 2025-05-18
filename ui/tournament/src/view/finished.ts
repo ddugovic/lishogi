@@ -5,7 +5,7 @@ import { i18n, i18nFormatCapitalized } from 'i18n';
 import { colorName } from 'shogi/color-name';
 import { type VNode, h } from 'snabbdom';
 import type TournamentController from '../ctrl';
-import type { TournamentData } from '../interfaces';
+import type { TournamentDataFull } from '../interfaces';
 import * as pagination from '../pagination';
 import { podium, standing } from './arena';
 import { teamStanding } from './battle';
@@ -14,11 +14,11 @@ import header from './header';
 import type { ViewHandler } from './main';
 import { standing as oStanding } from './organized';
 import playerInfo from './player-info';
-import { podium as rPodium, standing as rStanding, recents } from './robin';
+import { podium as rPodium, standing as rStanding } from './robin';
 import teamInfo from './team-info';
 import { numberRow } from './util';
 
-function confetti(data: TournamentData): MaybeVNode {
+function confetti(data: TournamentDataFull): MaybeVNode {
   if (data.me && data.isRecentlyFinished && once(`tournament.end.canvas.${data.id}`))
     return h('canvas#confetti', {
       hook: {
@@ -31,7 +31,7 @@ function confetti(data: TournamentData): MaybeVNode {
   else return null;
 }
 
-function stats(data: TournamentData): VNode {
+function stats(data: TournamentDataFull): VNode {
   const tableData = [
     numberRow(i18n('averageElo'), data.stats.averageRating, 'raw'),
     numberRow(i18n('gamesPlayed'), data.stats.games),
@@ -77,7 +77,6 @@ function main(ctrl: TournamentController): MaybeVNodes {
         : [h('div.big_top', [confetti(ctrl.data), header(ctrl), rPodium(ctrl)])]),
       robinControls(ctrl),
       rStanding(ctrl, 'finished'),
-      recents(ctrl),
     ];
   else
     return [
@@ -86,7 +85,6 @@ function main(ctrl: TournamentController): MaybeVNodes {
         : [h('div.big_top', [confetti(ctrl.data), header(ctrl), rPodium(ctrl)])]),
       organizedControls(ctrl, pag),
       oStanding(ctrl, pag, 'finished'),
-      recents(ctrl),
     ];
 }
 
@@ -95,7 +93,7 @@ function table(ctrl: TournamentController): VNode | undefined {
     ? playerInfo(ctrl)
     : ctrl.teamInfo.requested
       ? teamInfo(ctrl)
-      : stats
+      : ctrl.data.stats
         ? stats(ctrl.data)
         : undefined;
 }

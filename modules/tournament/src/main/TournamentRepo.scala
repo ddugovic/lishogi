@@ -236,7 +236,6 @@ final class TournamentRepo(val coll: Coll, playerCollName: CollName)(implicit
       tourId: Tournament.ID,
       candidates: List[User.ID],
       denied: List[User.ID],
-      nb: Int,
   ) =
     coll.update
       .one(
@@ -244,7 +243,6 @@ final class TournamentRepo(val coll: Coll, playerCollName: CollName)(implicit
         $set(
           "candidates" -> candidates,
           "denied"     -> denied,
-          "nbPlayers"  -> nb,
         ),
       )
       .void
@@ -258,11 +256,8 @@ final class TournamentRepo(val coll: Coll, playerCollName: CollName)(implicit
   def setTeamBattle(tourId: Tournament.ID, battle: TeamBattle) =
     coll.updateField($id(tourId), "teamBattle", battle).void
 
-  def setNotifiedTime(tourId: Tournament.ID, date: DateTime) =
+  def setReminderNotified(tourId: Tournament.ID, date: DateTime) =
     coll.updateField($id(tourId), "notified", date).void
-
-  def unsetNotifiedTime(tourId: Tournament.ID) =
-    coll.unsetField($id(tourId), "notified").void
 
   def teamBattleOf(tourId: Tournament.ID): Fu[Option[TeamBattle]] =
     coll.primitiveOne[TeamBattle]($id(tourId), "teamBattle")
@@ -386,6 +381,10 @@ final class TournamentRepo(val coll: Coll, playerCollName: CollName)(implicit
           tour.conditions.list.isEmpty option "conditions",
           tour.position.isEmpty option "sfen",
           tour.variant.standard option "variant",
+          tour.candidates.isEmpty option "candidates",
+          !tour.closed option "closed",
+          tour.denied.isEmpty option "denied",
+          !tour.candidatesOnly option "candidatesOnly",
         ).flatten,
       ),
     )
@@ -402,13 +401,11 @@ final class TournamentRepo(val coll: Coll, playerCollName: CollName)(implicit
   def calendar(from: DateTime, to: DateTime): Fu[List[Tournament]] =
     coll
       .find(
-        $doc(
-          "startsAt" $gte from $lte to,
+        $doc("startsAt" $gte from $lte to) ++
           $or(
             "schedule.freq" $in Schedule.Freq.all.filter(_.isWeeklyOrBetter),
-            "nbPlayers" $gte 15,
+            "nbPlayers" $gte 5,
           ),
-        ),
       )
       .sort($sort asc "startsAt")
       .cursor[Tournament](ReadPreference.secondaryPreferred)

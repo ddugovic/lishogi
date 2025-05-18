@@ -9,6 +9,7 @@
   align-items: unset;
   padding: 0 0;
   position: relative;
+  min-height: 3rem;
 
   .fbt {
     height: 100%;
@@ -74,6 +75,8 @@
   }
 
   .right {
+    display: flex;
+
     @include breakpoint.breakpoint(media-queries.$mq-x-small) {
       margin-left: auto;
     }

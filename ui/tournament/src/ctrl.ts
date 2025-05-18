@@ -1,18 +1,18 @@
-import {
-  type StoredBooleanProp,
-  type StoredJsonProp,
-  storedJsonProp,
-  storedProp,
-} from 'common/storage';
+import { defined } from 'common/common';
+import { type StoredJsonProp, storedJsonProp } from 'common/storage';
 import type {
   Arrangement,
+  ArrangementUser,
   NewArrangement,
   NewArrangementSettings,
   Pages,
   PlayerInfo,
+  Points,
   Standing,
   TeamInfo,
-  TournamentData,
+  TourPlayer,
+  TournamentDataBase,
+  TournamentDataFull,
   TournamentOpts,
 } from './interfaces';
 import { maxPerPage, myPage, players } from './pagination';
@@ -28,25 +28,28 @@ interface CtrlTeamInfo {
 
 export default class TournamentController {
   opts: TournamentOpts;
-  data: TournamentData;
+  data: TournamentDataFull;
   socket: TournamentSocket;
   page: number;
   pages: Pages = {};
   lastPageDisplayed: number | undefined;
   focusOnMe: boolean;
   joinSpinner = false;
+  tourRedirect = false;
   playerInfo: PlayerInfo = {};
   teamInfo: CtrlTeamInfo = {};
   arrangement: Arrangement | undefined;
-  utc: StoredBooleanProp = storedProp('arrangement.utc', false);
+  arrangementReadyMillis: number = 20 * 1000;
+  arrangementReadyTimeout: Timeout | undefined;
+  defaultArrangementPoints: Points = { w: 3, d: 2, l: 1 };
   playerManagement = false;
   newArrangement: NewArrangement | undefined;
   newArrangementSettings: StoredJsonProp<NewArrangementSettings>;
   shadedCandidates: string[] = [];
-  highlightArrs: string[] = [];
   disableClicks = true;
   searching = false;
   joinWithTeamSelector = false;
+  dateToFinish: Date | undefined;
   redraw: () => void;
   nbWatchers = 0;
 
@@ -69,17 +72,35 @@ export default class TournamentController {
     this.recountTeams();
     this.redirectToMyGame();
 
+    if (this.data.secondsToFinish)
+      this.dateToFinish = new Date(Date.now() + this.data.secondsToFinish * 1000);
+
     this.newArrangementSettings = storedJsonProp(
       `arrangement.newArrangementSettings${this.data.id}`,
       () => {
-        return { points: { w: 3, d: 2, l: 1 } };
+        return {};
       },
     );
-    console.log('Data', this.data);
-    // this.newArrangement = this.newArrangementSettings();
 
-    const hash = window.location.hash;
-    const userIds = hash.slice(1).split(';');
+    this.arrangementReadyRedraw(this.arrangement);
+
+    window.addEventListener('beforeunload', () => {
+      if (this.arrangement && !this.tourRedirect) this.arrangementMatch(this.arrangement, false);
+    });
+
+    this.hashChange();
+    window.addEventListener('hashchange', () => {
+      this.hashChange(true);
+    });
+
+    window.lishogi.pubsub.on('socket.in.crowd', data => {
+      this.nbWatchers = data.nb;
+    });
+  }
+
+  hashChange = (redraw = false): void => {
+    const hash = window.location.hash.slice(1);
+    const userIds = hash.split(';');
     if (
       userIds.length === 2 &&
       userIds[0] !== userIds[1] &&
@@ -89,18 +110,15 @@ export default class TournamentController {
       this.arrangement = this.findOrCreateArrangement(userIds);
     else if (hash.length === 8)
       this.arrangement = this.data.standing.arrangements.find(a => a.id === hash);
-
-    window.lishogi.pubsub.on('socket.in.crowd', data => {
-      this.nbWatchers = data.nb;
-    });
-  }
-
-  askReload = (): void => {
-    if (this.joinSpinner) xhr.reloadNow(this);
-    else xhr.reloadSoon(this);
+    if (redraw) this.redraw();
   };
 
-  reload = (data: TournamentData): void => {
+  askReload = (): void => {
+    if (this.joinSpinner || this.playerManagement) xhr.reloadNow(this);
+    else setTimeout(() => xhr.reloadSoon(this), Math.floor(Math.random() * 4000));
+  };
+
+  reload = (data: TournamentDataBase): void => {
     // we joined a private tournament! Reload the page to load the chat
     if (!this.data.me && data.me && this.data.private) window.lishogi.reload();
 
@@ -116,8 +134,8 @@ export default class TournamentController {
 
     this.loadPage(data.standing);
     if (this.focusOnMe) this.scrollToMe();
-    sound.end(data);
-    sound.countDown(data);
+    sound.end(this.data);
+    sound.countDown(this.data);
     this.shadedCandidates = [];
     this.joinSpinner = false;
     this.recountTeams();
@@ -150,6 +168,7 @@ export default class TournamentController {
     setTimeout(() => {
       if (this.lastStorage.get() !== gameId) {
         this.lastStorage.set(gameId);
+        this.tourRedirect = true;
         window.lishogi.redirect(`/${gameId}`);
       }
     }, delay);
@@ -207,13 +226,13 @@ export default class TournamentController {
     this.focusOnMe = false;
   };
 
-  join = (password?: string, team?: string): any => {
+  join = (password?: string, team?: string): void => {
     this.joinWithTeamSelector = false;
     if (!this.data.verdicts.accepted)
-      return this.data.verdicts.list.forEach((v: any) => {
+      this.data.verdicts.list.forEach((v: any) => {
         if (v.verdict !== 'ok') alert(v.verdict);
       });
-    if (this.data.teamBattle && !team && !this.data.me) {
+    else if (this.data.teamBattle && !team && !this.data.me) {
       this.joinWithTeamSelector = true;
     } else {
       xhr.join(this, password, team);
@@ -230,7 +249,10 @@ export default class TournamentController {
 
   playerKick(userId: string): void {
     this.socket.send('player-kick', { v: userId });
-    this.redraw();
+  }
+
+  closeJoining(v: boolean): void {
+    this.socket.send('close-joining', { v });
   }
 
   scrollToMe = (): void => {
@@ -271,21 +293,43 @@ export default class TournamentController {
   };
 
   showArrangement = (arrangement: Arrangement | undefined): void => {
-    console.log('showArrangement', arrangement);
+    clearTimeout(this.arrangementReadyTimeout);
+    this.arrangementReadyRedraw(arrangement);
     this.arrangement = arrangement;
     if (arrangement)
       window.history.replaceState(null, '', `#${arrangement.user1.id};${arrangement.user2.id}`);
     else history.replaceState(null, '', window.location.pathname + window.location.search);
     this.redraw();
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
+  };
+
+  arrangementReadyRedraw = (arrangement: Arrangement | undefined): void => {
+    clearTimeout(this.arrangementReadyTimeout);
+    if (arrangement) {
+      const user1Time = this.arrangementUserReady(arrangement.user1);
+      const user2Time = this.arrangementUserReady(arrangement.user2);
+      if (defined(user1Time)) {
+        this.arrangementReadyTimeout = setTimeout(
+          this.redraw,
+          this.arrangementReadyMillis - user1Time,
+        );
+      } else if (user2Time) {
+        this.arrangementReadyTimeout = setTimeout(
+          this.redraw,
+          this.arrangementReadyMillis - user2Time,
+        );
+      }
+    }
+  };
+
+  arrangementUserReady = (u: ArrangementUser): number | undefined => {
+    const now = Date.now();
+    const userReadyTime = u.readyAt ? now - u.readyAt : undefined;
+    return defined(userReadyTime) && userReadyTime <= this.arrangementReadyMillis
+      ? userReadyTime
+      : undefined;
   };
 
   arrangementMatch = (arrangement: Arrangement, yes: boolean): void => {
-    console.log('arrangementMatch', arrangement, yes);
-
     this.socket.send('arrangement-match', {
       id: arrangement.id,
       users: `${arrangement.user1.id};${arrangement.user2.id}`,
@@ -303,16 +347,18 @@ export default class TournamentController {
     this.socket.send('arrangement-time', data);
   };
 
-  showOrganizerArrangement(): void {
-    this.newArrangement = this.newArrangementSettings();
+  showOrganizerArrangement(arr: NewArrangement | undefined): void {
+    this.newArrangement = arr;
+    this.redraw();
+    window.scrollTo(window.scrollX, 0);
   }
 
-  showPlayerInfo = (player: any): void => {
+  showPlayerInfo = (player: TourPlayer): void => {
     if (this.data.secondsToStart) return;
     const userId = player.name.toLowerCase();
     this.teamInfo.requested = undefined;
     this.playerInfo = {
-      id: this.playerInfo.id === userId ? null : userId,
+      id: this.playerInfo.id === userId ? undefined : userId,
       player: player,
       data: null,
     };

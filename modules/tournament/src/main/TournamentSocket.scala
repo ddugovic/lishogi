@@ -27,6 +27,8 @@ final private class TournamentSocket(
 
   private val allWaitingUsers = new ConcurrentHashMap[Tournament.ID, WaitingUsers.WithNext](64)
 
+  private val reloadMsg = makeMessage("reload")
+
   private val reloadThrottler =
     LateMultiThrottler(executionTimeout = 1.seconds.some, logger = logger)
 
@@ -34,14 +36,14 @@ final private class TournamentSocket(
     reloadThrottler ! LateMultiThrottler.work(
       id = tourId,
       run = fuccess {
-        send(RP.Out.tellRoom(RoomId(tourId), makeMessage("reload")))
+        send(RP.Out.tellRoom(RoomId(tourId), reloadMsg))
       },
       delay = 1.seconds.some,
     )
 
   def reloadUsers(tourId: Tournament.ID, users: List[User.ID]): Unit =
     users foreach { userId =>
-      send(RP.Out.tellRoomUser(RoomId(tourId), userId, makeMessage("reload")))
+      send(RP.Out.tellRoomUser(RoomId(tourId), userId, reloadMsg))
     }
 
   def startGame(tourId: Tournament.ID, game: Game): Unit = {
@@ -59,18 +61,13 @@ final private class TournamentSocket(
     reload(tourId)
   }
 
-  def arrangementChange(arrangement: Arrangement): Unit = {
-    arrangement.userIds foreach { userId =>
-      send(
-        RP.Out.tellRoomUser(
-          RoomId(arrangement.tourId),
-          userId,
-          makeMessage("arrangement", JsonView.arrangement(arrangement)),
-        ),
-      )
-    }
-    reload(arrangement.tourId)
-  }
+  def arrangementChange(arrangement: Arrangement): Unit =
+    send(
+      RP.Out.tellRoom(
+        RoomId(arrangement.tourId),
+        makeMessage("arrangement", JsonView.arrangement(arrangement)),
+      ),
+    )
 
   def getWaitingUsers(tour: Tournament): Fu[WaitingUsers] = {
     send(Protocol.Out.getWaitingUsers(RoomId(tour.id), tour.name))
@@ -145,9 +142,8 @@ final private class TournamentSocket(
               .str("points")
               .flatMap(Arrangement.Points.apply)
               .filterNot(_ == Arrangement.Points.default)
-            scheduledAt     = d.long("scheduled") map { new DateTime(_) }
-            allowGameBefore = d.int("allowGameBefore")
-            settings = Arrangement.Settings(name, color, points, scheduledAt, allowGameBefore)
+            scheduledAt = d.long("scheduledAt") map { new DateTime(_) }
+            settings    = Arrangement.Settings(name, color, points, scheduledAt)
           } api.arrangementOrganizerSet(lookup, userId, settings)
         case "arrangement-delete" =>
           for {

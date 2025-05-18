@@ -13,7 +13,6 @@
 @use 'player-info';
 @use 'team-info';
 @use 'arrangement';
-@use 'arrangement-thumbnail';
 @use 'robin';
 @use 'organized';
 @use 'player-manage';
@@ -30,15 +29,31 @@
   }
 }
 
-.tour__faq {
-  padding: 4em var(--box-padding);
-  display: none;
+.tour__bottom {
+  padding: 2rem;
+  margin-top: 2rem;
 
-  @include breakpoint.breakpoint(local.$mq-col2) {
-    display: block;
+  h3 {
+    font-size: 1.5rem;
   }
 
-  h2 {
-    margin: 1.5em 0 0.5em 0;
+  .tour__desc {
+    margin-bottom: 4.5rem;
+
+    p {
+      margin-top: 1.5rem;
+    }
+  }
+
+  .tour__faq {
+    display: none;
+
+    @include breakpoint.breakpoint(local.$mq-col2) {
+      display: block;
+    }
+
+    h3 {
+      margin: 1.5rem 0 0.5rem 0;
+    }
   }
 }

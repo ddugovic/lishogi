@@ -120,8 +120,8 @@ final class JsonView(
       .add("isCandidate" -> me ?? (m => tour.candidates.contains(m.id)))
       .add("isDenied" -> me ?? (m => tour.denied.contains(m.id)))
       .add("candidatesFull" -> tour.candidatesFull)
-      .add("secondsToFinish" -> tour.isStarted.option(tour.secondsToFinish))
-      .add("secondsToStart" -> tour.isCreated.option(tour.secondsToStart))
+      .add("secondsToFinish" -> (!tour.isFinished).option(tour.secondsToFinish))
+      .add("secondsToStart" -> (!tour.isFinished).option(tour.secondsToStart))
       .add("me" -> myInfo.map(myInfoJson(me, pauseDelay)))
       .add("isBot" -> me.map(_.isBot))
       .add("featured" -> data.featured)
@@ -142,9 +142,9 @@ final class JsonView(
             "system"    -> tour.format.key,
             "fullName"  -> tour.trans,
             "minutes"   -> tour.minutes,
-            "perf"      -> full.option(tour.perfType),
-            "clock"     -> full.option(tour.timeControl),
-            "variant"   -> full.option(tour.variant.key),
+            "perf"      -> tour.perfType,
+            "clock"     -> tour.timeControl,
+            "variant"   -> tour.variant.key,
             "rated"     -> tour.isRated,
           )
           .add("spotlight" -> tour.spotlight)
@@ -224,7 +224,7 @@ final class JsonView(
               "id"     -> user.id,
               "name"   -> user.name,
               "rating" -> player.rating,
-              "score"  -> player.score,
+              "score"  -> player.scoreNotKicked,
               "fire"   -> player.fire,
               "nb"     -> sheetNbs(sheet),
             )
@@ -263,7 +263,7 @@ final class JsonView(
               "id"     -> user.id,
               "name"   -> user.name,
               "rating" -> player.rating,
-              "score"  -> player.score,
+              "score"  -> player.scoreNotKicked,
               "fire"   -> player.fire,
               "nb" -> Json.obj(
                 "game" -> arrs.size,
@@ -546,7 +546,7 @@ object JsonView {
         Json
           .obj(
             "n" -> light.fold(p.userId)(_.name),
-            "s" -> p.score,
+            "s" -> p.scoreNotKicked,
           )
           .add("t" -> light.flatMap(_.title))
           .add("f" -> p.fire)
@@ -559,7 +559,7 @@ object JsonView {
       Json
         .obj(
           "rank"     -> rank,
-          "score"    -> player.score,
+          "score"    -> player.scoreNotKicked,
           "rating"   -> player.rating,
           "username" -> user.name,
         )
@@ -585,10 +585,11 @@ object JsonView {
     lightUserApi async p.userId map { light =>
       Json
         .obj(
+          "id"     -> p.userId,
           "name"   -> light.fold(p.userId)(_.name),
           "rank"   -> rankedPlayer.rank,
           "rating" -> p.rating,
-          "score"  -> p.score,
+          "score"  -> p.scoreNotKicked,
           "sheet"  -> sheet.map(sheetJson(streakable)),
         )
         .add("title" -> light.flatMap(_.title))
@@ -622,7 +623,7 @@ object JsonView {
           "name"   -> light.name,
           "order"  -> ~player.order,
           "rating" -> player.rating,
-          "score"  -> player.score,
+          "score"  -> player.scoreNotKicked,
         )
         .add("title" -> light.title)
         .add("provisional" -> player.provisional)
@@ -633,6 +634,7 @@ object JsonView {
   private[tournament] def arrangement(a: Arrangement): JsObject =
     Json
       .obj(
+        "id"    -> a.id,
         "user1" -> arrangementUser(a.user1),
         "user2" -> arrangementUser(a.user2),
       )
@@ -645,7 +647,7 @@ object JsonView {
       .add("winner", a.winner)
       .add("plies", a.plies)
       .add("scheduledAt", a.scheduledAt)
-      .add("history", a.history.list.some.filter(_.nonEmpty))
+      .add("locked", a.lockedScheduledAt)
 
   private def arrangementUser(u: Arrangement.User): JsObject =
     Json
@@ -675,8 +677,8 @@ object JsonView {
     case TimeControl.RealTime(c) =>
       Json.obj(
         "limit"     -> c.limitSeconds,
-        "increment" -> c.incrementSeconds,
         "byoyomi"   -> c.byoyomiSeconds,
+        "increment" -> c.incrementSeconds,
       )
     case TimeControl.Correspondence(d) =>
       Json.obj(

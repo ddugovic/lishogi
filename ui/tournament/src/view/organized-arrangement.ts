@@ -1,3 +1,4 @@
+import { flatpickr } from 'common/assets';
 import { type MaybeVNode, bind } from 'common/snabbdom';
 import { i18n } from 'i18n';
 import { colorName } from 'shogi/color-name';
@@ -6,22 +7,19 @@ import { opposite } from 'shogiground/util';
 import { type VNode, type VNodes, h } from 'snabbdom';
 import type TournamentController from '../ctrl';
 import type { NewArrangement } from '../interfaces';
-import { arrangementThumbnail } from './arrangement-thumbnail';
-import { backControl, utcControl } from './controls';
-import { flatpickrInput } from './flatpickrs';
+import { arrangementLine } from './arrangement';
+import { backControl } from './controls';
 import header from './header';
-import { arrangementHasUser } from './util';
+import { arrangementHasUser, flatpickrConfig } from './util';
+
+let fInstance: any = null;
 
 export function organizedArrangementView(ctrl: TournamentController): VNodes {
   return [
     header(ctrl),
-    backControl(
-      ctrl,
-      () => {
-        ctrl.newArrangement = undefined;
-      },
-      [utcControl(ctrl)],
-    ),
+    backControl(() => {
+      ctrl.showOrganizerArrangement(undefined);
+    }),
     organizerArrangement(ctrl),
   ];
 }
@@ -37,6 +35,7 @@ const organizerArrangementForm = (ctrl: TournamentController): MaybeVNode => {
 
   const canSubmit = state.user1?.id && state.user2?.id;
   const isNew = !state.id;
+  const hasGame = !!state.gameId;
 
   const user1Id = state.user1?.id;
   const user2Id = state.user2?.id;
@@ -62,36 +61,52 @@ const organizerArrangementForm = (ctrl: TournamentController): MaybeVNode => {
     redraw = false,
   ) => {
     if (elm.checkValidity()) updateState(key, value);
-    else elm.value = state.allowGameBefore?.toString() || '';
 
     if (redraw) ctrl.redraw();
   };
   const updatePoints = (key: 'w' | 'd' | 'l', elm: HTMLInputElement) => {
-    if (elm.checkValidity()) state.points[key] = Number.parseInt(elm.value) || 0;
-    else elm.value = state.points[key].toString() || '';
+    const p = state.points || ctrl.defaultArrangementPoints;
+    if (elm.checkValidity()) p[key] = Number.parseInt(elm.value) || 0;
+    else elm.value = p[key].toString() || '';
+    state.points = p;
   };
 
   const handleSubmit = () => {
     const arrangement = {
+      id: state.id || 'new', // new id forces creation of new arrangement
       users: `${state.user1?.id};${state.user2?.id}`,
       name: state.name || undefined,
       color: state.color ? state.color === 'sente' : undefined,
       points: state.points ? `${state.points.l};${state.points.d};${state.points.w}` : undefined,
-      allowGameBefore: state.allowGameBefore ? state.allowGameBefore * 60 * 1000 : undefined,
       scheduledAt: state.scheduledAt ? new Date(state.scheduledAt).getTime() : undefined,
     };
     ctrl.newArrangementSettings({
       points: state.points,
-      scheduledAt: state.scheduledAt,
-      allowGameBefore: state.allowGameBefore,
+      scheduledAt: undefined,
     });
     ctrl.socket.send('arrangement-organizer', arrangement);
-    ctrl.newArrangement = undefined;
+    ctrl.showOrganizerArrangement(undefined);
+  };
+
+  const handleDelete = () => {
+    ctrl.socket.send('arrangement-delete', {
+      id: state.id,
+      users: `${state.user1?.id};${state.user2?.id}`,
+    });
+    ctrl.showOrganizerArrangement(undefined);
   };
 
   return h('div.organizer-arrangement', [
+    state.id
+      ? h('div.field-wrap.id', [
+          h('label', 'ID'),
+          h('input.disabled', {
+            attrs: { disabled: true, value: state.id },
+          }),
+        ])
+      : null,
     h('div.field-wrap.name', [
-      h('label', 'Match name '),
+      h('label', i18n('tourArrangements:gameName')),
       h('input', {
         attrs: { type: 'text', value: state.name || '', maxlength: 30 },
         on: {
@@ -102,13 +117,19 @@ const organizerArrangementForm = (ctrl: TournamentController): MaybeVNode => {
         },
       }),
     ]),
-
     h('div.field-wrap.players', [
-      h('label', 'Players*'),
+      h('label', `${i18n('players')}*`),
+      h('span.vs', 'vs'),
       h('div.sides.search-wrap', [
         h(
           'select',
           {
+            attrs: {
+              disabled: !isNew,
+            },
+            class: {
+              disabled: !isNew,
+            },
             on: {
               change: (e: Event) => {
                 updateState('user1', { id: (e.target as HTMLInputElement).value }, true);
@@ -117,10 +138,15 @@ const organizerArrangementForm = (ctrl: TournamentController): MaybeVNode => {
           },
           playerOptions(ctrl, state.user1?.id, state.user2?.id),
         ),
-        h('span', 'vs'),
         h(
           'select',
           {
+            attrs: {
+              disabled: !isNew,
+            },
+            class: {
+              disabled: !isNew,
+            },
             on: {
               change: (e: Event) => {
                 updateState('user2', { id: (e.target as HTMLInputElement).value }, true);
@@ -130,15 +156,15 @@ const organizerArrangementForm = (ctrl: TournamentController): MaybeVNode => {
           playerOptions(ctrl, state.user2?.id, state.user1?.id),
         ),
       ]),
-    ]),
-    h('div.field-wrap.sides.color', [
-      h('label', 'Color'),
       h('div.sides.color-wrap', [
         h(
           'select',
           {
             key: state.color,
-            attrs: { value: state.color || '' },
+            class: {
+              disabled: hasGame,
+            },
+            attrs: { value: state.color || '', disabled: hasGame },
             on: {
               change: (e: Event) =>
                 updateState(
@@ -154,7 +180,10 @@ const organizerArrangementForm = (ctrl: TournamentController): MaybeVNode => {
           'select',
           {
             key: state.color,
-            attrs: { value: state.color ? opposite(state.color) : '' },
+            class: {
+              disabled: hasGame,
+            },
+            attrs: { value: state.color ? opposite(state.color) : '', disabled: hasGame },
             on: {
               change: (e: Event) =>
                 updateState(
@@ -169,78 +198,122 @@ const organizerArrangementForm = (ctrl: TournamentController): MaybeVNode => {
       ]),
     ]),
     h('div.field-wrap.points', [
-      h('label', 'Points (Win/Draw/Loss)'),
-      h('div', [
+      h(
+        'label',
+        {
+          attrs: {
+            title: `${i18n('victory')}/${i18n('draw')}/${i18n('defeat')}`,
+          },
+        },
+        i18n('tourArrangements:pointsWDL'),
+      ),
+      h('div.points-wrap', [
         h('input', {
-          attrs: { type: 'text', inputmode: 'numberic', pattern: '[0-9]*', value: points.w },
+          class: {
+            disabled: hasGame,
+          },
+          attrs: {
+            type: 'text',
+            disabled: hasGame,
+            inputmode: 'numberic',
+            pattern: '[0-9]*',
+            value: points?.w || ctrl.defaultArrangementPoints.w,
+          },
           on: { input: (e: Event) => updatePoints('w', e.target as HTMLInputElement) },
         }),
         h('input', {
-          attrs: { type: 'text', inputmode: 'numberic', pattern: '[0-9]*', value: points.d },
+          class: {
+            disabled: hasGame,
+          },
+          attrs: {
+            type: 'text',
+            disabled: hasGame,
+            inputmode: 'numberic',
+            pattern: '[0-9]*',
+            value: points?.d || ctrl.defaultArrangementPoints.d,
+          },
           on: { input: (e: Event) => updatePoints('d', e.target as HTMLInputElement) },
         }),
         h('input', {
-          attrs: { type: 'text', inputmode: 'numberic', pattern: '[0-9]*', value: points.l },
+          class: {
+            disabled: hasGame,
+          },
+          attrs: {
+            type: 'text',
+            disabled: hasGame,
+            inputmode: 'numberic',
+            pattern: '[0-9]*',
+            value: points?.l || ctrl.defaultArrangementPoints.l,
+          },
           on: { input: (e: Event) => updatePoints('l', e.target as HTMLInputElement) },
         }),
       ]),
     ]),
     h('div.field-wrap.scheduled-at', [
-      h('label', 'Scheduled At'),
-      flatpickrInput(
-        false,
-        state.scheduledAt,
-        d => {
-          state.scheduledAt = d.getTime();
-          ctrl.redraw();
-        },
-        () => ctrl.utc(),
-      ),
-    ]),
-    h(
-      'div.field-wrap.game-before',
-      {
+      h('label', i18n('tourArrangements:scheduledAt')),
+      h('input.flatpickr', {
         class: {
-          disabled: !state.scheduledAt,
+          disabled: hasGame,
         },
-      },
-      [
-        h('label', 'Limit game start to before scheduled (minutes)'),
-        h('input', {
-          attrs: {
-            type: 'text',
-            inputmode: 'numberic',
-            pattern: '[0-9]*',
-            disabled: !state.scheduledAt,
-            value: (!!state.scheduledAt && state.allowGameBefore) || '',
+        attrs: {
+          disabled: hasGame,
+          placeholder: i18n('search:date'),
+        },
+        hook: {
+          insert: (node: VNode) => {
+            flatpickr().then(() => {
+              fInstance = window.flatpickr(node.elm as HTMLInputElement, {
+                ...flatpickrConfig,
+                onChange: dates => {
+                  state.scheduledAt = dates[0].getTime();
+                  ctrl.redraw();
+                },
+              });
+              if (state.scheduledAt) {
+                const scheduledDate = new Date(state.scheduledAt);
+                fInstance.setDate(scheduledDate, false);
+                fInstance.altInput.value = scheduledDate.toLocaleString();
+              }
+            });
           },
-          on: {
-            input: (e: Event) => {
-              updateStateWithValidity(
-                'allowGameBefore',
-                Number.parseInt((e.target as HTMLInputElement).value),
-                e.target as HTMLInputElement,
-              );
+          destroy: () => {
+            if (fInstance) fInstance.destroy();
+            fInstance = null;
+          },
+        },
+      }),
+    ]),
+    h('div.button-wrap', [
+      h(
+        'button.button',
+        {
+          hook: bind('click', () => handleSubmit()),
+          class: { disabled: !canSubmit },
+        },
+        isNew ? i18n('createAGame') : i18n('save'),
+      ),
+      !isNew
+        ? h(
+            'button.button.button-red',
+            {
+              class: {
+                disabled: hasGame,
+              },
+              hook: bind('click', () => handleDelete()),
             },
-          },
-        }),
-      ],
-    ),
-    h(
-      'button.button',
-      { hook: bind('click', () => handleSubmit()), class: { disabled: !canSubmit } },
-      isNew ? 'Create new game arrangement' : 'Update arrangement',
-    ),
-    gamesBetweenUsers.length
+            i18n('delete'),
+          )
+        : null,
+    ]),
+    gamesBetweenUsers.length && isNew
       ? h('div.games-users-wrap', [
-          h('h4', 'Existing games of players'),
-          h(
-            'div.games-users',
+          h('div.arrs-list-wrap', [
+            h('h2.arrs-title', i18n('tourArrangements:existingGamesBetweenPlayers')),
             h(
-              'div',
-              gamesBetweenUsers.map(g => arrangementThumbnail(ctrl, g)),
+              'div.arrs-list',
+              gamesBetweenUsers.map(g => arrangementLine(ctrl, g)),
             ),
-          ),
+          ]),
         ])
       : null,
   ]);

@@ -31,12 +31,9 @@ final private class Cleaner(
   private def cleanPuzzle: Funit =
     colls.puzzle
       .find(
-        $and(
-          $doc("verifiable" -> false),
-          $or(
-            $doc("acquired.date" $lt durationAgo(puzzleTimeout)),
-            $doc("tries" $gte Work.maxTries),
-          ),
+        $doc("verifiable" -> false) ++ $or(
+          $doc("acquired.date" $lt durationAgo(puzzleTimeout)),
+          $doc("tries" $gte Work.maxTries),
         ),
       )
       .sort($sort desc "acquired.date")

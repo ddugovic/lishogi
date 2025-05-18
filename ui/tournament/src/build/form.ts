@@ -31,9 +31,9 @@ window.lishogi.ready.then(() => {
       .on('keypress', e => e.key == 'Enter' && toggle());
   });
 
-  document.querySelectorAll('main form .flatpickr').forEach(el => {
-    window.flatpickr(el, {
-      minDate: new Date(Date.now() + 1000 * 60),
+  document.querySelectorAll('main form .flatpickr').forEach((el: HTMLInputElement) => {
+    const fp = window.flatpickr(el, {
+      minDate: !el.value ? new Date(Date.now() + 1000 * 60) : undefined,
       maxDate: new Date(Date.now() + 1000 * 3600 * 24 * 31 * 3),
       dateFormat: 'Z',
       altInput: true,
@@ -43,5 +43,6 @@ window.lishogi.ready.then(() => {
       disableMobile: true,
       locale: document.documentElement.lang as any,
     });
+    if (el.classList.contains('flatpickr--disabled')) fp._input.disabled = true;
   });
 });

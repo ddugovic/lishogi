@@ -1,10 +1,11 @@
 import { initOneWithState } from 'common/mini-board';
 import { numberFormat } from 'common/number';
 import { type MaybeVNodes, dataIcon } from 'common/snabbdom';
+import { i18n } from 'i18n';
 import { type VNode, h } from 'snabbdom';
-import type { Arrangement } from '../interfaces';
+import type { Arrangement, BasePlayer, Featured } from '../interfaces';
 
-export function miniBoard(game: any): VNode {
+export function miniBoard(game: Featured): VNode {
   return h(
     `a.mini-board.v-${game.variant}.mini-board-${game.id}`,
     {
@@ -31,12 +32,12 @@ export function ratio2percent(r: number): string {
   return `${Math.round(100 * r)}%`;
 }
 
-export function playerName(p: any): MaybeVNodes | string {
-  return p.title ? [h('span.title', p.title), ` ${p.name}`] : p.name;
+export function playerName(p: { name: string; title?: string } | undefined): MaybeVNodes {
+  return p?.title ? [h('span.title', p.title), ` ${p.name}`] : [p?.name || i18n('anonymous')];
 }
 
 export function player(
-  p: any,
+  p: BasePlayer,
   asLink: boolean,
   withRating: boolean,
   defender = false,
@@ -85,15 +86,24 @@ export function arrangementHasUser(a: Arrangement, userId: string): boolean {
   return a.user1.id === userId || a.user2.id === userId;
 }
 
-// hacky for flatpickr
-export function adjustDateToUTC(date: Date): Date {
-  return new Date(date.getTime() + date.getTimezoneOffset() * 60000);
-}
-export function adjustDateToLocal(date: Date): Date {
-  return new Date(date.getTime() - date.getTimezoneOffset() * 60000);
-}
-
-export function formattedDate(date: Date, utc: boolean): string {
-  if (utc) return date.toUTCString();
-  else return date.toLocaleString();
-}
+export const flatpickrConfig: Parameters<(typeof window)['flatpickr']>[1] = {
+  minDate: 'today',
+  maxDate: new Date(Date.now() + 1000 * 3600 * 24 * 31 * 3),
+  dateFormat: 'U',
+  altInput: true,
+  altFormat: 'Z',
+  enableTime: true,
+  time_24hr: true,
+  formatDate: (date, format) => {
+    if (format === 'U') return Math.floor(date.getTime()).toString();
+    return date.toLocaleString();
+  },
+  parseDate: (dateString, format) => {
+    if (format === 'U') {
+      return new Date(Number.parseInt(dateString));
+    }
+    return new Date(dateString);
+  },
+  disableMobile: true,
+  locale: document.documentElement.lang as any,
+};

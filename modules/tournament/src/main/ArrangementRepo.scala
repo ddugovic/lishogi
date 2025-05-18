@@ -10,36 +10,39 @@ import lila.game.Game
 import lila.tournament.BSONHandlers._
 import lila.user.User
 
-final class ArrangementRepo(coll: Coll)(implicit
+final class ArrangementRepo(val coll: Coll)(implicit
     ec: scala.concurrent.ExecutionContext,
 ) {
 
-  private def selectTour(tourId: Tournament.ID) = $doc("t" -> tourId)
-  private def selectUser(userId: User.ID)       = $doc("u" -> userId)
+  private def selectTour(tourId: Tournament.ID) = $doc(Arrangement.BSONFields.tourId -> tourId)
+  private def selectUser(userId: User.ID)       = $doc(Arrangement.BSONFields.users -> userId)
 
   private def selectTourUser(tourId: Tournament.ID, userId: User.ID) =
     $doc(
-      "t" -> tourId,
-      "u" -> userId,
+      Arrangement.BSONFields.tourId -> tourId,
+      Arrangement.BSONFields.users  -> userId,
     )
   private def selectTourUsers(tourId: Tournament.ID, user1Id: User.ID, user2Id: User.ID) =
     $doc(
-      "t" -> tourId,
-      "u" $all List(user1Id, user2Id),
+      Arrangement.BSONFields.tourId -> tourId,
+      Arrangement.BSONFields.users $all List(user1Id, user2Id),
     )
   // to hit tour index
   private def selectTourGame(tourId: Tournament.ID, gameId: Game.ID) =
     $doc(
-      "t" -> tourId,
-      "g" -> gameId,
+      Arrangement.BSONFields.tourId -> tourId,
+      Arrangement.BSONFields.gameId -> gameId,
     )
 
-  private val selectPlaying  = $doc("s" $lt shogi.Status.Mate.id)
-  private val selectWithGame = $doc("g" $exists true)
+  private val selectPlaying     = $doc(Arrangement.BSONFields.status $lt shogi.Status.Mate.id)
+  private val selectWithGame    = $doc(Arrangement.BSONFields.gameId $exists true)
+  private val selectWithoutGame = $doc(Arrangement.BSONFields.gameId $exists false)
+  private val selectUnfinished = $or(
+    Arrangement.BSONFields.status $lt shogi.Status.Mate.id,
+    Arrangement.BSONFields.gameId $exists false,
+  )
 
-  private def afterNow   = $doc("d" $gt DateTime.now.minusMinutes(30)) // some reserve
-  private val recentSort = $doc("d" -> -1)
-  private val chronoSort = $doc("d" -> 1)
+  private val recentSort = $doc(Arrangement.BSONFields.scheduledAt -> -1)
 
   def byId(id: Arrangement.ID): Fu[Option[Arrangement]] = coll.byId[Arrangement](id)
 
@@ -57,8 +60,26 @@ final class ArrangementRepo(coll: Coll)(implicit
   def havePlayedTogether(tourId: Tournament.ID, user1Id: User.ID, user2Id: User.ID): Fu[Boolean] =
     coll.exists(selectTourUsers(tourId, user1Id, user2Id))
 
-  def removePlaying(tourId: Tournament.ID) =
-    coll.delete.one(selectTour(tourId) ++ selectPlaying).void
+  def clearUnfinished(tourId: Tournament.ID) =
+    coll.update
+      .one(
+        selectTour(tourId) ++ selectUnfinished,
+        $unset(
+          Arrangement.BSONFields.gameId,
+          Arrangement.BSONFields.startedAt,
+          Arrangement.BSONFields.u1ScheduledAt,
+          Arrangement.BSONFields.u2ScheduledAt,
+          Arrangement.BSONFields.u1ReadyAt,
+          Arrangement.BSONFields.u2ReadyAt,
+          Arrangement.BSONFields.lockedScheduledAt,
+          Arrangement.BSONFields.lastNotified,
+        ),
+        multi = true,
+      )
+      .void
+
+  def removeUnfinished(tourId: Tournament.ID) =
+    coll.delete.one(selectTour(tourId) ++ selectUnfinished).void
 
   def find(tourId: Tournament.ID, userId: User.ID): Fu[List[Arrangement]] =
     coll.list[Arrangement](selectTourUser(tourId, userId))
@@ -83,7 +104,7 @@ final class ArrangementRepo(coll: Coll)(implicit
       coll.update
         .one(
           $id(arr.id),
-          $unset("g", "st"),
+          $unset(Arrangement.BSONFields.gameId, Arrangement.BSONFields.startedAt),
         )
         .void
     else
@@ -91,27 +112,21 @@ final class ArrangementRepo(coll: Coll)(implicit
         .one(
           $id(arr.id),
           $set(
-            "s" -> g.status.id,
-            "w" -> g.winnerUserId.map(_ == arr.user1.id),
-            "p" -> g.plies,
-          ) ++ $unset("l"),
+            Arrangement.BSONFields.status -> g.status.id,
+            Arrangement.BSONFields.winner -> g.winnerUserId.map(_ == arr.user1.id),
+            Arrangement.BSONFields.plies  -> g.plies,
+          ) ++ $unset(
+            Arrangement.BSONFields.lastNotified,
+          ),
         )
         .void
+
+  def setLastNotified(id: Arrangement.ID, date: DateTime) =
+    coll.updateField($id(id), Arrangement.BSONFields.lastNotified, date).void
 
   def delete(id: Arrangement.ID) = coll.delete.one($id(id)).void
 
   def removeByTour(tourId: Tournament.ID) = coll.delete.one(selectTour(tourId)).void
-
-  private[tournament] def allUpcomingByUserIdChronological(
-      userId: User.ID,
-  ): Fu[List[Arrangement]] =
-    coll
-      .find(
-        selectUser(userId) ++ afterNow,
-      )
-      .sort(chronoSort)
-      .cursor[Arrangement]()
-      .list()
 
   def recentGameIdsByTourAndUserId(
       tourId: Tournament.ID,
@@ -121,13 +136,13 @@ final class ArrangementRepo(coll: Coll)(implicit
     coll
       .find(
         selectTourUser(tourId, userId),
-        $doc("g" -> true).some,
+        $doc(Arrangement.BSONFields.gameId -> true).some,
       )
       .sort(recentSort)
       .cursor[Bdoc]()
       .list(nb)
       .dmap {
-        _.flatMap(_.getAsOpt[Game.ID]("g"))
+        _.flatMap(_.getAsOpt[Game.ID](Arrangement.BSONFields.gameId))
       }
 
   private[tournament] def countByTourIdAndUserIds(tourId: Tournament.ID): Fu[Map[User.ID, Int]] = {
@@ -136,9 +151,9 @@ final class ArrangementRepo(coll: Coll)(implicit
       .aggregateList(maxDocs = max) { framework =>
         import framework._
         Match(selectTour(tourId)) -> List(
-          Project($doc("u" -> true, "_id" -> false)),
-          UnwindField("u"),
-          GroupField("u")("nb" -> SumAll),
+          Project($doc(Arrangement.BSONFields.users -> true, Arrangement.BSONFields.id -> false)),
+          UnwindField(Arrangement.BSONFields.users),
+          GroupField(Arrangement.BSONFields.users)("nb" -> SumAll),
           Sort(Descending("nb")),
           Limit(max),
         )
@@ -160,14 +175,14 @@ final class ArrangementRepo(coll: Coll)(implicit
       Match(selectTour(tourId)) -> List(
         Project(
           $doc(
-            "_id" -> false,
-            "w"   -> true,
-            "p"   -> true,
+            Arrangement.BSONFields.id     -> false,
+            Arrangement.BSONFields.winner -> true,
+            Arrangement.BSONFields.plies  -> true,
           ),
         ),
-        GroupField("w")(
+        GroupField(Arrangement.BSONFields.winner)(
           "games" -> SumAll,
-          "moves" -> SumField("p"),
+          "moves" -> SumField(Arrangement.BSONFields.plies),
         ),
       )
     }

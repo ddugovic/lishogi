@@ -4,6 +4,7 @@ import * as status from 'game/status';
 import { i18n } from 'i18n';
 import { type VNode, h } from 'snabbdom';
 import type TournamentController from '../ctrl';
+import type { TourPlayer } from '../interfaces';
 import { teamName } from './battle';
 import { numberRow, playerName, player as renderPlayer } from './util';
 
@@ -18,9 +19,9 @@ function result(win: boolean, stat: number): string {
   }
 }
 
-function playerTitle(player: any) {
+function playerTitle(player: TourPlayer) {
   return h('h2', [
-    h('span.rank', player.rank ? `${player.rank}. ` : ''),
+    h('span.rank', 'rank' in player ? `${player.rank}. ` : ''),
     renderPlayer(player, true, false, false),
   ]);
 }

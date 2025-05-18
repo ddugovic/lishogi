@@ -2,7 +2,7 @@ import { type MaybeVNodes, bind, dataIcon } from 'common/snabbdom';
 import { i18n } from 'i18n';
 import { type VNode, h } from 'snabbdom';
 import type TournamentController from '../ctrl';
-import type { PageData } from '../interfaces';
+import type { ArenaPlayer, PageData, Podium } from '../interfaces';
 import { teamName } from './battle';
 import { playerName, preloadUserTips, ratio2percent, player as renderPlayer } from './util';
 
@@ -12,7 +12,8 @@ function scoreTag(s: any) {
   return h(scoreTagNames[(s[1] || 1) - 1], [Array.isArray(s) ? s[0] : s]);
 }
 
-function playerTr(ctrl: TournamentController, player: any) {
+function playerTr(ctrl: TournamentController, player: ArenaPlayer) {
+  if (!player.sheet) return;
   const userId = player.name.toLowerCase();
   const nbScores = player.sheet.scores.length;
   const battle = ctrl.data.teamBattle;
@@ -54,7 +55,7 @@ function playerTr(ctrl: TournamentController, player: any) {
   );
 }
 
-function podiumUsername(p: any) {
+function podiumUsername(p: Podium) {
   return h(
     'a.text.ulpt.user-link',
     {
@@ -64,7 +65,7 @@ function podiumUsername(p: any) {
   );
 }
 
-function podiumStats(p: any): VNode {
+function podiumStats(p: Podium): VNode {
   const nb = p.nb;
   return h('table.stats', [
     p.performance ? h('tr', [h('th', i18n('performance')), h('td', p.performance)]) : null,
@@ -78,7 +79,7 @@ function podiumStats(p: any): VNode {
   ]);
 }
 
-function podiumPosition(p: any, pos: string): VNode | undefined {
+function podiumPosition(p: Podium, pos: string): VNode | undefined {
   if (p) return h(`div.${pos}`, [h('div.trophy'), podiumUsername(p), podiumStats(p)]);
   else return;
 }
@@ -96,7 +97,7 @@ export function podium(ctrl: TournamentController): VNode {
 
 export function standing(ctrl: TournamentController, pag: PageData, klass?: string): VNode {
   const tableBody = pag.currentPageResults
-    ? pag.currentPageResults.map(res => playerTr(ctrl, res))
+    ? pag.currentPageResults.map(res => playerTr(ctrl, res as ArenaPlayer))
     : lastBody;
   if (pag.currentPageResults) lastBody = tableBody;
   return h(

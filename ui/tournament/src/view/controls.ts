@@ -47,13 +47,13 @@ export function organizedControls(ctrl: TournamentController, pag: PageData): VN
   ]);
 }
 
-export function backControl(ctrl: TournamentController, f: () => void, extra: VNodes = []): VNode {
+export function backControl(f: () => void, extra: VNodes = []): VNode {
   console.log('extra:', extra.length);
 
   return h('div.tour__controls.back', [
     h(
       'div.pager',
-      { hook: bind('click', () => f(), ctrl.redraw) },
+      { hook: bind('click', () => f()) },
       h(
         'button.fbt.is.text.' + 'back',
         {
@@ -66,28 +66,6 @@ export function backControl(ctrl: TournamentController, f: () => void, extra: VN
       ),
     ),
     ...extra,
-  ]);
-}
-
-export function utcControl(ctrl: TournamentController): VNode {
-  return h('div.switch', [
-    h('label.label', { attrs: { for: 'f-UTC' } }, 'UTC'),
-    h('input.cmn-toggle', {
-      attrs: {
-        id: 'f-UTC',
-        type: 'checkbox',
-        checked: ctrl.utc(),
-      },
-      hook: bind(
-        'change',
-        e => {
-          const val = (e.target as HTMLInputElement).checked;
-          ctrl.utc(val);
-        },
-        ctrl.redraw,
-      ),
-    }),
-    h('label', { attrs: { for: 'f-UTC' } }),
   ]);
 }
 

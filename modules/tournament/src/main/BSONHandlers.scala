@@ -148,7 +148,7 @@ object BSONHandlers {
         "closed"         -> w.boolO(o.closed),
         "denied"         -> w.strListO(o.denied),
         "teamBattle"     -> o.teamBattle,
-        "candidatesOnly" -> o.candidatesOnly,
+        "candidatesOnly" -> w.boolO(o.candidatesOnly),
         "noBerserk"      -> w.boolO(o.noBerserk),
         "noStreak"       -> w.boolO(o.noStreak),
         "schedule" -> o.schedule.map { s =>
@@ -238,59 +238,58 @@ object BSONHandlers {
 
   implicit val arrangementHandler: BSON[Arrangement] = new BSON[Arrangement] {
     def reads(r: BSON.Reader) = {
-      val users   = r strsD "u"
+      val users   = r strsD Arrangement.BSONFields.users
       val user1Id = users.headOption err "tournament arrangement first user"
       val user2Id = users lift 1 err "tournament arrangement second user"
       Arrangement(
-        id = r str "_id",
-        tourId = r str "t",
+        id = r str Arrangement.BSONFields.id,
+        tourId = r str Arrangement.BSONFields.tourId,
         user1 = Arrangement.User(
           id = user1Id,
-          readyAt = r dateO "r1",
-          scheduledAt = r dateO "d1",
+          readyAt = r dateO Arrangement.BSONFields.u1ReadyAt,
+          scheduledAt = r dateO Arrangement.BSONFields.u1ScheduledAt,
         ),
         user2 = Arrangement.User(
           id = user2Id,
-          readyAt = r dateO "r2",
-          scheduledAt = r dateO "d2",
+          readyAt = r dateO Arrangement.BSONFields.u2ReadyAt,
+          scheduledAt = r dateO Arrangement.BSONFields.u2ScheduledAt,
         ),
-        name = r strO "n",
-        color = r.getO[shogi.Color]("c"),
-        points = r.getO[Arrangement.Points]("pt"),
-        gameId = r strO "g",
-        startedAt = r dateO "st",
-        status = r.intO("s") flatMap shogi.Status.apply,
-        winner = r boolO "w" map {
+        name = r strO Arrangement.BSONFields.name,
+        color = r.getO[shogi.Color](Arrangement.BSONFields.color),
+        points = r.getO[Arrangement.Points](Arrangement.BSONFields.points),
+        gameId = r strO Arrangement.BSONFields.gameId,
+        startedAt = r dateO Arrangement.BSONFields.startedAt,
+        status = r.intO(Arrangement.BSONFields.status) flatMap shogi.Status.apply,
+        winner = r boolO Arrangement.BSONFields.winner map {
           case true => user1Id
           case _    => user2Id
         },
-        plies = r intO "p",
-        scheduledAt = r dateO "d",
-        lockedScheduledAt = r boolD "l",
-        history = Arrangement.History(r strsD "h"),
+        plies = r intO Arrangement.BSONFields.plies,
+        scheduledAt = r dateO Arrangement.BSONFields.scheduledAt,
+        lockedScheduledAt = r boolD Arrangement.BSONFields.lockedScheduledAt,
+        lastNotified = r dateO Arrangement.BSONFields.lastNotified,
       )
     }
     def writes(w: BSON.Writer, o: Arrangement) =
       $doc(
-        "_id" -> o.id,
-        "t"   -> o.tourId,
-        "u"   -> BSONArray(o.user1.id, o.user2.id),
-        "r1"  -> o.user1.readyAt,
-        "r2"  -> o.user2.readyAt,
-        "d1"  -> o.user1.scheduledAt,
-        "d2"  -> o.user2.scheduledAt,
-        "n"   -> o.name,
-        "c"   -> o.color,
-        "pt"  -> o.points.filterNot(_ == Arrangement.Points.default),
-        "g"   -> o.gameId,
-        "st"  -> o.startedAt,
-        "s"   -> o.status.map(_.id),
-        "w"   -> o.winner.map(o.user1 ==),
-        "p"   -> o.plies,
-        "d"   -> o.scheduledAt,
-        "h"   -> o.history.list,
-        "l"   -> w.boolO(o.lockedScheduledAt),
-        "ua"  -> o.gameId.isEmpty ?? DateTime.now.some, // updated at
+        Arrangement.BSONFields.id            -> o.id,
+        Arrangement.BSONFields.tourId        -> o.tourId,
+        Arrangement.BSONFields.users         -> BSONArray(o.user1.id, o.user2.id),
+        Arrangement.BSONFields.u1ReadyAt     -> o.user1.readyAt,
+        Arrangement.BSONFields.u2ReadyAt     -> o.user2.readyAt,
+        Arrangement.BSONFields.u1ScheduledAt -> o.user1.scheduledAt,
+        Arrangement.BSONFields.u2ScheduledAt -> o.user2.scheduledAt,
+        Arrangement.BSONFields.name          -> o.name,
+        Arrangement.BSONFields.color         -> o.color,
+        Arrangement.BSONFields.points        -> o.points.filterNot(_ == Arrangement.Points.default),
+        Arrangement.BSONFields.gameId        -> o.gameId,
+        Arrangement.BSONFields.startedAt     -> o.startedAt,
+        Arrangement.BSONFields.status        -> o.status.map(_.id),
+        Arrangement.BSONFields.winner        -> o.winner.map(o.user1 ==),
+        Arrangement.BSONFields.plies         -> o.plies,
+        Arrangement.BSONFields.scheduledAt   -> o.scheduledAt,
+        Arrangement.BSONFields.lockedScheduledAt -> w.boolO(o.lockedScheduledAt),
+        Arrangement.BSONFields.updatedAt -> o.gameId.isEmpty ?? DateTime.now.some, // updated at
       )
   }
 

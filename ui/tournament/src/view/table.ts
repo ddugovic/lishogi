@@ -2,11 +2,18 @@ import { bind } from 'common/snabbdom';
 import { opposite } from 'shogiground/util';
 import { type VNode, h } from 'snabbdom';
 import type TournamentController from '../ctrl';
-import type { Duel, DuelPlayer, DuelTeams, TeamBattle } from '../interfaces';
+import type {
+  Duel,
+  DuelPlayer,
+  DuelTeams,
+  Featured,
+  FeaturedPlayer,
+  TeamBattle,
+} from '../interfaces';
 import { teamName } from './battle';
 import { miniBoard, player as renderPlayer } from './util';
 
-function featuredPlayer(player: any) {
+function featuredPlayer(player: FeaturedPlayer) {
   return h('div.tour__featured__player', [
     h('strong', `#${player.rank}`),
     renderPlayer(player, true, true, false),
@@ -21,7 +28,7 @@ function featuredPlayer(player: any) {
   ]);
 }
 
-function featured(f: any): VNode {
+function featured(f: Featured): VNode {
   return h('div.tour__featured', [
     featuredPlayer(f[opposite(f.color)]),
     miniBoard(f),

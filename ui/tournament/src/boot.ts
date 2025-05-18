@@ -9,7 +9,7 @@ export function boot(
   let ctrl: TournamentController | undefined = undefined;
   window.lishogi.socket = new window.lishogi.StrongSocket(
     `/tournament/${opts.data.id}/socket/v4`,
-    opts.data.socketVersion,
+    opts.data.socketVersion!,
     {
       receive: (t: string, d: any) => ctrl?.socket.receive(t, d),
     },

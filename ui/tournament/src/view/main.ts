@@ -3,7 +3,7 @@ import { type MaybeVNodes, onInsert } from 'common/snabbdom';
 import { i18n } from 'i18n';
 import { type VNode, h } from 'snabbdom';
 import type TournamentController from '../ctrl';
-import { arrangementView } from './arrangement';
+import { arrangementModal } from './arrangement-modal';
 import { joinWithTeamSelector } from './battle';
 import { created } from './created';
 import { finished } from './finished';
@@ -23,6 +23,18 @@ export default function (ctrl: TournamentController): VNode {
   else if (ctrl.data.isStarted) handler = started;
   else handler = created;
 
+  const desc = ctrl.opts.$desc
+    ? h('div', {
+        hook: onInsert(el => $(el).replaceWith(ctrl.opts.$desc)),
+      })
+    : null;
+
+  const faq = ctrl.opts.$faq
+    ? h('div', {
+        hook: onInsert(el => $(el).replaceWith(ctrl.opts.$faq)),
+      })
+    : null;
+
   return h(`main.${ctrl.data.system}${!ctrl.isArena() ? '.arr-table' : ''}.${ctrl.opts.classes}`, [
     h('aside.tour__side', {
       hook: onInsert(el => {
@@ -36,22 +48,20 @@ export default function (ctrl: TournamentController): VNode {
       }),
     }),
     handler.table(ctrl),
-    h(
-      'div.tour__main',
+    h('div.tour__main', [
+      ctrl.arrangement ? arrangementModal(ctrl, ctrl.arrangement) : null,
       h(
         `div.box.${handler.name}`,
         {
-          class: { 'tour__main-finished': ctrl.data.isFinished },
+          class: { 'tour__main-finished': !!ctrl.data.isFinished },
         },
-        ctrl.arrangement
-          ? arrangementView(ctrl, ctrl.arrangement)
-          : ctrl.playerManagement
-            ? playerManagementView(ctrl)
-            : ctrl.newArrangement
-              ? organizedArrangementView(ctrl)
-              : handler.main(ctrl),
+        ctrl.playerManagement
+          ? playerManagementView(ctrl)
+          : ctrl.newArrangement
+            ? organizedArrangementView(ctrl)
+            : [...handler.main(ctrl), h('div.tour__bottom', [desc, faq])],
       ),
-    ),
+    ]),
     ctrl.opts.chat
       ? h('div.chat__members.none', [
           h('span.number', '\xa0'),

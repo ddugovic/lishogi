@@ -6,7 +6,6 @@ import controllers.routes
 import lila.api.Context
 import lila.app.templating.Environment._
 import lila.app.ui.ScalatagsTemplate._
-import lila.common.String.html.richText
 import lila.tournament.TeamBattle
 import lila.tournament.Tournament
 import lila.tournament.TournamentShield
@@ -53,9 +52,6 @@ object side {
               )
             },
           )
-        },
-        tour.description map { d =>
-          st.section(cls := "description")(richText(d))
         },
         tour.looksLikePrize option bits.userPrizeDisclaimer,
         verdicts.relevant option st.section(

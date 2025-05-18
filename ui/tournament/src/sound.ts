@@ -1,6 +1,6 @@
 import notify from 'common/notification';
 import { once } from 'common/storage';
-import type { TournamentData } from './interfaces';
+import type { TournamentDataFull } from './interfaces';
 
 let countDownTimeout: number | undefined;
 const li = window.lishogi;
@@ -13,7 +13,11 @@ function doCountDown(targetTime: number) {
 
     // always play the 0 sound before completing.
     const bestTick = Math.max(0, Math.round(secondsToStart));
-    if (bestTick <= 10) li.sound.play(`countDown${bestTick}`);
+    if (bestTick <= 10) {
+      const key = `countDown${bestTick}`;
+      console.info(key, new Date());
+      li.sound.play(key);
+    }
 
     if (bestTick > 0) {
       const nextTick = Math.min(10, bestTick - 1);
@@ -30,7 +34,7 @@ function doCountDown(targetTime: number) {
   };
 }
 
-export function end(data: TournamentData): void {
+export function end(data: TournamentDataFull): void {
   if (!data.me) return;
   if (!data.isRecentlyFinished) return;
   if (!once(`tournament.end.sound.${data.id}`)) return;
@@ -45,7 +49,7 @@ export function end(data: TournamentData): void {
   li.sound.play(soundName);
 }
 
-export function countDown(data: TournamentData): void {
+export function countDown(data: TournamentDataFull): void {
   if (!data.me || !data.secondsToStart) {
     if (countDownTimeout) clearTimeout(countDownTimeout);
     countDownTimeout = undefined;

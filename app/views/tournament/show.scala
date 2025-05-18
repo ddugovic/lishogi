@@ -7,6 +7,7 @@ import play.api.libs.json.Json
 import lila.api.Context
 import lila.app.templating.Environment._
 import lila.app.ui.ScalatagsTemplate._
+import lila.common.String.html.richText
 import lila.tournament.Tournament
 import lila.user.User
 
@@ -59,18 +60,33 @@ object show {
         )
         .some,
     )(
-      main(cls := s"tour${tour.schedule
+      main(cls := s"tour ${tour.format.key}${tour.schedule
           .?? { sched =>
             s" tour-sched tour-sched-${sched.freq.key} tour-speed-${sched.speed.key} tour-variant-${sched.variant.key} tour-id-${tour.id}"
           }}")(
         st.aside(cls := "tour__side")(
           tournament.side(tour, verdicts, streamers, shieldOwner, chatOption.isDefined),
         ),
-        div(cls := "tour__main")(div(cls := "box")),
-        (tour.isCreated || (tour.hasArrangements && !tour.isFinished)) option div(
-          cls := "tour__faq",
-        )(
-          faq(tour.format, tour.mode.rated.some, tour.isPrivate.option(tour.id)),
+        div(cls := "tour__main")(
+          div(cls := "box")(
+            div(cls := "tour__main__header"),
+            div(cls := "tour__controls"),
+            div(cls := "tour__pad"),
+            div(cls := "tour__bottom")(
+              tour.description map { d =>
+                div(cls := "tour__desc")(
+                  h2(trans.description()),
+                  p(richText(d)),
+                )
+              },
+              div(
+                cls := "tour__faq",
+              )(
+                h2(trans.faq.faqAbbreviation()),
+                faq(tour.format, tour.mode.rated.some, tour.isPrivate.option(tour.id)),
+              ),
+            ),
+          ),
         ),
       ),
     )

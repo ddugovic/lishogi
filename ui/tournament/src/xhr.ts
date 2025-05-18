@@ -14,6 +14,8 @@ function join(ctrl: TournamentController, password?: string, team?: string) {
       },
     })
     .then(res => {
+      ctrl.redraw();
+
       if (!res.ok)
         res.json().then((t: any) => {
           if (t.error) alert(t.error);
@@ -57,13 +59,13 @@ function reload(ctrl: TournamentController): Promise<void> {
     }, onFail);
 }
 
-const playerInfo = (ctrl: TournamentController, userId: string): any =>
+const playerInfo = (ctrl: TournamentController, userId: string): Promise<void> =>
   window.lishogi.xhr.json('GET', `/tournament/${ctrl.data.id}/player/${userId}`).then(data => {
     ctrl.setPlayerInfoData(data);
     ctrl.redraw();
   }, onFail);
 
-const teamInfo = (ctrl: TournamentController, teamId: string): any =>
+const teamInfo = (ctrl: TournamentController, teamId: string): Promise<void> =>
   window.lishogi.xhr.json('GET', `/tournament/${ctrl.data.id}/team/${teamId}`).then(data => {
     ctrl.setTeamInfo(data);
     ctrl.redraw();

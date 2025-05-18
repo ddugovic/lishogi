@@ -15,7 +15,6 @@ object list {
   ) =
     if (pager.currentPageResults.isEmpty)
       div(cls := "notours")(
-        iconTag("4"),
         p(trans.study.noneYet()),
       )
     else
@@ -32,7 +31,7 @@ object list {
           pager.currentPageResults.map { t =>
             tr(cls := "paginated")(
               td(cls := "icon")(
-                i(cls := t.format.key, dataIcon := tournamentIconChar(t)),
+                tournamentIcon(t),
               ),
               header(t),
               td(cls := "date")(momentFromNow(t.startsAt)),

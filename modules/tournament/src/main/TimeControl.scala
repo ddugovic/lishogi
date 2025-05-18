@@ -123,7 +123,7 @@ object TimeControl {
           clockTime = tc.clock.map(_.limitInMinutes) | clockTimeDefault,
           clockIncrement = tc.clock.map(_.incrementSeconds) | clockIncrementDefault,
           clockByoyomi = tc.clock.map(_.byoyomiSeconds) | clockByoyomiDefault,
-          periods = tc.clock.map(_.periodsTotal) | periodsDefault,
+          periods = (tc.clock.map(_.periodsTotal) | periodsDefault) atLeast periodsDefault,
           daysPerTurn = tc.days | daysPerTurnDefault,
         )
     }

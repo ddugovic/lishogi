@@ -8,20 +8,21 @@ import header from './header';
 export function playerManagementView(ctrl: TournamentController): VNodes {
   return [
     header(ctrl),
-    backControl(ctrl, () => {
+    backControl(() => {
       ctrl.playerManagement = false;
+      ctrl.redraw();
     }),
     playerManagement(ctrl),
   ];
 }
 
+let toKick = '';
 function playerManagement(ctrl: TournamentController): VNode {
   return h('div.player-manage', [
     renderCandidates(ctrl),
     renderDenied(ctrl),
     h('div.other-actions', [
       h('div.ban', [
-        h('h3.title', i18n('kickPlayer')),
         h(
           'div.search',
           h('input', {
@@ -35,12 +36,8 @@ function playerManagement(ctrl: TournamentController): VNode {
                     focus: false,
                     minLength: 3,
                     onSelect(v: any) {
-                      if (confirm(i18n('notReversible'))) {
-                        ctrl.playerKick(v.id);
-                      }
-                      const $el = $(el);
-                      $el.typeahead('close');
-                      $el.typeahead('val', '');
+                      toKick = v.id;
+                      ctrl.redraw();
                     },
                   });
                 });
@@ -48,15 +45,33 @@ function playerManagement(ctrl: TournamentController): VNode {
             },
           }),
         ),
+        h(
+          'button.button.button-red',
+          {
+            class: {
+              disabled: !toKick,
+            },
+            hook: bind('click', () => {
+              if (confirm(i18n('notReversible'))) {
+                ctrl.playerKick(toKick);
+                toKick = '';
+                ctrl.redraw();
+              }
+            }),
+          },
+          i18n('kickPlayer'),
+        ),
       ]),
       h('div.joining', [
         h(
-          'button.button.button-red.text',
+          'button.button.button-red',
           {
-            attrs: { 'data-icon': 'L', title: 'Accept' },
-            hook: bind('click', () => {}),
+            hook: bind('click', () => {
+              ctrl.closeJoining(!ctrl.data.isClosed);
+              ctrl.redraw();
+            }),
           },
-          ctrl.data.closed ? 'Open joining' : 'Close joining',
+          ctrl.data.isClosed ? 'Open joining' : 'Close joining',
         ),
       ]),
     ]),
@@ -126,7 +141,7 @@ function renderDenied(ctrl: TournamentController) {
                 h('td.name', renderUser(d)),
                 h('td.actions', [
                   h('button.button', {
-                    attrs: { 'data-icon': 'E', title: 'Accept' },
+                    attrs: { 'data-icon': 'P', title: i18n('accept') },
                     hook: bind('click', () => ctrl.processCandidate(d.id, true)),
                   }),
                 ]),

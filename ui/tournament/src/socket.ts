@@ -9,7 +9,7 @@ export interface TournamentSocket {
 export default function (send: Socket.Send, ctrl: TournamentController): TournamentSocket {
   const handlers: Record<string, any> = {
     reload() {
-      setTimeout(ctrl.askReload, Math.floor(Math.random() * 4000));
+      ctrl.askReload();
     },
     redirect(fullId: string) {
       ctrl.redirectFirst(fullId.slice(0, 8), true);
@@ -33,15 +33,15 @@ export default function (send: Socket.Send, ctrl: TournamentController): Tournam
         ctrl.arrangement &&
         users.includes(ctrl.arrangement.user1.id) &&
         users.includes(ctrl.arrangement.user2.id)
-      )
+      ) {
+        if (
+          ctrl.arrangement.user1.readyAt !== arr.user1.readyAt ||
+          ctrl.arrangement.user2.readyAt !== arr.user2.readyAt
+        ) {
+          ctrl.arrangementReadyRedraw(arr);
+        }
+
         ctrl.arrangement = arr;
-      else {
-        const key = `${arr.user1.id};${arr.user2.id}`;
-        ctrl.highlightArrs.push(key);
-        setTimeout(() => {
-          ctrl.highlightArrs = ctrl.highlightArrs.filter(k => k !== key);
-          ctrl.redraw();
-        }, 6000);
       }
 
       ctrl.redraw();

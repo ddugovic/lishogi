@@ -3,6 +3,7 @@ import { type MaybeVNode, dataIcon } from 'common/snabbdom';
 import { i18n } from 'i18n';
 import { type VNode, h } from 'snabbdom';
 import type TournamentController from '../ctrl';
+import type { TournamentDataFull } from '../interfaces';
 
 function startClock(time: number) {
   return {
@@ -12,17 +13,18 @@ function startClock(time: number) {
 
 const oneDayInSeconds = 60 * 60 * 24;
 
-function hasFreq(freq: string, d: any) {
+function hasFreq(freq: string, d: TournamentDataFull) {
   return d.schedule && d.schedule.freq === freq;
 }
 
-function clock(d: any): MaybeVNode {
+function clock(ctrl: TournamentController): MaybeVNode {
+  const d = ctrl.data;
   if (d.isFinished) return;
-  if (d.secondsToFinish) {
-    if (d.secondsToFinish > oneDayInSeconds)
+  if (d.secondsToFinish && !d.secondsToStart) {
+    if (d.secondsToFinish > oneDayInSeconds && ctrl.dateToFinish)
       return h('div.clock.clock-title', [
         h('span.shy', `${i18n('ending')} `),
-        new Date(Date.now() + d.secondsToFinish * 1000).toLocaleString(),
+        ctrl.dateToFinish.toLocaleString(),
       ]);
     else
       return h(
@@ -46,7 +48,7 @@ function clock(d: any): MaybeVNode {
             insert(vnode) {
               (vnode.elm as HTMLElement).setAttribute(
                 'datetime',
-                `${Date.now() + d.secondsToStart * 1000}`,
+                `${Date.now() + d.secondsToStart! * 1000}`,
               );
             },
           },
@@ -63,7 +65,7 @@ function clock(d: any): MaybeVNode {
   } else return;
 }
 
-function image(d: any): VNode | undefined {
+function image(d: TournamentDataFull): VNode | undefined {
   if (d.isFinished) return;
   if (hasFreq('shield', d) || hasFreq('marathon', d)) return;
   const s = d.spotlight;
@@ -112,5 +114,5 @@ function title(ctrl: TournamentController) {
 }
 
 export default function (ctrl: TournamentController): VNode {
-  return h('div.tour__main__header', [image(ctrl.data), title(ctrl), clock(ctrl.data)]);
+  return h('div.tour__main__header', [image(ctrl.data), title(ctrl), clock(ctrl)]);
 }

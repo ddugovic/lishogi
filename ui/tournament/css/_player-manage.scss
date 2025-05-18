@@ -37,25 +37,24 @@
 
   .other-actions {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    flex-wrap: wrap;
 
-    & > div {
-      padding: 1.5rem;
+    input {
+      margin-right: 1rem;
     }
 
     .ban {
+      flex: 1;
       display: flex;
       align-items: center;
-
-      .title {
-        margin-right: 0.75rem;
-      }
+      justify-content: center;
+      padding: 1.5rem 0;
+      border-right: theme.$border;
     }
 
     .joining {
-      display: flex;
-      justify-content: center;
-      border-left: theme.$border;
+      padding: 1.5rem;
     }
   }
 }

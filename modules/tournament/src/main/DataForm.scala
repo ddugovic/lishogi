@@ -101,6 +101,10 @@ final class DataForm {
               "Can't change tournament from 'candidates only' to open, if candidates list is not empty",
               ~_.candidatesOnly == tour.candidatesOnly || !tour.candidatesOnly || tour.candidates.isEmpty,
             )
+            .verifying(
+              "Can't change start date once tournament starts",
+              !tour.isStarted || tour.startDate == _.realStartDate
+            )
         }
       }
     }
@@ -186,7 +190,7 @@ private[tournament] case class TournamentSetup(
 
   def realFormat = format.flatMap(Format.byKey) | Format.Arena
 
-  def realStartDate = startDate.filter(_ isAfter DateTime.now).getOrElse(DateTime.now)
+  def realStartDate = startDate.getOrElse(DateTime.now)
 
   def realMinutes = finishDate
     .ifTrue(realFormat != Format.Arena)

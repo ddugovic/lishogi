@@ -51,7 +51,7 @@ object tournaments {
             "soon"      -> tour.isNowOrSoon,
           ),
         )(
-          td(cls := "icon")(iconTag(tournamentIconChar(tour))),
+          td(cls := "icon")(tournamentIcon(tour)),
           td(cls := "header")(
             a(href := routes.Tournament.show(tour.id))(
               span(cls := "name")(tour.trans),

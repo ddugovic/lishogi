@@ -41,7 +41,7 @@ object form {
             ),
           ),
         ),
-        a(href := routes.Tournament.help(none)),
+        a(href := routes.Tournament.help),
       )
     }
 
@@ -70,7 +70,10 @@ object form {
             ),
           ),
           postForm(cls := "terminate", action := routes.Tournament.terminate(tour.id))(
-            submitButton(dataIcon := "j", cls := "text button button-red confirm")(
+            submitButton(
+              dataIcon := "j",
+              cls      := s"text button button-red confirm${tour.isFinished ?? "disabled"}",
+            )(
               "Cancel the tournament",
             ),
           ),
@@ -234,10 +237,12 @@ final private class TourFields(form: Form[_], tour: Option[Tournament])(implicit
   def format =
     form3.group(
       form("format"),
-      "Format",
+      trans.tourFormat(),
       half = true,
       help = frag(
-        a(href := routes.Tournament.help(none))("More about formats"),
+        a(href := routes.Tournament.help)(
+          s"${trans.tourFormat.txt()} - ${trans.faq.faqAbbreviation.txt()}",
+        ),
       ).some,
     )(
       form3.select(
@@ -376,7 +381,7 @@ final private class TourFields(form: Form[_], tour: Option[Tournament])(implicit
       frag("Start date"),
       half = true,
       help = frag("Leave empty to start now").some, // tournament.form.positionInputHelp.some
-    )(form3.flatpickr(_))
+    )(form3.flatpickr(_, disabled = disabledAfterStart))
 
   def finishDate =
     frag(
