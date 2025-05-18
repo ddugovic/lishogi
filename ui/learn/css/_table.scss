@@ -117,7 +117,6 @@
       font-size: 28px;
       font-weight: bold;
       text-transform: uppercase;
-      background: #fff;
       border: none;
       border-radius: 5px;
       padding: 5px 10px;
@@ -131,6 +130,7 @@
 
       button {
         color: theme.$c-good;
+        background: theme.$c-good-over;
       }
     }
 
@@ -140,6 +140,7 @@
 
       button {
         color: theme.$c-bad;
+        background: theme.$c-bad-over;
       }
     }
 

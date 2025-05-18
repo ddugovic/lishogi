@@ -33,7 +33,7 @@ export default function (ctrl: LearnCtrl): MaybeVNode {
       h('div.buttons', [
         next
           ? h(
-              'a.next',
+              'button.button',
               {
                 on: {
                   click: () => {
@@ -42,19 +42,12 @@ export default function (ctrl: LearnCtrl): MaybeVNode {
                   },
                 },
               },
-              [
-                `${i18n('learn:next')}: `,
-                `${next.title} `,
-                h('i', { attrs: { 'data-icon': 'H' } }),
-              ],
+              [`${i18n('learn:next')}: `, `${next.title} `],
             )
           : null,
         h(
-          'a.back.text',
+          'button.button.button-red',
           {
-            dataset: {
-              icon: 'I',
-            },
             on: {
               click: () => {
                 ctrl.setHome();

@@ -3,6 +3,7 @@ import { type VNode, h } from 'snabbdom';
 import { categories } from '../categories';
 import type LearnCtrl from '../ctrl';
 import type { Stage } from '../interfaces';
+import { other, samuraiHelmet, stages } from '../svg';
 import { average } from '../util';
 
 function calcPercentage(ctrl: LearnCtrl): number {
@@ -42,7 +43,11 @@ function ribbon(s: Stage, status: string, res: number[]) {
 function side(ctrl: LearnCtrl) {
   const progress = calcPercentage(ctrl);
   return h(`div.learn__side-home${progress === 100 ? '.done' : ''}`, [
-    h('i.fat'),
+    h('div.fat', {
+      props: {
+        innerHTML: samuraiHelmet,
+      },
+    }),
     h('h1', i18n('learn:learnShogi')),
     h('h2', i18n('learn:byPlaying')),
     h('div.progress', [
@@ -74,7 +79,7 @@ function side(ctrl: LearnCtrl) {
 function whatNext(ctrl: LearnCtrl) {
   const makeStage = (
     href: string,
-    img: string,
+    svg: string,
     title: string,
     subtitle: string,
     done?: boolean,
@@ -88,7 +93,11 @@ function whatNext(ctrl: LearnCtrl) {
       },
       [
         done ? h('div.ribbon.done', h('div.ribbon-inner', makeStars(3))) : null,
-        h(`div.stage-img.${img}`),
+        h('div.stage-img', {
+          props: {
+            innerHTML: svg,
+          },
+        }),
         h('div.text', [h('h3', title), h('p.subtitle', subtitle)]),
       ],
     );
@@ -101,38 +110,38 @@ function whatNext(ctrl: LearnCtrl) {
       userId
         ? makeStage(
             `/@/${userId}`,
-            'beams-aura',
+            other.beamsAura,
             i18n('learn:register'),
             i18n('learn:getAFreeLishogiAccount'),
             true,
           )
         : makeStage(
             '/signup',
-            'beams-aura',
+            other.beamsAura,
             i18n('learn:register'),
             i18n('learn:getAFreeLishogiAccount'),
           ),
       makeStage(
         '/resources',
-        'king',
+        stages.king,
         i18n('learn:shogiResources'),
         i18n('learn:curatedShogiResources'),
       ),
       makeStage(
         '/training',
-        'bullseye',
+        other.bullseye,
         i18n('learn:puzzles'),
         i18n('learn:exerciseYourTacticalSkills'),
       ),
       makeStage(
         '/#hook',
-        'sword-clash',
+        other.swordClash,
         i18n('learn:playPeople'),
         i18n('learn:opponentsFromAroundTheWorld'),
       ),
       makeStage(
         '/#ai',
-        'vintage-robot',
+        other.vintageRobot,
         i18n('learn:playMachine'),
         i18n('learn:testYourSkillsWithTheComputer'),
       ),
@@ -181,7 +190,11 @@ export default function (ctrl: LearnCtrl): VNode {
                 },
                 [
                   ribbon(s, status, res),
-                  h(`div.stage-img.${s.key}`),
+                  h('div.stage-img', {
+                    props: {
+                      innerHTML: stages[s.key] || 'lol',
+                    },
+                  }),
                   h(`div.text${titleVerbosityClass(s.title)}`, [
                     h('h3', s.title),
                     h('p.subtitle', s.subtitle),

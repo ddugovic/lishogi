@@ -1,6 +1,7 @@
 import { i18n } from 'i18n';
 import { type VNode, h } from 'snabbdom';
 import type LearnCtrl from '../ctrl';
+import { samuraiHelmet, stages } from '../svg';
 
 export default function (ctrl: LearnCtrl): VNode {
   return h('div.learn__side-map', [
@@ -15,7 +16,7 @@ export default function (ctrl: LearnCtrl): VNode {
             },
           },
         },
-        [h('div.stage-img.samurai-helmet'), i18n('learn:menu')],
+        [h('div.stage-img', { props: { innerHTML: samuraiHelmet } }), i18n('learn:menu')],
       ),
       ...ctrl.categories.map(categ => {
         return h(
@@ -54,7 +55,14 @@ export default function (ctrl: LearnCtrl): VNode {
                       },
                     },
                   },
-                  [h(`div.stage-img.${s.key}`), h('span', s.title)],
+                  [
+                    h('div.stage-img', {
+                      props: {
+                        innerHTML: stages[s.key],
+                      },
+                    }),
+                    h('span', s.title),
+                  ],
                 );
               }),
             ),

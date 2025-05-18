@@ -136,17 +136,13 @@
         position: absolute;
         display: block;
         padding: 6px 0;
-        color: #6a6340;
-        box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
-        text-shadow: rgba(255, 255, 255, 0.5) 0 1px 0;
+        color: theme.$c-primary-over;
         text-align: center;
         font-weight: bold;
         line-height: 1.46em;
 
         i {
-          color: theme.$c-brag;
-          animation: 0.6s soft-hue ease-in-out infinite;
-          text-shadow: 0 -0.5px 1px rgba(0, 0, 0, 0.5);
+          color: theme.$c-good-over;
         }
 
         i:nth-child(2) {
@@ -160,23 +156,25 @@
 
       &.done {
         .ribbon-inner {
-          background-color: #bfdc7a;
+          background-color: theme.$c-good;
         }
 
         &::before,
         &::after {
-          border: 3px solid #6e8900;
+          border: 3px solid theme.$c-good;
+          filter: brightness(0.5);
         }
       }
 
       &.ongoing {
         .ribbon-inner {
-          background-color: #b3e5fc;
+          background-color: theme.$c-primary;
         }
 
         &::before,
         &::after {
-          border: 3px solid #536dfe;
+          border: 3px solid theme.$c-primary;
+          filter: brightness(0.5);
         }
       }
     }
@@ -215,11 +213,5 @@
 
   to {
     box-shadow: 0 0 15px 5px theme.$c-primary-glow;
-  }
-}
-
-@keyframes soft-hue {
-  50% {
-    filter: hue-rotate(-20deg);
   }
 }

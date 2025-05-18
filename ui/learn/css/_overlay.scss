@@ -133,34 +133,11 @@
   .buttons {
     width: 100%;
     text-align: center;
-    margin-bottom: 23px;
+    margin-bottom: 1rem;
 
-    a {
-      @extend %box-radius;
-
-      display: block;
-      text-decoration: none;
-      text-transform: uppercase;
-      line-height: 48px;
-      margin: 8px 10% 0 10%;
-      height: 48px;
-      color: #fff;
-      transition: all 0.3s;
-      margin-top: 8px;
-
-      &.next {
-        font-size: 0.9em;
-        background: #3692e7;
-      }
-
-      &.back {
-        font-size: 0.85em;
-        background: #e53935f0;
-      }
-
-      &:hover {
-        filter: brightness(0.9);
-      }
+    button {
+      width: 80%;
+      margin: 0.5rem auto;
     }
   }
 }

@@ -11,9 +11,7 @@
     font-size: 1.3em;
     height: 50px;
     line-height: 50px;
-    text-indent: 15px;
     cursor: pointer;
-    opacity: 0.81;
   }
 
   .back {
@@ -36,6 +34,7 @@
 
   .categ > h2 {
     border-top: theme.$border;
+    text-indent: 15px;
   }
 
   .categ > h2:hover {
@@ -74,7 +73,7 @@
       height: 50px;
       margin-right: 10px;
       margin-left: 2px;
-      padding: 10px;
+      padding: 7px;
     }
 
     &.active {

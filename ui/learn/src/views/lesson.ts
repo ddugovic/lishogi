@@ -2,6 +2,7 @@ import { i18n } from 'i18n';
 import { type VNode, h } from 'snabbdom';
 import type LearnCtrl from '../ctrl';
 import type { Level } from '../interfaces';
+import { stages } from '../svg';
 import congrats from './congrats';
 import completed from './overlays/completed';
 import starting from './overlays/starting';
@@ -155,7 +156,7 @@ export default function (ctrl: LearnCtrl): VNode {
       h('div.learn__table', [
         h('div.wrap', [
           h('div.title', [
-            h(`div.stage-img.${stage.key}`),
+            h('div.stage-img', { props: { innerHTML: stages[stage.key] } }),
             h('div.text', [h('h2', stage.title), h('p.subtitle', stage.subtitle)]),
           ]),
           vm.levelState === 'fail'
