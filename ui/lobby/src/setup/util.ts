@@ -25,6 +25,7 @@ export const incChoices: number[] = Array.from(byoChoices);
 export const periodChoices: number[] = [1, 2, 3, 4, 5];
 
 export const dayChoices: number[] = [1, 2, 3, 5, 7, 10, 14];
+export const dayExtraChoices: number[] = dayChoices.concat([0]);
 
 export const aiLevelChoices: number[] = Array.from(Array(8), (_, i) => i + 1);
 
@@ -87,7 +88,6 @@ export function select(
   key: SetupDataKey,
   options: [string | number, string][],
   empty = false,
-  disabledValues: (string | number)[] = [],
 ): VNode {
   const cur = ctrl.selected(key);
   const emptyOption = empty
@@ -106,6 +106,7 @@ export function select(
       attrs: {
         id: fieldId(key),
         name: key,
+        disabled: ctrl.submitted,
       },
     },
     emptyOption.concat(
@@ -114,9 +115,6 @@ export function select(
           'option',
           {
             attrs: { value: o[0], selected: o[0] == cur },
-            props: {
-              disabled: disabledValues.includes(o[0]),
-            },
           },
           o[1],
         ),
@@ -133,6 +131,7 @@ export function slider(ctrl: SetupCtrl, key: SetupDataKey, options: number[], bi
       min: 0,
       max: options.length - 1,
       step: 1,
+      disabled: ctrl.submitted,
     },
     hook: {
       insert: vnode => {
@@ -164,7 +163,7 @@ export function radioGroup(
       const value = i[0];
       const id = fieldId(key, value);
       const name = i[1];
-      const disabled = disabledValue === value;
+      const disabled = disabledValue === value || ctrl.submitted;
       const checked = ctrl.data[key] == value;
       return h('div', { key: `${id}-${ctrl.data[key]}` }, [
         h(`input#${id}`, {

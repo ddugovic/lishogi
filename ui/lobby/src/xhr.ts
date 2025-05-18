@@ -1,11 +1,7 @@
 import { clockToPerf } from 'common/clock';
-import debounce from 'debounce-promise';
 import type { Game, Preset, PresetOpts, Seek } from './interfaces';
 
-export const seeks: () => Promise<Seek[]> = debounce(
-  () => window.lishogi.xhr.json('GET', '/lobby/seeks'),
-  2000,
-);
+export const seeks: () => Promise<Seek[]> = () => window.lishogi.xhr.json('GET', '/lobby/seeks');
 
 export const nowPlaying: () => Promise<Game[]> = () =>
   window.lishogi.xhr.json('GET', '/account/now-playing').then(o => o.nowPlaying);

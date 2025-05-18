@@ -16,6 +16,7 @@ import {
   byoChoices,
   colorChoices,
   dayChoices,
+  dayExtraChoices,
   fieldId,
   formatMinutes,
   incChoices,
@@ -46,7 +47,7 @@ export function setupModal(ctrl: SetupCtrl): VNode {
 function innerModal(ctrl: SetupCtrl): MaybeVNodes {
   return [
     h(
-      'h2',
+      'h3',
       ctrl.key === 'ai'
         ? i18n('playWithTheMachine')
         : ctrl.key === 'friend'
@@ -54,7 +55,6 @@ function innerModal(ctrl: SetupCtrl): MaybeVNodes {
           : i18n('createAGame'),
     ),
     variant(ctrl),
-    ctrl.key !== 'hook' ? position(ctrl) : undefined,
     timeControl(ctrl),
     ctrl.key !== 'ai' ? mode(ctrl) : undefined,
     ctrl.key === 'ai' ? levels(ctrl) : undefined,
@@ -65,19 +65,20 @@ function innerModal(ctrl: SetupCtrl): MaybeVNodes {
 }
 
 function variant(ctrl: SetupCtrl): VNode {
-  return h('div.setup-variant.section.select', [
-    h('a.info', {
-      attrs: { href: '/variant', target: '_blank', 'data-icon': '', title: i18n('variants') },
-    }),
-    h('label', {}, `${i18n('variant')}:`),
-    select(ctrl, 'variant', variantChoicesTranslated),
-  ]);
-}
-
-function position(ctrl: SetupCtrl): VNode {
-  return h('div.setup-position.section', [
-    radioGroup(ctrl, 'position', positionChoicesTranslated),
-    ctrl.data.position == Position.fromPosition ? positionInput(ctrl) : undefined,
+  return h('div.setup-variant.section', [
+    h('div.select', [
+      h('a.info', {
+        attrs: { href: '/variant', target: '_blank', 'data-icon': '', title: i18n('variants') },
+      }),
+      h('label', {}, `${i18n('variant')}:`),
+      select(ctrl, 'variant', variantChoicesTranslated),
+    ]),
+    ctrl.key !== 'hook'
+      ? h('div.setup-position', [
+          radioGroup(ctrl, 'position', positionChoicesTranslated),
+          ctrl.data.position == Position.fromPosition ? positionInput(ctrl) : undefined,
+        ])
+      : undefined,
   ]);
 }
 
@@ -183,12 +184,17 @@ function timeControlRt(ctrl: SetupCtrl): MaybeVNodes {
 
 function timeControlCorres(ctrl: SetupCtrl): MaybeVNodes {
   return [
-    h('div.setup-time-corres', [
+    h(
+      'div.setup-time-corres',
       h('div.setup-time-days', [
-        h('div.label', [i18n('daysPerTurn'), ': ', h('strong', ctrl.data.days)]),
-        slider(ctrl, 'days', dayChoices, true),
+        h('div.label', [
+          i18n('daysPerTurn'),
+          ': ',
+          h('strong', ctrl.data.days === 0 ? '∞' : ctrl.data.days),
+        ]),
+        slider(ctrl, 'days', ctrl.key === 'hook' ? dayChoices : dayExtraChoices, true),
       ]),
-    ]),
+    ),
   ];
 }
 
@@ -307,7 +313,14 @@ function innerModalNvui(ctrl: SetupCtrl): MaybeVNodes {
       : undefined,
     selectNvui(ctrl, i18n('timeControl'), 'timeMode', timeModeChoicesTranslated),
     ctrl.isCorres()
-      ? h('div', [selectNvui(ctrl, i18n('daysPerTurn'), 'days', dayChoices)])
+      ? h('div', [
+          selectNvui(
+            ctrl,
+            i18n('daysPerTurn'),
+            'days',
+            ctrl.key === 'hook' ? dayChoices : dayExtraChoices,
+          ),
+        ])
       : h('div', [
           selectNvui(ctrl, i18n('minutesPerSide'), 'time', timeChoices),
           selectNvui(ctrl, i18n('byoyomiInSeconds'), 'byoyomi', byoChoices),

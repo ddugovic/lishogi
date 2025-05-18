@@ -13,6 +13,7 @@ import {
   aiLevelChoices,
   byoChoices,
   dayChoices,
+  dayExtraChoices,
   incChoices,
   maxRatingChoices,
   minRatingChoices,
@@ -210,6 +211,7 @@ export default class SetupCtrl {
         'variant',
         RULES.map(r => variantToId(r)),
       );
+
       this.data = {
         variant: variantId,
         timeMode: getNumber('timeMode', timeModeChoices),
@@ -217,7 +219,7 @@ export default class SetupCtrl {
         byoyomi: getNumber('byoyomi', byoChoices),
         increment: getNumber('increment', incChoices),
         periods: getNumber('periods', periodChoices),
-        days: getNumber('days', dayChoices),
+        days: getNumber('days', key === 'hook' ? dayChoices : dayExtraChoices),
         position: getNumber('position', positionChoices),
         sfen: getString('sfen'),
         handicap: getString(
@@ -279,28 +281,25 @@ export default class SetupCtrl {
   };
 
   submit = (color: Color | 'random'): void => {
-    const rating = this.rating();
+    this.error = undefined;
+    this.submitted = true;
+    this.redraw();
+
+    const isUnlimited = this.data.timeMode === TimeMode.Corres && this.data.days === 0;
     const postData = {
       variant: this.data.variant,
-      timeMode: this.data.timeMode,
+      timeMode: isUnlimited ? TimeMode.Unlimited : this.data.timeMode,
       time: this.data.time,
       byoyomi: this.data.byoyomi,
       increment: this.data.increment,
       periods: this.data.periods,
-      days: this.data.days,
+      days: Math.max(this.data.days, 1),
       sfen: this.data.position === Position.fromPosition ? this.data.sfen : '',
       level: this.data.level,
       mode: this.data.mode,
       ratingRange: this.ratingRange(),
       color: color,
     };
-    console.log(
-      rating ? `${rating - this.data.ratingMin}-${rating + this.data.ratingMin}` : undefined,
-    );
-
-    this.error = undefined;
-    this.submitted = false;
-    this.redraw();
 
     let url = `/setup/${this.key}`;
     if (this.key === 'hook') url += `/${window.lishogi.sri}`;
