@@ -78,6 +78,7 @@ declare global {
       modulesData: Record<string, any>;
 
       // flags
+      redirectInProgress?: string;
       properReload?: boolean;
       quietMode?: boolean;
 

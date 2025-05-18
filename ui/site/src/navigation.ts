@@ -1,5 +1,3 @@
-let redirectInProgress: string | undefined;
-
 export function redirect(obj: string | { url: string; cookie: Cookie }): void {
   let url: string;
   if (typeof obj == 'string') url = obj;
@@ -16,12 +14,12 @@ export function redirect(obj: string | { url: string; cookie: Cookie }): void {
     }
   }
   const href = `//${location.host}/${url.replace(/^\//, '')}`;
-  redirectInProgress = href;
+  window.lishogi.redirectInProgress = href;
   location.href = href;
 }
 
 export function reload(): void {
-  if (redirectInProgress) return;
+  if (window.lishogi.redirectInProgress) return;
   window.lishogi.properReload = true;
   window.lishogi.socket.destroy(); // todo
   if (location.hash) location.reload();
