@@ -106,7 +106,7 @@ object side {
             a(cls := "text", dataIcon := "g", href := routes.Tournament.show(t.tour.id))(
               t.tour.trans,
             ),
-            div(cls := "clock", dataTime := t.tour.secondsToFinish)(
+            t.tour.isArena option div(cls := "clock", dataTime := t.tour.secondsToFinish)(
               div(cls := "time")(t.tour.clockStatus),
             ),
           )
