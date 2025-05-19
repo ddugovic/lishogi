@@ -1026,4 +1026,6 @@
 	<string name="acceptRandomCandidate">Accept random candidate</string>
 	<string name="exploreSiteAndHaveFun">Explore the site and have fun :)</string>
 	<string name="hakoiriMusumeExplanation" comment="Mini game on 404 pages">Help the king escape through the bottom opening of the board by sliding the pieces.</string>
+	<string name="startDate">Start date</string>
+	<string name="endDate">End date</string>
 </resources>

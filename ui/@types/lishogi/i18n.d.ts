@@ -861,6 +861,8 @@ declare global {
     | 'acceptRandomCandidate'
     | 'exploreSiteAndHaveFun'
     | 'hakoiriMusumeExplanation'
+    | 'startDate'
+    | 'endDate'
     | 'opponentLeftCounter'
     | 'nbMoves'
     | 'nbPlayers'

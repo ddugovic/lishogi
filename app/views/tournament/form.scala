@@ -378,7 +378,7 @@ final private class TourFields(form: Form[_], tour: Option[Tournament])(implicit
   def startDate =
     form3.group(
       form("startDate"),
-      frag("Start date"),
+      trans.startDate(),
       half = true,
       help = frag("Leave empty to start now").some, // tournament.form.positionInputHelp.some
     )(form3.flatpickr(_, disabled = disabledAfterStart))
@@ -390,7 +390,7 @@ final private class TourFields(form: Form[_], tour: Option[Tournament])(implicit
       ),
       form3.group(
         form("finishDate"),
-        frag("End date"),
+        trans.endDate(),
         klass = "f-robin f-organized",
         half = true,
       )(form3.flatpickr(_)),
@@ -399,7 +399,7 @@ final private class TourFields(form: Form[_], tour: Option[Tournament])(implicit
   def description =
     form3.group(
       form("description"),
-      frag("Tournament description"),
+      trans.description(),
       help = frag(
         "Anything special you want to tell the participants? Try to keep it short.",
       ).some,

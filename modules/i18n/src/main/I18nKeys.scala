@@ -860,6 +860,8 @@ object I18nKeys {
   val `acceptRandomCandidate` = new I18nKey("acceptRandomCandidate")
   val `exploreSiteAndHaveFun` = new I18nKey("exploreSiteAndHaveFun")
   val `hakoiriMusumeExplanation` = new I18nKey("hakoiriMusumeExplanation")
+  val `startDate` = new I18nKey("startDate")
+  val `endDate` = new I18nKey("endDate")
   val `opponentLeftCounter` = new I18nKey("opponentLeftCounter")
   val `nbMoves` = new I18nKey("nbMoves")
   val `nbPlayers` = new I18nKey("nbPlayers")
