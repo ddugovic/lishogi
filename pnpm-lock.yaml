@@ -9,33 +9,9 @@ catalogs:
     '@badrap/result':
       specifier: ^0.2.13
       version: 0.2.13
-    '@textcomplete/core':
-      specifier: ^0.1.13
-      version: 0.1.13
-    '@textcomplete/textarea':
-      specifier: ^0.1.13
-      version: 0.1.13
-    '@types/debounce-promise':
-      specifier: ^3.1.9
-      version: 3.1.9
-    '@types/yaireo__tagify':
-      specifier: ^4.27.0
-      version: 4.27.0
-    '@yaireo/tagify':
-      specifier: ^4.35.1
-      version: 4.35.1
     breakpoint-sass:
       specifier: github:WandererXII/breakpoint#4.x
       version: 4.0.0-beta.1
-    chart.js:
-      specifier: ^4.4.9
-      version: 4.4.9
-    debounce-promise:
-      specifier: ^3.1.2
-      version: 3.1.2
-    flatpickr:
-      specifier: ^4.6.13
-      version: 4.6.13
     shogiground:
       specifier: ^0.10.1
       version: 0.10.1
@@ -160,7 +136,7 @@ importers:
         specifier: workspace:*
         version: link:../helpers
       '@yaireo/tagify':
-        specifier: 'catalog:'
+        specifier: ^4.35.1
         version: 4.35.1(prop-types@15.8.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       balloon-css:
         specifier: ^1.2.0
@@ -201,10 +177,10 @@ importers:
         specifier: ^4.27.0
         version: 4.27.0
       chart.js:
-        specifier: 'catalog:'
+        specifier: ^4.4.9
         version: 4.4.9
       flatpickr:
-        specifier: 'catalog:'
+        specifier: ^4.6.13
         version: 4.6.13
       shogiground:
         specifier: 'catalog:'
@@ -219,7 +195,7 @@ importers:
         specifier: 'catalog:'
         version: 0.2.13
       '@yaireo/tagify':
-        specifier: 'catalog:'
+        specifier: ^4.35.1
         version: 4.35.1(prop-types@15.8.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       breakpoint-sass:
         specifier: 'catalog:'
@@ -234,7 +210,7 @@ importers:
         specifier: workspace:*
         version: link:../common
       debounce-promise:
-        specifier: 'catalog:'
+        specifier: ^3.1.2
         version: 3.1.2
       game:
         specifier: workspace:*
@@ -262,10 +238,10 @@ importers:
         version: link:../tree
     devDependencies:
       '@types/debounce-promise':
-        specifier: 'catalog:'
+        specifier: ^3.1.9
         version: 3.1.9
       '@types/yaireo__tagify':
-        specifier: 'catalog:'
+        specifier: ^4.27.0
         version: 4.27.0
 
   ui/ceval:
@@ -325,7 +301,7 @@ importers:
         specifier: workspace:*
         version: link:../ceval
       chart.js:
-        specifier: 'catalog:'
+        specifier: ^4.4.9
         version: 4.4.9
       chartjs-adapter-dayjs-4:
         specifier: ^1.0.4
@@ -475,7 +451,7 @@ importers:
         specifier: 'catalog:'
         version: https://codeload.github.com/WandererXII/breakpoint/tar.gz/2a857d010c6cface94accd43250c5cf0513d798a
       chart.js:
-        specifier: 'catalog:'
+        specifier: ^4.4.9
         version: 4.4.9
       chartjs-plugin-datalabels:
         specifier: ^2.2.0
@@ -568,10 +544,10 @@ importers:
         specifier: ^0.2.0
         version: 0.2.0
       '@textcomplete/core':
-        specifier: 'catalog:'
+        specifier: ^0.1.13
         version: 0.1.13
       '@textcomplete/textarea':
-        specifier: 'catalog:'
+        specifier: ^0.1.13
         version: 0.1.13(@textcomplete/core@0.1.13)
       breakpoint-sass:
         specifier: 'catalog:'
@@ -583,7 +559,7 @@ importers:
         specifier: workspace:*
         version: link:../common
       flatpickr:
-        specifier: 'catalog:'
+        specifier: ^4.6.13
         version: 4.6.13
       i18n:
         specifier: workspace:*
@@ -839,7 +815,7 @@ importers:
   ui/team:
     dependencies:
       '@yaireo/tagify':
-        specifier: 'catalog:'
+        specifier: ^4.35.1
         version: 4.35.1(prop-types@15.8.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       breakpoint-sass:
         specifier: 'catalog:'
@@ -851,23 +827,23 @@ importers:
         specifier: workspace:*
         version: link:../common
       debounce-promise:
-        specifier: 'catalog:'
+        specifier: ^3.1.2
         version: 3.1.2
     devDependencies:
       '@types/debounce-promise':
-        specifier: 'catalog:'
+        specifier: ^3.1.9
         version: 3.1.9
       '@types/yaireo__tagify':
-        specifier: 'catalog:'
+        specifier: ^4.27.0
         version: 4.27.0
 
   ui/tournament:
     dependencies:
       '@textcomplete/core':
-        specifier: 'catalog:'
+        specifier: ^0.1.13
         version: 0.1.13
       '@textcomplete/textarea':
-        specifier: 'catalog:'
+        specifier: ^0.1.13
         version: 0.1.13(@textcomplete/core@0.1.13)
       breakpoint-sass:
         specifier: 'catalog:'

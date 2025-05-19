@@ -5,9 +5,9 @@
   "type": "module",
   "dependencies": {
     "@badrap/result": "catalog:",
-    "@yaireo/tagify": "catalog:",
+    "@yaireo/tagify": "^4.35.1",
     "breakpoint-sass": "catalog:",
-    "debounce-promise": "catalog:",
+    "debounce-promise": "^3.1.2",
     "ceval": "workspace:*",
     "chat": "workspace:*",
     "common": "workspace:*",
@@ -21,7 +21,7 @@
     "tree": "workspace:*"
   },
   "devDependencies": {
-    "@types/yaireo__tagify": "catalog:",
-    "@types/debounce-promise": "catalog:"
+    "@types/yaireo__tagify": "^4.27.0",
+    "@types/debounce-promise": "^3.1.9"
   }
 }

@@ -5,7 +5,7 @@
   "type": "module",
   "dependencies": {
     "breakpoint-sass": "catalog:",
-    "chart.js": "catalog:",
+    "chart.js": "^4.4.9",
     "chartjs-plugin-datalabels": "^2.2.0",
     "common": "workspace:*",
     "i18n": "workspace:*",

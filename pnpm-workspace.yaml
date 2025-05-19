@@ -5,17 +5,9 @@ packages:
 catalog:
   'shogiground': ^0.10.1
   'shogiops': ^0.18.0
-  'snabbdom': ^3.6.2
   '@badrap/result': ^0.2.13
+  'snabbdom': ^3.6.2
   'breakpoint-sass': 'github:WandererXII/breakpoint#4.x'
-  'chart.js': ^4.4.9
-  'flatpickr': ^4.6.13
-  '@textcomplete/core': '^0.1.13'
-  '@textcomplete/textarea': '^0.1.13'
-  '@yaireo/tagify': '^4.35.1'
-  '@types/yaireo__tagify': '^4.27.0'
-  'debounce-promise': '^3.1.2'
-  '@types/debounce-promise': '^3.1.9'
 
 onlyBuiltDependencies:
   - esbuild

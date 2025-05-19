@@ -7,7 +7,7 @@
     "@juggle/resize-observer": "^3.4.0",
     "breakpoint-sass": "catalog:",
     "ceval": "workspace:*",
-    "chart.js": "catalog:",
+    "chart.js": "^4.4.9",
     "chartjs-adapter-dayjs-4": "^1.0.4",
     "chartjs-plugin-datalabels": "^2.2.0",
     "chartjs-plugin-zoom": "^2.2.0",
