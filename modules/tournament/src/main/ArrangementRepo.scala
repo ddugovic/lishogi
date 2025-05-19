@@ -39,7 +39,7 @@ final class ArrangementRepo(val coll: Coll)(implicit
   private val selectWithoutGame = $doc(Arrangement.BSONFields.gameId $exists false)
   private val selectUnfinished = $or(
     Arrangement.BSONFields.status $lt shogi.Status.Mate.id,
-    Arrangement.BSONFields.gameId $exists false,
+    Arrangement.BSONFields.status $exists false,
   )
 
   private val recentSort = $doc(Arrangement.BSONFields.scheduledAt -> -1)
@@ -104,7 +104,11 @@ final class ArrangementRepo(val coll: Coll)(implicit
       coll.update
         .one(
           $id(arr.id),
-          $unset(Arrangement.BSONFields.gameId, Arrangement.BSONFields.startedAt),
+          $unset(
+            Arrangement.BSONFields.gameId,
+            Arrangement.BSONFields.status,
+            Arrangement.BSONFields.startedAt,
+          ),
         )
         .void
     else
@@ -117,6 +121,7 @@ final class ArrangementRepo(val coll: Coll)(implicit
             Arrangement.BSONFields.plies  -> g.plies,
           ) ++ $unset(
             Arrangement.BSONFields.lastNotified,
+            Arrangement.BSONFields.lockedScheduledAt,
           ),
         )
         .void

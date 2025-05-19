@@ -76,6 +76,7 @@ case class Arrangement(
       user2 = user2.clearAll,
       gameId = gid.some,
       startedAt = now.some,
+      status = shogi.Status.Started.some,
       color = color.some, // same color after abandoned games
     )
   }

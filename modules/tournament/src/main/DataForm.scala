@@ -103,7 +103,7 @@ final class DataForm {
             )
             .verifying(
               "Can't change start date once tournament starts",
-              !tour.isStarted || tour.startDate == _.realStartDate
+              !tour.isStarted || tour.startsAt == _.realStartDate,
             )
         }
       }

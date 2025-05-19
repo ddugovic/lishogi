@@ -22,7 +22,7 @@ function tableClick(ctrl: TournamentController): (e: Event) => void {
   };
 }
 
-function playerNameStanding(_ctrl: TournamentController, player: ArrangementPlayer) {
+function playerNameStanding(player: ArrangementPlayer) {
   const userId = player.name.toLowerCase();
   return h(
     'div',
@@ -73,7 +73,7 @@ export function standing(ctrl: TournamentController, klass?: string): VNode {
                   kicked: !!player.kicked,
                 },
               },
-              [h('td', i + 1), h('td.player-name', playerNameStanding(ctrl, player))],
+              [h('td', i + 1), h('td.player-name', playerNameStanding(player))],
             ),
           ),
         ),
