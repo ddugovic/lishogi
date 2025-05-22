@@ -147,6 +147,7 @@ final class JsonView(
             "variant"   -> tour.variant.key,
             "rated"     -> tour.isRated,
           )
+          .add("isFull" -> !tour.notFull)
           .add("spotlight" -> tour.spotlight)
           .add("berserkable" -> tour.berserkable)
           .add(

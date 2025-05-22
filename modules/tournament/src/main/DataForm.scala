@@ -32,10 +32,11 @@ final class DataForm {
       finishDate = none,
       variant = shogi.variant.Standard.id.toString.some,
       position = none,
-      password = none,
-      candidatesOnly = false.some,
       mode = none,
       rated = true.some,
+      password = none,
+      candidatesOnly = false.some,
+      maxPlayers = none,
       conditions = Condition.DataForm.AllSetup.default,
       teamBattleByTeam = teamBattleId,
       berserkable = true.some,
@@ -58,6 +59,7 @@ final class DataForm {
       rated = tour.mode.rated.some,
       password = tour.password,
       candidatesOnly = tour.candidatesOnly.some,
+      maxPlayers = tour.maxPlayers,
       conditions = Condition.DataForm.AllSetup(tour.conditions),
       teamBattleByTeam = none,
       berserkable = tour.berserkable.some,
@@ -103,7 +105,7 @@ final class DataForm {
             )
             .verifying(
               "Can't change start date once tournament starts",
-              !tour.isStarted || tour.startsAt == _.realStartDate,
+              !tour.isStarted || _.startDate.fold(true)(d => d.getMillis == tour.startsAt.getMillis),
             )
         }
       }
@@ -126,6 +128,7 @@ final class DataForm {
       "rated" -> optional(boolean),
       "password"         -> optional(nonEmptyText),
       "candidatesOnly"   -> optional(boolean),
+      "maxPlayers"       -> optional(number),
       "conditions"       -> Condition.DataForm.all,
       "teamBattleByTeam" -> optional(nonEmptyText),
       "berserkable"      -> optional(boolean),
@@ -142,6 +145,10 @@ final class DataForm {
       .verifying("Reduce tournament duration", _.validNotExcessiveDuration)
       .verifying("Team battle supports only arena format", _.validTeamBattleFormat)
       .verifying("Team battle doesn't support candidates only option", _.validCandidates)
+      .verifying(
+        "Invalid max players - limit must be less than format default (faq) and greater than 1",
+        _.validMaxPlayers,
+      )
 }
 
 object DataForm {
@@ -174,6 +181,7 @@ private[tournament] case class TournamentSetup(
     rated: Option[Boolean],
     password: Option[String],
     candidatesOnly: Option[Boolean],
+    maxPlayers: Option[Int],
     conditions: Condition.DataForm.AllSetup,
     teamBattleByTeam: Option[String],
     berserkable: Option[Boolean],
@@ -229,6 +237,9 @@ private[tournament] case class TournamentSetup(
   def validTeamBattleFormat = realFormat == Format.Arena || teamBattleByTeam.isEmpty
 
   def validCandidates = !(~candidatesOnly) || teamBattleByTeam.isEmpty
+
+  def validMaxPlayers =
+    maxPlayers.isEmpty || maxPlayers.exists(mp => mp <= Format.maxPlayers(realFormat) && mp > 1)
 
   def isPrivate = password.isDefined || conditions.teamMember.isDefined
 

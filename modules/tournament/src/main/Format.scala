@@ -27,4 +27,11 @@ object Format {
       case Organized => I18nKeys.tourArrangements.organized.txt()
     }
 
+  def maxPlayers(format: Format): Int =
+    format match {
+      case Arena     => 300
+      case Robin     => 50
+      case Organized => 100
+    }
+
 }

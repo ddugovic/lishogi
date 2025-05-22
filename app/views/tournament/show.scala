@@ -83,7 +83,12 @@ object show {
                 cls := "tour__faq",
               )(
                 h2(trans.faq.faqAbbreviation()),
-                faq(tour.format, tour.mode.rated.some, tour.isPrivate.option(tour.id)),
+                faq(
+                  tour.format,
+                  tour.mode.rated.some,
+                  tour.maxPlayersOrDefault.some,
+                  tour.isPrivate.option(tour.id),
+                ),
               ),
             ),
           ),

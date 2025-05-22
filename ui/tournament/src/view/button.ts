@@ -36,7 +36,7 @@ function join(ctrl: TournamentController): MaybeVNode {
   return orJoinSpinner(ctrl, () => {
     const askToJoin = ctrl.data.candidatesOnly && !ctrl.data.me;
     const delay = ctrl.data.me?.pauseDelay;
-    const joinable = ctrl.data.verdicts.accepted && !delay && !ctrl.data.isBot;
+    const joinable = ctrl.data.verdicts.accepted && !delay && !ctrl.data.isBot && !ctrl.data.isFull;
     const highlightable = joinable && ctrl.data.createdBy !== ctrl.opts.userId;
     const button = h(
       `button.fbt.text${highlightable ? '.highlight' : ''}`,
@@ -56,7 +56,7 @@ function join(ctrl: TournamentController): MaybeVNode {
           ctrl.redraw,
         ),
       },
-      askToJoin ? i18n('askToJoin') : i18n('join'),
+      askToJoin ? i18n('askToJoin') : ctrl.data.isFull ? 'Full' : i18n('join'),
     );
     return delay
       ? h(

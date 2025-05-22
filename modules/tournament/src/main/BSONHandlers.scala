@@ -112,6 +112,7 @@ object BSONHandlers {
         denied = r strsD "denied",
         teamBattle = r.getO[TeamBattle]("teamBattle"),
         candidatesOnly = r boolD "candidatesOnly",
+        maxPlayers = r intO "maxPlayers",
         noBerserk = r boolD "noBerserk",
         noStreak = r boolD "noStreak",
         schedule = for {
@@ -149,6 +150,7 @@ object BSONHandlers {
         "denied"         -> w.strListO(o.denied),
         "teamBattle"     -> o.teamBattle,
         "candidatesOnly" -> w.boolO(o.candidatesOnly),
+        "maxPlayers"     -> o.maxPlayers.filterNot(_ == Format.maxPlayers(o.format)),
         "noBerserk"      -> w.boolO(o.noBerserk),
         "noStreak"       -> w.boolO(o.noStreak),
         "schedule" -> o.schedule.map { s =>

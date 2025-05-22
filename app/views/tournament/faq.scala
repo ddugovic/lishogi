@@ -43,8 +43,9 @@ object faq {
 
   def apply(
       format: lila.tournament.Format,
-      rated: Option[Boolean] = None,
-      privateId: Option[String] = None,
+      rated: Option[Boolean] = none,
+      maxPlayers: Option[Int] = none,
+      privateId: Option[String] = none,
   )(implicit
       ctx: Context,
   ) =
@@ -60,6 +61,20 @@ object faq {
         case lila.tournament.Format.Robin     => robin
         case lila.tournament.Format.Organized => organized
       },
+      h3(trans.arena.howManyPlayersCanJoin()),
+      p(
+        frag(
+          maxPlayers match {
+            case Some(num) => trans.arena.howManyPlayersCanJoinAnswer(num)
+            case None =>
+              trans.arena.howManyPlayersCanJoinAnswerDefault(
+                lila.tournament.Format.maxPlayers(format),
+              )
+          },
+          br,
+          trans.arena.howManyPlayersCanJoinDenied(),
+        ),
+      ),
       h3(trans.arena.isItRated()),
       rated match {
         case Some(true)  => p(trans.arena.isRated())
@@ -122,6 +137,8 @@ object faq {
     p(trans.arena.howIsTheWinnerDecidedAnswer()),
     h3(trans.arena.howDoesItEnd()),
     p(trans.arena.howDoesItEndAnswer()),
+    h3(trans.tourArrangements.howManyGames()),
+    p(trans.tourArrangements.howManyGamesAnswer()),
   )
 
 }

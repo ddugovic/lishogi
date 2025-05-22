@@ -128,12 +128,19 @@ object form {
       teams: List[lila.hub.LightTeam],
       tour: Option[Tournament],
   )(implicit ctx: Context) =
-    form3.fieldset("Entry conditions", toggle = tour.exists(_.conditions.list.nonEmpty).some)(
+    form3.fieldset(
+      "Entry conditions",
+      toggle = tour
+        .exists(t =>
+          t.conditions.list.nonEmpty || t.candidatesOnly || t.maxPlayers.isDefined || t.isPrivate,
+        )
+        .some,
+    )(
       errMsg(form("conditions")),
       form3.split(
         form3.checkbox(
           form("candidatesOnly"),
-          frag("Request to join"),
+          trans.askToJoin(),
           help = frag("Players can only join after you approve their request").some,
           half = true,
           disabled = fields.isTeamBattle,
@@ -141,17 +148,15 @@ object form {
         fields.password,
       ),
       form3.split(
+        form3.group(
+          form("maxPlayers"),
+          frag("Max players allowed to join"),
+          help = frag("Cannot be higher than format default").some,
+          half = true,
+        )(form3.input(_)(autocomplete := "off")),
         form3.group(form("conditions.nbRatedGame.nb"), frag("Minimum rated games"), half = true)(
           form3.select(_, Condition.DataForm.nbRatedGameChoices),
         ),
-        (ctx.me.exists(_.hasTitle) || isGranted(_.ManageTournament)) ?? {
-          form3.checkbox(
-            form("conditions.titled"),
-            frag("Only titled players"),
-            help = frag("Require an official title to join the tournament").some,
-            half = true,
-          )
-        },
       ),
       form3.split(
         form3.group(form("conditions.minRating.rating"), frag("Minimum rating"), half = true)(

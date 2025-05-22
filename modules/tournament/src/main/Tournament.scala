@@ -34,6 +34,7 @@ case class Tournament(
     denied: List[User.ID] = Nil,
     teamBattle: Option[TeamBattle] = None,
     candidatesOnly: Boolean = false,
+    maxPlayers: Option[Int] = None,
     noBerserk: Boolean = false,
     noStreak: Boolean = false,
     schedule: Option[Schedule],
@@ -68,7 +69,7 @@ case class Tournament(
 
   def hasArrangements = isRobin || isOrganized
 
-  def notFull = nbPlayers < 1000
+  def notFull = nbPlayers < maxPlayersOrDefault
 
   def isMarathon =
     schedule.map(_.freq) exists {
@@ -118,6 +119,8 @@ case class Tournament(
     }
 
   def popular = nbPlayers > 3
+
+  def maxPlayersOrDefault = maxPlayers.getOrElse(Format.maxPlayers(format))
 
   def speed = timeControl.clock.map(Speed.apply).getOrElse(Speed.Correspondence)
 
@@ -173,6 +176,7 @@ object Tournament {
       mode: Mode,
       password: Option[String],
       candidatesOnly: Boolean,
+      maxPlayers: Option[Int],
       startDate: DateTime,
       berserkable: Boolean,
       streakable: Boolean,
@@ -197,6 +201,7 @@ object Tournament {
       conditions = Condition.All.empty,
       teamBattle = teamBattle,
       candidatesOnly = candidatesOnly,
+      maxPlayers = maxPlayers,
       noBerserk = !berserkable,
       noStreak = !streakable,
       schedule = None,

@@ -81,6 +81,7 @@ final class TournamentApi(
       mode = setup.realMode,
       password = setup.password,
       candidatesOnly = setup.candidatesOnly | false,
+      maxPlayers = setup.maxPlayers,
       variant = setup.realVariant,
       position = setup.position,
       berserkable = setup.berserkable | true,
@@ -119,6 +120,7 @@ final class TournamentApi(
         startsAt = data.startDate | old.startsAt,
         password = data.password,
         candidatesOnly = ~data.candidatesOnly,
+        maxPlayers = data.maxPlayers,
         position =
           if (old.isCreated || old.position.isDefined)
             data.position
@@ -483,36 +485,13 @@ final class TournamentApi(
               else shogi.Color.Gote,
             ),
           ) >>-
-            socket.foreach(_.startGame(tour.id, game)) >>-
-            featureOneOf(tour, game.id, playersMap.values)
-              .mon(_.tournament.arrangement.createFeature)
-              .unit
+            socket.foreach(_.startGame(tour.id, game))
         }
       }
       .monSuccess(_.tournament.arrangement.create)
       .chronometer
       .logIfSlow(75, logger)(_ => s"Robin pairing for https://lishogi.org/tournament/${tour.id}")
       .result
-
-  private def featureOneOf(
-      tour: Tournament,
-      gameId: Game.ID,
-      players: Iterable[Player],
-  ): Funit = {
-    tour.featuredId ?? { gid => arrangementRepo.byGame(tour.id, gid) } flatMap { arrOpt =>
-      def switch = tournamentRepo.setFeaturedGameId(tour.id, gameId)
-      val fuOptOtherPlayers =
-        arrOpt.filter(_.playing) ?? { arr =>
-          makePlayerMap(tour.id, arr.userIds).map(_.values.some)
-        }
-      fuOptOtherPlayers flatMap { playersOpt =>
-        val curScore = playersOpt.flatMap(_.map(_.score).maxOption)
-        val newScore = ~players.map(_.score).maxOption
-        if (curScore.exists(_ > newScore)) funit
-        else switch
-      }
-    }
-  }
 
   def arrangementSetTime(
       lookup: Arrangement.Lookup,

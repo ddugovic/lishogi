@@ -954,6 +954,10 @@ object I18nKeys {
     val `noArenaStreaks` = new I18nKey("arena:noArenaStreaks")
     val `averagePerformance` = new I18nKey("arena:averagePerformance")
     val `averageScore` = new I18nKey("arena:averageScore")
+    val `howManyPlayersCanJoin` = new I18nKey("arena:howManyPlayersCanJoin")
+    val `howManyPlayersCanJoinAnswerDefault` = new I18nKey("arena:howManyPlayersCanJoinAnswerDefault")
+    val `howManyPlayersCanJoinAnswer` = new I18nKey("arena:howManyPlayersCanJoinAnswer")
+    val `howManyPlayersCanJoinDenied` = new I18nKey("arena:howManyPlayersCanJoinDenied")
     val `drawingWithinNbMoves` = new I18nKey("arena:drawingWithinNbMoves")
     val `viewAllXTeams` = new I18nKey("arena:viewAllXTeams")
 }
@@ -2276,6 +2280,8 @@ object I18nKeys {
     val `whoStartsMatchesAnswer` = new I18nKey("tourArrangements:whoStartsMatchesAnswer")
     val `organizedScoring` = new I18nKey("tourArrangements:organizedScoring")
     val `organizedScoringAnswer` = new I18nKey("tourArrangements:organizedScoringAnswer")
+    val `howManyGames` = new I18nKey("tourArrangements:howManyGames")
+    val `howManyGamesAnswer` = new I18nKey("tourArrangements:howManyGamesAnswer")
 }
 
   object tourname {

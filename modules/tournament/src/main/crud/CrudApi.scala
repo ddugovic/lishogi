@@ -71,6 +71,7 @@ final class CrudApi(tournamentRepo: TournamentRepo) {
       mode = shogi.Mode.Rated,
       password = none,
       candidatesOnly = false,
+      maxPlayers = none,
       startDate = DateTime.now,
       berserkable = true,
       streakable = true,
