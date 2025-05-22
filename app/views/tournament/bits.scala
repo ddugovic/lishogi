@@ -49,9 +49,7 @@ object bits {
               tour.trans,
             ),
           ),
-          tour.schedule.fold(td) { s =>
-            td(momentFromNow(s.at))
-          },
+          td(momentFromNow(tour.startsAt)),
           td(dataIcon := "r", cls := "text")(tour.nbPlayers),
         )
       },
