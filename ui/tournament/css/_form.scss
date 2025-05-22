@@ -131,3 +131,11 @@
     display: none;
   }
 }
+
+.form-group:has(#form3-description) {
+  width: 100%;
+
+  #form3-description {
+    height: 8rem;
+  }
+}

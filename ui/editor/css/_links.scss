@@ -5,9 +5,9 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 1rem;
+  gap: 2rem;
   grid-area: links;
-  margin-top: 2em;
+  margin-top: 2rem;
 
   & > * {
     display: flex;
@@ -37,6 +37,6 @@
 
   .button {
     width: 100%;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
   }
 }

@@ -2,7 +2,6 @@
 @use 'pkg:common/abstract/extends';
 @use 'pkg:common/abstract/mixins';
 @use 'pkg:common/abstract/uniboard';
-@use 'pkg:common/abstract/variables';
 @use 'pkg:common/theme';
 
 .board-editor .underboard {
@@ -96,16 +95,16 @@
 
   @include breakpoint.breakpoint(uniboard.$mq-col2-uniboard) {
     flex-direction: row;
-    gap: 1rem;
+    gap: 2rem;
 
     .copyables {
       width: calc(100% / 3 * 2 + 1rem);
-      margin-top: variables.$block-gap;
+      margin-top: 2rem;
     }
 
     .tools {
       width: calc(100% / 3);
-      margin-top: variables.$block-gap;
+      margin-top: 2rem;
 
       .variants,
       .color-turn,

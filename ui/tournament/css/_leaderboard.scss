@@ -6,20 +6,22 @@ $user-list-width: 35ch;
 
 .tournament-leaderboards,
 .tournament-shields {
-  @extend %box-radius;
-
-  border: theme.$border;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax($user-list-width, 1fr));
+  gap: 1rem;
 
   &__item {
+    @extend %box-radius;
+
     background: theme.$c-bg-box;
-    border-right: theme.$border;
+    border: theme.$border;
   }
 
   h2 {
-    @extend %metal, %box-shadow;
+    @extend %box-radius-top;
 
+    background: theme.$c-bg-zebra;
+    border-bottom: theme.$border;
     font-size: 1.45em;
     line-height: 2.5em;
     padding-left: 0.8rem;
@@ -28,8 +30,8 @@ $user-list-width: 35ch;
     white-space: nowrap;
 
     a {
-      color: theme.$c-brag;
       display: block;
+      color: theme.$c-font;
 
       &:hover {
         color: theme.$c-link;
@@ -45,6 +47,10 @@ $user-list-width: 35ch;
     &:nth-child(even) {
       background: theme.$c-bg-zebra;
     }
+
+    &:last-child {
+      @extend %box-radius-bottom;
+    }
   }
 }
 
@@ -58,7 +64,6 @@ $user-list-width: 35ch;
   h2 {
     position: relative;
     padding-left: 95px;
-    border-bottom: theme.$border;
   }
 }
 
@@ -99,4 +104,17 @@ $user-list-width: 35ch;
       background: theme.$c-bg-zebra;
     }
   }
+}
+
+ol:empty,
+ul:empty {
+  position: relative;
+}
+
+ol:empty::before,
+ul:empty::before {
+  content: '-';
+  display: block;
+  text-align: center;
+  padding: 1.2rem 0;
 }

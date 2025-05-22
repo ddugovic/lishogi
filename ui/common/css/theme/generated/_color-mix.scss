@@ -66,7 +66,6 @@ html {
   --m-link_bg-box_mix_20: color-mix(in srgb, var(--c-link) 20%, var(--c-bg-box) 80%);
   --m-link_bg-box_mix_80: color-mix(in srgb, var(--c-link) 80%, var(--c-bg-box) 20%);
   --m-link_bg-page_mix_20: color-mix(in srgb, var(--c-link) 20%, var(--c-bg-page) 80%);
-  --m-link_black_mix_70: color-mix(in srgb, var(--c-link) 70%, black 30%);
   --m-link_font_mix_35: color-mix(in srgb, var(--c-link) 35%, var(--c-font) 65%);
   --m-primary_alpha_neg80: oklch(from var(--c-primary) l c h / 0.2);
   --m-primary_alpha_neg85: oklch(from var(--c-primary) l c h / 0.15);

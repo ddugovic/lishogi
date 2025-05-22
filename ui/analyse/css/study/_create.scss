@@ -29,9 +29,14 @@
       width: 100%;
       text-align: left;
       overflow: hidden;
-      margin-bottom: 3px;
+      margin-bottom: 0.33rem;
+      padding: 1rem;
       text-transform: none;
-      background: theme.$m-link_black_mix_70;
+      background: theme.$c-bg-zebra;
+
+      &:hover {
+        background: theme.$c-bg-zebra2;
+      }
     }
   }
 }

@@ -3,8 +3,6 @@
 @use 'pkg:common/abstract/media-queries';
 @use 'pkg:common/theme';
 
-$c-lead: theme.$c-brag;
-$c-lead-over: theme.$c-brag-over;
 $user-list-width: 30ch;
 
 .community {
@@ -13,7 +11,7 @@ $user-list-width: 30ch;
   grid-template-areas: 'online' 'leaders';
 
   @include breakpoint.breakpoint(media-queries.$mq-xx-small) {
-    grid-template-columns: min-content 1fr;
+    grid-template-columns: $user-list-width 1fr;
     grid-template-rows: min-content;
     grid-template-areas:
       'online leaders'
@@ -54,14 +52,15 @@ $user-list-width: 30ch;
     grid-area: leaders;
 
     .leaderboards {
-      @extend %box-radius;
-
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax($user-list-width, 1fr));
-      border: 1px solid $c-lead;
+      gap: 1rem;
 
-      .user-top {
-        border-right: 2px solid theme.$m-brag_alpha_neg50;
+      section {
+        @extend %box-radius;
+
+        border: 1px solid theme.$c-brag;
+        overflow: hidden;
       }
 
       h2 {
@@ -73,11 +72,11 @@ $user-list-width: 30ch;
         padding-left: 0.8rem;
         text-transform: uppercase;
         margin: 0;
-        background: $c-lead;
-        color: $c-lead-over;
+        background: theme.$c-brag;
+        color: theme.$c-brag-over;
 
         a {
-          color: $c-lead-over;
+          color: theme.$c-brag-over;
         }
       }
 
@@ -89,6 +88,17 @@ $user-list-width: 30ch;
         background: theme.$c-bg-zebra;
       }
     }
+  }
+
+  ol:empty {
+    position: relative;
+  }
+
+  ol:empty::before {
+    content: '-';
+    display: block;
+    text-align: center;
+    padding: 1.2rem 0;
   }
 }
 

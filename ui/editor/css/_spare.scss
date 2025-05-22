@@ -67,13 +67,6 @@
       background-color: theme.$c-border;
     }
 
-    &:not(.inactive):hover,
-    &.active {
-      &::after {
-        background-color: theme.$c-accent;
-      }
-    }
-
     .outer {
       width: 50%;
       height: 0;
@@ -91,6 +84,10 @@
         .selectable-wrap {
           height: calc(100% / 9);
           position: relative;
+
+          &:has(piece) {
+            cursor: pointer;
+          }
         }
       }
     }

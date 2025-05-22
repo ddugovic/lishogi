@@ -19,7 +19,7 @@ html {
   --c-bg-header-dropdown: #{$c-bg-popup};
   --c-bg-high: #{hsl($c-site-hue, 5%, 14%)};
   --c-bg-input: #{c-light($c-bg-page, 13%)};
-  --c-bg-low: #{hsl($c-site-hue, 5%, 22%)};
+  --c-bg-low: #{hsl($c-site-hue, 5%, 21%)};
   --c-bg-metal: #{$c-bg-zebra};
   --c-bg-metal-hover: #{$c-bg-zebra2};
   --c-bg-page: #{hsl($c-site-hue, 8%, 6%)};
@@ -152,7 +152,6 @@ html {
   --m-link_bg-box_mix_20: #{color.mix($c-link,$c-bg-box,20%)};
   --m-link_bg-box_mix_80: #{color.mix($c-link,$c-bg-box,80%)};
   --m-link_bg-page_mix_20: #{color.mix($c-link,$c-bg-page,20%)};
-  --m-link_black_mix_70: #{color.mix($c-link,black,70%)};
   --m-link_font_mix_35: #{color.mix($c-link,$c-font,35%)};
   --m-primary_alpha_neg80: #{color.adjust($c-primary,$alpha:-0.8)};
   --m-primary_alpha_neg85: #{color.adjust($c-primary,$alpha:-0.85)};
