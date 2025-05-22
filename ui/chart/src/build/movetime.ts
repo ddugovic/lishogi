@@ -88,7 +88,7 @@ function movetime(el: HTMLCanvasElement, data: AnalyseData): PlyChart | undefine
       label += `\n${formatClock(clock)}`;
       totalSeriesPlot[colorName].push({
         x: node ? node.ply : tree[x].ply + 1,
-        y: color ? clock : -clock,
+        y: color ? Math.max(clock, 0) : Math.min(-clock, 0),
       });
     }
     labels.push(label);
