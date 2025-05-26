@@ -29,7 +29,7 @@ object TimeControl {
     def days                 = value.some
     def estimateTotalSeconds = value * 24 * 60 * 60
     def show(implicit lang: Lang) =
-      s"${lila.i18n.I18nKeys.daysPerTurn}: $value"
+      s"${lila.i18n.I18nKeys.nbDays.pluralSameTxt(value)}"
   }
   object Correspondence {
     val id = 2
