@@ -43,6 +43,7 @@ final class TournamentApi(
     duelStore: DuelStore,
     pause: Pause,
     cacheApi: lila.memo.CacheApi,
+    chatApi: lila.chat.ChatApi,
     lightUserApi: lila.user.LightUserApi,
     proxyRepo: lila.round.GameProxyRepo,
     notifier: Notifier,
@@ -224,7 +225,9 @@ final class TournamentApi(
     tournamentRepo.remove(tour).void >>
       (if (tour.isArena) pairingRepo.removeByTour(tour.id)
        else arrangementRepo.removeByTour(tour.id)) >>
-      playerRepo.removeByTour(tour.id) >>- socket.foreach(_.reload(tour.id))
+      playerRepo.removeByTour(tour.id) >> chatApi.remove(
+        lila.chat.Chat.Id(tour.id),
+      ) >>- socket.foreach(_.reload(tour.id))
 
   private[tournament] def finish(oldTour: Tournament): Funit =
     Sequencing(oldTour.id)(tournamentRepo.startedById) { tour =>
@@ -254,6 +257,7 @@ final class TournamentApi(
             callbacks.indexLeaderboard(tour).logFailure(logger, _ => s"${tour.id} indexLeaderboard")
             callbacks.clearWinnersCache(tour)
             callbacks.clearTrophyCache(tour)
+            chatApi.markForExpire(lila.chat.Chat.Id(tour.id))
             duelStore.remove(tour)
           }
       }

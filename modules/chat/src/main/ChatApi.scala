@@ -2,6 +2,7 @@ package lila.chat
 
 import scala.concurrent.duration._
 
+import org.joda.time.DateTime
 import reactivemongo.api.ReadPreference
 
 import shogi.Color
@@ -271,6 +272,9 @@ final class ChatApi(
 
   def removeAll(chatIds: List[Chat.Id]) = coll.delete.one($inIds(chatIds)).void
 
+  def markForExpire(chatId: Chat.Id) =
+    coll.update.one($id(chatId), $set(Chat.BSONFields.expire -> true)).void
+
   private def pushLine(chatId: Chat.Id, line: Line): Funit =
     coll.update
       .one(
@@ -282,7 +286,7 @@ final class ChatApi(
               "$slice" -> -maxLinesPerChat.value,
             ),
           ),
-        ),
+        ) ++ $set(Chat.BSONFields.updatedAt -> DateTime.now),
         upsert = true,
       )
       .void

@@ -115,8 +115,10 @@ object Chat {
   def chanOf(id: Chat.Id) = s"chat:$id"
 
   object BSONFields {
-    val id    = "_id"
-    val lines = "l"
+    val id        = "_id"
+    val lines     = "l"
+    val updatedAt = "u"
+    val expire    = "e"
   }
 
   import BSONFields._

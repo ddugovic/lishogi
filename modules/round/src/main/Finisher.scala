@@ -155,6 +155,7 @@ final private class Finisher(
             val finish = FinishGame(game, senteO, goteO)
             updateCountAndPerfs(finish) map { ratingDiffs =>
               message foreach { messenger.system(game, _) }
+              messenger.markForExpire(game.id)
               gameRepo game game.id foreach { newGame =>
                 newGame foreach proxy.setFinishedGame
                 val newFinish = finish.copy(game = newGame | game)
