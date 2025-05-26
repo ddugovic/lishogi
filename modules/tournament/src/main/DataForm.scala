@@ -133,7 +133,7 @@ final class DataForm {
       "teamBattleByTeam" -> optional(nonEmptyText),
       "berserkable"      -> optional(boolean),
       "streakable"       -> optional(boolean),
-      "description"      -> optional(cleanNonEmptyText),
+      "description"      -> optional(cleanNonEmptyText(maxLength = 3000)),
       "hasChat"          -> optional(boolean),
     )(TournamentSetup.apply)(TournamentSetup.unapply)
       .verifying("Invalid starting position", _.validPosition)
