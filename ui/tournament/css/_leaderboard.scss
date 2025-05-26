@@ -11,7 +11,7 @@ $user-list-width: 35ch;
   gap: 1rem;
 
   &__item {
-    @extend %box-radius;
+    @extend %box-radius, %box-shadow;
 
     background: theme.$c-bg-box;
     border: theme.$border;
@@ -63,7 +63,11 @@ $user-list-width: 35ch;
 .tournament-shields {
   h2 {
     position: relative;
-    padding-left: 95px;
+    padding-left: 0;
+
+    a {
+      padding-left: 95px;
+    }
   }
 }
 
@@ -82,7 +86,7 @@ $user-list-width: 35ch;
   letter-spacing: normal;
   color: #333;
   text-shadow: 0 0 6px #fff;
-  filter: drop-shadow(0 0 10px theme.$c-brag);
+  filter: drop-shadow(0 0 6px theme.$c-brag);
 }
 
 .tournament-categ-shields {

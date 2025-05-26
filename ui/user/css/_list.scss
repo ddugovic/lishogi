@@ -57,7 +57,7 @@ $user-list-width: 30ch;
       gap: 1rem;
 
       section {
-        @extend %box-radius;
+        @extend %box-radius, %box-shadow;
 
         border: 1px solid theme.$c-brag;
         overflow: hidden;
