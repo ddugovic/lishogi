@@ -67,6 +67,7 @@ final class ArrangementRepo(val coll: Coll)(implicit
         $unset(
           Arrangement.BSONFields.gameId,
           Arrangement.BSONFields.startedAt,
+          Arrangement.BSONFields.scheduledAt,
           Arrangement.BSONFields.u1ScheduledAt,
           Arrangement.BSONFields.u2ScheduledAt,
           Arrangement.BSONFields.u1ReadyAt,
