@@ -6,7 +6,7 @@ import scala.concurrent.duration._
 import akka.actor._
 import akka.stream.scaladsl._
 
-final private class StartedOrganizer(
+final private class StartedArenaOrganizer(
     api: TournamentApi,
     tournamentRepo: TournamentRepo,
     playerRepo: PlayerRepo,
@@ -29,7 +29,7 @@ final private class StartedOrganizer(
   def receive = {
 
     case ReceiveTimeout =>
-      val msg = "tournament.StartedOrganizer timed out!"
+      val msg = "tournament.StartedArenaOrganizer timed out!"
       pairingLogger.error(msg)
       throw new RuntimeException(msg)
 
@@ -38,7 +38,7 @@ final private class StartedOrganizer(
         .documentSource()
         .mapAsyncUnordered(4) { tour =>
           processTour(tour) recover { case e: Exception =>
-            logger.error(s"StartedOrganizer $tour", e)
+            logger.error(s"StartedArenaOrganizer $tour", e)
             0
           }
         }
@@ -50,15 +50,15 @@ final private class StartedOrganizer(
           lila.mon.tournament.started.update(tours)
           lila.mon.tournament.waitingPlayers.record(users).unit
         }
-        .monSuccess(_.tournament.startedOrganizer.tick)
+        .monSuccess(_.tournament.startedArenaOrganizer.tick)
         .addEffectAnyway(scheduleNext())
         .unit
   }
 
   private def processTour(tour: Tournament): Fu[Int] =
     if (tour.secondsToFinish <= 0) api finish tour inject 0
-    else if (api.killSchedule contains tour.id) {
-      api.killSchedule remove tour.id
+    else if (api.arenaKillSchedule contains tour.id) {
+      api.arenaKillSchedule remove tour.id
       api finish tour inject 0
     } else if (tour.nbPlayers < 2) fuccess(0)
     else if (tour.nbPlayers < 30) {
@@ -75,7 +75,7 @@ final private class StartedOrganizer(
     !tour.pairingsClosed ??
       socket
         .getWaitingUsers(tour)
-        .monSuccess(_.tournament.startedOrganizer.waitingUsers)
+        .monSuccess(_.tournament.startedArenaOrganizer.waitingUsers)
         .flatMap { waiting =>
           api.makePairings(tour, waiting, smallTourNbActivePlayers) inject waiting.size
         }

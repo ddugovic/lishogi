@@ -125,7 +125,7 @@ final class Env(
 
   system.actorOf(Props(wire[CreatedOrganizer]))
 
-  system.actorOf(Props(wire[StartedOrganizer]))
+  system.actorOf(Props(wire[StartedArenaOrganizer]))
 
   system.actorOf(Props(wire[StartedNonArenaOrganizer]))
 

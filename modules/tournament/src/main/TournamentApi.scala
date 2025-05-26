@@ -259,11 +259,11 @@ final class TournamentApi(
       }
     }
 
-  private[tournament] val killSchedule = scala.collection.mutable.Set.empty[Tournament.ID]
+  private[tournament] val arenaKillSchedule = scala.collection.mutable.Set.empty[Tournament.ID]
 
   def kill(tour: Tournament): Funit = {
-    if (tour.isStarted) fuccess(killSchedule add tour.id).void
-    else if (tour.isCreated) destroy(tour)
+    if (tour.isStarted && tour.isArena) fuccess(arenaKillSchedule add tour.id).void
+    else if (tour.isStarted || tour.isCreated) destroy(tour)
     else funit
   }
 

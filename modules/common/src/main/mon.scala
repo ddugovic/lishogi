@@ -349,9 +349,9 @@ object mon {
     val created        = gauge("tournament.count").withTag("type", "created")
     val started        = gauge("tournament.count").withTag("type", "started")
     val waitingPlayers = histogram("tournament.waitingPlayers").withoutTags()
-    object startedOrganizer {
-      val tick         = future("tournament.startedOrganizer.tick")
-      val waitingUsers = future("tournament.startedOrganizer.waitingUsers")
+    object startedArenaOrganizer {
+      val tick         = future("tournament.startedArenaOrganizer.tick")
+      val waitingUsers = future("tournament.startedArenaOrganizer.waitingUsers")
     }
     object createdOrganizer {
       val tick = future("tournament.createdOrganizer.tick")
