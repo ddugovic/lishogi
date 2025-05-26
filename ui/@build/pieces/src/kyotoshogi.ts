@@ -2,7 +2,14 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import dedent from 'dedent';
 import type { PieceSet, RoleDict } from './types.js';
-import { categorizePieceSets, colors, dasherCss, readImageAsBase64, types } from './util.js';
+import {
+  categorizePieceSets,
+  colors,
+  dasherCss,
+  dasherWrapCss,
+  readImageAsBase64,
+  types,
+} from './util.js';
 
 const roleDict: RoleDict = {
   FU: 'pawn',
@@ -77,14 +84,28 @@ function classes(color: string, role: string): string {
   }
 }
 
+// piece set name: [set classes]
+const pieceSetNameCls: Record<string, string> = {
+  better_8_bit:
+    'image-rendering: pixelated !important; background-size: contain !important; background-repeat: no-repeat !important;',
+};
+
 function extraCss(pieceSet: PieceSet): string {
   const cssClasses: string[] = [];
 
+  // extension
   if (pieceSet.ext === 'png') {
     cssClasses.push(
       '.v-kyotoshogi piece { will-change: transform !important; background-repeat: unset !important; }',
     );
   }
+
+  // name
+  const cls = pieceSetNameCls[pieceSet.name];
+  if (cls) {
+    cssClasses.push(`.v-kyotoshogi piece { ${cls} }`);
+  }
+
   return cssClasses.join('\n');
 }
 
@@ -133,7 +154,11 @@ export function kyotoshogi(sourceDir: string, destDir: string): void {
   const dasher: string[] = [];
   for (const pieceSet of [...pieceSets.regular, ...pieceSets.bidirectional]) {
     const file = path.join(sourceDir, pieceSet.name, `0KY.${pieceSet.ext}`);
+
     dasher.push(dasherCss(file, pieceSet, 'kyotoshogi'));
+
+    const cls = pieceSetNameCls[pieceSet.name];
+    if (cls) dasher.push(dasherWrapCss(cls, pieceSet, 'kyotoshogi'));
   }
   fs.writeFileSync(path.join(destDir, 'lishogi.dasher.css'), dasher.join('\n'));
 }

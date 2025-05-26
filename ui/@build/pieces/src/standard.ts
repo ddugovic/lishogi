@@ -2,7 +2,14 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import dedent from 'dedent';
 import type { PieceSet, RoleDict } from './types.js';
-import { categorizePieceSets, colors, dasherCss, readImageAsBase64, types } from './util.js';
+import {
+  categorizePieceSets,
+  colors,
+  dasherCss,
+  dasherWrapCss,
+  readImageAsBase64,
+  types,
+} from './util.js';
 
 const roleDict: RoleDict = {
   FU: 'pawn',
@@ -82,25 +89,35 @@ function classes(color: string, role: string): string {
   }
 }
 
+// piece set name: [set classes, class resets for other variants]
+const pieceSetNameCls: Record<string, [string, string]> = {
+  pixel: ['image-rendering: pixelated;', 'image-rendering: unset;'],
+  better_8_bit: [
+    'image-rendering: pixelated; background-size: contain; background-repeat: no-repeat;',
+    'image-rendering: unset; background-size: cover;',
+  ],
+  characters: ['background-size: contain;', 'background-size: cover;'],
+};
+
 function extraCss(pieceSet: PieceSet): string {
   const cssClasses: string[] = [];
-  if (pieceSet.name === 'pixel') {
-    cssClasses.push('piece { image-rendering: pixelated; }');
-    cssClasses.push('.v-chushogi piece, .v-kyotoshogi piece { image-rendering: unset; }');
-  }
 
-  if (pieceSet.name === 'characters') {
-    cssClasses.push('piece { background-size: contain; }');
-    cssClasses.push('.v-chushogi piece, .v-kyotoshogi piece { background-size: cover; }');
-  }
-
+  // extension
   if (pieceSet.ext === 'png') {
     cssClasses.push('piece { will-change: transform; background-repeat: unset; }');
     cssClasses.push(
-      '.v-chushogi piece, .v-kyotoshogi piece { will-change: auto; background-repeat: no-repeat; }',
+      '.v-chushogi piece, .v-kyotoshogi piece, .dasher piece  { will-change: auto; background-repeat: no-repeat; }',
     );
   }
-  cssClasses.push('.v-chushogi piece, .v-kyotoshogi piece { background-image: none !important; }');
+
+  // name
+  const cls = pieceSetNameCls[pieceSet.name];
+  if (cls) {
+    cssClasses.push(`piece { ${cls[0]} }`);
+    cssClasses.push(`.v-chushogi piece, .v-kyotoshogi piece, .dasher piece  { ${cls[1]} }`);
+  }
+
+  cssClasses.push('.v-chushogi piece, .v-kyotoshogi piece{ background-image: none !important; }');
   return cssClasses.join('\n');
 }
 
@@ -147,7 +164,11 @@ export function standard(sourceDir: string, destDir: string): void {
   const dasher: string[] = [];
   for (const pieceSet of [...pieceSets.regular, ...pieceSets.bidirectional]) {
     const file = path.join(sourceDir, pieceSet.name, `0KI.${pieceSet.ext}`);
+
     dasher.push(dasherCss(file, pieceSet, 'standard'));
+
+    const cls = pieceSetNameCls[pieceSet.name];
+    if (cls) dasher.push(dasherWrapCss(cls[0], pieceSet, 'standard'));
   }
   fs.writeFileSync(path.join(destDir, 'lishogi.dasher.css'), dasher.join('\n'));
 }

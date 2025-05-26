@@ -2,7 +2,14 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import dedent from 'dedent';
 import type { PieceSet } from './types.js';
-import { categorizePieceSets, colors, dasherCss, readImageAsBase64, types } from './util.js';
+import {
+  categorizePieceSets,
+  colors,
+  dasherCss,
+  dasherWrapCss,
+  readImageAsBase64,
+  types,
+} from './util.js';
 
 const roles = [
   'lance',
@@ -135,8 +142,17 @@ function classes(color: string, role: string): string {
   }
 }
 
+// piece set name: [set classes]
+const pieceSetNameCls: Record<string, string> = {
+  mnemonic: 'background-size: contain !important;',
+  better_8_bit:
+    'image-rendering: pixelated !important; background-size: contain !important; background-repeat: no-repeat !important;',
+};
+
 function extraCss(pieceSet: PieceSet): string {
   const cssClasses: string[] = [];
+
+  // extension
   if (pieceSet.ext === 'png') {
     cssClasses.push(
       '.v-chushogi piece { will-change: transform !important; background-repeat: unset !important; }',
@@ -145,9 +161,12 @@ function extraCss(pieceSet: PieceSet): string {
     cssClasses.push('.v-chushogi piece { will-change: auto; background-repeat: no-repeat; }');
   }
 
-  if (pieceSet.name === 'mnemonic') {
-    cssClasses.push('.v-chushogi piece { background-size: contain !important; }');
+  // name
+  const cls = pieceSetNameCls[pieceSet.name];
+  if (cls) {
+    cssClasses.push(`.v-chushogi piece { ${cls} }`);
   }
+
   return cssClasses.join('\n');
 }
 
@@ -203,7 +222,11 @@ export function chushogi(sourceDir: string, destDir: string): void {
   const dasher: string[] = [];
   for (const pieceSet of [...pieceSets.regular, ...pieceSets.bidirectional]) {
     const file = path.join(sourceDir, pieceSet.name, `0_KIRIN.${pieceSet.ext}`);
+
     dasher.push(dasherCss(file, pieceSet, 'chushogi'));
+
+    const cls = pieceSetNameCls[pieceSet.name];
+    if (cls) dasher.push(dasherWrapCss(cls, pieceSet, 'chushogi'));
   }
   fs.writeFileSync(path.join(destDir, 'lishogi.dasher.css'), dasher.join('\n'));
 }

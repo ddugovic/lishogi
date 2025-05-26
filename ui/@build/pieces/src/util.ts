@@ -9,9 +9,16 @@ export const types: Record<Ext, string> = {
   png: 'png;base64,',
 };
 
+export function dasherWrapCss(value: string, pieceSet: PieceSet, variant: PieceSetVariant): string {
+  return `#dasher_app .list.tab-${variant} .no-square[data-value='${pieceSet.name}'] piece{${value}}`;
+}
 export function dasherCss(path: string, pieceSet: PieceSet, variant: PieceSetVariant): string {
   const base64 = readImageAsBase64(path);
-  return `#dasher_app .list.tab-${variant} .no-square[data-value='${pieceSet.name}'] piece{background-image:url('data:image/${types[pieceSet.ext]}${base64}');}`;
+  return dasherWrapCss(
+    `background-image:url('data:image/${types[pieceSet.ext]}${base64}');`,
+    pieceSet,
+    variant,
+  );
 }
 
 export function readImageAsBase64(path: string): string {
