@@ -9,7 +9,6 @@ import lila.app.ui.ScalatagsTemplate._
 import lila.game.Game
 import lila.game.Player
 import lila.game.Pov
-import lila.rating.PerfType.Correspondence
 import lila.user.Title
 
 object bits {
@@ -87,12 +86,6 @@ object bits {
       )
     else
       perfType match {
-        case Some(Correspondence) =>
-          link(
-            href = s"${routes.Main.faq}#correspondence",
-            title = Correspondence.desc,
-            name = Correspondence.trans,
-          )
         case Some(pt) => span(title := pt.desc)(pt.trans)
         case _        => variantName(variant)
       }
