@@ -582,9 +582,10 @@ final class TournamentApi(
             _.reloadUsers(tour.id, List(tour.createdBy, userId)),
           )
       case tour if tour.isCreated =>
-        playerRepo.remove(tour.id, userId) >> updateNbPlayers(tour.id) >>- socket.foreach(
-          _.reload(tour.id),
-        )
+        playerRepo.remove(tour.id, userId) >> updateNbPlayers(tour.id) >>- {
+          if (tour.hasArrangements) cached.arrangement.invalidatePlayers(tour.id)
+          socket.foreach(_.reload(tour.id))
+        }
       case tour if (tour.isStarted && (tour.isArena || isForced)) =>
         for {
           _ <- playerRepo.withdraw(tour.id, userId)
@@ -593,6 +594,7 @@ final class TournamentApi(
             else
               fuccess(isStalling)
         } yield {
+          if (tour.hasArrangements) cached.arrangement.invalidatePlayers(tour.id)
           if (pausable) pause.add(userId)
           socket.foreach(_.reload(tour.id))
         }
