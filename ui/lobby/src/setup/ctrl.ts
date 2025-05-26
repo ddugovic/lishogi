@@ -181,7 +181,7 @@ export default class SetupCtrl {
 
   ratingRange(): string | undefined {
     const rating = this.rating();
-    if (rating) return `${rating - this.data.ratingMin}-${rating + this.data.ratingMin}`;
+    if (rating) return `${rating - this.data.ratingMin}-${rating + this.data.ratingMax}`;
     else return;
   }
 
