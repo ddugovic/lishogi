@@ -452,15 +452,18 @@ final class TournamentApi(
             arr.hasUser(userId)
         ),
     ) { (tour, arrangement) =>
-      if (join && arrangement.opponentUser(userId).exists(_.isReady)) {
-        makeManualPairings(tour, arrangement)
-      } else if (join || arrangement.user(userId).exists(_.isReady)) {
-        val updated = arrangement.setReadyAt(userId, join ?? DateTime.now.some)
-        arrangementRepo.update(updated) >>- cached.arrangement.invalidateArrangaments(
-          arrangement.tourId,
-        ) >>-
-          socket.foreach(_.arrangementChange(updated))
-      } else funit
+      val canActuallyBeReadyFu = if (join) !arrangementRepo.isPlaying(tour.id, userId) else fuFalse
+      canActuallyBeReadyFu.flatMap { canActuallyBeReady =>
+        if (canActuallyBeReady && arrangement.opponentUser(userId).exists(_.isReady)) {
+          makeManualPairings(tour, arrangement)
+        } else if (canActuallyBeReady || arrangement.user(userId).exists(_.isReady)) {
+          val updated = arrangement.setReadyAt(userId, canActuallyBeReady ?? DateTime.now.some)
+          arrangementRepo.update(updated) >>- cached.arrangement.invalidateArrangaments(
+            arrangement.tourId,
+          ) >>-
+            socket.foreach(_.arrangementChange(updated))
+        } else funit
+      }
     }
 
   private def makePlayerMap(tourId: Tournament.ID, users: List[User.ID]): Fu[Map[User.ID, Player]] =
