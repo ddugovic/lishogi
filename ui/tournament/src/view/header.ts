@@ -24,7 +24,7 @@ function clock(ctrl: TournamentController): MaybeVNode {
     if (d.secondsToFinish > oneDayInSeconds && ctrl.dateToFinish)
       return h('div.clock.clock-title', [
         h('span.shy', `${i18n('ending')} `),
-        ctrl.dateToFinish.toLocaleString(),
+        h('span', ctrl.dateToFinish.toLocaleString()),
       ]);
     else
       return h(
@@ -37,9 +37,9 @@ function clock(ctrl: TournamentController): MaybeVNode {
   }
   if (d.secondsToStart) {
     if (d.secondsToStart > oneDayInSeconds)
-      return h(
-        'div.clock',
-        h('time.timeago.shy', {
+      return h('div.clock.clock-title', [
+        h('span.shy', `${i18n('starting')} `),
+        h('time.timeago', {
           attrs: {
             title: new Date(d.startsAt).toLocaleString(),
             datetime: Date.now() + d.secondsToStart * 1000,
@@ -53,7 +53,7 @@ function clock(ctrl: TournamentController): MaybeVNode {
             },
           },
         }),
-      );
+      ]);
     else
       return h(
         'div.clock.clock-title',

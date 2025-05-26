@@ -270,11 +270,16 @@ function totalSection(ctrl: TournamentController, a: Arrangement): VNode {
               'button.fbt',
               {
                 attrs: {
-                  title: meReady ? i18n('cancel') : i18n('tourArrangements:startGameNow'),
+                  title: !ctrl.data.isStarted
+                    ? `${i18n('starting')} ${new Date(ctrl.data.startsAt).toLocaleString()}`
+                    : meReady
+                      ? i18n('cancel')
+                      : i18n('tourArrangements:startGameNow'),
                 },
                 class: {
                   glowing: opponentReady,
                   'rubber-band': opponentReady,
+                  disabled: !ctrl.data.isStarted,
                 },
                 hook: bind('click', () => {
                   ctrl.arrangementMatch(a, true);

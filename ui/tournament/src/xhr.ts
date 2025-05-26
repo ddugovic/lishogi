@@ -77,7 +77,7 @@ interface Xhr {
   loadPage: (ctrl: TournamentController, p: number) => void;
   loadPageOf: typeof loadPageOf;
   reloadSoon: (...args: any[]) => void;
-  reloadNow: typeof reload;
+  reloadNow: (...args: any[]) => void;
   playerInfo: typeof playerInfo;
   teamInfo: typeof teamInfo;
 }
@@ -88,7 +88,7 @@ const xhrFunctions: Xhr = {
   loadPage: throttle(1000, loadPage),
   loadPageOf: loadPageOf,
   reloadSoon: throttle(4000, reload),
-  reloadNow: reload,
+  reloadNow: throttle(500, reload),
   playerInfo: playerInfo,
   teamInfo: teamInfo,
 };

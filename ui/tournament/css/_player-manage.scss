@@ -31,14 +31,12 @@
     }
   }
 
-  .denied .table-wrap {
-    border-bottom: theme.$border;
-  }
-
   .other-actions {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    border-top: theme.$border;
+    border-bottom: theme.$border;
 
     input {
       margin-right: 1rem;

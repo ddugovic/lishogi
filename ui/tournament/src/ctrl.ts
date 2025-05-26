@@ -114,8 +114,8 @@ export default class TournamentController {
   };
 
   askReload = (): void => {
-    if (this.joinSpinner || this.playerManagement) xhr.reloadNow(this);
-    else setTimeout(() => xhr.reloadSoon(this), Math.floor(Math.random() * 4000));
+    if (this.joinSpinner || this.isCreator()) xhr.reloadNow(this);
+    else setTimeout(() => xhr.reloadSoon(this), Math.floor(Math.random() * 5000));
   };
 
   reload = (data: TournamentDataBase): void => {
