@@ -440,7 +440,9 @@ final class TournamentApi(
             arr.hasUser(userId)
         ),
     ) { (tour, arrangement) =>
-      val canActuallyBeReadyFu = if (join) !arrangementRepo.isPlaying(tour.id, userId) else fuFalse
+      val canActuallyBeReadyFu =
+        if (join) (fuccess(tour.isCorrespondence) >>| !arrangementRepo.isPlaying(tour.id, userId))
+        else fuFalse
       canActuallyBeReadyFu.flatMap { canActuallyBeReady =>
         if (canActuallyBeReady && arrangement.opponentUser(userId).exists(_.isReady)) {
           makeManualPairings(tour, arrangement)
