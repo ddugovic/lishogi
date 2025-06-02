@@ -32,7 +32,7 @@
     }
 
     &.dest:not(.hover) {
-      background: radial-gradient(transparent 0%, transparent 80%, rgba(20, 85, 0, 0.3) 80%);
+      background: radial-gradient(transparent 0%, transparent 80%, theme.$c-selected-hover 80%);
     }
   }
 

@@ -55,6 +55,14 @@ $c-bad-over: $c-error-over;
 $c-fancy: hsl(294deg, 62%, 48%);
 $c-fancy-over: white;
 
+$c-selected: rgba(20, 85, 30, 0.5);
+$c-selected-hover: rgba(20, 85, 30, 0.25);
+
+$c-premoved: rgba(20, 30, 85, 0.5);
+$c-premoved-hover: rgba(20, 30, 85, 0.25);
+
+$c-last-dest: rgba(169, 199, 0, 0.41);
+
 $c-inaccuracy: hsl(202deg, 78%, 62%);
 $c-inaccuracy-clear: hsl(202deg, 100%, 62%);
 $c-mistake: hsl(41deg, 100%, 45%);

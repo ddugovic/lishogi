@@ -86,6 +86,7 @@ html {
   --m-primary_lightness_10: oklch(from var(--c-primary) calc(l + 0.1) c h);
   --m-primary_white_mix_40: color-mix(in srgb, var(--c-primary) 40%, white 60%);
   --m-primary_white_mix_60: color-mix(in srgb, var(--c-primary) 60%, white 40%);
+  --m-red_alpha_neg50: oklch(from var(--c-red) l c h / 0.5);
   --m-secondary_alpha_neg50: oklch(from var(--c-secondary) l c h / 0.5);
   --m-secondary_alpha_neg60: oklch(from var(--c-secondary) l c h / 0.4);
   --m-secondary_alpha_neg80: oklch(from var(--c-secondary) l c h / 0.2);

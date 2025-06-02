@@ -305,50 +305,44 @@ sg-squares {
       }
 
       &.dest::before {
-        background: radial-gradient(rgba(20, 85, 30, 0.5) 19%, rgba(0, 0, 0, 0) 20%);
+        background: radial-gradient(theme.$c-selected 19%, rgba(0, 0, 0, 0) 20%);
       }
 
       &.pre-dest::before {
-        background: radial-gradient(rgba(20, 30, 85, 0.5) 19%, rgba(0, 0, 0, 0) 20%);
+        background: radial-gradient(theme.$c-premoved 19%, rgba(0, 0, 0, 0) 20%);
       }
 
       &.oc.dest::before {
-        background: radial-gradient(transparent 0%, transparent 80%, rgba(20, 85, 0, 0.3) 80%);
+        background: radial-gradient(transparent 0%, transparent 80%, theme.$c-selected-hover 80%);
       }
 
       &.oc.pre-dest::before {
-        background: radial-gradient(transparent 0%, transparent 80%, rgba(20, 30, 85, 0.2) 80%);
+        background: radial-gradient(transparent 0%, transparent 80%, theme.$c-premoved-hover 80%);
       }
 
       &.last-dest::before {
-        background-color: rgba(155, 199, 0, 0.41);
+        background-color: theme.$c-last-dest;
       }
 
       &.check::before {
-        background: radial-gradient(
-          ellipse at center,
-          rgba(255, 0, 0, 1) 0%,
-          rgba(231, 0, 0, 1) 25%,
-          rgba(169, 0, 0, 0) 89%,
-          rgba(158, 0, 0, 0) 100%
-        );
+        background-color: theme.$m-red_alpha_neg50;
       }
 
       &.selected::before {
-        background-color: rgba(20, 85, 30, 0.5);
+        background-color: theme.$c-selected;
       }
 
       &.preselected::before,
       &.current-pre::before {
-        background-color: rgba(20, 30, 85, 0.5);
+        background-color: theme.$c-premoved;
       }
 
       &.dest.hover::before {
-        background: rgba(20, 85, 30, 0.3);
+        background: theme.$c-selected-hover;
       }
 
       &.pre-dest.hover::before {
-        background: rgba(20, 30, 85, 0.2);
+        background: theme.$c-premoved-hover;
       }
 
       &.force-selected:not(.selected)::before {

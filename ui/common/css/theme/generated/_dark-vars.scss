@@ -59,6 +59,7 @@ html {
   --c-inaccuracy: #{hsl(202deg, 78%, 62%)};
   --c-inaccuracy-clear: #{hsl(202deg, 100%, 62%)};
   --c-interesting: #{hsl(307deg, 80%, 70%)};
+  --c-last-dest: #{rgba(169, 199, 0, 0.41)};
   --c-link: #{$c-primary};
   --c-link-clear: #{$c-primary-clear};
   --c-link-dim: #{$c-primary-dim};
@@ -69,6 +70,8 @@ html {
   --c-page-input: #{$c-bg-box};
   --c-page-mask: #{hsla(0deg, 0%, 0%, 0.6)};
   --c-popup: #{$c-font-clear};
+  --c-premoved: #{rgba(20, 30, 85, 0.5)};
+  --c-premoved-hover: #{rgba(20, 30, 85, 0.25)};
   --c-primary: #{hsl(209deg, 73%, 52%)};
   --c-primary-clear: #{c-whiter($c-primary, 20%)};
   --c-primary-dim: #{c-blacker($c-primary, 15%)};
@@ -80,6 +83,8 @@ html {
   --c-secondary-dim: #{c-blacker($c-secondary, 20%)};
   --c-secondary-dimmer: #{c-blacker($c-secondary, 40%)};
   --c-secondary-over: #{#fff};
+  --c-selected: #{rgba(20, 85, 30, 0.5)};
+  --c-selected-hover: #{rgba(20, 85, 30, 0.25)};
   --c-shade: #{c-light($c-font, 30%)};
   --c-warn: #{$c-brag};
   --c-warn-over: #{$c-brag-over};
@@ -172,6 +177,7 @@ html {
   --m-primary_lightness_10: #{color.adjust($c-primary,$lightness:10%)};
   --m-primary_white_mix_40: #{color.mix($c-primary,white,40%)};
   --m-primary_white_mix_60: #{color.mix($c-primary,white,60%)};
+  --m-red_alpha_neg50: #{color.adjust($c-red,$alpha:-0.5)};
   --m-secondary_alpha_neg50: #{color.adjust($c-secondary,$alpha:-0.5)};
   --m-secondary_alpha_neg60: #{color.adjust($c-secondary,$alpha:-0.6)};
   --m-secondary_alpha_neg80: #{color.adjust($c-secondary,$alpha:-0.8)};
