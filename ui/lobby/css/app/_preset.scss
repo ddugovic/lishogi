@@ -55,8 +55,8 @@
       background: theme.$c-accent;
       color: theme.$c-accent-over;
 
-      &.isReady::before {
-        opacity: 0.5;
+      .check-mark {
+        opacity: 0.6;
       }
     }
   }
