@@ -11,11 +11,7 @@ import results from './results';
 import * as util from './util';
 
 export default function (ctrl: SimulCtrl): VNode {
-  const handler = ctrl.data.isRunning
-    ? started
-    : ctrl.data.isFinished
-      ? finished
-      : created(showText);
+  const handler = ctrl.data.isRunning ? started : ctrl.data.isFinished ? finished : created;
 
   return h('main.simul', [
     h('aside.simul__side', {
@@ -36,7 +32,7 @@ export default function (ctrl: SimulCtrl): VNode {
           },
         },
       },
-      handler(ctrl),
+      [...handler(ctrl), showText(ctrl)],
     ),
     h('div.chat__members.none', {
       hook: onInsert(el => {
@@ -48,7 +44,8 @@ export default function (ctrl: SimulCtrl): VNode {
 
 const showText = (ctrl: SimulCtrl) =>
   ctrl.data.text.length > 0
-    ? h('div.simul-text', [
+    ? h('div.simul-desc', [
+        h('h2', i18n('description')),
         h('p', {
           hook: richHTML(ctrl.data.text),
         }),

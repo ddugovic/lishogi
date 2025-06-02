@@ -8,11 +8,11 @@
 .simul {
   h1 {
     font-size: 2.1em;
+    overflow: hidden;
+  }
 
-    .author {
-      margin-left: 0.7em;
-      font-size: 0.7em;
-    }
+  .author {
+    font-size: 1.2em;
   }
 
   .finished {
@@ -42,25 +42,12 @@
     }
   }
 
-  .simul-text {
-    @extend %box-neat;
+  .simul-desc {
+    padding: 2rem;
+    margin-top: 2rem;
 
-    margin: 0 auto 2em auto;
-    padding: 1.5em 2.5em;
-    background: theme.$c-bg-zebra;
-    width: 70%;
-
-    textarea {
-      width: 100%;
-      height: 10em;
-    }
-
-    .save {
-      width: 100%;
-    }
-
-    p {
-      margin: 0;
+    h2 {
+      margin-bottom: 1rem;
     }
   }
 

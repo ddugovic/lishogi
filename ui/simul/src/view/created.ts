@@ -1,7 +1,7 @@
 import { useJp } from 'common/common';
 import { modal } from 'common/modal';
 import { getPerfIcon } from 'common/perf-icons';
-import { type MaybeVNode, type MaybeVNodes, bind } from 'common/snabbdom';
+import { type MaybeVNodes, bind } from 'common/snabbdom';
 import spinner from 'common/spinner';
 import { i18n, i18nFormat, i18nVdomPlural } from 'i18n';
 import { i18nVariant } from 'i18n/variant';
@@ -15,221 +15,211 @@ let openModal = false;
 let joining: Timeout | undefined = undefined;
 let withdrawing: Timeout | undefined = undefined;
 
-export default function (
-  showText: (ctrl: SimulCtrl) => MaybeVNode,
-): (ctrl: SimulCtrl) => MaybeVNodes {
-  return (ctrl: SimulCtrl): MaybeVNodes => {
-    const candidates = ctrl.candidates().sort(byName);
-    const accepted = ctrl.accepted().sort(byName);
-    const isHost = ctrl.createdByMe();
-    const variantIconFor = (a: Applicant) => {
-      const variant = ctrl.data.variants.find(v => a.player.variant == v);
-      if (!variant || ctrl.data.variants.length === 1) return undefined;
-      else
-        return h('td.variant', {
-          attrs: {
-            title: i18nVariant(variant),
-            'data-icon': getPerfIcon(variant),
-          },
-        });
-    };
-    return [
-      h('div.box__top', [
-        util.title(ctrl),
-        h(
-          'div.box__top__actions',
-          ctrl.opts.userId
-            ? isHost
-              ? hostButtons(ctrl, accepted)
-              : ctrl.containsMe()
-                ? withdrawButton(ctrl)
-                : joinButton(ctrl)
-            : h(
-                'a.button.text',
-                {
-                  attrs: {
-                    'data-icon': 'G',
-                    href: `/login?referrer=${window.location.pathname}`,
-                  },
-                },
-                i18n('signIn'),
-              ),
-        ),
-      ]),
-      showText(ctrl),
-      ctrl.acceptedContainsMe()
-        ? h('p.instructions', 'You have been selected! Hold still, the simul is about to begin.')
-        : isHost && ctrl.data.applicants.length < 6
-          ? h('p.instructions', 'Share this page URL to let people enter the simul!')
-          : null,
+export default function (ctrl: SimulCtrl): MaybeVNodes {
+  const candidates = ctrl.candidates().sort(byName);
+  const accepted = ctrl.accepted().sort(byName);
+  const isHost = ctrl.createdByMe();
+  const variantIconFor = (a: Applicant) => {
+    const variant = ctrl.data.variants.find(v => a.player.variant == v);
+    if (!variant || ctrl.data.variants.length === 1) return undefined;
+    else
+      return h('td.variant', {
+        attrs: {
+          title: i18nVariant(variant),
+          'data-icon': getPerfIcon(variant),
+        },
+      });
+  };
+  return [
+    h('div.box__top', [
+      util.title(ctrl),
       h(
-        'div.halves',
-        {
-          hook: {
-            postpatch(_old, vnode) {
-              window.lishogi.powertip.manualUserIn(vnode.elm as HTMLElement);
-            },
+        'div.box__top__actions',
+        ctrl.opts.userId
+          ? isHost
+            ? hostButtons(ctrl, accepted)
+            : ctrl.containsMe()
+              ? withdrawButton(ctrl)
+              : joinButton(ctrl)
+          : h(
+              'a.button.text',
+              {
+                attrs: {
+                  'data-icon': 'G',
+                  href: `/login?referrer=${window.location.pathname}`,
+                },
+              },
+              i18n('signIn'),
+            ),
+      ),
+    ]),
+    h(
+      'div.halves',
+      {
+        hook: {
+          postpatch(_old, vnode) {
+            window.lishogi.powertip.manualUserIn(vnode.elm as HTMLElement);
           },
         },
-        [
-          h(
-            'div.half.candidates',
-            h('table.slist', [
+      },
+      [
+        h(
+          'div.half.candidates',
+          h('table.slist', [
+            h(
+              'thead',
               h(
-                'thead',
+                'tr',
                 h(
-                  'tr',
-                  h(
-                    'th',
-                    {
-                      attrs: { colspan: 3 },
-                    },
-                    i18nVdomPlural(
-                      'nbCandidatePlayers',
-                      candidates.length,
-                      h('strong', candidates.length),
-                    ),
+                  'th',
+                  {
+                    attrs: { colspan: 3 },
+                  },
+                  i18nVdomPlural(
+                    'nbCandidatePlayers',
+                    candidates.length,
+                    h('strong', candidates.length),
                   ),
                 ),
               ),
-              h(
-                'tbody',
-                candidates.map(applicant => {
-                  return h(
-                    'tr',
-                    {
-                      key: applicant.player.id,
-                      class: {
-                        me: ctrl.opts.userId === applicant.player.id,
-                      },
-                    },
-                    [
-                      h('td', util.player(applicant.player, ctrl)),
-                      variantIconFor(applicant),
-                      h(
-                        'td.action',
-                        isHost
-                          ? [
-                              h('a.button', {
-                                attrs: {
-                                  'data-icon': 'H',
-                                  title: i18n('accept'),
-                                },
-                                hook: bind('click', () =>
-                                  xhr.accept(applicant.player.id)(ctrl.data.id),
-                                ),
-                              }),
-                            ]
-                          : [],
-                      ),
-                    ],
-                  );
-                }),
-              ),
-            ]),
-          ),
-          h('div.half.accepted', [
-            h('table.slist.user_list', [
-              h('thead', [
-                h(
+            ),
+            h(
+              'tbody',
+              candidates.map(applicant => {
+                return h(
                   'tr',
-                  h(
-                    'th',
-                    {
-                      attrs: { colspan: 3 },
+                  {
+                    key: applicant.player.id,
+                    class: {
+                      me: ctrl.opts.userId === applicant.player.id,
                     },
-                    i18nVdomPlural(
-                      'nbAcceptedPlayers',
-                      accepted.length,
-                      h('strong', accepted.length),
+                  },
+                  [
+                    h('td', util.player(applicant.player, ctrl)),
+                    variantIconFor(applicant),
+                    h(
+                      'td.action',
+                      isHost
+                        ? [
+                            h('a.button', {
+                              attrs: {
+                                'data-icon': 'H',
+                                title: i18n('accept'),
+                              },
+                              hook: bind('click', () =>
+                                xhr.accept(applicant.player.id)(ctrl.data.id),
+                              ),
+                            }),
+                          ]
+                        : [],
                     ),
-                  ),
-                ),
-              ]),
-              h(
-                'tbody',
-                accepted.map(applicant => {
-                  return h(
-                    'tr',
-                    {
-                      key: applicant.player.id,
-                      class: {
-                        me: ctrl.opts.userId === applicant.player.id,
-                      },
-                    },
-                    [
-                      h('td', util.player(applicant.player, ctrl)),
-                      variantIconFor(applicant),
-                      h(
-                        'td.action',
-                        isHost
-                          ? [
-                              h('a.button.button-red', {
-                                attrs: {
-                                  'data-icon': 'L',
-                                  title: i18n('decline'),
-                                },
-                                hook: bind('click', () =>
-                                  xhr.reject(applicant.player.id)(ctrl.data.id),
-                                ),
-                              }),
-                            ]
-                          : [],
-                      ),
-                    ],
-                  );
-                }),
-              ),
-            ]),
-            isHost && accepted.length < 2 ? h('div.help', i18n('acceptPlayersStartSimul')) : null,
+                  ],
+                );
+              }),
+            ),
           ]),
-        ],
-      ),
-      isHost && candidates.length ? randomButton(ctrl) : null,
-      ctrl.data.proverb
-        ? h('blockquote.pull-quote', [
-            h('p', useJp() ? ctrl.data.proverb.japanese : ctrl.data.proverb.english),
-          ])
-        : null,
-      openModal
-        ? modal({
-            class: 'variant-select',
-            content: [
+        ),
+        h('div.half.accepted', [
+          h('table.slist.user_list', [
+            h('thead', [
               h(
-                'div.continue-with',
-                ctrl.data.variants.map(variant =>
-                  h(
-                    'button.button',
-                    {
-                      hook: bind('click', () => {
-                        openModal = false;
-                        startJoining(ctrl.redraw);
-                        xhr.join(ctrl.data.id, variant);
-                      }),
-                    },
-                    [
-                      h(
-                        'span.text',
-                        {
-                          attrs: {
-                            'data-icon': getPerfIcon(variant),
-                          },
-                        },
-                        i18nVariant(variant),
-                      ),
-                    ],
+                'tr',
+                h(
+                  'th',
+                  {
+                    attrs: { colspan: 3 },
+                  },
+                  i18nVdomPlural(
+                    'nbAcceptedPlayers',
+                    accepted.length,
+                    h('strong', accepted.length),
                   ),
                 ),
               ),
-            ],
-            onClose() {
-              openModal = false;
-              ctrl.redraw();
-            },
-          })
-        : undefined,
-    ];
-  };
+            ]),
+            h(
+              'tbody',
+              accepted.map(applicant => {
+                return h(
+                  'tr',
+                  {
+                    key: applicant.player.id,
+                    class: {
+                      me: ctrl.opts.userId === applicant.player.id,
+                    },
+                  },
+                  [
+                    h('td', util.player(applicant.player, ctrl)),
+                    variantIconFor(applicant),
+                    h(
+                      'td.action',
+                      isHost
+                        ? [
+                            h('a.button.button-red', {
+                              attrs: {
+                                'data-icon': 'L',
+                                title: i18n('decline'),
+                              },
+                              hook: bind('click', () =>
+                                xhr.reject(applicant.player.id)(ctrl.data.id),
+                              ),
+                            }),
+                          ]
+                        : [],
+                    ),
+                  ],
+                );
+              }),
+            ),
+          ]),
+          isHost && accepted.length < 2 ? h('div.help', i18n('acceptPlayersStartSimul')) : null,
+        ]),
+      ],
+    ),
+    isHost && candidates.length ? randomButton(ctrl) : null,
+    ctrl.data.proverb
+      ? h('blockquote.pull-quote', [
+          h('p', useJp() ? ctrl.data.proverb.japanese : ctrl.data.proverb.english),
+        ])
+      : null,
+    openModal
+      ? modal({
+          class: 'variant-select',
+          content: [
+            h(
+              'div.continue-with',
+              ctrl.data.variants.map(variant =>
+                h(
+                  'button.button',
+                  {
+                    hook: bind('click', () => {
+                      openModal = false;
+                      startJoining(ctrl.redraw);
+                      xhr.join(ctrl.data.id, variant);
+                    }),
+                  },
+                  [
+                    h(
+                      'span.text',
+                      {
+                        attrs: {
+                          'data-icon': getPerfIcon(variant),
+                        },
+                      },
+                      i18nVariant(variant),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+          onClose() {
+            openModal = false;
+            ctrl.redraw();
+          },
+        })
+      : undefined,
+  ];
 }
 
 const joinButton = (ctrl: SimulCtrl) =>

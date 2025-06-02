@@ -33,8 +33,7 @@ export function player(p: Player, ctrl: SimulCtrl): VNode {
 const userName = (u: LightUser) => (u.title ? [h('span.utitle', u.title), ` ${u.name}`] : [u.name]);
 
 export const title = (ctrl: SimulCtrl): VNode =>
-  h('h1', [
-    ctrl.data.name,
-    h('br'),
+  h('div', [
+    h('h1', { attrs: { title: ctrl.data.name } }, ctrl.data.name),
     h('span.author', i18nVdom('by', player(ctrl.data.host as Player, ctrl))),
   ]);
