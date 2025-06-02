@@ -80,13 +80,14 @@ function image(d: TournamentDataFull): VNode | undefined {
 
 function title(ctrl: TournamentController) {
   const d = ctrl.data;
-  if (hasFreq('marathon', d)) return h('h1', [h('i.fire-trophy', '\\'), d.fullName]);
+  if (hasFreq('marathon', d))
+    return h('h1', { attrs: { title: d.fullName } }, [h('i.fire-trophy', '\\'), d.fullName]);
   if (hasFreq('shield', d))
     return h('h1', [
       h(
         'a.shield-trophy',
         {
-          attrs: { href: '/tournament/shields' },
+          attrs: { href: '/tournament/shields', title: d.fullName },
         },
         d.perf.icon,
       ),
@@ -94,6 +95,7 @@ function title(ctrl: TournamentController) {
     ]);
   return h(
     'h1',
+    { attrs: { title: d.fullName } },
     (d.animal
       ? [
           h(
@@ -106,7 +108,6 @@ function title(ctrl: TournamentController) {
             },
             d.animal.name,
           ),
-          ' Arena',
         ]
       : [d.fullName]
     ).concat(d.private ? [' ', h('span', { attrs: dataIcon('a') })] : []),

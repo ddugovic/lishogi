@@ -23,26 +23,31 @@ export default function (send: Socket.Send, ctrl: TournamentController): Tournam
         : a => {
             return a.id === arr.id;
           };
+
       const users = [arr.user1.id, arr.user2.id];
       const index = ctrl.data.standing.arrangements.findIndex(a => f(a));
+      let old: Arrangement | undefined = undefined;
 
-      if (index !== -1) ctrl.data.standing.arrangements[index] = arr;
-      else ctrl.data.standing.arrangements.push(arr);
+      if (index !== -1) {
+        old = ctrl.data.standing.arrangements[index];
+        ctrl.data.standing.arrangements[index] = arr;
+      } else ctrl.data.standing.arrangements.push(arr);
 
       if (
-        ctrl.arrangement &&
-        users.includes(ctrl.arrangement.user1.id) &&
-        users.includes(ctrl.arrangement.user2.id)
-      ) {
-        if (
-          ctrl.arrangement.user1.readyAt !== arr.user1.readyAt ||
-          ctrl.arrangement.user2.readyAt !== arr.user2.readyAt
-        ) {
-          ctrl.arrangementReadyRedraw(arr);
-        }
+        !old ||
+        old.user1.readyAt !== arr.user1.readyAt ||
+        old.user2.readyAt !== arr.user2.readyAt
+      )
+        ctrl.arrangementReadyRedraw(arr);
 
+      if (
+        (ctrl.arrangement &&
+          !ctrl.arrangement.id &&
+          users.includes(ctrl.arrangement.user2.id) &&
+          users.includes(ctrl.arrangement.user1.id)) ||
+        (ctrl.arrangement && ctrl.arrangement.id === arr.id)
+      )
         ctrl.arrangement = arr;
-      }
 
       ctrl.redraw();
     },

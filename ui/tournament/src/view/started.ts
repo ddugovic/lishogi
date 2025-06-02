@@ -46,10 +46,17 @@ function main(ctrl: TournamentController): MaybeVNodes {
       standing(ctrl, pag, 'started'),
     ];
   else if (ctrl.isRobin())
-    return [header(ctrl), robinControls(ctrl), rStanding(ctrl, 'started'), yourUpcoming(ctrl)];
+    return [
+      header(ctrl),
+      gameId ? joinTheGame(gameId) : null,
+      robinControls(ctrl),
+      rStanding(ctrl, 'started'),
+      yourUpcoming(ctrl),
+    ];
   else
     return [
       header(ctrl),
+      gameId ? joinTheGame(gameId) : null,
       organizedControls(ctrl, pag),
       oStanding(ctrl, pag, 'started'),
       yourUpcoming(ctrl),

@@ -14,20 +14,25 @@ function withdraw(ctrl: TournamentController): MaybeVNode {
     const candidate = ctrl.data.isCandidate;
     const pause = ctrl.data.isStarted && !candidate;
     const title = pause ? i18n('pause') : i18n('withdraw');
+    const useTitle = !candidate && !ctrl.isCreator();
 
     if (pause && !ctrl.isArena()) return;
     const button = h(
-      'button.fbt.text',
+      'button.fbt',
       {
         attrs: {
           title: title,
           'data-icon': pause ? 'Z' : 'b',
         },
+        class: {
+          text: useTitle,
+        },
         hook: bind('click', ctrl.withdraw, ctrl.redraw),
       },
-      !candidate ? title : undefined,
+      useTitle ? title : undefined,
     );
-    if (candidate) return h('div.waiting', [h('span', i18n('waitingForApproval')), button]);
+    if (candidate && !ctrl.isCreator())
+      return h('div.waiting', [h('span', i18n('waitingForApproval')), button]);
     else return button;
   });
 }
@@ -114,10 +119,12 @@ export function managePlayers(ctrl: TournamentController): MaybeVNode {
       {
         class: {
           text: !ctrl.isOrganized(),
+          'data-count': !!ctrl.data.candidates?.length,
         },
         attrs: {
           disabled: !!ctrl.data.isFinished,
           'data-icon': 'f',
+          'data-count': ctrl.data.candidates?.length ? ctrl.data.candidates?.length : false,
         },
         hook: bind(
           'click',
@@ -127,9 +134,7 @@ export function managePlayers(ctrl: TournamentController): MaybeVNode {
           ctrl.redraw,
         ),
       },
-      !ctrl.isOrganized()
-        ? `${i18n('managePlayers')}${ctrl.data.candidates?.length ? ` (${ctrl.data.candidates.length})` : ''}`
-        : undefined,
+      !ctrl.isOrganized() ? i18n('managePlayers') : undefined,
     );
   else return null;
 }

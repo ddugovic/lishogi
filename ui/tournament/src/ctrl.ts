@@ -1,5 +1,6 @@
 import { defined } from 'common/common';
 import { type StoredJsonProp, storedJsonProp } from 'common/storage';
+import { ids } from 'game/status';
 import type {
   Arrangement,
   ArrangementUser,
@@ -40,7 +41,7 @@ export default class TournamentController {
   teamInfo: CtrlTeamInfo = {};
   arrangement: Arrangement | undefined;
   arrangementReadyMillis: number = 20 * 1000;
-  arrangementReadyTimeout: Timeout | undefined;
+  arrangementReadyTimeouts: Map<string, Timeout> = new Map();
   defaultArrangementPoints: Points = { w: 3, d: 2, l: 1 };
   playerManagement = false;
   newArrangement: NewArrangement | undefined;
@@ -70,7 +71,8 @@ export default class TournamentController {
     sound.end(this.data);
     sound.countDown(this.data);
     this.recountTeams();
-    this.redirectToMyGame();
+
+    if (this.isArena()) this.redirectToMyGame();
 
     if (this.data.secondsToFinish)
       this.dateToFinish = new Date(Date.now() + this.data.secondsToFinish * 1000);
@@ -82,7 +84,14 @@ export default class TournamentController {
       },
     );
 
-    this.arrangementReadyRedraw(this.arrangement);
+    if (this.isRobin())
+      this.data.standing.arrangements.forEach(a => {
+        this.arrangementReadyRedraw(a);
+      });
+    else if (this.isOrganized())
+      this.data.standing.arrangements.forEach(a => {
+        if (this.arrangementHasMe(a)) this.arrangementReadyRedraw(a);
+      });
 
     window.addEventListener('beforeunload', () => {
       if (this.arrangement && !this.tourRedirect) this.arrangementMatch(this.arrangement, false);
@@ -139,7 +148,7 @@ export default class TournamentController {
     this.shadedCandidates = [];
     this.joinSpinner = false;
     this.recountTeams();
-    this.redirectToMyGame();
+    if (this.isArena()) this.redirectToMyGame();
   };
 
   isRobin = (): boolean => this.data.system === 'robin';
@@ -148,8 +157,15 @@ export default class TournamentController {
 
   isCreator = (): boolean => this.data.createdBy === this.opts.userId;
 
-  myGameId = (): string => {
-    return this.data.me?.gameId;
+  isCorres = (): boolean => 'days' in this.data.clock;
+
+  myGameId = (): string | undefined => {
+    if (this.isCorres()) return;
+    else if (this.isArena()) return this.data.me?.gameId;
+    else
+      return this.data.standing.arrangements.find(
+        a => this.arrangementHasMe(a) && a.status === ids.started,
+      )?.gameId;
   };
 
   private recountTeams() {
@@ -178,11 +194,9 @@ export default class TournamentController {
     if (this.isArena()) {
       if (!data.failed || !this.pages[data.page]) this.pages[data.page] = data.players;
     } else if (this.isOrganized()) {
-      console.log('p', data.players);
       for (let i = 1; i <= Math.ceil(data.players.length / maxPerPage); i++)
         this.pages[i] = data.players.slice((i - 1) * maxPerPage, i * maxPerPage);
     }
-    console.log('PAGES', this.pages);
   };
 
   setPage = (page: number): void => {
@@ -293,8 +307,6 @@ export default class TournamentController {
   };
 
   showArrangement = (arrangement: Arrangement | undefined): void => {
-    clearTimeout(this.arrangementReadyTimeout);
-    this.arrangementReadyRedraw(arrangement);
     this.arrangement = arrangement;
     if (arrangement)
       window.history.replaceState(null, '', `#${arrangement.user1.id};${arrangement.user2.id}`);
@@ -302,20 +314,22 @@ export default class TournamentController {
     this.redraw();
   };
 
-  arrangementReadyRedraw = (arrangement: Arrangement | undefined): void => {
-    clearTimeout(this.arrangementReadyTimeout);
-    if (arrangement) {
+  arrangementReadyRedraw = (arrangement: Arrangement): void => {
+    if (arrangement.id && this.arrangementHasMe(arrangement)) {
+      const tm = this.arrangementReadyTimeouts.get(arrangement.id);
+      clearTimeout(tm);
+
       const user1Time = this.arrangementUserReady(arrangement.user1);
       const user2Time = this.arrangementUserReady(arrangement.user2);
-      if (defined(user1Time)) {
-        this.arrangementReadyTimeout = setTimeout(
-          this.redraw,
-          this.arrangementReadyMillis - user1Time,
+
+      if (defined(user1Time) || defined(user2Time)) {
+        const minTimeout = Math.min(
+          user1Time || Number.POSITIVE_INFINITY,
+          user2Time || Number.POSITIVE_INFINITY,
         );
-      } else if (user2Time) {
-        this.arrangementReadyTimeout = setTimeout(
-          this.redraw,
-          this.arrangementReadyMillis - user2Time,
+        this.arrangementReadyTimeouts.set(
+          arrangement.id,
+          setTimeout(this.redraw, this.arrangementReadyMillis - minTimeout),
         );
       }
     }
@@ -327,6 +341,10 @@ export default class TournamentController {
     return defined(userReadyTime) && userReadyTime <= this.arrangementReadyMillis
       ? userReadyTime
       : undefined;
+  };
+
+  arrangementHasMe = (arrangement: Arrangement): boolean => {
+    return this.opts.userId === arrangement.user1.id || this.opts.userId === arrangement.user2.id;
   };
 
   arrangementMatch = (arrangement: Arrangement, yes: boolean): void => {

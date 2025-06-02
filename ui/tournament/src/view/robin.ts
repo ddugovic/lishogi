@@ -1,6 +1,6 @@
 import { type MaybeVNode, bind } from 'common/snabbdom';
 import { ids } from 'game/status';
-import { i18n } from 'i18n';
+import { i18n, i18nFormat } from 'i18n';
 import { type VNode, h } from 'snabbdom';
 import type TournamentController from '../ctrl';
 import type { Arrangement, ArrangementPlayer } from '../interfaces';
@@ -86,7 +86,18 @@ export function standing(ctrl: TournamentController, klass?: string): VNode {
           'thead',
           h(
             'tr',
-            players.map((player, i) => h('th', { attrs: { title: player.name } }, i + 1)),
+            players.map((player, i) =>
+              h(
+                'th',
+                {
+                  attrs: { title: player.name },
+                  class: {
+                    me: ctrl.opts.userId === player.id,
+                  },
+                },
+                i + 1,
+              ),
+            ),
           ),
         ),
         h(
@@ -103,11 +114,18 @@ export function standing(ctrl: TournamentController, klass?: string): VNode {
               players.map((player2, j) => {
                 const arr = ctrl.findArrangement([player.id, player2.id]);
                 const key = `${player.id};${player2.id}`;
+                const meAndOpponent =
+                  meId === arr?.user1.id
+                    ? [arr.user1, arr.user2]
+                    : meId === arr?.user2.id
+                      ? [arr.user2, arr.user1]
+                      : undefined;
+
                 return h(
                   'td',
                   {
                     attrs: {
-                      title: `${player.name} vs ${player2.name}`,
+                      title: i18nFormat('xVsY', player.name, player2.name),
                       'data-p': key,
                     },
                     class: {
@@ -126,6 +144,7 @@ export function standing(ctrl: TournamentController, klass?: string): VNode {
                             !ctrl.data.isFinished &&
                             (!!arr?.user1.scheduledAt || !!arr?.user2.scheduledAt),
                           sched: !ctrl.data.isFinished && !!arr?.scheduledAt,
+                          ready: !!meAndOpponent && !!ctrl.arrangementUserReady(meAndOpponent[1]),
                         },
                       })
                     : null,

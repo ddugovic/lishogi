@@ -25,7 +25,8 @@ export function arrangementModal(ctrl: TournamentController, a: Arrangement): VN
     },
     onClose() {
       if (!fInstance?.isOpen) ctrl.showArrangement(undefined);
-      if (hasMe(ctrl, a)) ctrl.arrangementMatch(a, false);
+      const me = findMe(ctrl, a);
+      if (me && ctrl.arrangementUserReady(me)) ctrl.arrangementMatch(a, false);
       showCalendar = false;
       ctrl.redraw();
     },
@@ -55,7 +56,7 @@ function playerSection(
   return h(`div.arr-user.arr-user-${pos}`, [
     h('div.arr-name', [
       renderPlayer(player, true, true),
-      hasMe(ctrl, a) && player.id !== ctrl.opts.userId && !a.gameId
+      ctrl.arrangementHasMe(a) && player.id !== ctrl.opts.userId && !a.gameId
         ? h('a.user-button.message', {
             attrs: {
               href: `/inbox/${user.id}`,
@@ -90,10 +91,9 @@ function points(ctrl: TournamentController, a: Arrangement, user: ArrangementUse
 }
 
 function action(ctrl: TournamentController, a: Arrangement, user: ArrangementUser): MaybeVNode {
-  const me = ctrl.opts.userId;
-  const hasMe = a.user1.id === me || a.user2.id === me;
-  if (!hasMe || ctrl.data.isFinished || a.gameId) return;
-  else return user.id === me ? myActions(ctrl, a, user) : opponentActions(ctrl, a, user);
+  if (!ctrl.arrangementHasMe(a) || ctrl.data.isFinished || a.gameId) return;
+  else
+    return user.id === ctrl.opts.userId ? myActions(ctrl, a, user) : opponentActions(ctrl, a, user);
 }
 
 function myActions(ctrl: TournamentController, a: Arrangement, user: ArrangementUser): VNode {
@@ -208,9 +208,8 @@ function opponentActions(
 }
 
 function totalSection(ctrl: TournamentController, a: Arrangement): VNode {
-  const now = Date.now();
-  const myArrangement = hasMe(ctrl, a);
-  const meAndOpponent = myArrangement
+  const hasMe = ctrl.arrangementHasMe(a);
+  const meAndOpponent = hasMe
     ? a.user1.id === ctrl.opts.userId
       ? [a.user1, a.user2]
       : [a.user2, a.user1]
@@ -218,15 +217,17 @@ function totalSection(ctrl: TournamentController, a: Arrangement): VNode {
   const me = meAndOpponent?.[0];
   const opponent = meAndOpponent?.[1];
 
-  const meReady = !!me?.readyAt && now - me.readyAt <= 20000;
-  const opponentReady = !!opponent?.readyAt && now - opponent.readyAt <= 20000;
+  const meReady = !!me && !!ctrl.arrangementUserReady(me);
+  const opponentReady = !!opponent && !!ctrl.arrangementUserReady(opponent);
 
   return h('div.total-section', [
     h('div.values', [
-      h('div', [
-        h('span.title', i18n('tourArrangements:scheduledAt')),
-        h('span.value', formatDate(a.scheduledAt)),
-      ]),
+      !a.startedAt
+        ? h('div', [
+            h('span.title', i18n('tourArrangements:scheduledAt')),
+            h('span.value', formatDate(a.scheduledAt)),
+          ])
+        : null,
       a.startedAt
         ? h('div', [
             h('span.title', i18n('tourArrangements:startedAt')),
@@ -264,7 +265,7 @@ function totalSection(ctrl: TournamentController, a: Arrangement): VNode {
           { attrs: { href: `/${a.gameId}` } },
           i18n('tourArrangements:goToGame'),
         )
-      : !ctrl.data.isFinished && myArrangement
+      : !ctrl.data.isFinished && hasMe
         ? h('div.arr-start-wrap', [
             h(
               'button.fbt',
@@ -279,7 +280,7 @@ function totalSection(ctrl: TournamentController, a: Arrangement): VNode {
                 class: {
                   glowing: opponentReady,
                   'rubber-band': opponentReady,
-                  disabled: !ctrl.data.isStarted,
+                  disabled: !ctrl.data.isStarted || !!ctrl.myGameId(),
                 },
                 hook: bind('click', () => {
                   ctrl.arrangementMatch(a, true);
@@ -311,6 +312,10 @@ function formatDate(dateNumber: number | undefined): VNode {
     : h('span.date', '-');
 }
 
-function hasMe(ctrl: TournamentController, a: Arrangement): boolean {
-  return ctrl.opts.userId === a.user1.id || ctrl.opts.userId === a.user2.id;
+function findMe(ctrl: TournamentController, a: Arrangement): ArrangementUser | undefined {
+  return ctrl.opts.userId === a.user1.id
+    ? a.user1
+    : ctrl.opts.userId === a.user2.id
+      ? a.user2
+      : undefined;
 }
