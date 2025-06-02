@@ -69,8 +69,6 @@ final class TournamentApi(
       setup: TournamentSetup,
       me: User,
       myTeams: List[LightTeam],
-      getUserTeamIds: User.ID => Fu[List[TeamID]],
-      andJoin: Boolean = true,
   ): Fu[Tournament] = {
     val tour = Tournament.make(
       by = Right(me),
@@ -97,16 +95,6 @@ final class TournamentApi(
       setup.teamBattleByTeam.orElse(tour.conditions.teamMember.map(_.teamId)).?? { teamId =>
         tournamentRepo.setForTeam(tour.id, teamId).void
       }
-    } >> {
-      andJoin ?? join(
-        tour.id,
-        me,
-        tour.password,
-        setup.teamBattleByTeam,
-        getUserTeamIds,
-        isLeader = false,
-        none,
-      )
     } inject tour
   }
 

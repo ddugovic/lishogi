@@ -320,8 +320,6 @@ final class Tournament(
                       setup,
                       me,
                       teams,
-                      getLeaderTeamIds,
-                      andJoin = setup.realFormat == lila.tournament.Format.Arena,
                     ) map { tour =>
                       Redirect {
                         if (tour.isTeamBattle) routes.Tournament.teamBattleEdit(tour.id)
@@ -351,18 +349,17 @@ final class Tournament(
         setup =>
           rateLimitCreation(me, setup.isPrivate, req) {
             teamC.teamsIBelongTo(me) flatMap { teams =>
-              api.createTournament(setup, me, teams, getLeaderTeamIds, andJoin = false) flatMap {
-                tour =>
-                  jsonView(
-                    tour,
-                    none,
-                    none,
-                    getLeaderTeamIds,
-                    env.team.getTeamName,
-                    none,
-                    none,
-                    partial = false,
-                  )(reqLang) map { Ok(_) }
+              api.createTournament(setup, me, teams) flatMap { tour =>
+                jsonView(
+                  tour,
+                  none,
+                  none,
+                  getLeaderTeamIds,
+                  env.team.getTeamName,
+                  none,
+                  none,
+                  partial = false,
+                )(reqLang) map { Ok(_) }
               }
             }
           },
