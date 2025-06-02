@@ -21,6 +21,7 @@ main.arr-table {
 
   .r-table-wrap {
     $cell-size: 2.2rem;
+    $mobile-cell-size: 3.5rem;
     $large-cell-size: 3rem;
 
     display: flex;
@@ -53,6 +54,11 @@ main.arr-table {
         height: $cell-size;
         border: 1px solid theme.$c-font-dimmer;
         text-align: center;
+
+        @include breakpoint.breakpoint(local.$mq-mobile) {
+          min-width: $mobile-cell-size;
+          height: $mobile-cell-size;
+        }
 
         &.me {
           background-color: theme.$m-primary_alpha_neg85;
