@@ -1,11 +1,37 @@
 import { modal } from 'common/modal';
-import { bind, onInsert } from 'common/snabbdom';
+import { onInsert } from 'common/snabbdom';
 import { debounce } from 'common/timings';
 import { i18n } from 'i18n';
 import { type VNode, h } from 'snabbdom';
-import type AnalyseCtrl from './ctrl';
 
-function standardStudyForm(ctrl: AnalyseCtrl): VNode {
+export function studyModal(gameId: string, orientation: Color, onClose: () => void): VNode {
+  return modal({
+    class: 'study__invite',
+    onClose() {
+      onClose();
+    },
+    content: [
+      h('div', [
+        h('div.study-option', [
+          h('div.study-title', i18n('postGameStudy')),
+          h('div.desc', i18n('postGameStudyExplanation')),
+          postGameStudyForm(gameId, orientation),
+          h(
+            'a.text',
+            { attrs: { 'data-icon': '', href: `/study/post-game-study/${gameId}/hot` } },
+            i18n('postGameStudiesOfGame'),
+          ),
+        ]),
+        h('div.study-option', [
+          h('div.study-title', i18n('standardStudy')),
+          standardStudyForm(gameId, orientation),
+        ]),
+      ]),
+    ],
+  });
+}
+
+function standardStudyForm(gameId: string, orientation: Color): VNode {
   return h(
     'form',
     {
@@ -16,10 +42,10 @@ function standardStudyForm(ctrl: AnalyseCtrl): VNode {
     },
     [
       h('input', {
-        attrs: { type: 'hidden', name: 'gameId', value: ctrl.data.game.id },
+        attrs: { type: 'hidden', name: 'gameId', value: gameId },
       }),
       h('input', {
-        attrs: { type: 'hidden', name: 'orientation', value: ctrl.shogiground.state.orientation },
+        attrs: { type: 'hidden', name: 'orientation', value: orientation },
       }),
       h(
         'button.button',
@@ -34,17 +60,18 @@ function standardStudyForm(ctrl: AnalyseCtrl): VNode {
   );
 }
 
-function postGameStudyForm(ctrl: AnalyseCtrl): VNode {
+function postGameStudyForm(gameId: string, orientation: Color): VNode {
   return h(
     'form',
     {
-      hook: onInsert(el => {
+      attrs: { method: 'post', action: '/study/post-game-study' },
+      hook: onInsert((el: HTMLFormElement) => {
         el.addEventListener('submit', (e: any) => {
           e.preventDefault();
           debounce(
             () => {
               window.lishogi.xhr
-                .formToXhr(e)
+                .formToXhr(el)
                 .then(res => res.json())
                 .then(res => {
                   if (res.redirect) {
@@ -69,7 +96,7 @@ function postGameStudyForm(ctrl: AnalyseCtrl): VNode {
     },
     [
       h('input', {
-        attrs: { type: 'hidden', name: 'gameId', value: ctrl.data.game.id },
+        attrs: { type: 'hidden', name: 'gameId', value: gameId },
       }),
       h('div', [
         h('label', i18n('studyWith')),
@@ -87,7 +114,7 @@ function postGameStudyForm(ctrl: AnalyseCtrl): VNode {
         }),
       ]),
       h('input', {
-        attrs: { type: 'hidden', name: 'orientation', value: ctrl.shogiground.state.orientation },
+        attrs: { type: 'hidden', name: 'orientation', value: orientation },
       }),
       h(
         'button.button',
@@ -100,48 +127,4 @@ function postGameStudyForm(ctrl: AnalyseCtrl): VNode {
       ),
     ],
   );
-}
-
-export function studyAdvancedButton(ctrl: AnalyseCtrl, menuIsOpen: boolean): VNode | null {
-  return h('button.fbt', {
-    attrs: {
-      'data-icon': '4',
-      disabled: !document.body.dataset.user,
-      title: i18n('toStudy'),
-      hidden: menuIsOpen,
-    },
-    hook: bind('click', _ => {
-      ctrl.studyModal(true);
-      ctrl.redraw();
-    }),
-  });
-}
-
-export function studyModal(ctrl: AnalyseCtrl): VNode {
-  const d = ctrl.data;
-  return modal({
-    class: 'study__invite',
-    onClose() {
-      ctrl.studyModal(false);
-      ctrl.redraw();
-    },
-    content: [
-      h('div', [
-        h('div.study-option', [
-          h('div.study-title', i18n('postGameStudy')),
-          h('div.desc', i18n('postGameStudyExplanation')),
-          postGameStudyForm(ctrl),
-          h(
-            'a.text',
-            { attrs: { 'data-icon': '', href: `/study/post-game-study/${d.game.id}/hot` } },
-            i18n('postGameStudiesOfGame'),
-          ),
-        ]),
-        h('div.study-option', [
-          h('div.study-title', i18n('standardStudy')),
-          standardStudyForm(ctrl),
-        ]),
-      ]),
-    ],
-  });
 }

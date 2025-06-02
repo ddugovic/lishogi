@@ -1,10 +1,9 @@
-import { modal } from 'common/modal';
-import { type MaybeVNode, type MaybeVNodes, onInsert } from 'common/snabbdom';
+import type { MaybeVNode, MaybeVNodes } from 'common/snabbdom';
 import spinner from 'common/spinner';
-import { debounce } from 'common/timings';
 import * as game from 'game';
 import { game as gameRoute } from 'game/router';
 import * as status from 'game/status';
+import { studyModal } from 'game/view/post-game-study';
 import { i18n, i18nFormat, i18nVdomPlural } from 'i18n';
 import { type Hooks, type VNode, h } from 'snabbdom';
 import type RoundController from '../ctrl';
@@ -13,103 +12,6 @@ import * as util from '../util';
 
 function analysisBoardOrientation(data: RoundData) {
   return data.player.color;
-}
-
-function standardStudyForm(ctrl: RoundController): VNode {
-  return h(
-    'form',
-    {
-      attrs: {
-        method: 'post',
-        action: '/study/as',
-      },
-    },
-    [
-      h('input', {
-        attrs: { type: 'hidden', name: 'gameId', value: ctrl.data.game.id },
-      }),
-      h('input', {
-        attrs: { type: 'hidden', name: 'orientation', value: ctrl.shogiground.state.orientation },
-      }),
-      h(
-        'button.button',
-        {
-          attrs: {
-            type: 'submit',
-          },
-        },
-        i18n('study:createStudy'),
-      ),
-    ],
-  );
-}
-
-function postGameStudyForm(ctrl: RoundController): VNode {
-  return h(
-    'form',
-    {
-      hook: util.onInsert(el => {
-        $(el).on('submit', e => {
-          e.preventDefault();
-          debounce(
-            () => {
-              window.lishogi.xhr
-                .json('POST', '/study/post-game-study')
-                .then(res => {
-                  if (res.redirect) {
-                    ctrl.setRedirecting();
-                    window.lishogi.properReload = true;
-                    window.location.href = res.redirect;
-                  }
-                })
-                .catch(error => {
-                  try {
-                    const res = error as Response;
-                    alert(`${res.statusText} - ${res.status}`);
-                  } catch {
-                    console.error(error);
-                  }
-                });
-            },
-            1000,
-            true,
-          )();
-        });
-      }),
-    },
-    [
-      h('input', {
-        attrs: { type: 'hidden', name: 'gameId', value: ctrl.data.game.id },
-      }),
-      h('div', [
-        h('label', i18n('studyWith')),
-        h('input.user-invite', {
-          hook: onInsert<HTMLInputElement>(el => {
-            window.lishogi.userAutocomplete($(el), {
-              tag: 'span',
-              focus: true,
-            });
-          }),
-          attrs: {
-            name: 'invited',
-            placeholder: `${i18n('study:searchByUsername')} (${i18n('optional').toLowerCase()})`,
-          },
-        }),
-      ]),
-      h('input', {
-        attrs: { type: 'hidden', name: 'orientation', value: ctrl.shogiground.state.orientation },
-      }),
-      h(
-        'button.button',
-        {
-          attrs: {
-            type: 'submit',
-          },
-        },
-        i18n('study:createStudy'),
-      ),
-    ],
-  );
 }
 
 function studyAdvancedButton(ctrl: RoundController): VNode | null {
@@ -128,32 +30,10 @@ function studyAdvancedButton(ctrl: RoundController): VNode | null {
     : null;
 }
 
-function studyModal(ctrl: RoundController): VNode {
-  const d = ctrl.data;
-  return modal({
-    class: 'study__invite',
-    onClose() {
-      ctrl.openStudyModal = false;
-      ctrl.redraw();
-    },
-    content: [
-      h('div', [
-        h('div.study-option', [
-          h('div.study-title', i18n('postGameStudy')),
-          h('div.desc', i18n('postGameStudyExplanation')),
-          postGameStudyForm(ctrl),
-          h(
-            'a.text',
-            { attrs: { 'data-icon': '', href: `/study/post-game-study/${d.game.id}/hot` } },
-            i18n('postGameStudiesOfGame'),
-          ),
-        ]),
-        h('div.study-option', [
-          h('div.study-title', i18n('standardStudy')),
-          standardStudyForm(ctrl),
-        ]),
-      ]),
-    ],
+function studyModalWrap(ctrl: RoundController) {
+  return studyModal(ctrl.data.game.id, ctrl.shogiground.state.orientation, () => {
+    ctrl.openStudyModal = false;
+    ctrl.redraw();
   });
 }
 
@@ -685,7 +565,7 @@ export function followUp(ctrl: RoundController): VNode {
       : null,
     studyButton(ctrl),
     analysisButton(ctrl),
-    ctrl.openStudyModal ? studyModal(ctrl) : null,
+    ctrl.openStudyModal ? studyModalWrap(ctrl) : null,
   ]);
 }
 
@@ -715,7 +595,7 @@ export function watcherFollowUp(ctrl: RoundController): VNode | null {
       : null,
     studyButton(ctrl),
     analysisButton(ctrl),
-    ctrl.openStudyModal ? studyModal(ctrl) : null,
+    ctrl.openStudyModal ? studyModalWrap(ctrl) : null,
   ];
   return content.find(x => !!x) ? h('div.follow-up', content) : null;
 }

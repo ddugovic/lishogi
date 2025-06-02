@@ -16,6 +16,7 @@
   "dependencies": {
     "common": "workspace:*",
     "shogi": "workspace:*",
+    "snabbdom": "catalog:",
     "i18n": "workspace:*"
   }
 }

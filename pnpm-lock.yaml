@@ -438,6 +438,9 @@ importers:
       shogi:
         specifier: workspace:*
         version: link:../shogi
+      snabbdom:
+        specifier: 'catalog:'
+        version: 3.6.2
 
   ui/i18n:
     dependencies:

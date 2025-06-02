@@ -8,6 +8,7 @@ import stepwiseScroll from 'common/wheel';
 import { playable } from 'game';
 import * as router from 'game/router';
 import { finished } from 'game/status';
+import { studyModal } from 'game/view/post-game-study';
 import statusView from 'game/view/status';
 import { i18n, i18nFormatCapitalized, i18nPluralSame } from 'i18n';
 import { colorName } from 'shogi/color-name';
@@ -30,7 +31,6 @@ import * as notationExport from './notation-export';
 import practiceView from './practice/practice-view';
 import retroView from './retrospect/retro-view';
 import serverSideUnderboard from './server-side-underboard';
-import { studyAdvancedButton, studyModal } from './study-modal';
 import * as gbEdit from './study/gamebook/gamebook-edit';
 import * as gbPlay from './study/gamebook/gamebook-play-view';
 import type { StudyCtrl } from './study/interfaces';
@@ -312,7 +312,20 @@ function controls(ctrl: AnalyseCtrl) {
                   }),
                 ]
               : [
-                  !ctrl.synthetic ? studyAdvancedButton(ctrl, menuIsOpen) : null,
+                  !ctrl.synthetic
+                    ? h('button.fbt', {
+                        attrs: {
+                          'data-icon': '4',
+                          disabled: !document.body.dataset.user,
+                          title: i18n('toStudy'),
+                          hidden: menuIsOpen,
+                        },
+                        hook: bind('click', _ => {
+                          ctrl.studyModal(true);
+                          ctrl.redraw();
+                        }),
+                      })
+                    : null,
                   h('button.fbt', {
                     attrs: {
                       title: i18n('practiceWithComputer'),
@@ -405,7 +418,12 @@ export default function (ctrl: AnalyseCtrl): VNode {
     },
     [
       ctrl.keyboardHelp ? keyboardView(ctrl) : null,
-      ctrl.studyModal() ? studyModal(ctrl) : null,
+      ctrl.studyModal()
+        ? studyModal(ctrl.data.game.id, ctrl.shogiground.state.orientation, () => {
+            ctrl.studyModal(false);
+            ctrl.redraw();
+          })
+        : null,
       study ? studyView.overboard(study) : null,
 
       h(
