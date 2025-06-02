@@ -121,7 +121,7 @@ object SimulForm {
         }.verifying("At least one variant", _.nonEmpty),
         "position"         -> optional(lila.common.Form.sfen.clean),
         "color"            -> stringIn(colors.toSet),
-        "text"             -> cleanText,
+        "text"             -> cleanText(maxLength = 3000),
         "estimatedStartAt" -> optional(inTheFuture(ISODateTimeOrTimestamp.isoDateTimeOrTimestamp)),
         "team"             -> optional(nonEmptyText),
       )(Setup.apply)(Setup.unapply)

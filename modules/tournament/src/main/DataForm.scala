@@ -107,6 +107,10 @@ final class DataForm {
               "Can't change start date once tournament starts",
               !tour.isStarted || _.startDate.fold(true)(d => d.getMillis == tour.startsAt.getMillis),
             )
+            .verifying(
+              "Can't change tournament duration after tournament ends",
+              !tour.isFinished || _.realMinutes == tour.minutes,
+            )
         }
       }
     }

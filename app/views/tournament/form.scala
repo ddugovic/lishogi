@@ -72,7 +72,7 @@ object form {
           postForm(cls := "terminate", action := routes.Tournament.terminate(tour.id))(
             submitButton(
               dataIcon := "j",
-              cls      := s"text button button-red confirm${tour.isFinished ?? "disabled"}",
+              cls      := s"text button button-red confirm${tour.isFinished ?? " disabled"}",
             )(
               "Cancel the tournament",
             ),
@@ -236,6 +236,7 @@ final private class TourFields(form: Form[_], tour: Option[Tournament])(implicit
 
   def isTeamBattle = tour.exists(_.isTeamBattle) || form("teamBattleByTeam").value.nonEmpty
 
+  private def disabledAfterFinish = tour.exists(_.isFinished)
   private def disabledAfterStart  = tour.exists(!_.isCreated)
   private def disabledAfterCreate = tour.isDefined
 
@@ -385,20 +386,24 @@ final private class TourFields(form: Form[_], tour: Option[Tournament])(implicit
       form("startDate"),
       trans.startDate(),
       half = true,
-      help = frag("Leave empty to start now").some, // tournament.form.positionInputHelp.some
+      help = !disabledAfterCreate option frag("Leave empty to start now"),
     )(form3.flatpickr(_, disabled = disabledAfterStart))
 
   def finishDate =
     frag(
       form3.group(form("minutes"), trans.duration(), klass = "f-arena", half = true)(
-        form3.select(_, DataForm.minutes.map(m => (m, trans.nbMinutes.pluralSameTxt(m)))),
+        form3.select(
+          _,
+          DataForm.minutes.map(m => (m, trans.nbMinutes.pluralSameTxt(m))),
+          disabled = disabledAfterFinish,
+        ),
       ),
       form3.group(
         form("finishDate"),
         trans.endDate(),
         klass = "f-robin f-organized",
         half = true,
-      )(form3.flatpickr(_)),
+      )(form3.flatpickr(_, disabled = disabledAfterFinish)),
     )
 
   def description =
