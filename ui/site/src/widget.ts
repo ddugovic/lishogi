@@ -51,7 +51,9 @@ export function initWidgets(): void {
       if (this.number.length) this.number.text(data.nb);
       if (data.users) {
         const tags = data.users.map(u =>
-          u ? `<a class="user-link ulpt" href="/@/${u.toLowerCase()}">${u}</a>` : 'Anonymous',
+          u
+            ? `<a class="user-link ulpt" href="/@/${(u.includes(' ') ? u.split(' ')[1] : u).toLowerCase()}">${u}</a>`
+            : 'Anonymous',
         );
         if (data.anons === 1) tags.push('Anonymous');
         else if (data.anons) tags.push(`Anonymous (${data.anons})`);
