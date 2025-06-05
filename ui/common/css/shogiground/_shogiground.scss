@@ -313,6 +313,10 @@ sg-hand-wrap {
       flex: 1 0 14%;
       height: 100%;
 
+      &.last-dest {
+        background-color: theme.$c-last-dest;
+      }
+
       &.selected {
         opacity: 1;
         background-color: theme.$c-selected;

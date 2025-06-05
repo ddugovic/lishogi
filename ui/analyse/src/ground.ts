@@ -46,6 +46,7 @@ export function makeConfig(ctrl: AnalyseCtrl): SgConfig {
     },
     checks: opts.checks,
     lastDests: opts.lastDests,
+    lastPiece: opts.lastPiece,
     orientation: ctrl.bottomColor(),
     viewOnly: !!ctrl.embed,
     hands: {

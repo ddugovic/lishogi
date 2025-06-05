@@ -17,6 +17,7 @@ import { debounce } from 'common/timings';
 import * as game from 'game';
 import { i18n, i18nPluralSame } from 'i18n';
 import { i18nVariant } from 'i18n/variant';
+import { usiToRole } from 'shogi/common';
 import { isImpasse as impasse } from 'shogi/impasse';
 import { makeNotation } from 'shogi/notation';
 import { Shogiground } from 'shogiground';
@@ -345,6 +346,7 @@ export default class AnalyseCtrl {
           ? color
           : undefined;
     const splitSfen = node.sfen.split(' ');
+    const lastRole = node.usi ? usiToRole(node.usi) : undefined;
     const config: ShogigroundConfig = {
       sfen: {
         board: splitSfen[0],
@@ -359,7 +361,8 @@ export default class AnalyseCtrl {
         dests: this.embed || movableColor !== color ? new Map() : drops,
       },
       checks: node.check,
-      lastDests: node.usi ? usiToSquareNames(node.usi) : undefined,
+      lastDests: node.usi ? usiToSquareNames(node.usi) : [],
+      lastPiece: lastRole ? { color: opposite(color), role: lastRole } : undefined,
       drawable: {
         squares: [],
       },
