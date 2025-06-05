@@ -4,7 +4,7 @@ import { analysis, editor } from 'common/links';
 import { i18n } from 'i18n';
 import { Shogiground } from 'shogiground';
 import type { Api as SgApi } from 'shogiground/api';
-import type { NumberPair } from 'shogiground/types';
+import type { NumberPair, Piece } from 'shogiground/types';
 import { eventPosition, opposite, samePiece } from 'shogiground/util';
 import { Board } from 'shogiops/board';
 import { Hand, Hands } from 'shogiops/hands';
@@ -79,14 +79,14 @@ export default class EditorCtrl {
       }),
     );
     kbd.bind(
-      ['left', 'k'],
+      ['left', 'k', 'mod+z'],
       preventing(() => {
         this.backward();
         this.redraw();
       }),
     );
     kbd.bind(
-      ['right', 'j'],
+      ['right', 'j', 'mod+y'],
       preventing(() => {
         this.forward();
         this.redraw();
@@ -130,9 +130,14 @@ export default class EditorCtrl {
       else window.history.replaceState('', '', this.makeEditorUrl(sfen));
     }
     const cur = this.selected();
-    if (typeof cur !== 'string' && this.shogiground)
-      this.shogiground.selectPiece({ color: cur[0], role: cur[1] }, true, true);
+    const curPiece =
+      typeof cur !== 'string' ? ({ color: cur[0], role: cur[1] } as Piece) : undefined;
+
+    if (curPiece && this.shogiground && !this.shogiground.state.selectedPiece)
+      this.shogiground.selectPiece(curPiece, true, true);
+
     this.options.onChange?.(sfen, this.rules, this.bottomColor());
+
     this.redraw();
   }
 
@@ -218,7 +223,7 @@ export default class EditorCtrl {
   }
 
   private isPlayable(): boolean {
-    return parseSfen(this.rules, this.getSfen()).unwrap(
+    return parseSfen(this.rules, this.getSfen(), true).unwrap(
       pos => !pos.isEnd(),
       _ => false,
     );
@@ -256,6 +261,8 @@ export default class EditorCtrl {
   }
 
   clearBoard(): void {
+    this.shogiground?.selectSquare(null);
+    this.shogiground?.selectPiece(null);
     this.setSfen(
       this.getSfen({
         board: Board.empty(),

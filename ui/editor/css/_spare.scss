@@ -123,6 +123,7 @@
       background-repeat: no-repeat;
       background-size: 90%;
       filter: grayscale(1);
+      cursor: pointer;
 
       &.pointer svg {
         fill: theme.$c-good;

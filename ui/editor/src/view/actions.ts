@@ -40,7 +40,7 @@ function clearBoard(ctrl: EditorCtrl, state: EditorState): VNode {
     {
       attrs: { 'data-icon': 'q' },
       class: {
-        disabled: /^[0-9\/]+$/.test(state.sfen.split(' ')[0]),
+        disabled: /^[0-9\/]+$/.test(state.sfen.split(' ')[0]) && state.sfen.split(' ')[2] === '-',
       },
       on: {
         click() {

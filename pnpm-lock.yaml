@@ -13,8 +13,8 @@ catalogs:
       specifier: github:WandererXII/breakpoint#4.x
       version: 4.0.0-beta.1
     shogiground:
-      specifier: ^0.10.1
-      version: 0.10.1
+      specifier: ^0.10.2
+      version: 0.10.2
     shogiops:
       specifier: ^0.18.0
       version: 0.18.0
@@ -158,7 +158,7 @@ importers:
         version: 1.3.2
       shogiground:
         specifier: 'catalog:'
-        version: 0.10.1
+        version: 0.10.2
       sortablejs:
         specifier: ^1.15.6
         version: 1.15.6
@@ -184,7 +184,7 @@ importers:
         version: 4.6.13
       shogiground:
         specifier: 'catalog:'
-        version: 0.10.1
+        version: 0.10.2
       shogiops:
         specifier: 'catalog:'
         version: 0.18.0
@@ -226,7 +226,7 @@ importers:
         version: link:../shogi
       shogiground:
         specifier: 'catalog:'
-        version: 0.10.1
+        version: 0.10.2
       shogiops:
         specifier: 'catalog:'
         version: 0.18.0
@@ -266,7 +266,7 @@ importers:
         version: link:../shogi
       shogiground:
         specifier: 'catalog:'
-        version: 0.10.1
+        version: 0.10.2
       shogiops:
         specifier: 'catalog:'
         version: 0.18.0
@@ -347,7 +347,7 @@ importers:
         version: https://codeload.github.com/WandererXII/breakpoint/tar.gz/2a857d010c6cface94accd43250c5cf0513d798a
       shogiground:
         specifier: 'catalog:'
-        version: 0.10.1
+        version: 0.10.2
       shogiops:
         specifier: 'catalog:'
         version: 0.18.0
@@ -389,7 +389,7 @@ importers:
         version: link:../shogi
       shogiground:
         specifier: 'catalog:'
-        version: 0.10.1
+        version: 0.10.2
       shogiops:
         specifier: 'catalog:'
         version: 0.18.0
@@ -416,7 +416,7 @@ importers:
         version: link:../shogi
       shogiground:
         specifier: 'catalog:'
-        version: 0.10.1
+        version: 0.10.2
       shogiops:
         specifier: 'catalog:'
         version: 0.18.0
@@ -485,7 +485,7 @@ importers:
         version: link:../i18n
       shogiground:
         specifier: 'catalog:'
-        version: 0.10.1
+        version: 0.10.2
       shogiops:
         specifier: 'catalog:'
         version: 0.18.0
@@ -509,7 +509,7 @@ importers:
         version: link:../shogi
       shogiground:
         specifier: 'catalog:'
-        version: 0.10.1
+        version: 0.10.2
       shogiops:
         specifier: 'catalog:'
         version: 0.18.0
@@ -533,7 +533,7 @@ importers:
         version: link:../shogi
       shogiground:
         specifier: 'catalog:'
-        version: 0.10.1
+        version: 0.10.2
       shogiops:
         specifier: 'catalog:'
         version: 0.18.0
@@ -572,7 +572,7 @@ importers:
         version: link:../shogi
       shogiground:
         specifier: 'catalog:'
-        version: 0.10.1
+        version: 0.10.2
       shogiops:
         specifier: 'catalog:'
         version: 0.18.0
@@ -624,7 +624,7 @@ importers:
         version: link:../keyboard-move
       shogiground:
         specifier: 'catalog:'
-        version: 0.10.1
+        version: 0.10.2
       shogiops:
         specifier: 'catalog:'
         version: 0.18.0
@@ -658,7 +658,7 @@ importers:
         version: link:../shogi
       shogiground:
         specifier: 'catalog:'
-        version: 0.10.1
+        version: 0.10.2
       shogiops:
         specifier: 'catalog:'
         version: 0.18.0
@@ -688,7 +688,7 @@ importers:
         version: link:../shogi
       shogiground:
         specifier: 'catalog:'
-        version: 0.10.1
+        version: 0.10.2
       shogiops:
         specifier: 'catalog:'
         version: 0.18.0
@@ -730,7 +730,7 @@ importers:
         version: link:../shogi
       shogiground:
         specifier: 'catalog:'
-        version: 0.10.1
+        version: 0.10.2
       shogiops:
         specifier: 'catalog:'
         version: 0.18.0
@@ -754,7 +754,7 @@ importers:
         version: link:../i18n
       shogiground:
         specifier: 'catalog:'
-        version: 0.10.1
+        version: 0.10.2
       shogiops:
         specifier: 'catalog:'
         version: 0.18.0
@@ -807,7 +807,7 @@ importers:
         version: link:../puz
       shogiground:
         specifier: 'catalog:'
-        version: 0.10.1
+        version: 0.10.2
       shogiops:
         specifier: 'catalog:'
         version: 0.18.0
@@ -871,7 +871,7 @@ importers:
         version: link:../shogi
       shogiground:
         specifier: 'catalog:'
-        version: 0.10.1
+        version: 0.10.2
       snabbdom:
         specifier: 'catalog:'
         version: 3.6.2
@@ -3654,8 +3654,8 @@ packages:
     resolution: {integrity: sha512-AzqKpGKjrj7EM6rKVQEPpB288oCfnrEIuyoT9cyF4nmGa7V8Zk6f7RRqYisX8X9m+Q7bd632aZW4ky7EhbQztA==}
     engines: {node: '>= 0.4'}
 
-  shogiground@0.10.1:
-    resolution: {integrity: sha512-FcfH2FpUjipt9ofyiqeh3H3GN+vaX/USoAkXoMyvC5M6TlmpM3xBne/6w0f2RorKSXw/VPVbP3rMXlLLIxEcVA==}
+  shogiground@0.10.2:
+    resolution: {integrity: sha512-oPyR4ip0+aPnST4oIxbq96WxKdH2n7NIKgyhJaL/Ht/0EVbvgOm3albtnbKPovhF/s1Yig5ncxE79kSNnDvQyA==}
 
   shogiops@0.18.0:
     resolution: {integrity: sha512-dafmb9Kj646Af+VsHzSDXODJdasGsvkcxBhgfgBxHq4pBoF5LHujajDuveEhYwgTC2A0PxWmqGwA7IPHvaVV4Q==}
@@ -7028,7 +7028,7 @@ snapshots:
 
   shell-quote@1.8.2: {}
 
-  shogiground@0.10.1: {}
+  shogiground@0.10.2: {}
 
   shogiops@0.18.0:
     dependencies:

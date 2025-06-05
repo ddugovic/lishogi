@@ -16,12 +16,7 @@ function analysis(ctrl: EditorCtrl, state: EditorState): VNode {
       attrs: {
         'data-icon': 'A',
         rel: 'nofollow',
-        ...(state.legalSfen
-          ? { href: ctrl.makeAnalysisUrl(state.legalSfen, ctrl.bottomColor()) }
-          : {}),
-      },
-      class: {
-        disabled: !state.legalSfen,
+        href: ctrl.makeAnalysisUrl(state.sfen, ctrl.bottomColor()),
       },
     },
     i18n('analysis'),
@@ -107,7 +102,7 @@ function study(ctrl: EditorCtrl, state: EditorState): VNode {
         attrs: { type: 'hidden', name: 'variant', value: ctrl.rules },
       }),
       h('input', {
-        attrs: { type: 'hidden', name: 'sfen', value: state.legalSfen || '' },
+        attrs: { type: 'hidden', name: 'sfen', value: state.sfen || '' },
       }),
       h(
         'button.button.text',
@@ -115,10 +110,6 @@ function study(ctrl: EditorCtrl, state: EditorState): VNode {
           attrs: {
             type: 'submit',
             'data-icon': '4',
-            disabled: !state.legalSfen,
-          },
-          class: {
-            disabled: !state.legalSfen,
           },
         },
         i18n('toStudy'),

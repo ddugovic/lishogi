@@ -3,7 +3,7 @@ packages:
   - 'bin'
 
 catalog:
-  'shogiground': ^0.10.1
+  'shogiground': ^0.10.2
   'shogiops': ^0.18.0
   '@badrap/result': ^0.2.13
   'snabbdom': ^3.6.2
