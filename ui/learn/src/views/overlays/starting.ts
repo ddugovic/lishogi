@@ -2,6 +2,7 @@ import type { MaybeVNode } from 'common/snabbdom';
 import { i18n, i18nFormat } from 'i18n';
 import { h } from 'snabbdom';
 import type LearnCtrl from '../../ctrl';
+import { stages } from '../../svg';
 
 export default function (ctrl: LearnCtrl): MaybeVNode {
   if (!ctrl.vm) return null;
@@ -18,7 +19,11 @@ export default function (ctrl: LearnCtrl): MaybeVNode {
       },
       h('div.learn__screen.', [
         h('h1', `${i18nFormat('learn:stageX', ctrl.vm.stage.id)}: ${ctrl.vm.stage.title}`),
-        h(`div.stage-img.${ctrl.vm.stage.key}`),
+        h(`div.stage-img.${ctrl.vm.stage.key}.categ-${ctrl.vm.category.key}`, {
+          props: {
+            innerHTML: stages[ctrl.vm.stage.key],
+          },
+        }),
         h('p', ctrl.vm.stage.intro),
         h('div.buttons', h('a.next', i18n('learn:letsGo'))),
       ]),

@@ -1334,6 +1334,7 @@ declare global {
     | 'learn:tellYourPiecesApart'
     | 'learn:howToSelectPieceSet'
     | 'learn:choosePieceDesign'
+    | 'learn:choosePieceDesignShort'
     | 'learn:promotionZone'
     | 'learn:senteGoesFirst'
     | 'learn:introComplete'
