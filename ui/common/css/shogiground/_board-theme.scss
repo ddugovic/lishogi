@@ -480,7 +480,7 @@ sg-squares {
   }
 }
 
-.custom {
+body.custom {
   #dasher_app .piece .list {
     background-color: var(--custom-board-color, theme.$c-bg-box);
     background-image: var(--custom-board-img, none);

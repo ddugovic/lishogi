@@ -313,21 +313,23 @@ sg-hand-wrap {
       flex: 1 0 14%;
       height: 100%;
 
-      &.last-dest {
-        background-color: theme.$c-last-dest;
-      }
-
       &.selected {
+        @extend %box-radius;
+
         opacity: 1;
         background-color: theme.$c-selected;
       }
 
       &.preselected {
+        @extend %box-radius;
+
         opacity: 1;
         background-color: theme.$c-premoved;
       }
 
       &.current-pre {
+        @extend %box-radius;
+
         background-color: theme.$c-premoved;
       }
 

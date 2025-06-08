@@ -176,6 +176,8 @@ html {
     transition: 0.13s ease-out;
 
     > div {
+      @extend %box-radius;
+
       // :not([contenteditable])
       vertical-align: top;
       box-sizing: border-box;
@@ -185,7 +187,6 @@ html {
       color: $tag-text-color;
       color: var(--tag-text-color);
       line-height: inherit;
-      border-radius: 3px;
       user-select: none;
       transition: 0.13s ease-out;
 
