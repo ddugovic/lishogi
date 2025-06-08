@@ -17,6 +17,7 @@ object insights {
       title = s"${user.username} - ${trans.insights.insights.txt()}",
       moreCss = cssTag("insights"),
       moreJs = frag(
+        i18nJsTag("insights"),
         moduleJsTag(
           "insights",
           Json.obj(

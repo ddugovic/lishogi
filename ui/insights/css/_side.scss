@@ -1,32 +1,43 @@
 @use 'pkg:breakpoint-sass' as breakpoint;
+@use 'pkg:common/abstract/extends';
 @use 'pkg:common/abstract/fluid-size';
 @use 'pkg:common/abstract/media-queries';
 @use 'pkg:common/theme';
 
 aside {
-  h2.title-username a {
-    color: theme.$c-font;
-    display: none;
-    padding: 0.5rem;
-    text-align: center;
-    font-weight: bold;
-
-    &.small {
-      @include fluid-size.fluid-size('font-size', 10px, 24px);
-    }
-
-    @include breakpoint.breakpoint(media-queries.$mq-small) {
-      display: block;
-    }
-  }
-
   .filter {
     min-width: 200px;
     padding: 0 1rem;
 
+    h2.title-username {
+      @extend %box-neat;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
+      background: theme.$c-bg-box;
+      width: 50%;
+
+      a {
+        text-align: center;
+
+        &.small {
+          @include fluid-size.fluid-size('font-size', 10px, 24px);
+        }
+      }
+
+      @include breakpoint.breakpoint(media-queries.$mq-small) {
+        width: 100%;
+      }
+    }
+
     .filter-toggle {
+      display: inline-block;
       text-align: right;
       padding-bottom: 0.4rem;
+      width: 50%;
 
       & > div {
         cursor: pointer;
@@ -73,8 +84,25 @@ aside {
       }
     }
 
-    .options.key-speeds {
-      padding-bottom: 10rem;
+    .options.key-speed {
+      padding-bottom: 2rem;
+
+      .speed-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        label {
+          display: flex;
+          align-items: center;
+
+          input {
+            @extend %checkbox;
+
+            margin-right: 0.25rem;
+          }
+        }
+      }
     }
 
     .ms-choice {

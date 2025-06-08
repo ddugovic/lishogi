@@ -11,6 +11,11 @@ import { translateSpeed } from './util';
 export function filter(ctrl: InsightCtrl): VNode {
   return h('div.filter', [
     h(
+      'h2.title-username',
+      { class: { small: ctrl.username.length > 11 } },
+      h('a.user-link.ulpt', { attrs: { href: `/@/${ctrl.userId}` } }, ctrl.username),
+    ),
+    h(
       'div.filter-toggle',
       h(
         'div',
@@ -99,6 +104,7 @@ function optionsSpeed(ctrl: InsightCtrl): VNode {
     return h('label', [
       h('input', {
         attrs: {
+          name: speed,
           type: 'checkbox',
           value: speed,
           checked: ctrl.filter.speeds.includes(speed),
@@ -121,7 +127,7 @@ function optionsSpeed(ctrl: InsightCtrl): VNode {
   return h('div.options.key-speed', [
     h('h3', i18ns.speeds),
     h(
-      'div',
+      'div.speed-list',
       allOptions.speeds.map(s => speed2checkbox(s)),
     ),
   ]);

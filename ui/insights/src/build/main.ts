@@ -13,7 +13,7 @@ import view from '../views/view';
 const patch = init([classModule, attributesModule, styleModule, propsModule, eventListenersModule]);
 
 function main(opts: InsightOpts): void {
-  const element = document.querySelector('insights-app--wrap')!;
+  const element = document.querySelector('.insights-app--wrap')!;
 
   const ctrl = new InsightCtrl(opts, redraw);
 
