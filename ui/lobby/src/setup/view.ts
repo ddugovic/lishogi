@@ -12,6 +12,7 @@ import { type VNode, h } from 'snabbdom';
 import type SetupCtrl from './ctrl';
 import {
   Position,
+  TimeMode,
   aiLevelChoices,
   byoChoices,
   colorChoices,
@@ -155,7 +156,14 @@ function sfenInput(ctrl: SetupCtrl): VNode {
 
 function timeControl(ctrl: SetupCtrl): VNode {
   return h('div.setup-time.section', [
-    h('div.setup-time-mode', [radioGroup(ctrl, 'timeMode', timeModeChoicesTranslated)]),
+    h('div.setup-time-mode', [
+      radioGroup(
+        ctrl,
+        'timeMode',
+        timeModeChoicesTranslated,
+        ctrl.isAnon() ? TimeMode.Corres : undefined,
+      ),
+    ]),
     ...(ctrl.isCorres() ? timeControlCorres(ctrl) : timeControlRt(ctrl)),
   ]);
 }

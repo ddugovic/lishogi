@@ -135,6 +135,10 @@ export default class SetupCtrl {
     return this.key !== 'hook' || this.data.mode !== Mode.Rated;
   }
 
+  isAnon(): boolean {
+    return !document.body.dataset.user;
+  }
+
   canSubmit(): boolean {
     const timeOk = this.validTime();
     const ratedOk = this.data.mode != Mode.Rated || this.canBeRated();
@@ -211,10 +215,11 @@ export default class SetupCtrl {
         'variant',
         RULES.map(r => variantToId(r)),
       );
+      const timeMode = this.isAnon() ? TimeMode.RealTime : getNumber('timeMode', timeModeChoices);
 
       this.data = {
         variant: variantId,
-        timeMode: getNumber('timeMode', timeModeChoices),
+        timeMode,
         time: getNumber('time', timeChoices),
         byoyomi: getNumber('byoyomi', byoChoices),
         increment: getNumber('increment', incChoices),
