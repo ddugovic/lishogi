@@ -1,13 +1,13 @@
 packages:
-  - 'ui/**/*'
-  - 'bin'
+  - ui/**/*
+  - bin
 
 catalog:
-  'shogiground': ^0.10.2
-  'shogiops': ^0.18.0
+  shogiground: ^0.10.3
+  shogiops: ^0.18.0
   '@badrap/result': ^0.2.13
-  'snabbdom': ^3.6.2
-  'breakpoint-sass': 'github:WandererXII/breakpoint#4.x'
+  snabbdom: ^3.6.2
+  breakpoint-sass: github:WandererXII/breakpoint#4.x
 
 onlyBuiltDependencies:
   - esbuild
