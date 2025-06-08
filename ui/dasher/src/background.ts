@@ -37,8 +37,8 @@ export function ctrl(
     { key: 'light', name: i18n('light') },
     { key: 'dark', name: i18n('dark') },
     { key: 'transp', name: i18n('transparent') },
-    { key: 'custom', name: i18n('custom') },
   ];
+  if (document.body.dataset.user) list.push({ key: 'custom', name: i18n('custom') });
 
   const announceFail = (validUrl: boolean) =>
     window.lishogi.announce({
