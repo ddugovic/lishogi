@@ -89,7 +89,6 @@ export function ctrl(
       data.bgPage = value;
       applyCustomColor('bgPage', value);
       if (data.light !== isLight) {
-        console.log('Setting light to', isLight);
         data.light = isLight;
         applyShading(isLight);
       }
@@ -177,8 +176,6 @@ function presetSelection(ctrl: CustomBackgroundCtrl): VNode {
             ctrl.set(preset.preset);
             colors.forEach(c => {
               const sp = colorInputs.get(c);
-              console.log('Setting ', c, 'to', preset.preset[c]);
-
               sp.set(preset.preset[c]);
             });
           });

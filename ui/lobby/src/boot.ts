@@ -95,7 +95,6 @@ export default function boot(
   const hash = location.hash;
 
   if (['#ai', '#friend', '#hook'].includes(hash)) {
-    console.log('boot:', location.search);
     const setupData: Record<string, string> = location.search
       ? location.search
           .slice(1)

@@ -48,8 +48,6 @@ export function organizedControls(ctrl: TournamentController, pag: PageData): VN
 }
 
 export function backControl(f: () => void, extra: VNodes = []): VNode {
-  console.log('extra:', extra.length);
-
   return h('div.tour__controls.back', [
     h(
       'div.pager',

@@ -230,8 +230,6 @@ export class StrongSocket implements IStrongSocket {
   };
 
   destroy = (): void => {
-    console.log('destroy');
-
     clearTimeout(this.pingSchedule);
     clearTimeout(this.connectSchedule);
     this.disconnect();
@@ -239,8 +237,6 @@ export class StrongSocket implements IStrongSocket {
   };
 
   disconnect = (): void => {
-    console.log('DISCONENNT');
-
     const ws = this.ws;
     if (ws) {
       this.debug('Disconnect');
@@ -251,8 +247,6 @@ export class StrongSocket implements IStrongSocket {
   };
 
   onError = (e: Event): void => {
-    console.log('ERRROR', e);
-
     this.options.debug = true;
     this.debug(`error: ${JSON.stringify(e)}`);
     this.tryOtherUrl = true;
@@ -268,8 +262,6 @@ export class StrongSocket implements IStrongSocket {
         10 * 60 * 1000,
         () => {
           this.options.idle = true;
-          console.log('idle?');
-
           disconnectTimeout = setTimeout(this.destroy, 2 * 60 * 60 * 1000);
         },
         () => {
