@@ -87,7 +87,7 @@ trait AssetHelper { self: I18nHelper with SecurityHelper =>
   lazy val powertipTag       = vendorJsTag("jquery-powertip", "jquery.powertip.min.js")
   lazy val infiniteScrollTag = vendorJsTag("infinite-scroll", "infinite-scroll.pkgd.min.js")
   lazy val fingerprintTag    = vendorJsTag("fipr", "fipr.js")
-  lazy val tagifyTag         = vendorJsTag("tagify", "tagify.min.js")
+  lazy val tagifyTag         = vendorJsTag("tagify", "tagify.js")
 
   def i18nJsTag(name: String)(implicit lang: Lang): Frag =
     jsAt(s"i18n/${name}/${lang.code}.js")
