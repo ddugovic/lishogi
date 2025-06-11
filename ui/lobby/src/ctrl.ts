@@ -148,16 +148,16 @@ export default class LobbyController {
     });
   };
 
-  setTab = (tab: Tab, store = true): void => {
+  setTab = (tab: Tab, store = true, loadSeeks = true): void => {
     if (tab !== this.tab) {
-      if (tab === 'seeks') this.seeksNow();
+      if (tab === 'seeks' && loadSeeks) this.seeksNow();
       else if (hookRepo.tabs.includes(tab) && !hookRepo.tabs.includes(this.tab))
         this.socket.realTimeIn();
       else if (hookRepo.tabs.includes(this.tab) && !hookRepo.tabs.includes(tab)) {
         this.socket.realTimeOut();
         this.data.hooks = [];
       }
-      if (tab === 'presets' && this.reloadSeeks) this.seeksEventually();
+      if (tab === 'presets' && this.reloadSeeks && loadSeeks) this.seeksEventually();
       if (store) this.tab = this.stores.tab.set(tab);
       else this.tab = tab;
     }
@@ -210,7 +210,7 @@ export default class LobbyController {
     if (preset.ai) {
       this.setRedirecting();
     } else {
-      if (preset.timeMode === 2) this.setTab('seeks', false);
+      if (preset.timeMode === 2) this.setTab('seeks', false, false);
       else {
         this.currentPresetId = preset.id;
         this.setTab('real_time', false);
