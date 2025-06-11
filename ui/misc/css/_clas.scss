@@ -7,7 +7,7 @@
 
 $c-font-clas: theme.$m-font-clear_clas_mix_30;
 $c-bg-clas: theme.$c-clas;
-$c-bg-clas-over: white;
+$c-bg-clas-over: theme.$c-clas-over;
 $c-bg-clas-over-dim: theme.$m-white_clas_mix_80;
 
 %archived {

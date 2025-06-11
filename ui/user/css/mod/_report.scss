@@ -3,7 +3,7 @@
 
 $c-report-bg: theme.$c-bg-high;
 $c-report-high: theme.$c-brag;
-$c-report-high-over: white;
+$c-report-high-over: theme.$c-brag-over;
 
 #report_list {
   .header {

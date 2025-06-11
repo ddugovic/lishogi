@@ -29,7 +29,7 @@ $mq-not-col3: media-queries.$mq-not-small;
   min-height: 300px;
 
   @include breakpoint.breakpoint($mq-col2) {
-    min-height: 400px;
+    min-height: 500px;
   }
 
   @include breakpoint.breakpoint($mq-col3) {

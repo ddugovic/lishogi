@@ -54,7 +54,6 @@
     bad {
       @extend %flex-center;
 
-      color: white;
       padding: 0 0.5em 0.1em 0.3em;
       margin-right: 1ch;
       font-size: 0.9em;
@@ -69,6 +68,7 @@
 
     good {
       background: theme.$c-good;
+      color: theme.$c-good-over;
 
       &::before {
         content: 'E';
@@ -77,6 +77,7 @@
 
     bad {
       background: theme.$c-bad;
+      color: theme.$c-bad-over;
 
       &::before {
         content: 'L';

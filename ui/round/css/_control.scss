@@ -186,16 +186,11 @@
     }
 
     .spinner {
-      width: 45px;
-      height: 55px;
-
-      @include breakpoint.breakpoint(local.$mq-col1) {
-        width: 36px;
-        height: 44px;
-      }
+      width: 36px;
+      height: 44px;
 
       path {
-        stroke: white;
+        stroke: theme.$c-primary-over;
       }
     }
 
@@ -257,7 +252,7 @@
         height: 55px;
 
         path {
-          stroke: white;
+          stroke: theme.$c-primary-over;
         }
       }
     }
