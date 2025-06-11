@@ -1,5 +1,5 @@
 import { type MaybeVNode, bind, onInsert } from 'common/snabbdom';
-import { i18nFormat } from 'i18n';
+import { i18nPluralSame } from 'i18n';
 import { type VNode, h } from 'snabbdom';
 import type TournamentController from '../ctrl';
 import type { RankedTeam, TeamBattle } from '../interfaces';
@@ -99,7 +99,7 @@ function extraTeams(ctrl: TournamentController): VNode {
             href: `/tournament/${ctrl.data.id}/teams`,
           },
         },
-        i18nFormat('arena:viewAllXTeams', Object.keys(ctrl.data.teamBattle!.teams).length),
+        i18nPluralSame('arena:viewAllXTeams', Object.keys(ctrl.data.teamBattle!.teams).length),
       ),
     ),
   );
