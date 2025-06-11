@@ -1,5 +1,6 @@
 import type LobbyController from './ctrl';
 import type { Hook, Tab } from './interfaces';
+import { action } from './util';
 
 export const tabs: Tab[] = ['real_time', 'presets'];
 
@@ -18,8 +19,13 @@ export function sort(ctrl: LobbyController, hooks: Hook[]): void {
   hooks.sort(s.startsWith('time') ? timeOrder(s !== 'time') : ratingOrder(s !== 'rating'));
 }
 
-export function add(ctrl: LobbyController, hook: Hook): void {
+export function add(ctrl: LobbyController, hook: Hook): boolean {
+  const flushable =
+    action(hook) === 'cancel' ||
+    (ctrl.data.hooks.length === ctrl.stepHooks.length &&
+      ctrl.data.hooks.every(h => ctrl.stepHooks.some(s => s.id === h.id)));
   ctrl.data.hooks.push(hook);
+  return flushable;
 }
 export function setAll(ctrl: LobbyController, hooks: Hook[]): void {
   ctrl.data.hooks = hooks;

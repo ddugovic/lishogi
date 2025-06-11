@@ -2,7 +2,6 @@ import { idleTimer } from 'common/timings';
 import type LobbyController from './ctrl';
 import * as hookRepo from './hook-repo';
 import type { Hook } from './interfaces';
-import { action } from './util';
 
 interface Handlers {
   [key: string]: (data: any) => void;
@@ -19,8 +18,8 @@ export default class LobbySocket {
 
     this.handlers = {
       had(hook: Hook) {
-        hookRepo.add(ctrl, hook);
-        if (action(hook) === 'cancel') ctrl.flushHooks(true);
+        const flushable = hookRepo.add(ctrl, hook);
+        if (flushable) ctrl.flushHooks(true);
         ctrl.redraw();
       },
       hrm(ids: string) {
