@@ -157,7 +157,7 @@ function rematchButtons(ctrl: RoundController): MaybeVNodes {
         )
       : null,
     h(
-      'button.fbt.rematch.sente',
+      'button.fbt.rematch',
       {
         class: {
           me,
@@ -170,7 +170,7 @@ function rematchButtons(ctrl: RoundController): MaybeVNodes {
             ? i18n('yourOpponentWantsToPlayANewGameWithYou')
             : me
               ? i18n('rematchOfferSent')
-              : '',
+              : false,
         },
         hook: util.bind(
           'click',

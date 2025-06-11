@@ -60,7 +60,7 @@ interface EmergSound {
 
 export class ClockController {
   emergSound: EmergSound = {
-    lowtime: () => window.lishogi.sound.play('lowtime'),
+    lowtime: () => window.lishogi.sound.play('lowTime'),
     nextPeriod: () => window.lishogi.sound.play('period'),
     tick: () => window.lishogi.sound.play('tick'),
     delay: 20000,
