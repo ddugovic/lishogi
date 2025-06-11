@@ -265,6 +265,8 @@ function translateMessage(t: string): string {
       return i18n('resumptionOfferCanceled');
     case 'xDeclinesResumption':
       return i18nFormatCapitalized('xDeclinesResumption', colorName(color as Color, false));
+    case 'gameAborted':
+      return i18n('gameAborted');
     default:
       console.warn('Unhandled translation', t);
       return i18n(trans as I18nKey);
