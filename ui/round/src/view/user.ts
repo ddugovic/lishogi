@@ -51,10 +51,10 @@ export function userHtml(ctrl: RoundController, player: Player, position: Positi
         h(`i.line${user.patron ? '.patron' : ''}`, {
           attrs: {
             title: connecting
-              ? 'Connecting to the game'
+              ? i18n('connectingToTheGame')
               : player.onGame
-                ? 'Joined the game'
-                : 'Left the game',
+                ? i18nFormat('xJoinedTheGame', user.username)
+                : i18nFormat('xLeftTheGame', user.username),
           },
         }),
         h(
@@ -114,10 +114,10 @@ export function userHtml(ctrl: RoundController, player: Player, position: Positi
       h('i.line', {
         attrs: {
           title: connecting
-            ? 'Connecting to the game'
+            ? i18n('connectingToTheGame')
             : player.onGame
-              ? 'Joined the game'
-              : 'Left the game',
+              ? i18nFormat('xJoinedTheGame', i18n('player'))
+              : i18nFormat('xLeftTheGame', i18n('player')),
         },
       }),
       h('name', player.ai ? engineNameFromCode(player.aiCode) : player.name || 'Anonymous'),
