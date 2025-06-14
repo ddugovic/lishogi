@@ -1,8 +1,10 @@
 import { initOneWithState } from 'common/mini-board';
 import { numberFormat } from 'common/number';
-import { type MaybeVNodes, dataIcon } from 'common/snabbdom';
+import { proverb } from 'common/snabbdom';
+import { type MaybeVNode, type MaybeVNodes, dataIcon } from 'common/snabbdom';
 import { i18n } from 'i18n';
 import { type VNode, h } from 'snabbdom';
+import type TournamentController from '../ctrl';
 import type { Arrangement, BasePlayer, Featured } from '../interfaces';
 
 export function miniBoard(game: Featured): VNode {
@@ -107,3 +109,7 @@ export const flatpickrConfig: Parameters<(typeof window)['flatpickr']>[1] = {
   disableMobile: true,
   locale: document.documentElement.lang as any,
 };
+
+export function proverbWrap(ctrl: TournamentController): MaybeVNode {
+  return ctrl.data.proverb ? proverb(ctrl.data.proverb) : null;
+}

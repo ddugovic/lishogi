@@ -158,7 +158,7 @@ final class JsonView(
           )
           .add("schedule" -> tour.schedule.map(scheduleJson))
           .add("private" -> tour.isPrivate)
-          .add("proverb" -> tour.isCreated.option(lila.common.Proverb.one(tour.id)))
+          .add("proverb" -> (!tour.isFinished).option(lila.common.Proverb.one(tour.id)))
           .add("defender" -> shieldOwner.map(_.value))
           .add("animal" -> Animal.wikiUrl(tour.name).map { url =>
             Json.obj("name" -> tour.name, "url" -> url)

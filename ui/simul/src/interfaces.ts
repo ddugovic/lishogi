@@ -18,10 +18,7 @@ export interface SimulData {
   variants: VariantKey[];
   applicants: Applicant[];
   pairings: Pairing[];
-  proverb?: {
-    english: string;
-    japanese: string;
-  };
+  proverb?: Proverb;
   team?: Team;
 }
 

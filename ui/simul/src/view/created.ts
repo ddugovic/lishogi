@@ -1,7 +1,6 @@
-import { useJp } from 'common/common';
 import { modal } from 'common/modal';
 import { getPerfIcon } from 'common/perf-icons';
-import { type MaybeVNodes, bind } from 'common/snabbdom';
+import { type MaybeVNodes, bind, proverb } from 'common/snabbdom';
 import spinner from 'common/spinner';
 import { i18n, i18nFormat, i18nVdomPlural } from 'i18n';
 import { i18nVariant } from 'i18n/variant';
@@ -177,11 +176,7 @@ export default function (ctrl: SimulCtrl): MaybeVNodes {
       ],
     ),
     isHost && candidates.length ? randomButton(ctrl) : null,
-    ctrl.data.proverb
-      ? h('blockquote.pull-quote', [
-          h('p', useJp() ? ctrl.data.proverb.japanese : ctrl.data.proverb.english),
-        ])
-      : null,
+    ctrl.data.proverb ? proverb(ctrl.data.proverb) : null,
     openModal
       ? modal({
           class: 'variant-select',

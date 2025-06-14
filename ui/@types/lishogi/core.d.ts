@@ -23,6 +23,11 @@ declare global {
     deviceMemory: number;
   }
 
+  interface Proverb {
+    english: string;
+    japanese: string;
+  }
+
   type Speed =
     | 'ultraBullet'
     | 'bullet'

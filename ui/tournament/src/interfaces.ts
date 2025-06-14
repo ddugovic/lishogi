@@ -133,10 +133,7 @@ export interface TournamentDataFull extends TournamentDataBase {
     speed: string;
   };
   private?: boolean;
-  proverb?: {
-    japanese: string;
-    english: string;
-  };
+  proverb?: Proverb;
   defender?: string; // shield
   animal: {
     name: string;

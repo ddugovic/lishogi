@@ -1,4 +1,5 @@
-import type { Attrs, Hooks, VNode } from 'snabbdom';
+import { type Attrs, type Hooks, type VNode, h } from 'snabbdom';
+import { useJp } from './common';
 
 export type MaybeVNode = VNode | string | null | undefined;
 export type MaybeVNodes = MaybeVNode[];
@@ -51,4 +52,10 @@ export function dataIcon(icon: string): Attrs {
   return {
     'data-icon': icon,
   };
+}
+
+export function proverb(p: Proverb): VNode {
+  return h(`blockquote.pull-quote${useJp() ? '.jp' : ''}`, [
+    h('p', useJp() ? p.japanese : p.english),
+  ]);
 }

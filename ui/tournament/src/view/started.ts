@@ -15,6 +15,7 @@ import playerInfo from './player-info';
 import { standing as rStanding } from './robin';
 import tourTable from './table';
 import teamInfo from './team-info';
+import { proverbWrap } from './util';
 
 function joinTheGame(gameId: string) {
   return h(
@@ -37,6 +38,7 @@ const name = 'started';
 function main(ctrl: TournamentController): MaybeVNodes {
   const gameId = ctrl.myGameId();
   const pag = pagination.players(ctrl);
+
   if (ctrl.isArena())
     return [
       header(ctrl),
@@ -44,6 +46,7 @@ function main(ctrl: TournamentController): MaybeVNodes {
       teamStanding(ctrl, 'started'),
       arenaControls(ctrl, pag),
       standing(ctrl, pag, 'started'),
+      !ctrl.data.nbPlayers ? proverbWrap(ctrl) : null,
     ];
   else if (ctrl.isRobin())
     return [
@@ -51,6 +54,7 @@ function main(ctrl: TournamentController): MaybeVNodes {
       gameId ? joinTheGame(gameId) : null,
       robinControls(ctrl),
       rStanding(ctrl, 'started'),
+      !ctrl.data.nbPlayers ? proverbWrap(ctrl) : null,
       yourUpcoming(ctrl),
     ];
   else
@@ -59,6 +63,7 @@ function main(ctrl: TournamentController): MaybeVNodes {
       gameId ? joinTheGame(gameId) : null,
       organizedControls(ctrl, pag),
       oStanding(ctrl, pag, 'started'),
+      !ctrl.data.nbPlayers ? proverbWrap(ctrl) : null,
       yourUpcoming(ctrl),
       allUpcomingAndOngoing(ctrl),
     ];
