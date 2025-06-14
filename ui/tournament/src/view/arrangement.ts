@@ -6,15 +6,38 @@ import type TournamentController from '../ctrl';
 import type { Arrangement } from '../interfaces';
 import { arrangementHasUser, playerName } from './util';
 
+const maxListed = 15;
+
+let allYourUpcoming = false;
 export function yourUpcoming(ctrl: TournamentController): MaybeVNode {
   const arrs = (ctrl.data.standing.arrangements as Arrangement[])
     .filter(a => arrangementHasUser(a, ctrl.opts.userId) && !a.gameId)
     .sort((a, b) => (!a.scheduledAt || !b.scheduledAt ? 0 : a.scheduledAt - b.scheduledAt))
     .map(a => arrangementLine(ctrl, a));
+
+  const trimArrs = arrs.length > maxListed && !allYourUpcoming;
+  const arrsTrimmed = trimArrs ? arrs.slice(0, maxListed) : arrs;
+
   return ctrl.data.me
     ? h('div.arrs-list-wrap', [
         h('h2.arrs-title', i18n('tourArrangements:yourUpcomingGames')),
-        arrs.some(a => !!a) ? h('div.arrs-list', arrs) : h('div.notours', i18n('study:noneYet')),
+        arrsTrimmed.some(a => !!a)
+          ? h('div.arrs-list', arrsTrimmed)
+          : h('div.notours', i18n('study:noneYet')),
+        trimArrs
+          ? h(
+              'a.arrs-more',
+              {
+                on: {
+                  click() {
+                    allYourUpcoming = !allYourUpcoming;
+                    ctrl.redraw();
+                  },
+                },
+              },
+              i18n('more'),
+            )
+          : null,
       ])
     : null;
 }
