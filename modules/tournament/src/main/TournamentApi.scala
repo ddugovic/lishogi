@@ -127,7 +127,7 @@ final class TournamentApi(
         mode = if (tour.position.isDefined) shogi.Mode.Casual else tour.mode,
       )
     }
-    tournamentRepo update tour void
+    tournamentRepo.update(tour).void >>- socket.foreach(_.reload(tour.id))
   }
 
   def teamBattleUpdate(
