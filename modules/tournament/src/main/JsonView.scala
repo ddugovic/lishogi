@@ -148,6 +148,7 @@ final class JsonView(
             "rated"     -> tour.isRated,
           )
           .add("isFull" -> !tour.notFull)
+          .add("maxGames" -> tour.isOrganized.option(lila.tournament.Format.Organized.maxGames))
           .add("spotlight" -> tour.spotlight)
           .add("berserkable" -> tour.berserkable)
           .add(

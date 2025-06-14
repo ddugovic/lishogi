@@ -1007,7 +1007,7 @@ final class TournamentApi(
           .fold(
             if (tour.isOrganized && tour.createdBy == userId)
               arrangementRepo.countByTour(tour.id) map { count =>
-                (count < 500) ?? {
+                (count < Format.Organized.maxGames) ?? {
                   Arrangement.make(tour.id, lookup.users).some
                 }
               }

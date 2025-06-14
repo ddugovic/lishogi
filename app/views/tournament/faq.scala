@@ -138,7 +138,11 @@ object faq {
     h3(trans.arena.howDoesItEnd()),
     p(trans.arena.howDoesItEndAnswer()),
     h3(trans.tourArrangements.howManyGames()),
-    p(trans.tourArrangements.howManyGamesAnswer()),
+    p(
+      trans.tourArrangements.howManyGamesAnswer.pluralSame(
+        lila.tournament.Format.Organized.maxGames,
+      ),
+    ),
   )
 
 }

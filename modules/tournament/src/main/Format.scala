@@ -12,9 +12,11 @@ sealed trait Format {
 
 object Format {
 
-  case object Arena     extends Format
-  case object Robin     extends Format
-  case object Organized extends Format
+  case object Arena extends Format
+  case object Robin extends Format
+  case object Organized extends Format {
+    val maxGames = 350
+  }
 
   val all = List(Arena, Robin, Organized)
 
