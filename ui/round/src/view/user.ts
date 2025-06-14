@@ -120,7 +120,12 @@ export function userHtml(ctrl: RoundController, player: Player, position: Positi
               : i18nFormat('xLeftTheGame', i18n('player')),
         },
       }),
-      h('name', player.ai ? engineNameFromCode(player.aiCode) : player.name || 'Anonymous'),
+      h(
+        'name',
+        player.ai
+          ? engineNameFromCode(player.aiCode)
+          : player.name || h('span.anon', i18n('anonymous')),
+      ),
       player.ai ? h('div.ai-level', i18nFormat('levelX', player.ai)) : null,
     ],
   );
@@ -130,5 +135,5 @@ export function userTxt(player: Player): string {
   if (player.user) {
     return (player.user.title ? `${player.user.title} ` : '') + player.user.username;
   } else if (player.ai) return engineNameFromCode(player.aiCode);
-  else return 'Anonymous';
+  else return i18n('anonymous');
 }

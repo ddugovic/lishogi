@@ -269,7 +269,7 @@ function translateMessage(t: string): string {
       return i18n('gameAborted');
     default:
       console.warn('Unhandled translation', t);
-      return i18n(trans as I18nKey);
+      return i18n(trans as I18nKeyBasic);
   }
 }
 

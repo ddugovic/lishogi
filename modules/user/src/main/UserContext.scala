@@ -25,8 +25,6 @@ sealed trait UserContext {
 
   def username = me.map(_.username)
 
-  def usernameOrAnon = username | "Anonymous"
-
   def troll = me.??(_.marks.troll)
 
   def ip = lila.common.HTTPRequest lastRemoteAddress req

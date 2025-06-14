@@ -3,7 +3,7 @@ import { requestIdleCallbackWithFallback } from 'common/common';
 import notify from 'common/notification';
 import * as game from 'game';
 import * as status from 'game/status';
-import { i18n } from 'i18n';
+import { i18n, i18nFormat } from 'i18n';
 import { type KeyboardMove, ctrl as makeKeyboardMove } from 'keyboard-move';
 import { makeNotation, makeNotationLine } from 'shogi/notation';
 import { Shogiground } from 'shogiground';
@@ -428,7 +428,7 @@ export default class RoundController {
       notify(() => {
         let txt = i18n('yourTurn');
         const opponent = renderUser.userTxt(d.opponent);
-        if (this.ply < 1) txt = `${opponent}\njoined the game.\n${txt}`;
+        if (this.ply < 1) txt = `${i18nFormat('xJoinedTheGame', opponent)}\n${txt}`;
         else {
           const m_step = d.steps[d.steps.length - 1];
           const prev_step = d.steps[d.steps.length - 2];
@@ -445,7 +445,7 @@ export default class RoundController {
       });
     else if (this.isPlaying() && this.ply < 1)
       notify(() => {
-        return `${renderUser.userTxt(d.opponent)}\njoined the game.`;
+        return i18nFormat('xJoinedTheGame', renderUser.userTxt(d.opponent));
       });
   };
 
