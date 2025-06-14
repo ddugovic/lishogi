@@ -45,12 +45,6 @@
   }
 
   .tour__faq {
-    display: none;
-
-    @include breakpoint.breakpoint(local.$mq-col2) {
-      display: block;
-    }
-
     h3 {
       margin: 1.5rem 0 0.5rem 0;
     }

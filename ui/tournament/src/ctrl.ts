@@ -84,13 +84,9 @@ export default class TournamentController {
       },
     );
 
-    if (this.isRobin())
+    if (this.isRobin() || this.isOrganized())
       this.data.standing.arrangements.forEach(a => {
         this.arrangementReadyRedraw(a);
-      });
-    else if (this.isOrganized())
-      this.data.standing.arrangements.forEach(a => {
-        if (this.arrangementHasMe(a)) this.arrangementReadyRedraw(a);
       });
 
     window.addEventListener('beforeunload', () => {

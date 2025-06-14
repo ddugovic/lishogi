@@ -19,7 +19,7 @@ export function playerManagementView(ctrl: TournamentController): VNodes {
 let toKick = '';
 function playerManagement(ctrl: TournamentController): VNode {
   return h('div.player-manage', [
-    renderCandidates(ctrl),
+    ctrl.data.candidatesOnly ? renderCandidates(ctrl) : null,
     renderDenied(ctrl),
     h('div.other-actions', [
       h('div.ban', [

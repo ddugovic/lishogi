@@ -65,17 +65,15 @@ object form {
             form3.globalError(form),
             allFieldsets(form, fields, teams = myTeams, tour = tour.some),
             form3.actions(
-              a(href := routes.Tournament.show(tour.id))(trans.cancel()),
+              a(href := routes.Tournament.show(tour.id))(trans.back()),
               form3.submit(trans.save(), icon = "g".some),
             ),
           ),
           postForm(cls := "terminate", action := routes.Tournament.terminate(tour.id))(
             submitButton(
-              dataIcon := "j",
+              dataIcon := "!",
               cls      := s"text button button-red confirm${tour.isFinished ?? " disabled"}",
-            )(
-              "Cancel the tournament",
-            ),
+            )(s"${trans.delete.txt()} - ${trans.notReversible.txt()}"),
           ),
         ),
       )

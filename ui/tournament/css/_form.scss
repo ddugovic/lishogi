@@ -37,14 +37,6 @@
   }
 }
 
-.tour__faq {
-  margin-top: variables.$block-gap;
-
-  h2 {
-    margin: 1.2em 0 0.5em 0;
-  }
-}
-
 .textcomplete-dropdown {
   @extend %popup-shadow;
 
@@ -138,4 +130,8 @@
   #form3-description {
     height: 8rem;
   }
+}
+
+.form3 button.submit {
+  min-width: 35%;
 }
