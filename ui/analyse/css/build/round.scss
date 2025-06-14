@@ -1,6 +1,6 @@
 @use 'base';
 @use 'pkg:common/component/context-streamer';
-@use 'ui/round/css/meta';
-@use 'ui/round/css/modal-study';
+@use 'pkg:game/meta';
+@use 'pkg:game/modal-study';
 @use 'pkg:chat/chat';
 @use '../round';

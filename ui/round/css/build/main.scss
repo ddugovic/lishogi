@@ -12,6 +12,8 @@
 @use 'pkg:common/component/context-streamer';
 @use 'pkg:common/form/cmn-toggle';
 @use 'pkg:common/shogiground/blindfold';
+@use 'pkg:game/meta';
+@use 'pkg:game/modal-study';
 @use 'pkg:chat/chat';
 @use 'pkg:chat/preset';
 @use 'pkg:keyboard-move/keyboard-move';

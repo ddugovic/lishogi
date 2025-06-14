@@ -4,12 +4,12 @@
 
 .pull-quote {
   margin: 0 auto;
+  max-width: 275px;
 
   p {
     color: theme.$c-font;
     position: relative;
-    margin: 0 0.7em;
-    padding: 1em 0;
+    padding: 1em;
     border: theme.$border;
     border-width: 1px 0;
     font-style: italic;
@@ -33,17 +33,11 @@
     }
   }
 
-  &.long p {
-    font-size: 1rem;
+  &.jp p {
+    text-align: center;
   }
 
-  footer {
-    margin: 10px;
-    line-height: 20px;
-    text-align: right;
-
-    &::before {
-      content: '\2014\2009';
-    }
+  &.long p {
+    font-size: 1rem;
   }
 }

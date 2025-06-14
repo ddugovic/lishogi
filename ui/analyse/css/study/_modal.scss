@@ -2,14 +2,12 @@
 @use 'pkg:common/abstract/media-queries';
 @use 'pkg:common/theme';
 
-.study__modal {
-  &#modal-wrap {
-    padding: 1rem;
-    min-width: 80vw;
+.study__modal#modal-wrap {
+  padding: 1rem;
+  min-width: 80vw;
 
-    @include breakpoint.breakpoint(media-queries.$mq-x-small) {
-      min-width: 500px;
-    }
+  @include breakpoint.breakpoint(media-queries.$mq-x-small) {
+    min-width: 500px;
   }
 
   > div {

@@ -10,7 +10,8 @@
     },
     "./*": {
       "types": "./src/*.ts",
-      "import": "./src/*.ts"
+      "import": "./src/*.ts",
+      "sass": "./css/_*.scss"
     }
   },
   "dependencies": {
