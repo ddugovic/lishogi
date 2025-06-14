@@ -54,8 +54,8 @@ html.custom-light {
   --c-font-metal: inherit;
   --metal-shadow: none;
   --c-primary-glow: color-mix(in srgb, var(--c-primary) 75%, white);
-  --c-sente-symbol: '☖';
-  --c-gote-symbol: '☗';
+  --sente-symbol: '☗';
+  --gote-symbol: '☖';
 }
 
 @supports (color: oklch(from var(--c-accent) calc(1 - round(l, 1)) 0 0)) {

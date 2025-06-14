@@ -40,7 +40,6 @@ html.light {
   --c-font-page: #{c-light($c-font, 37%)};
   --c-font-shadow: #{white};
   --c-good-move: #{hsl(130deg, 67%, 40%)};
-  --c-gote-symbol: '☖';
   --c-header-dropdown: #{$c-popup};
   --c-inaccuracy: #{hsl(202deg, 78%, 40%)};
   --c-link: #{$c-primary};
@@ -57,10 +56,11 @@ html.light {
   --c-secondary-clear: #{c-blacker($c-secondary, 17%)};
   --c-secondary-dim: #{c-whiter($c-secondary, 17%)};
   --c-secondary-dimmer: #{c-whiter($c-secondary, 40%)};
-  --c-sente-symbol: '☗';
   --c-shade: #{c-whiter($c-font, 75%)};
   --c-warn: #{$c-brag};
+  --gote-symbol: '☖';
   --metal-shadow: #{0 1px 0 white};
+  --sente-symbol: '☗';
   --text-shadow: #{0 1px 0 $c-font-shadow};
   --m-accent_bg-box_mix_10: #{color.mix($c-accent,$c-bg-box,10%)};
   --m-accent_bg-box_mix_12: #{color.mix($c-accent,$c-bg-box,12%)};

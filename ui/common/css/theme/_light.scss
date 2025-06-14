@@ -76,8 +76,8 @@ $metal-shadow: 0 1px 0 white;
 $c-bg-metal-hover: color.adjust($c-bg-high, $lightness: -3%);
 $c-font-metal-hover: inherit;
 
-$c-sente-symbol: '☗';
-$c-gote-symbol: '☖';
+$sente-symbol: '☗';
+$gote-symbol: '☖';
 
 $c-eval-sente: #888;
 $c-eval-gote: #fff;
