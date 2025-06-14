@@ -192,6 +192,7 @@ final class StudyApi(
             text = text,
             publicSource = lila.hub.actorApi.shutup.PublicSource.Study(studyId.value).some,
             busChan = _.Study,
+            permanent = true,
           )
         }
       }

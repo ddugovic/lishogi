@@ -245,7 +245,6 @@ final class TournamentApi(
             callbacks.indexLeaderboard(tour).logFailure(logger, _ => s"${tour.id} indexLeaderboard")
             callbacks.clearWinnersCache(tour)
             callbacks.clearTrophyCache(tour)
-            chatApi.markForExpire(lila.chat.Chat.Id(tour.id))
             duelStore.remove(tour)
           }
       }

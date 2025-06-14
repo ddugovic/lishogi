@@ -75,9 +75,6 @@ final class Messenger(api: ChatApi) {
       api.userChat.timeout(chatId, modId, suspect, r, ChatTimeout.Scope.Global, text, _.Round)
     }
 
-  def markForExpire(gameId: Game.ID): Funit =
-    api.markForExpire(Chat.Id(gameId))
-
   private def watcherId(chatId: Chat.Id) = Chat.Id(s"$chatId/w")
   private def watcherId(gameId: Game.Id) = Chat.Id(s"$gameId/w")
 }

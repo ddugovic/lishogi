@@ -392,7 +392,7 @@ final class Study(
   def clearChat(id: String) =
     Auth { _ => me =>
       env.study.api.isOwner(id, me) flatMap {
-        _ ?? env.chat.api.userChat.clear(Chat.Id(id))
+        _ ?? env.chat.api.remove(Chat.Id(id))
       } inject Redirect(routes.Study.show(id))
     }
 

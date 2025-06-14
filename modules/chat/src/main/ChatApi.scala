@@ -93,10 +93,11 @@ final class ChatApi(
         text: String,
         publicSource: Option[PublicSource],
         busChan: BusChan.Select,
+        permanent: Boolean = false,
     ): Funit =
       makeLine(chatId, userId, text) flatMap {
         _ ?? { line =>
-          pushLine(chatId, line) >>- {
+          pushLine(chatId, line, permanent) >>- {
             if (publicSource.isDefined) cached invalidate chatId
             shutup ! {
               publicSource match {
@@ -112,8 +113,6 @@ final class ChatApi(
           }
         }
       }
-
-    def clear(chatId: Chat.Id) = coll.delete.one($id(chatId)).void
 
     def system(chatId: Chat.Id, text: String, busChan: BusChan.Select): Funit = {
       val line = UserLine(systemUserId, none, text, troll = false, deleted = false)
@@ -272,10 +271,7 @@ final class ChatApi(
 
   def removeAll(chatIds: List[Chat.Id]) = coll.delete.one($inIds(chatIds)).void
 
-  def markForExpire(chatId: Chat.Id) =
-    coll.update.one($id(chatId), $set(Chat.BSONFields.expire -> true)).void
-
-  private def pushLine(chatId: Chat.Id, line: Line): Funit =
+  private def pushLine(chatId: Chat.Id, line: Line, permanent: Boolean = false): Funit =
     coll.update
       .one(
         $id(chatId),
@@ -286,7 +282,9 @@ final class ChatApi(
               "$slice" -> -maxLinesPerChat.value,
             ),
           ),
-        ) ++ $set(Chat.BSONFields.updatedAt -> DateTime.now),
+        ) ++ $set(Chat.BSONFields.updatedAt -> DateTime.now) ++ (permanent ?? $set(
+          Chat.BSONFields.permanent -> true,
+        )),
         upsert = true,
       )
       .void
