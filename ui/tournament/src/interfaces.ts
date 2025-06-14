@@ -123,6 +123,7 @@ export interface TournamentDataFull extends TournamentDataBase {
   spotlight: Spotlight;
   berserkable?: boolean;
   isFull?: boolean;
+  maxGames?: number;
   position?: {
     name: string;
     sfen: string;

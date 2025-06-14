@@ -1,12 +1,12 @@
 import { flatpickr } from 'common/assets';
-import { type MaybeVNode, bind } from 'common/snabbdom';
-import { i18n } from 'i18n';
+import { type MaybeVNode, type MaybeVNodes, bind } from 'common/snabbdom';
+import { i18n, i18nPluralSame } from 'i18n';
 import { colorName } from 'shogi/color-name';
 import { colors } from 'shogiground/constants';
 import { opposite } from 'shogiground/util';
-import { type VNode, type VNodes, h } from 'snabbdom';
+import { type VNode, h } from 'snabbdom';
 import type TournamentController from '../ctrl';
-import type { NewArrangement } from '../interfaces';
+import type { Arrangement, NewArrangement } from '../interfaces';
 import { arrangementLine } from './arrangement';
 import { backControl } from './controls';
 import header from './header';
@@ -14,7 +14,7 @@ import { arrangementHasUser, flatpickrConfig } from './util';
 
 let fInstance: any = null;
 
-export function organizedArrangementView(ctrl: TournamentController): VNodes {
+export function organizedArrangementView(ctrl: TournamentController): MaybeVNodes {
   return [
     header(ctrl),
     backControl(() => {
@@ -24,13 +24,25 @@ export function organizedArrangementView(ctrl: TournamentController): VNodes {
   ];
 }
 
-function organizerArrangement(ctrl: TournamentController): VNode {
-  return h('div.oganized-arrangement', [organizerArrangementForm(ctrl)]);
-}
-
-const organizerArrangementForm = (ctrl: TournamentController): MaybeVNode => {
+function organizerArrangement(ctrl: TournamentController): MaybeVNode {
   const state = ctrl.newArrangement;
   if (!state) return;
+
+  return h(
+    'div.organizer-arrangement-wrap',
+    ctrl.data.standing.arrangements.length >= ctrl.data.maxGames! && !state.id
+      ? h('div.max-arrs', [
+          'Maximum number of games reached: ',
+          i18nPluralSame('nbGames', ctrl.data.standing.arrangements.length),
+        ])
+      : organizerArrangementForm(ctrl, state),
+  );
+}
+
+const organizerArrangementForm = (
+  ctrl: TournamentController,
+  state: Partial<Arrangement>,
+): MaybeVNode => {
   const points = state.points;
 
   const canSubmit = state.user1?.id && state.user2?.id;
