@@ -808,6 +808,7 @@ final class StudyApi(
 
   def delete(study: Study) =
     sequenceStudy(study.id) { study =>
+      chatApi.remove(Chat.Id(study.id.value))
       studyRepo.delete(study) >>
         chapterRepo.deleteByStudy(study)
     }
