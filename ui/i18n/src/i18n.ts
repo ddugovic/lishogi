@@ -5,7 +5,7 @@ const quantity: (c: number) => 'zero' | 'one' | 'two' | 'few' | 'many' | 'other'
   (window.lishogi as any).quantity || (() => 'other');
 const defaultQuantity = (o: number) => (o == 1 ? 'one' : 'other');
 
-export const i18n = (key: I18nKey): string => {
+export const i18n = (key: I18nKeyBasic): string => {
   return i18nRecord[key] || key;
 };
 
@@ -21,18 +21,18 @@ const interpolate = (str: string, args: any[]): string => {
   return str;
 };
 
-export const i18nFormat = (key: I18nKey, ...args: any[]): string => {
+export const i18nFormat = (key: I18nKeyInterpolate, ...args: any[]): string => {
   const str = i18nRecord[key];
   return str ? interpolate(str, args) : `${key} ${args.join(', ')}`;
 };
 
 // args can be at the start
-export const i18nFormatCapitalized = (key: I18nKey, ...args: any[]): string => {
+export const i18nFormatCapitalized = (key: I18nKeyInterpolate, ...args: any[]): string => {
   const str = i18nRecord[key];
   return capitalize(str ? interpolate(str, args) : `${key} ${args.join(', ')}`);
 };
 
-const i18nPlural = (key: I18nKey, count: number, ...args: any[]): string => {
+const i18nPlural = (key: I18nKeyPlural, count: number, ...args: any[]): string => {
   const pluralKey = `${key}|${quantity(count)}`;
   const str =
     i18nRecord[pluralKey] || i18nRecord[`${key}|${defaultQuantity(count)}`] || i18nRecord[key];
@@ -40,7 +40,7 @@ const i18nPlural = (key: I18nKey, count: number, ...args: any[]): string => {
 };
 
 // count is both quantity and arg
-export const i18nPluralSame = (key: I18nKey, count: number): string => {
+export const i18nPluralSame = (key: I18nKeyPlural, count: number): string => {
   return i18nPlural(key, count, count);
 };
 
@@ -58,12 +58,12 @@ const vdomInterpolate = (str: string, args: any[]): string[] => {
   return segments;
 };
 
-export const i18nVdom = (key: I18nKey, ...args: any[]): string[] => {
+export const i18nVdom = (key: I18nKeyInterpolate, ...args: any[]): string[] => {
   const str = i18nRecord[key];
   return str ? vdomInterpolate(str, args) : [key];
 };
 
-export const i18nVdomPlural = (key: I18nKey, count: number, ...args: any[]): string[] => {
+export const i18nVdomPlural = (key: I18nKeyPlural, count: number, ...args: any[]): string[] => {
   const pluralKey = `${key}|${quantity(count)}`;
   const str =
     i18nRecord[pluralKey] || i18nRecord[`${key}|${defaultQuantity(count)}`] || i18nRecord[key];

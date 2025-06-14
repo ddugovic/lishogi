@@ -25,7 +25,7 @@ function onMyTurn(fctrl: ForecastCtrl, cNodes: ForecastStep[]): VNode | undefine
         h('strong', i18nFormat('playX', moveNotation)),
         lines.length
           ? h('span', i18nPluralSame('andSaveNbPremoveLines', lines.length))
-          : h('span', i18nFormat('noConditionalPremoves')),
+          : h('span', i18n('noConditionalPremoves')),
       ]),
     ],
   );

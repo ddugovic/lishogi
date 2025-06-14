@@ -4,7 +4,7 @@ import * as game from 'game';
 import { game as gameRoute } from 'game/router';
 import * as status from 'game/status';
 import { studyModal } from 'game/view/post-game-study';
-import { i18n, i18nFormat, i18nVdomPlural } from 'i18n';
+import { i18n, i18nPluralSame, i18nVdomPlural } from 'i18n';
 import { type Hooks, type VNode, h } from 'snabbdom';
 import type RoundController from '../ctrl';
 import type { RoundData } from '../interfaces';
@@ -510,7 +510,7 @@ export function moretime(ctrl: RoundController): MaybeVNode {
     ? h('a.moretime', {
         attrs: {
           title: ctrl.data.clock
-            ? i18nFormat('giveNbSeconds', ctrl.data.clock.moretime)
+            ? i18nPluralSame('giveNbSeconds', ctrl.data.clock.moretime)
             : i18n('preferences:giveMoreTime'),
           'data-icon': 'O',
         },

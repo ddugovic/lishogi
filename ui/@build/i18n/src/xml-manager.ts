@@ -65,14 +65,33 @@ export async function createXmlManager(rootDir: string): Promise<TranslationMana
 }
 
 function dtsFile(rootDir: string, sourceI18n: I18nObj): string {
+  const plurals = Object.entries(sourceI18n)
+    .filter(([, value]) => typeof value === 'object')
+    .map(([key]) => key);
+
+  const interpolates = Object.entries(sourceI18n)
+    .filter(
+      ([, value]) => typeof value === 'string' && (value.includes('%s') || value.includes('%1$s')),
+    )
+    .map(([key]) => key);
+
+  const takenKeys = new Set([...plurals, ...interpolates]);
+  const basic = Object.entries(sourceI18n)
+    .filter(([key]) => !takenKeys.has(key))
+    .map(([key]) => key);
+
   return `// Generated with ${path.relative(rootDir, import.meta.filename)}
 
 // biome-ignore format: Auto generated
 declare global {
-  type I18nKey =
-${Object.keys(sourceI18n)
-  .map(k => `    | '${k}'`)
-  .join('\n')};
+  type I18nKeyPlural =
+${plurals.map(k => `    | '${k}'`).join('\n')};
+
+  type I18nKeyInterpolate =
+${interpolates.map(k => `    | '${k}'`).join('\n')};
+
+  type I18nKeyBasic =
+${basic.map(k => `    | '${k}'`).join('\n')};
 }
 
 export {};
