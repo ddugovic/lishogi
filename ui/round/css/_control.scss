@@ -22,10 +22,6 @@
     margin: 20px auto 10px auto;
   }
 
-  .q-explanation {
-    padding: 0.5rem;
-  }
-
   .suggestion,
   .pending,
   .negotiation {
@@ -51,30 +47,6 @@
 
     .button {
       margin: 0.5em 0 0 0;
-    }
-
-    .impasse {
-      width: 100%;
-      display: flex;
-      justify-content: space-around;
-      margin-bottom: 1rem;
-
-      .color-icon::before {
-        font-size: 1.3rem;
-      }
-
-      .impasse-list {
-        text-align: left;
-
-        li {
-          margin: 0.1rem;
-        }
-      }
-
-      .good {
-        color: theme.$c-good;
-        font-weight: bold;
-      }
     }
 
     .sealed-move {

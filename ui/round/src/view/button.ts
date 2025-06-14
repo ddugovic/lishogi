@@ -603,3 +603,18 @@ export function watcherFollowUp(ctrl: RoundController): VNode | null {
 const onSuggestionHook: Hooks = util.onInsert(el =>
   window.lishogi.pubsub.emit('round.suggestion', el.textContent),
 );
+
+export function sealedUsi(ctrl: RoundController): MaybeVNode {
+  if (!status.prepaused(ctrl.data)) return null;
+
+  const myTurn = game.isPlayerTurn(ctrl.data);
+  return h(
+    'div.suggestion',
+    {
+      class: {
+        glowing: myTurn,
+      },
+    },
+    h('strong.sealed-move', myTurn ? i18n('makeASealedMove') : i18n('waitingForASealedMove')),
+  );
+}

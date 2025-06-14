@@ -1,0 +1,50 @@
+@use 'pkg:common/theme';
+
+#modal-wrap.impasse-help {
+  width: 30em;
+
+  h4 {
+    font-size: 1.75rem;
+
+    .q-explanation {
+      margin-left: 0.25rem;
+    }
+  }
+
+  .impasse {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    margin: 1rem auto;
+
+    .color-icon {
+      display: flex;
+      flex-direction: column;
+
+      &::before {
+        font-size: 5rem;
+      }
+
+      .impasse-list {
+        margin-top: 1rem;
+        text-align: left;
+
+        li {
+          display: flex;
+          justify-content: space-between;
+          gap: 0.75rem;
+          margin: 0.2rem 0;
+
+          span {
+            font-weight: bold;
+
+            &.good {
+              color: theme.$c-good;
+              font-weight: bold;
+            }
+          }
+        }
+      }
+    }
+  }
+}

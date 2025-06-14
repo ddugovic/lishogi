@@ -6,6 +6,7 @@ import type RoundController from '../ctrl';
 import * as shogiground from '../ground';
 import * as keyboard from '../keyboard';
 import * as util from '../util';
+import { impasseModal } from './impasse-modal';
 import { renderTable } from './table';
 
 export function main(ctrl: RoundController): VNode {
@@ -43,6 +44,7 @@ export function main(ctrl: RoundController): VNode {
           ),
           ...renderTable(ctrl),
           ctrl.keyboardMove ? keyboardMove(ctrl.keyboardMove) : null,
+          ctrl.impasseHelp ? impasseModal(ctrl) : null,
         ],
       );
 }

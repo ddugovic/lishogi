@@ -12,7 +12,6 @@ import type { Position } from '../interfaces';
 import * as button from './button';
 import renderExpiration from './expiration';
 import * as replay from './replay';
-import * as suggestion from './suggestions';
 import * as renderUser from './user';
 
 function renderPlayer(ctrl: RoundController, position: Position) {
@@ -49,7 +48,7 @@ export const renderTablePlay = (ctrl: RoundController): MaybeVNodes => {
   const loading = isLoading(ctrl);
   const pausable = ctrl.showPauseButton();
   const paused = pausable && (status.paused(ctrl.data) || status.prepaused(ctrl.data));
-  const submit = button.submitUsi(ctrl) || suggestion.sealedUsi(ctrl);
+  const submit = button.submitUsi(ctrl) || button.sealedUsi(ctrl);
   const icons =
     loading || submit || paused
       ? []
@@ -96,7 +95,6 @@ export const renderTablePlay = (ctrl: RoundController): MaybeVNodes => {
     : submit
       ? [submit]
       : [
-          suggestion.impasse(ctrl),
           button.resume(ctrl),
           button.opponentGone(ctrl),
           button.cancelDrawOffer(ctrl),
