@@ -44,7 +44,7 @@ object side {
                   if (game.imported)
                     div(
                       a(href := routes.Importer.importGame, title := trans.importGame.txt())(
-                        "IMPORT",
+                        trans.importGame(),
                       ),
                     )
                   else
@@ -64,12 +64,11 @@ object side {
                   )
                 },
               ),
-              game.notationImport.exists(_.date.isDefined) option small(
-                "Imported ",
-                game.notationImport.flatMap(_.user).map { user =>
-                  trans.by(userIdLink(user.some, None, false))
-                },
-              ),
+              game.notationImport.flatMap(_.user).map { importedBy =>
+                small(
+                  trans.importedByX(userIdLink(importedBy.some, None, false)),
+                )
+              },
             ),
           ),
           div(cls := "game__meta__players")(
