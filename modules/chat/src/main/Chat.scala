@@ -133,7 +133,7 @@ object Chat {
     def reads(r: BSON.Reader): MixedChat = {
       MixedChat(
         id = r.get[Id](id),
-        lines = r.get[List[Line]](lines),
+        lines = r.getD[List[Line]](lines),
       )
     }
     def writes(w: BSON.Writer, o: MixedChat) =
@@ -147,7 +147,7 @@ object Chat {
     def reads(r: BSON.Reader): UserChat = {
       UserChat(
         id = r.get[Id](id),
-        lines = r.get[List[UserLine]](lines),
+        lines = r.getD[List[UserLine]](lines),
       )
     }
     def writes(w: BSON.Writer, o: UserChat) =
