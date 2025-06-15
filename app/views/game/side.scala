@@ -33,7 +33,7 @@ object side {
       bookmarked: Boolean,
   )(implicit ctx: Context): Option[Frag] =
     ctx.noBlind option {
-      import pov._
+      import pov.game
       div(cls := "game__meta")(
         st.section(
           div(cls := "game__meta__infos", dataIcon := bits.gameIcon(game))(
@@ -71,7 +71,7 @@ object side {
               },
             ),
           ),
-          div(cls := "game__meta__players")(
+          div(cls := s"game__meta__players orientation-${pov.color.name}")(
             game.players.map { p =>
               frag(
                 div(cls := s"player color-icon is ${p.color.name} text")(

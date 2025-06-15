@@ -40,8 +40,14 @@
   }
 
   &__players {
+    display: flex;
+    flex-direction: column-reverse;
     margin-top: 0.3rem;
     font-size: 90%;
+
+    &.orientation-gote {
+      flex-direction: column;
+    }
   }
 
   .bookmark {

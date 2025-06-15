@@ -17,7 +17,7 @@ import { debounce } from 'common/timings';
 import * as game from 'game';
 import { i18n, i18nPluralSame } from 'i18n';
 import { i18nVariant } from 'i18n/variant';
-import { usiToRole } from 'shogi/common';
+import { flipMetaPlayers, usiToRole } from 'shogi/common';
 import { isImpasse as impasse } from 'shogi/impasse';
 import { makeNotation } from 'shogi/notation';
 import { Shogiground } from 'shogiground';
@@ -256,6 +256,7 @@ export default class AnalyseCtrl {
           ? 'gote'
           : undefined);
     this.flipped = !!(userOrientation && this.data.orientation !== userOrientation);
+    flipMetaPlayers(userOrientation || this.data.orientation);
   };
 
   private setPath = (path: Tree.Path): void => {
@@ -277,6 +278,7 @@ export default class AnalyseCtrl {
       orientation: this.bottomColor(),
     });
     if (this.practice) this.restartPractice();
+    flipMetaPlayers(this.bottomColor());
     this.redraw();
   };
 

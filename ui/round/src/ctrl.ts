@@ -5,6 +5,7 @@ import * as game from 'game';
 import * as status from 'game/status';
 import { i18n, i18nFormat } from 'i18n';
 import { type KeyboardMove, ctrl as makeKeyboardMove } from 'keyboard-move';
+import { flipMetaPlayers } from 'shogi/common';
 import { makeNotation, makeNotationLine } from 'shogi/notation';
 import { Shogiground } from 'shogiground';
 import type { Api as SgApi } from 'shogiground/api';
@@ -377,9 +378,11 @@ export default class RoundController {
 
   flipNow = (): void => {
     this.flip = !this.nvui && !this.flip;
+    const orientation = ground.boardOrientation(this.data, this.flip);
     this.shogiground.set({
-      orientation: ground.boardOrientation(this.data, this.flip),
+      orientation,
     });
+    flipMetaPlayers(orientation);
     this.redraw();
   };
 
