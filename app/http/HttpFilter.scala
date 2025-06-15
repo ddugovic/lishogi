@@ -31,15 +31,19 @@ final class HttpFilter(env: Env)(implicit val mat: Materializer) extends Filter 
       }
     }
 
+  private val ignoredLogUris = List(
+    "/.well-known/appspecific/com.chrome.devtools.json",
+  )
+
   private def monitoring(req: RequestHeader, startTime: Long, result: Result) = {
     val actionName = HTTPRequest actionName req
     val reqTime    = nowMillis - startTime
     val statusCode = result.header.status
     val client     = HTTPRequest clientName req
     if (env.isDev) {
-      if (logRequests)
+      if (logRequests && !ignoredLogUris.contains(req.uri))
         logger.info(
-          s"$statusCode ${client.padTo(7, ' ')} $req ${req.method} $actionName ${reqTime}ms",
+          s"[$statusCode] ${s"[$client]".padTo(9, ' ')} ${req.method.padTo(6, ' ')} ${req.uri} -> $actionName (${reqTime}ms)",
         )
     } else httpMon.time(actionName, client, req.method, statusCode).record(reqTime)
   }
