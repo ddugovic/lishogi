@@ -82,5 +82,5 @@ export function impasseModal(ctrl: RoundController): MaybeVNode {
 function username(player: Player): string {
   return player.user
     ? player.user.username
-    : player.name || (player.ai ? engineNameFromCode(player.aiCode) : i18n('anonymous'));
+    : player.name || (player.ai ? engineNameFromCode(player.aiCode) : i18n('anonymousUser'));
 }

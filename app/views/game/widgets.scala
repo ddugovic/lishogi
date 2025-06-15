@@ -113,8 +113,6 @@ object widgets {
         }
     }
 
-  private lazy val anonSpan = span(cls := "anon")(lila.user.User.anonymous)
-
   private def gamePlayer(player: Player)(implicit ctx: Context) =
     div(cls := s"player ${player.color.name}")(
       player.playerUser map { playerUser =>

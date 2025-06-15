@@ -1,6 +1,7 @@
 package lila.app
 package mashup
 
+import play.api.i18n.Lang
 import play.api.libs.json._
 
 import lila.api.Context
@@ -66,7 +67,7 @@ final class Preload(
         // format: off
         case ((((((((((((((data, povs), posts), tours), events), simuls), studies), feat), entries), lead), tWinners), puzzle), streams), playban), blindGames) =>
         // format: on
-          (ctx.me ?? currentGameMyTurn(povs, lightUserApi.sync) _)
+          (ctx.me ?? { me => currentGameMyTurn(povs, lightUserApi.sync)(me)(ctx.lang) })
             .mon(_.lobby segment "currentGame") zip
             lightUserApi
               .preloadMany {
@@ -97,7 +98,7 @@ final class Preload(
             }
       }
 
-  def currentGameMyTurn(user: User): Fu[Option[CurrentGame]] =
+  def currentGameMyTurn(user: User)(implicit lang: Lang): Fu[Option[CurrentGame]] =
     gameRepo.playingRealtimeNoAi(user).flatMap {
       _.map { roundProxy.pov(_, user) }.sequenceFu.dmap(_.flatten)
     } flatMap {
@@ -106,11 +107,11 @@ final class Preload(
 
   private def currentGameMyTurn(povs: List[Pov], lightUser: lila.common.LightUser.GetterSync)(
       user: User,
-  ): Fu[Option[CurrentGame]] =
+  )(implicit lang: Lang): Fu[Option[CurrentGame]] =
     ~povs.collectFirst {
       case p1 if p1.game.nonAi && p1.game.hasClock && p1.isMyTurn =>
         roundProxy.pov(p1.gameId, user) dmap (_ | p1) map { pov =>
-          val opponent = lila.game.Namer.playerTextBlocking(pov.opponent)(lightUser)
+          val opponent = lila.game.Namer.playerTextBlocking(pov.opponent)(lightUser, lang)
           CurrentGame(
             pov = pov,
             opponent = opponent,

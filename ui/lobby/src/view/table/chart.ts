@@ -60,7 +60,7 @@ function renderPowertip(hs: Hook | Seek): string {
     html += ` ${usr} (${hs.rating}${(isHook(hs) ? hs.prov : hs.provisional) ? '?' : ''})`;
     html += '</a>';
   } else {
-    html += `<span class="opponent anon ${color}">${i18n('anonymous')}</span>`;
+    html += `<span class="opponent anon ${color}">${i18n('anonymousUser')}</span>`;
   }
   html += '<div class="inner-clickable">';
   html += `<div>${isHook(hs) ? hs.clock : hs.days ? i18nPluralSame('nbDays', hs.days) : 'INF'}</div>`;

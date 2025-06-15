@@ -24,7 +24,7 @@ trait ForumHelper { self: UserHelper with StringHelper with HasEnv =>
   def authorName(post: Post)(implicit lang: Lang) =
     post.userId match {
       case Some(userId) => userIdSpanMini(userId, withOnline = true, modIcon = ~post.modIcon)
-      case None         => frag(lila.user.User.anonymous)
+      case None         => anonSpan
     }
 
   def authorLink(
@@ -35,7 +35,7 @@ trait ForumHelper { self: UserHelper with StringHelper with HasEnv =>
   )(implicit lang: Lang): Frag =
     if (post.erased) span(cls := "author")("<erased>")
     else
-      post.userId.fold(frag(lila.user.User.anonymous)) { userId =>
+      post.userId.fold(anonSpan) { userId =>
         userIdLink(userId.some, cssClass = cssClass, withOnline = withOnline, modIcon = modIcon)
       }
 }

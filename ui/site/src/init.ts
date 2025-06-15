@@ -1,5 +1,6 @@
 import { assetUrl, lishogiScriptPath, loadCssPath, loadLishogiScript } from 'common/assets';
 import { initAll as initMiniBoards, update as updateMiniBoard } from 'common/mini-board';
+import { i18n } from 'i18n';
 import { announce } from './announce';
 import { challengeApp } from './challenge';
 import { loadInfiniteScroll } from './infinite-scroll';
@@ -203,9 +204,9 @@ export function init(): void {
       }, 10);
       return false;
     });
-    $('a.delete, input.delete').on('click', () => confirm('Delete?'));
+    $('a.delete, input.delete').on('click', () => confirm(i18n('delete')));
     $('input.confirm, button.confirm').on('click', function (this: HTMLElement) {
-      return confirm($(this).attr('title') || 'Confirm this action?');
+      return confirm($(this).attr('title') || i18n('confirm'));
     });
 
     $('#main-wrap').on('click', 'a.bookmark', function (this: HTMLAnchorElement) {

@@ -35,7 +35,7 @@ export function ratio2percent(r: number): string {
 }
 
 export function playerName(p: { name: string; title?: string } | undefined): MaybeVNodes {
-  return p?.title ? [h('span.title', p.title), ` ${p.name}`] : [p?.name || i18n('anonymous')];
+  return p?.title ? [h('span.title', p.title), ` ${p.name}`] : [p?.name || i18n('anonymousUser')];
 }
 
 export function player(

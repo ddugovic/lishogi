@@ -48,7 +48,8 @@ final class Env(
             api.markAllRead(userIds.map(Notification.Notifies.apply)).unit
           case lila.game.actorApi.CorresAlarmEvent(pov) =>
             pov.player.userId ?? { userId =>
-              lila.game.Namer.playerText(pov.opponent)(getLightUser) foreach { opponent =>
+              lila.game.Namer
+                .playerText(pov.opponent)(getLightUser, lila.i18n.defaultLang) foreach { opponent =>
                 api addNotification Notification.make(
                   Notification.Notifies(userId),
                   CorresAlarm(

@@ -61,7 +61,10 @@ final class JsonView(rematches: Rematches) {
           .obj(
             "id" -> pov.opponent.userId,
             "username" -> lila.game.Namer
-              .playerTextBlocking(pov.opponent, withRating = false)(lightUserSync),
+              .playerTextBlocking(pov.opponent, withRating = false)(
+                lightUserSync,
+                lila.i18n.defaultLang,
+              ),
           )
           .add("rating" -> pov.opponent.rating)
           .add("ai" -> pov.opponent.aiLevel)

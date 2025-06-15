@@ -36,9 +36,15 @@ final class GifExport(
           .withBody(
             Json.obj(
               "black" -> Namer
-                .playerTextBlocking(pov.game.sentePlayer, withRating = true)(lightUserApi.sync),
+                .playerTextBlocking(pov.game.sentePlayer, withRating = true)(
+                  lightUserApi.sync,
+                  lila.i18n.defaultLang,
+                ),
               "white" -> Namer
-                .playerTextBlocking(pov.game.gotePlayer, withRating = true)(lightUserApi.sync),
+                .playerTextBlocking(pov.game.gotePlayer, withRating = true)(
+                  lightUserApi.sync,
+                  lila.i18n.defaultLang,
+                ),
               "comment" -> s"${baseUrl.value}/${pov.game.id} rendered with https://github.com/WandererXII/lishogi-gif",
               "orientation" -> pov.color.engName,
               "delay"       -> targetMedianTime.centis, // default delay for frames
@@ -58,9 +64,15 @@ final class GifExport(
   def gameThumbnail(game: Game): Fu[Option[Source[ByteString, _]]] = {
     if (Game.gifVariants.contains(game.variant)) {
       val query = List(
-        "sfen"  -> game.shogi.toSfen.value,
-        "black" -> Namer.playerTextBlocking(game.sentePlayer, withRating = true)(lightUserApi.sync),
-        "white" -> Namer.playerTextBlocking(game.gotePlayer, withRating = true)(lightUserApi.sync),
+        "sfen" -> game.shogi.toSfen.value,
+        "black" -> Namer.playerTextBlocking(game.sentePlayer, withRating = true)(
+          lightUserApi.sync,
+          lila.i18n.defaultLang,
+        ),
+        "white" -> Namer.playerTextBlocking(game.gotePlayer, withRating = true)(
+          lightUserApi.sync,
+          lila.i18n.defaultLang,
+        ),
         "orientation" -> game.firstColor.engName,
       ) ::: List(
         game.lastUsiStr.map { "lastMove" -> _ },

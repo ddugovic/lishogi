@@ -107,7 +107,10 @@ final private class StudyMaker(
         pov.game,
         shogi.format.Tag(_.TimeControl, pov.game.clock.fold("")(_.config.show)),
       )
-      name <- Namer.gameVsText(pov.game, withRatings = false)(lightUserApi.async)
+      name <- Namer.gameVsText(pov.game, withRatings = false)(
+        lightUserApi.async,
+        lila.i18n.defaultLang,
+      )
       roots = makeRoots(pov)
       chapters = roots.zipWithIndex.map { case (r, i) =>
         val nameStr = if (roots.sizeIs > 1) s"$name pt.${i + 1}" else name

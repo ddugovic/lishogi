@@ -124,7 +124,7 @@ export function userHtml(ctrl: RoundController, player: Player, position: Positi
         'name',
         player.ai
           ? engineNameFromCode(player.aiCode)
-          : player.name || h('span.anon', i18n('anonymous')),
+          : player.name || h('span.anon', i18n('anonymousUser')),
       ),
       player.ai ? h('div.ai-level', i18nFormat('levelX', player.ai)) : null,
     ],
@@ -135,5 +135,5 @@ export function userTxt(player: Player): string {
   if (player.user) {
     return (player.user.title ? `${player.user.title} ` : '') + player.user.username;
   } else if (player.ai) return engineNameFromCode(player.aiCode);
-  else return i18n('anonymous');
+  else return i18n('anonymousUser');
 }

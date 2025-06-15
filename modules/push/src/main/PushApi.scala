@@ -288,7 +288,8 @@ final private class PushApi(
       case false => f
     }
 
-  private def asyncOpponentName(pov: Pov): Fu[String] = Namer playerText pov.opponent
+  private def asyncOpponentName(pov: Pov): Fu[String] =
+    Namer.playerText(pov.opponent)(lightUser, lila.i18n.defaultLang)
 }
 
 private object PushApi {

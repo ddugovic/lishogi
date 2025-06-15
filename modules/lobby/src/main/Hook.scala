@@ -54,9 +54,8 @@ case class Hook(
     RatingRange noneIfDefault ratingRange
   }
 
-  def userId   = user.map(_.id)
-  def username = user.fold(User.anonymous)(_.username)
-  def lame     = user ?? (_.lame)
+  def userId = user.map(_.id)
+  def lame   = user ?? (_.lame)
 
   lazy val perfType = PerfPicker.perfType(speed, realVariant, none)
 

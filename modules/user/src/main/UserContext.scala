@@ -19,7 +19,8 @@ sealed trait UserContext {
 
   def isAnon = !isAuth
 
-  def is(user: User): Boolean = me contains user
+  def is(name: String): Boolean = me.exists(_.id == User.normalize(name))
+  def is(user: User): Boolean   = me contains user
 
   def userId = me.map(_.id)
 

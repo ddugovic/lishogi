@@ -76,6 +76,9 @@ trait UserHelper { self: I18nHelper with StringHelper with NumberHelper with Dat
   def usernameOrAnon(userId: Option[String]) =
     userId.flatMap(lightUser).fold(User.anonymous)(_.titleName)
 
+  def anonSpan(implicit lang: Lang): Frag =
+    span(cls := "anon")(trans.anonymousUser())
+
   def isOnline(userId: String) = env.socket isOnline userId
 
   def isStreaming(userId: String) = env.streamer.liveStreamApi isStreaming userId
@@ -89,7 +92,7 @@ trait UserHelper { self: I18nHelper with StringHelper with NumberHelper with Dat
       params: String = "",
       modIcon: Boolean = false,
   )(implicit lang: Lang): Frag =
-    userIdOption.flatMap(lightUser).fold[Frag](User.anonymous) { user =>
+    userIdOption.flatMap(lightUser).fold[Frag](anonSpan) { user =>
       userIdNameLink(
         userId = user.id,
         username = user.name,

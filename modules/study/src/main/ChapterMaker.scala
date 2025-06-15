@@ -157,7 +157,10 @@ final private class ChapterMaker(
       )
       name <- {
         if (data.isDefaultName)
-          Namer.gameVsText(game, withRatings = false)(lightUser.async) dmap Chapter.Name.apply
+          Namer.gameVsText(game, withRatings = false)(
+            lightUser.async,
+            lila.i18n.defaultLang,
+          ) dmap Chapter.Name.apply
         else fuccess(data.name)
       }
       root = GameToRoot(game, withClocks = true)

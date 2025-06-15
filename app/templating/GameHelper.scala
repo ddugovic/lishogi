@@ -19,7 +19,6 @@ import lila.game.Pov
 import lila.i18n.defaultLang
 import lila.i18n.{ I18nKeys => trans }
 import lila.user.Title
-import lila.user.User
 
 trait GameHelper {
   self: I18nHelper with UserHelper with StringHelper with ShogigroundHelper with ShogiHelper =>
@@ -91,23 +90,21 @@ trait GameHelper {
     s"main-v-${v.key}"
 
   def engineName(ec: lila.game.EngineConfig)(implicit lang: Lang): String =
-    if (lang.language == "ja") ec.engine.jpFullName
-    else ec.engine.fullName
+    Namer.engineName(ec)
 
   def engineLevel(ec: lila.game.EngineConfig)(implicit lang: Lang): String =
-    trans.levelX.txt(ec.level)
+    Namer.engineLevel(ec)
 
   def engineText(ec: lila.game.EngineConfig, withLevel: Boolean = true)(implicit
       lang: Lang,
   ): String =
-    if (withLevel) s"${engineName(ec)} (${engineLevel(ec).toLowerCase})"
-    else engineName(ec)
+    Namer.engineText(ec, withLevel)
 
   def playerUsername(player: Player, withRating: Boolean = true, withTitle: Boolean = true)(implicit
       lang: Lang,
   ): Frag =
     player.engineConfig.fold[Frag](
-      player.userId.flatMap(lightUser).fold[Frag](lila.user.User.anonymous) { user =>
+      player.userId.flatMap(lightUser).fold[Frag](anonSpan) { user =>
         val title = user.title ifTrue withTitle map { t =>
           frag(
             span(
@@ -127,12 +124,10 @@ trait GameHelper {
     }
 
   def playerText(player: Player, withRating: Boolean = false)(implicit lang: Lang) =
-    player.engineConfig.fold(
-      Namer.playerTextBlocking(player, withRating)(lightUser),
-    )(ec => engineText(ec, withRating))
+    Namer.playerTextBlocking(player, withRating)(lightUser, lang)
 
-  def gameVsText(game: Game, withRatings: Boolean = false): String =
-    Namer.gameVsTextBlocking(game, withRatings)(lightUser)
+  def gameVsText(game: Game, withRatings: Boolean = false)(implicit lang: Lang): String =
+    Namer.gameVsTextBlocking(game, withRatings)(lightUser, lang)
 
   val berserkIconSpan = iconTag("`")
 
@@ -155,7 +150,7 @@ trait GameHelper {
           (player.engineConfig, player.name) match {
             case (Some(ec), _)   => engineText(ec, withRating)
             case (_, Some(name)) => name
-            case _               => User.anonymous
+            case _               => anonSpan
           },
           statusIcon,
         )
@@ -291,7 +286,7 @@ trait GameHelper {
     val players =
       if (c.isOpen) trans.openChallenge.txt()
       else {
-        val challenger = c.challengerUser.fold(trans.anonymous.txt()) { reg =>
+        val challenger = c.challengerUser.fold(trans.anonymousUser.txt()) { reg =>
           s"${usernameOrId(reg.id)} (${reg.rating.show})"
         }
         c.destUser.fold(trans.challengeFromX.txt(challenger)) { dest =>
