@@ -193,7 +193,7 @@ trait SetupHelper { self: I18nHelper =>
 
   def translatedBoardCoordinateChoices(implicit lang: Lang) =
     List(
-      (Pref.Coords.NONE, trans.no.txt()),
+      (Pref.Coords.NONE, trans.none.txt()),
       (Pref.Coords.INSIDE, trans.insideTheBoard.txt()),
       (Pref.Coords.OUTSIDE, trans.outsideTheBoard.txt()),
       (Pref.Coords.EDGE, trans.edgeOfTheBoard.txt()),
