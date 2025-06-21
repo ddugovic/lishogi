@@ -3,7 +3,7 @@ import { bindMobileTapHold } from 'common/mobile';
 import { enrichText, innerHTML } from 'common/rich-text';
 import type { MaybeVNodes } from 'common/snabbdom';
 import throttle from 'common/throttle';
-import { playable } from 'game';
+import { playable } from 'game/game';
 import { i18n } from 'i18n';
 import { usiToNotation } from 'shogi/notation';
 import { type Hooks, type VNode, h } from 'snabbdom';

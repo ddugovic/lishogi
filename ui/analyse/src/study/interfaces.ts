@@ -1,6 +1,6 @@
 import type { Prop } from 'common/common';
 import type { StoredProp, StoredSet } from 'common/storage';
-import type { Status } from 'game';
+import type { Status } from 'game/interfaces';
 import type { AnalyseData } from '../interfaces';
 import type { CommentForm } from './comment-form';
 import type { DescriptionCtrl } from './description';

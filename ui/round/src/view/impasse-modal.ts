@@ -1,6 +1,6 @@
 import { modal } from 'common/modal';
 import type { MaybeVNode } from 'common/snabbdom';
-import type { Player } from 'game';
+import type { Player } from 'game/interfaces';
 import { i18n } from 'i18n';
 import { engineNameFromCode } from 'shogi/engine-name';
 import { impasseInfo } from 'shogi/impasse';

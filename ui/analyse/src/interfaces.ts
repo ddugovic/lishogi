@@ -1,4 +1,4 @@
-import type { Clock, Player, Source, Status } from 'game';
+import type { AnalyseGame, Clock, Division, Player } from 'game/interfaces';
 import type { VNode } from 'snabbdom';
 import type AnalyseController from './ctrl';
 import type { ForecastData } from './forecast/interfaces';
@@ -10,7 +10,7 @@ export interface NvuiPlugin {
 
 // similar, but not identical, to game/GameData
 export interface AnalyseData {
-  game: Game;
+  game: AnalyseGame;
   player: Player;
   opponent: Player;
   orientation: Color;
@@ -36,31 +36,6 @@ export interface ServerEvalData {
   analysis?: Analysis;
   tree: Tree.Node;
   division?: Division;
-}
-
-// similar, but not identical, to game/Game
-interface Game {
-  id: string;
-  status: Status;
-  player: Color;
-  plies: number;
-  startedAtPly: number;
-  startedAtStep: number;
-  source: Source;
-  speed: Speed;
-  variant: Variant;
-  winner?: Color;
-  moveCentis?: number[];
-  initialSfen?: string;
-  importedBy?: string;
-  division?: Division;
-  perf: string;
-  rated?: boolean;
-}
-
-interface Division {
-  middle?: number;
-  end?: number;
 }
 
 interface Analysis {

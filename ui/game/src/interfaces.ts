@@ -34,6 +34,30 @@ interface Game {
   perf: string;
 }
 
+export interface AnalyseGame {
+  id: string;
+  status: Status;
+  player: Color;
+  plies: number;
+  startedAtPly: number;
+  startedAtStep: number;
+  source: Source;
+  speed: Speed;
+  variant: Variant;
+  winner?: Color;
+  moveCentis?: number[];
+  initialSfen?: string;
+  importedBy?: string;
+  division?: Division;
+  perf: string;
+  rated?: boolean;
+}
+
+export interface Division {
+  middle?: number;
+  end?: number;
+}
+
 export interface Status {
   id: StatusId;
   name: StatusName;

@@ -1,4 +1,4 @@
-import { isPlayerTurn } from 'game';
+import { isPlayerTurn } from 'game/game';
 import { aborted, finished, paused } from 'game/status';
 import { i18n } from 'i18n';
 import type RoundController from './ctrl';

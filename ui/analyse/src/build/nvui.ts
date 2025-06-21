@@ -1,6 +1,6 @@
 import { type Prop, prop } from 'common/common';
 import { type MaybeVNodes, bind } from 'common/snabbdom';
-import type { Player } from 'game';
+import type { Player } from 'game/interfaces';
 import { i18n } from 'i18n';
 import { commands } from 'nvui/command';
 import { Notify } from 'nvui/notify';

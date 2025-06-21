@@ -1,4 +1,4 @@
-import type { StatusId } from 'game';
+import type { StatusId } from 'game/interfaces';
 
 export interface BasePlayer {
   name: string;

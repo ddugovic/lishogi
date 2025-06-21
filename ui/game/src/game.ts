@@ -1,8 +1,6 @@
 import type { GameData, Player } from './interfaces';
 import * as status from './status';
 
-export * from './interfaces';
-
 export function playable(data: GameData): boolean {
   return data.game.status.id < status.ids.aborted && !imported(data) && !status.paused(data);
 }

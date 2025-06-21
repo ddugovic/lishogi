@@ -1,5 +1,5 @@
 import { update } from 'common/mini-board';
-import type { Source, Status } from 'game';
+import type { Source, Status } from 'game/interfaces';
 import { makeNotation } from 'shogi/notation';
 import { type TreeWrapper, build as makeTree, ops as treeOps, path as treePath } from 'tree';
 

@@ -1,4 +1,5 @@
 import type { Chart } from 'chart.js';
+import type { AnalyseGame } from 'game';
 
 export interface PlyChart extends Chart<'line'> {
   selectPly(ply: number, isMainline: boolean): void;
@@ -6,11 +7,6 @@ export interface PlyChart extends Chart<'line'> {
 
 export interface AcplChart extends PlyChart {
   updateData(d: AnalyseData, mainline: Tree.Node[]): void;
-}
-
-export interface Division {
-  middle?: number;
-  end?: number;
 }
 
 export interface Player {
@@ -24,18 +20,7 @@ export interface AnalyseData {
   player: Player;
   opponent: Player;
   treeParts: Tree.Node[];
-  game: {
-    division?: Division;
-    variant: {
-      key: VariantKey;
-    };
-    moveCentis?: number[];
-    status: {
-      name: string;
-    };
-    startedAtPly?: number;
-    startedAtStep?: number;
-  };
+  game: AnalyseGame;
   analysis?: {
     partial?: boolean;
   };
@@ -43,6 +28,7 @@ export interface AnalyseData {
     running: boolean;
     initial: number;
     increment: number;
+    byoyomi: number;
   };
 }
 

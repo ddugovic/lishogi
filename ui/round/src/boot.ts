@@ -1,6 +1,6 @@
 import { makeChat } from 'chat';
 import type { ChatCtrl, ChatOpts } from 'chat/interfaces';
-import type { TourPlayer } from 'game';
+import type { TourPlayer } from 'game/interfaces';
 import { finished } from 'game/status';
 import type RoundController from './ctrl';
 import type { RoundData, RoundOpts } from './interfaces';

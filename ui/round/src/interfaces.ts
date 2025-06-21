@@ -1,5 +1,5 @@
 import type { ChatPlugin } from 'chat/interfaces';
-import type { GameData, Status } from 'game';
+import type { GameData, Status } from 'game/interfaces';
 import type { MoveMetadata as SgMoveMetadata } from 'shogiground/types';
 import type { Role } from 'shogiops/types';
 import type { VNode } from 'snabbdom';

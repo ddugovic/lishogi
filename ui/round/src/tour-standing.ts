@@ -1,6 +1,6 @@
 import type { ChatPlugin } from 'chat/interfaces';
 import { loadCssPath } from 'common/assets';
-import type { Team, TourPlayer } from 'game';
+import type { Team, TourPlayer } from 'game/interfaces';
 import { i18n } from 'i18n';
 import { type VNode, h } from 'snabbdom';
 import { onInsert } from './util';

@@ -1,4 +1,4 @@
-import type { Player } from 'game';
+import type { Player } from 'game/interfaces';
 import { i18n, i18nFormat } from 'i18n';
 import { colorName } from 'shogi/color-name';
 import { engineNameFromCode } from 'shogi/engine-name';

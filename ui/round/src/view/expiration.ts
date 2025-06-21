@@ -1,5 +1,5 @@
 import type { MaybeVNode } from 'common/snabbdom';
-import { isPlayerTurn, playable } from 'game';
+import { isPlayerTurn, playable } from 'game/game';
 import { i18nVdomPlural } from 'i18n';
 import { h } from 'snabbdom';
 import type RoundController from '../ctrl';

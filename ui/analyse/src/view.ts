@@ -5,7 +5,7 @@ import { bindMobileMousedown, hasTouchEvents } from 'common/mobile';
 import { type MaybeVNode, bind, bindNonPassive, dataIcon, onInsert } from 'common/snabbdom';
 import spinner from 'common/spinner';
 import stepwiseScroll from 'common/wheel';
-import { playable } from 'game';
+import { playable } from 'game/game';
 import * as router from 'game/router';
 import { finished } from 'game/status';
 import { studyModal } from 'game/view/post-game-study';
