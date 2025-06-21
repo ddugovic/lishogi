@@ -62,16 +62,16 @@ object pref {
               radios(form("display.coords"), translatedBoardCoordinateChoices),
             ),
             setting(
+              colorName(),
+              radios(form("display.colorName"), translatedColorNameChoices),
+            ),
+            setting(
               clearHands(),
               radios(form("display.clearHands"), booleanChoices),
             ),
             setting(
               handsBackground(),
               radios(form("display.handsBackground"), booleanChoices),
-            ),
-            setting(
-              boardLayout(),
-              radios(form("display.boardLayout"), translatedBoardLayoutChoices),
             ),
             setting(
               boardHighlightsLastDests(),
@@ -98,8 +98,8 @@ object pref {
               radios(form("display.replay"), translatedMoveListWhilePlayingChoices),
             ),
             setting(
-              colorName(),
-              radios(form("display.colorName"), translatedColorNameChoices),
+              boardLayout(),
+              radios(form("display.boardLayout"), translatedBoardLayoutChoices),
             ),
             setting(
               zenMode(),
