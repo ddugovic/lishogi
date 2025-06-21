@@ -32,6 +32,10 @@ const parser = new XMLParser({
   textNodeName: '#text',
 });
 
+function escapeText(str: string): string {
+  return str.replaceAll('\\"', '"').replaceAll("\\'", "'");
+}
+
 export async function parseXmls(sources: XmlSource[]): Promise<I18nObj> {
   const keysObjects = await Promise.all(sources.map(s => parseXml(s)));
   return keysObjects.reduce((acc, obj) => ({ ...acc, ...obj }), {});
@@ -50,7 +54,9 @@ async function parseXml(source: XmlSource): Promise<I18nObj> {
 
     strings.forEach(str => {
       const key = `${prefix}${str['@_name']}`;
-      result[key] = str['#text'];
+      const text = str['#text'] || '';
+      const escapedText = escapeText(text);
+      result[key] = escapedText;
     });
   }
 
@@ -65,7 +71,9 @@ async function parseXml(source: XmlSource): Promise<I18nObj> {
 
       result[baseKey] = items.reduce(
         (acc, item) => {
-          acc[item['@_quantity']] = item['#text'];
+          const text = item['#text'];
+          const escapedText = escapeText(text);
+          acc[item['@_quantity']] = escapedText;
           return acc;
         },
         {} as Partial<Record<PluralCategory, string>>,
