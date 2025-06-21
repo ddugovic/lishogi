@@ -15,6 +15,4 @@ final class Env(
   lazy val requesterApi = new RequesterApi(db(CollName("analysis_requester")))
 
   lazy val analyser = wire[Analyser]
-
-  lazy val annotator = new Annotator
 }

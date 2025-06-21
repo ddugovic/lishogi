@@ -178,7 +178,6 @@ object NotationDump {
       moves: Boolean = true,
       tags: Boolean = true,
       evals: Boolean = true,
-      literate: Boolean = false,
       shiftJis: Boolean = false,
       notationInJson: Boolean = false,
       delayMoves: Boolean = false,

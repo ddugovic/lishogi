@@ -99,7 +99,7 @@ final class Game(
             color = get("color", req) flatMap shogi.Color.fromName,
             analysed = getBoolOpt("analysed", req),
             ongoing = getBool("ongoing", req),
-            flags = requestNotationFlags(req, extended = false).copy(literate = false),
+            flags = requestNotationFlags(req, extended = false),
             perSecond = MaxPerSecond(me match {
               case Some(m) if m is user.id => 60
               case Some(_) if oauth        => 30 // bonus for oauth logged in only (not for CSRF)
@@ -159,7 +159,6 @@ final class Game(
       tags = getBoolOpt("tags", req) | true,
       clocks = getBoolOpt("clocks", req) | extended,
       evals = getBoolOpt("evals", req) | extended,
-      literate = getBoolOpt("literate", req) | false,
       shiftJis = getBoolOpt("shiftJis", req) | false,
       notationInJson = getBoolOpt("notationInJson", req) | false,
     )
