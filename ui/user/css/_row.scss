@@ -89,6 +89,7 @@
     .player {
       font-size: 1.3em;
       text-align: right;
+      flex: 1;
     }
 
     .player.gote {
@@ -109,6 +110,7 @@
   .result {
     display: block;
     text-align: center;
+    margin-top: 1.5rem;
   }
 
   .win {

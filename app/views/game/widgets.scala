@@ -15,13 +15,12 @@ object widgets {
   def apply(
       games: Seq[Game],
       user: Option[lila.user.User] = None,
-      ownerLink: Boolean = false,
   )(implicit ctx: Context): Frag =
     games map { g =>
       val fromPlayer  = user flatMap g.player
       val firstPlayer = fromPlayer | g.firstPlayer
       st.article(cls := "game-row paginated")(
-        a(cls := "game-row__overlay", href := gameLink(g, firstPlayer.color, ownerLink)),
+        a(cls := "game-row__overlay", href := gameLink(g, firstPlayer.color)),
         div(cls := "game-row__board")(
           gameSfen(Pov(g, firstPlayer), withLink = false, withTitle = false),
         ),
@@ -31,10 +30,9 @@ object widgets {
               strong(
                 if (g.imported)
                   frag(
-                    span("IMPORT"),
-                    g.notationImport.flatMap(_.user).map { uid =>
-                      frag(" ", trans.by(userIdLink(uid.some, None, false)))
-                    },
+                    g.notationImport.flatMap(_.user) map { uid =>
+                      trans.importedByX(userIdLink(uid.some, None, false))
+                    } getOrElse span("IMPORT"),
                     separator,
                     bits.variantLink(g.variant),
                   )
@@ -56,29 +54,31 @@ object widgets {
                 },
             ),
           ),
-          div(cls := "versus")(
-            gamePlayer(g.sentePlayer),
-            div(cls := "swords", dataIcon := "U"),
-            gamePlayer(g.gotePlayer),
-          ),
-          div(cls := "result")(
-            if (g.isBeingPlayed) trans.playingRightNow()
-            else if (g.paused) trans.gameAdjourned()
-            else {
-              if (g.finishedOrAborted)
-                span(
-                  cls := g.winner.flatMap(w => fromPlayer.map(p => if (p == w) "win" else "loss")),
-                )(
-                  gameEndStatus(g),
-                  g.winner.map { winner =>
-                    frag(
-                      ", ",
-                      transWithColorName(trans.xIsVictorious, winner.color, g.isHandicap),
-                    )
-                  },
-                )
-              else transWithColorName(trans.xPlays, g.turnColor, g.isHandicap)
-            },
+          div(cls := "header__center")(
+            div(cls := "versus")(
+              gamePlayer(g.sentePlayer),
+              div(cls := "swords", dataIcon := "U"),
+              gamePlayer(g.gotePlayer),
+            ),
+            div(cls := "result")(
+              if (g.isBeingPlayed) trans.playingRightNow()
+              else if (g.paused) trans.gameAdjourned()
+              else {
+                if (g.finishedOrAborted)
+                  span(
+                    cls := g.winner.flatMap(w => fromPlayer.map(p => if (p == w) "win" else "loss")),
+                  )(
+                    gameEndStatus(g),
+                    g.winner.map { winner =>
+                      frag(
+                        ", ",
+                        transWithColorName(trans.xIsVictorious, winner.color, g.isHandicap),
+                      )
+                    },
+                  )
+                else transWithColorName(trans.xPlays, g.turnColor, g.isHandicap)
+              },
+            ),
           ),
           if (g.playedPlies > 0)
             div(cls := "moves-count")(
@@ -87,12 +87,6 @@ object widgets {
           else frag(br, br),
           g.metadata.analysed option
             div(cls := "metadata text", dataIcon := "")(trans.computerAnalysisAvailable()),
-          g.notationImport.flatMap(_.user).map { uid =>
-            div(cls := "metadata")(
-              s"${if (g.isKifImport) "KIF" else "CSA"} import by ",
-              userIdLink(uid.some),
-            )
-          },
         ),
       )
     }
