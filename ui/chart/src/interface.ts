@@ -1,5 +1,5 @@
 import type { Chart } from 'chart.js';
-import type { AnalyseGame } from 'game';
+import type { AnalyseGame } from 'game/interfaces';
 
 export interface PlyChart extends Chart<'line'> {
   selectPly(ply: number, isMainline: boolean): void;

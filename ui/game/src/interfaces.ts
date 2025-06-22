@@ -141,7 +141,7 @@ export interface Team {
   name: string;
 }
 
-export interface Simul {
+interface Simul {
   id: string;
   name: string;
   hostId: string;
