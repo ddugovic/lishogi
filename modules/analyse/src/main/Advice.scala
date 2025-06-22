@@ -4,6 +4,7 @@ import scala.util.chaining._
 
 import shogi.format.Glyph
 
+import lila.i18n.{ I18nKeys => trans }
 import lila.tree.Eval._
 
 sealed trait Advice {
@@ -22,12 +23,12 @@ sealed trait Advice {
       s"($c) "
     }) +
       (this match {
-        case MateAdvice(seq, _, _, _) => seq.desc
-        case CpAdvice(judgment, _, _) => judgment.toString
-      }) + "." + {
+        case Advice.MateAdvice(seq, _, _, _) => i18n(seq.descKey)
+        case Advice.CpAdvice(judgment, _, _) => i18n(judgment.key)
+      }) + s"${i18n(trans.dotSymbol.key)} " + {
         withBestMove ?? {
           info.variation.headOption ?? { usi =>
-            s" Best ${if (usi.contains("*")) "drop" else "move"} was [usi:${ply - 1}.$usi]"
+            i18n(trans.bestMoveWasX.key, s"[usi:${ply - 1}.$usi]")
           }
         }
       }
@@ -36,101 +37,107 @@ sealed trait Advice {
     List(prev.evalComment, info.evalComment).flatten mkString " → "
   }.some filter (_.nonEmpty)
 
+  private def i18n(key: String, args: String*): String =
+    s"i18n{$key;${args.mkString(",")}}"
+
 }
 
 object Advice {
 
-  sealed abstract class Judgement(val glyph: Glyph, val name: String) {
-    override def toString = name
+  sealed abstract class Judgement(val glyph: Glyph, val key: String) {
+    override def toString = key
     def isBlunder         = this == Judgement.Blunder
   }
   object Judgement {
-    object Inaccuracy extends Judgement(Glyph.MoveOrDropAssessment.dubious, "Inaccuracy")
-    object Mistake    extends Judgement(Glyph.MoveOrDropAssessment.mistake, "Mistake")
-    object Blunder    extends Judgement(Glyph.MoveOrDropAssessment.blunder, "Blunder")
+    object Inaccuracy extends Judgement(Glyph.MoveOrDropAssessment.dubious, trans.inaccuracy.key)
+    object Mistake    extends Judgement(Glyph.MoveOrDropAssessment.mistake, trans.mistake.key)
+    object Blunder    extends Judgement(Glyph.MoveOrDropAssessment.blunder, trans.blunder.key)
+
     val all = List(Inaccuracy, Mistake, Blunder)
   }
 
   def apply(prev: Info, info: Info): Option[Advice] =
     CpAdvice(prev, info) orElse MateAdvice(prev, info)
-}
 
-private[analyse] case class CpAdvice(
-    judgment: Advice.Judgement,
-    info: Info,
-    prev: Info,
-) extends Advice
+  private[analyse] case class CpAdvice(
+      judgment: Advice.Judgement,
+      info: Info,
+      prev: Info,
+  ) extends Advice
 
-private[analyse] object CpAdvice {
+  private[analyse] object CpAdvice {
 
-  private def cpWinningChances(cp: Double): Double = 2 / (1 + Math.exp(-0.0007 * cp)) - 1
+    private def cpWinningChances(cp: Double): Double = 2 / (1 + Math.exp(-0.0007 * cp)) - 1
 
-  private val winningChanceJudgements = List(
-    .3 -> Advice.Judgement.Blunder,
-    .2 -> Advice.Judgement.Mistake,
-    .1 -> Advice.Judgement.Inaccuracy,
-  )
-
-  def apply(prev: Info, info: Info): Option[CpAdvice] =
-    for {
-      cp     <- prev.cp map (_.ceiled.centipawns)
-      infoCp <- info.cp map (_.ceiled.centipawns)
-      prevWinningChances    = cpWinningChances(cp)
-      currentWinningChances = cpWinningChances(infoCp)
-      delta = (currentWinningChances - prevWinningChances) pipe { d =>
-        info.color.fold(-d, d)
-      }
-      judgement <- winningChanceJudgements find { case (d, _) => d <= delta } map (_._2)
-    } yield CpAdvice(judgement, info, prev)
-}
-
-sealed abstract private[analyse] class MateSequence(val desc: String)
-private[analyse] case object MateCreated
-    extends MateSequence(
-      desc = "Checkmate is now unavoidable",
-    )
-private[analyse] case object MateDelayed
-    extends MateSequence(
-      desc = "Not the best checkmate sequence",
-    )
-private[analyse] case object MateLost
-    extends MateSequence(
-      desc = "Lost forced checkmate sequence",
+    private val winningChanceJudgments = List(
+      .3 -> Judgement.Blunder,
+      .2 -> Judgement.Mistake,
+      .1 -> Judgement.Inaccuracy,
     )
 
-private[analyse] object MateSequence {
-  def apply(prev: Option[Mate], next: Option[Mate]): Option[MateSequence] =
-    (prev, next).some collect {
-      case (None, Some(n)) if n.negative                  => MateCreated
-      case (Some(p), None) if p.positive                  => MateLost
-      case (Some(p), Some(n)) if p.positive && n.negative => MateLost
+    def apply(prev: Info, info: Info): Option[CpAdvice] =
+      for {
+        cp     <- prev.cp map (_.ceiled.centipawns)
+        infoCp <- info.cp map (_.ceiled.centipawns)
+        prevWinningChances    = cpWinningChances(cp)
+        currentWinningChances = cpWinningChances(infoCp)
+        delta = (currentWinningChances - prevWinningChances) pipe { d =>
+          info.color.fold(-d, d)
+        }
+        judgment <- winningChanceJudgments find { case (d, _) => d <= delta } map (_._2)
+      } yield CpAdvice(judgment, info, prev)
+  }
+
+  sealed trait MateSequence {
+    def descKey: String
+  }
+  object MateSequence {
+    case object MateCreated extends MateSequence {
+      val descKey = trans.mateCreatedDescription.key
     }
-}
-private[analyse] case class MateAdvice(
-    sequence: MateSequence,
-    judgment: Advice.Judgement,
-    info: Info,
-    prev: Info,
-) extends Advice
-private[analyse] object MateAdvice {
+    case object MateDelayed extends MateSequence {
+      val descKey = trans.mateDelayedDescription.key
+    }
+    case object MateLost extends MateSequence {
+      val descKey = trans.mateLostDescription.key
+    }
 
-  def apply(prev: Info, info: Info): Option[MateAdvice] = {
-    def invertCp(cp: Cp)       = cp invertIf info.color.gote
-    def invertMate(mate: Mate) = mate invertIf info.color.gote
-    def prevCp                 = prev.cp.map(invertCp).??(_.centipawns)
-    def nextCp                 = info.cp.map(invertCp).??(_.centipawns)
-    MateSequence(prev.mate map invertMate, info.mate map invertMate) flatMap { sequence =>
-      import Advice.Judgement._
-      val judgment: Option[Advice.Judgement] = sequence match {
-        case MateCreated if prevCp < -4000 => Option(Inaccuracy)
-        case MateCreated if prevCp < -1000 => Option(Mistake)
-        case MateCreated                   => Option(Blunder)
-        case MateLost if nextCp > 4000     => Option(Inaccuracy)
-        case MateLost if nextCp > 1000     => Option(Mistake)
-        case MateLost                      => Option(Blunder)
-        case MateDelayed                   => None
+    def apply(prev: Option[Mate], next: Option[Mate]): Option[MateSequence] =
+      (prev, next).some collect {
+        case (None, Some(n)) if n.negative                  => MateSequence.MateCreated
+        case (Some(p), None) if p.positive                  => MateSequence.MateLost
+        case (Some(p), Some(n)) if p.positive && n.negative => MateSequence.MateLost
       }
-      judgment map { MateAdvice(sequence, _, info, prev) }
+  }
+
+  private[analyse] case class MateAdvice(
+      sequence: MateSequence,
+      judgment: Judgement,
+      info: Info,
+      prev: Info,
+  ) extends Advice
+  private[analyse] object MateAdvice {
+
+    def apply(prev: Info, info: Info): Option[MateAdvice] = {
+      def invertCp(cp: Cp)       = cp invertIf info.color.gote
+      def invertMate(mate: Mate) = mate invertIf info.color.gote
+      def prevCp                 = prev.cp.map(invertCp).??(_.centipawns)
+      def nextCp                 = info.cp.map(invertCp).??(_.centipawns)
+      MateSequence(prev.mate map invertMate, info.mate map invertMate) flatMap { sequence =>
+        import Judgement._
+        import MateSequence._
+        val judgment: Option[Judgement] = sequence match {
+          case MateCreated if prevCp < -4000 => Option(Inaccuracy)
+          case MateCreated if prevCp < -1000 => Option(Mistake)
+          case MateCreated                   => Option(Blunder)
+          case MateLost if nextCp > 4000     => Option(Inaccuracy)
+          case MateLost if nextCp > 1000     => Option(Mistake)
+          case MateLost                      => Option(Blunder)
+          case MateDelayed                   => None
+        }
+        judgment map { MateAdvice(sequence, _, info, prev) }
+      }
     }
   }
+
 }

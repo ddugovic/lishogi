@@ -18,7 +18,7 @@ object JsonView {
         .add("judgment" -> adviceOption.map { a =>
           Json
             .obj(
-              "name"    -> a.judgment.name,
+              "name"    -> a.judgment.key,
               "comment" -> a.makeComment(false, true),
             )
             .add(

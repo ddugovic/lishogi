@@ -4,7 +4,7 @@ import { enrichText, innerHTML } from 'common/rich-text';
 import type { MaybeVNodes } from 'common/snabbdom';
 import throttle from 'common/throttle';
 import { playable } from 'game/game';
-import { i18n } from 'i18n';
+import { i18n, i18nFormat } from 'i18n';
 import { usiToNotation } from 'shogi/notation';
 import { type Hooks, type VNode, h } from 'snabbdom';
 import { path as treePath } from 'tree';
@@ -144,13 +144,47 @@ export function renderInlineCommentsOf(
                 node,
                 ctx.ctrl.tree.nodeAtPath(parentPath),
                 ctx.ctrl.data.game.variant.key,
-                text,
+                replaceI18nPatterns(text),
               ),
             ),
         ),
       });
     })
     .filter(nonEmpty);
+}
+
+export function replaceI18nPatterns(input: string): string {
+  return input.replace(/i18n\{([^}]+)\}/g, (_, content: string) => {
+    const parts = content
+      .split(';')
+      .map(part => part.trim())
+      .filter(Boolean);
+    const [key, ...params] = parts;
+    return translateAdviceComment(key as any, params);
+  });
+}
+
+function translateAdviceComment(key: I18nKeyBasic | I18nKeyInterpolate, params: string[]) {
+  switch (key) {
+    case 'inaccuracy':
+      return i18n('inaccuracy');
+    case 'mistake':
+      return i18n('mistake');
+    case 'blunder':
+      return i18n('blunder');
+    case 'dotSymbol':
+      return i18n('dotSymbol');
+    case 'mateCreatedDescription':
+      return i18n('mateCreatedDescription');
+    case 'mateDelayedDescription':
+      return i18n('mateDelayedDescription');
+    case 'mateLostDescription':
+      return i18n('mateLostDescription');
+    case 'bestMoveWasX':
+      return i18nFormat('bestMoveWasX', params);
+    default:
+      return key;
+  }
 }
 
 export function findCurrentPath(c: AnalyseCtrl): Tree.Path | undefined {

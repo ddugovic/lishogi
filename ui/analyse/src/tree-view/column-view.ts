@@ -16,6 +16,7 @@ import {
   nodeClasses,
   nonEmpty,
   renderInlineCommentsOf,
+  replaceI18nPatterns,
   retroLine,
   truncateComment,
 } from './util';
@@ -209,9 +210,9 @@ function renderMainlineCommentsOf(
   return node.comments!.map(comment => {
     if (comment.by === 'lishogi' && !ctx.showComputer) return;
     let sel = `comment${colorClass}`;
-    if (comment.text.startsWith('Inaccuracy.')) sel += '.inaccuracy';
-    else if (comment.text.startsWith('Mistake.')) sel += '.mistake';
-    else if (comment.text.startsWith('Blunder.')) sel += '.blunder';
+    if (comment.text.startsWith('i18n{inaccuracy;}')) sel += '.inaccuracy';
+    else if (comment.text.startsWith('i18n{mistake;}')) sel += '.mistake';
+    else if (comment.text.startsWith('i18n{blunder;}')) sel += '.blunder';
     if (conceal) sel += `.${conceal}`;
     const by = withAuthor ? `<span class="by">${commentAuthorText(comment.by)}</span>` : '';
     const truncated = truncateComment(comment.text, 400, ctx);
@@ -225,7 +226,7 @@ function renderMainlineCommentsOf(
               node,
               ctx.ctrl.tree.nodeAtPath(opts.parentPath),
               ctx.ctrl.data.game.variant.key,
-              s[s.length - 1],
+              replaceI18nPatterns(s[s.length - 1]),
             ),
           )
         );
