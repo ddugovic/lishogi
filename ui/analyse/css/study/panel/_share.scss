@@ -23,6 +23,8 @@
     cursor: pointer;
 
     input {
+      @extend %checkbox;
+
       margin-right: 0.3em;
       vertical-align: middle;
     }

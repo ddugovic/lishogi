@@ -32,10 +32,14 @@
 
       a {
         &:first-child {
+          @extend %box-radius-bottom-left;
+
           flex: 1;
         }
 
         &:last-child {
+          @extend %box-radius-bottom-right;
+
           overflow: hidden;
           text-overflow: ellipsis;
         }

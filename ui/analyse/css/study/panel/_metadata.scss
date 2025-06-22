@@ -2,7 +2,7 @@
 @use 'pkg:common/theme';
 
 .study__metadata {
-  @extend %box-neat;
+  @extend %box-neat-force;
 
   background: theme.$c-bg-box;
   text-align: left;

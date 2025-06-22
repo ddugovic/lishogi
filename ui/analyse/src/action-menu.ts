@@ -50,7 +50,7 @@ function deleteButton(ctrl: AnalyseCtrl, userId: string | null): VNode | undefin
       },
       [
         h(
-          'button.button.text.thin',
+          'button.button.button-red.text',
           {
             attrs: {
               type: 'submit',

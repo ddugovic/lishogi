@@ -1,5 +1,6 @@
 import { richHTML } from 'common/rich-text';
 import { bind } from 'common/snabbdom';
+import { i18n } from 'i18n';
 import { type VNode, h } from 'snabbdom';
 import type AnalyseCtrl from '../ctrl';
 import { nodeFullName } from '../util';
@@ -43,7 +44,7 @@ export function currentComments(ctrl: AnalyseCtrl, includingMine: boolean): VNod
           ? h('a.edit', {
               attrs: {
                 'data-icon': 'q',
-                title: 'Delete',
+                title: i18n('delete'),
               },
               hook: bind(
                 'click',

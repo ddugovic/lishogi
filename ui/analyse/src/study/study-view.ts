@@ -146,7 +146,7 @@ function postGameButtons(ctrl: StudyCtrl): MaybeVNode {
     const myColor = userId ? usersGameColor(userId) : undefined;
     const me = myColor && ctrl.data.postGameStudy.players[myColor];
     const gameBackButton = h(
-      'a.button.button-empty.text',
+      `a.button.button-empty${!me ? '.text' : ''}`,
       {
         attrs: {
           title: i18n('backToGame'),
