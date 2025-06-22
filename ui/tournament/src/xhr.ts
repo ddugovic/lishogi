@@ -42,13 +42,13 @@ function loadPageOf(ctrl: TournamentController, userId: string): Promise<any> {
   return window.lishogi.xhr.json('GET', `/tournament/${ctrl.data.id}/page-of/${userId}`);
 }
 
-function reload(ctrl: TournamentController): Promise<void> {
+function reload(ctrl: TournamentController, partial = true): Promise<void> {
   return window.lishogi.xhr
     .json('GET', `/tournament/${ctrl.data.id}`, {
       url: {
         page: ctrl.focusOnMe ? undefined : ctrl.page,
         playerInfo: ctrl.playerInfo.id,
-        partial: true,
+        partial,
       },
     })
     .then(data => {

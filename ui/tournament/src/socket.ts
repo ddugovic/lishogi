@@ -11,6 +11,9 @@ export default function (send: Socket.Send, ctrl: TournamentController): Tournam
     reload() {
       ctrl.askReload();
     },
+    reloadFull() {
+      ctrl.askFullReload();
+    },
     redirect(fullId: string) {
       ctrl.redirectFirst(fullId.slice(0, 8), true);
       return true;

@@ -123,6 +123,10 @@ export default class TournamentController {
     else setTimeout(() => xhr.reloadSoon(this), Math.floor(Math.random() * 5000));
   };
 
+  askFullReload = (): void => {
+    setTimeout(() => xhr.reloadSoon(this, false), Math.floor(Math.random() * 5000));
+  };
+
   reload = (data: TournamentDataBase): void => {
     // we joined a private tournament! Reload the page to load the chat
     if (!this.data.me && data.me && this.data.private) window.lishogi.reload();
@@ -136,6 +140,8 @@ export default class TournamentController {
     this.data.candidatesFull = data.candidatesFull;
     if (data.playerInfo && data.playerInfo.player.id === this.playerInfo.id)
       this.playerInfo.data = data.playerInfo;
+    if (this.data.secondsToFinish)
+      this.dateToFinish = new Date(Date.now() + this.data.secondsToFinish * 1000);
 
     this.loadPage(data.standing);
     if (this.focusOnMe) this.scrollToMe();
