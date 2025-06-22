@@ -66,11 +66,15 @@ export function ctrl(
   colors.forEach(c => {
     data[c] = dataInit?.[c] || presets[0].preset[c];
   });
-  const saveTheme = debounce(function (this: HTMLElement) {
+  const saveTheme = debounce(() => {
     window.lishogi.xhr
       .text('POST', '/pref/customBackground', { formData: data })
       .catch(() => announceFail(validateUrl(data.bgImg)));
   }, 750);
+
+  const emitChange = debounce(() => {
+    window.lishogi.pubsub.emit('background-change');
+  }, 2500);
 
   return {
     set: (cbd: CustomBackgroundData) => {
@@ -78,12 +82,14 @@ export function ctrl(
       applyEverything(data);
       redraw();
       saveTheme();
+      emitChange();
     },
     setColor: <K extends ColorKey>(key: K, value: CustomBackgroundData[K]) => {
       data[key] = value;
       applyCustomColor(key, value);
       redraw();
       saveTheme();
+      emitChange();
     },
     setBgColor: (value: string, isLight: boolean) => {
       data.bgPage = value;
@@ -94,12 +100,14 @@ export function ctrl(
       }
       redraw();
       saveTheme();
+      emitChange();
     },
     setImage: (url: string) => {
       data.bgImg = url;
       applyImage(url);
       redraw();
       saveTheme();
+      emitChange();
     },
     data,
     redraw,

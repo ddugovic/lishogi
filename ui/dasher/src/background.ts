@@ -58,6 +58,7 @@ export function ctrl(
         loadCssPath('common.custom');
         open('customBackground');
       } else redraw();
+      window.lishogi.pubsub.emit('background-change');
     },
     getImage: () => data.image || '//lishogi1.org/assets/images/background/nature.jpg',
     setImage(i: string) {
