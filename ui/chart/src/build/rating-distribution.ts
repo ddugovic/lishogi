@@ -1,6 +1,15 @@
+import { TinyColor } from '@ctrl/tinycolor';
 import type { ChartConfiguration, ChartData, ChartDataset } from 'chart.js';
 import { i18n } from 'i18n';
-import { fontFamily, gridColor, hoverBorderColor } from '../common';
+import {
+  borderColor,
+  bragColor,
+  fontClearColor,
+  primaryColor,
+  secondaryColor,
+  shadeColor,
+  tooltipConfig,
+} from '../common';
 import type { DistributionData } from '../interface';
 
 function main(data: DistributionData): void {
@@ -14,13 +23,14 @@ function main(data: DistributionData): void {
       ratings.push(ratingAt(i));
       cumul.push(arraySum(data.freq.slice(0, i)) / sum);
     }
+    const mainColor = new TinyColor(primaryColor()).lighten(20).toString();
     const gradient = this.getContext('2d')?.createLinearGradient(0, 0, 0, 400);
-    gradient?.addColorStop(0, 'rgba(119, 152, 191, 1)');
-    gradient?.addColorStop(1, 'rgba(119, 152, 191, 0.3)');
+    gradient?.addColorStop(0, mainColor);
+    gradient?.addColorStop(1, 'transparent');
     const seriesCommonData = (color: string): Partial<ChartDataset<'line'>> => ({
       pointHoverRadius: 6,
       pointHoverBorderWidth: 2,
-      pointHoverBorderColor: hoverBorderColor,
+      pointHoverBorderColor: fontClearColor(),
       borderColor: color,
       pointBackgroundColor: color,
     });
@@ -28,22 +38,11 @@ function main(data: DistributionData): void {
 
     const datasets: ChartDataset<'line'>[] = [
       {
-        ...seriesCommonData('#dddf0d'),
+        ...seriesCommonData(secondaryColor()),
         data: cumul,
         yAxisID: 'y2',
         label: i18n('cumulative'),
         pointRadius: 0,
-        datalabels: { display: false },
-        pointHitRadius: 200,
-      },
-      {
-        ...seriesCommonData('#7798bf'),
-        data: data.freq,
-        backgroundColor: gradient,
-        yAxisID: 'y',
-        fill: true,
-        label: i18n('players'),
-        pointRadius: 4,
         datalabels: { display: false },
         pointHitRadius: 200,
       },
@@ -70,14 +69,25 @@ function main(data: DistributionData): void {
         },
       });
     if (data.myRating && data.myRating <= maxRating)
-      pushLine('#55bf3b', data.myRating, `${i18n('yourRating')} (${data.myRating})`);
+      pushLine(bragColor(), data.myRating, `${i18n('yourRating')} (${data.myRating})`);
     if (data.otherRating && data.otherPlayer) {
       pushLine(
-        '#eeaaee',
+        shadeColor(),
         Math.min(data.otherRating, maxRating),
         `${data.otherPlayer} (${data.otherRating})`,
       );
     }
+    datasets.push({
+      ...seriesCommonData(mainColor),
+      data: data.freq,
+      backgroundColor: gradient,
+      yAxisID: 'y',
+      fill: true,
+      label: i18n('players'),
+      pointRadius: 4,
+      datalabels: { display: false },
+      pointHitRadius: 200,
+    });
     const chartData: ChartData<'line'> = {
       labels: ratings,
       datasets: datasets,
@@ -87,13 +97,14 @@ function main(data: DistributionData): void {
       type: 'line',
       data: chartData,
       options: {
+        clip: false,
         scales: {
           x: {
             type: 'linear',
             min: Math.min(...ratings),
             max: maxRating,
             grid: {
-              color: gridColor,
+              color: borderColor(),
             },
             ticks: {
               stepSize: 100,
@@ -108,7 +119,7 @@ function main(data: DistributionData): void {
           },
           y: {
             grid: {
-              color: gridColor,
+              color: borderColor(),
               tickLength: 0,
             },
             ticks: {
@@ -145,12 +156,7 @@ function main(data: DistributionData): void {
             display: false,
           },
           tooltip: {
-            titleFont: fontFamily(),
-            bodyFont: fontFamily(),
-            caretPadding: 8,
-            callbacks: {
-              label: (item: any) => (item.datasetIndex > 1 ? item.dataset.label : undefined),
-            },
+            ...tooltipConfig,
           },
         },
       },

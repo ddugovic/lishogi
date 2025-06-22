@@ -1,6 +1,6 @@
 import type { ArcElement, ChartConfiguration, ChartDataset, ChartType } from 'chart.js';
 import { cssVar } from 'common/styles';
-import { fontColor, fontFamily } from '../common';
+import { fontClearColor, fontFamily } from '../common';
 
 declare module 'chart.js' {
   // @ts-ignore
@@ -51,7 +51,7 @@ function main(): void {
             display: true,
             text: '',
             padding: { top: 100 },
-            color: fontColor,
+            color: fontClearColor(),
           },
           needle: {
             value: index ? v.network : v.server,

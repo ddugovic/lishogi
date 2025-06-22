@@ -1,5 +1,5 @@
-import { cssVar } from 'common/styles';
-import { fontColor, tooltipBgColor } from '../common';
+import { TinyColor } from '@ctrl/tinycolor';
+import { bragColor, fontClearColor, fontDimColor, tooltipConfig } from '../common';
 
 function main(data: any): void {
   const canvas = document.querySelector('.puzzle-dashboard__radar') as HTMLCanvasElement;
@@ -7,9 +7,13 @@ function main(data: any): void {
   d.datasets[0] = {
     ...d.datasets[0],
     ...{
-      backgroundColor: 'rgba(189,130,35,0.2)',
-      borderColor: cssVar('--c-brag'),
-      pointBackgroundColor: fontColor,
+      backgroundColor: new TinyColor(bragColor()).setAlpha(0.2).toString(),
+      borderColor: bragColor(),
+      pointBackgroundColor: bragColor(),
+      pointHoverBackgroundColor: fontClearColor(),
+      pointRadius: 4,
+      pointHoverRadius: 5,
+      pointHitRadius: 20,
     },
   };
 
@@ -23,6 +27,15 @@ function main(data: any): void {
         legend: {
           display: false,
         },
+        datalabels: {
+          display: false,
+        },
+        tooltip: {
+          ...tooltipConfig,
+          format: {
+            useGrouping: false,
+          },
+        },
       },
       aspectRatio: 2,
       scales: {
@@ -30,23 +43,23 @@ function main(data: any): void {
           beginAtZero: false,
           suggestedMin: Math.min(...d.datasets[0].data) - 100,
           ticks: {
-            color: fontColor,
-            showLabelBackdrop: false, // hide square behind text
+            color: fontDimColor(),
+            showLabelBackdrop: false,
             format: {
               useGrouping: false,
             },
           },
           pointLabels: {
-            color: fontColor,
+            color: fontClearColor(),
             font: {
               size: window.innerWidth < 500 ? 11 : 16,
             },
           },
           grid: {
-            color: tooltipBgColor,
+            color: fontDimColor(),
           },
           angleLines: {
-            color: tooltipBgColor,
+            color: fontDimColor(),
           },
         },
       },

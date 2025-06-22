@@ -4,6 +4,7 @@
   "license": "AGPL-3.0-or-later",
   "type": "module",
   "dependencies": {
+    "@ctrl/tinycolor": "^4.1.0",
     "@juggle/resize-observer": "^3.4.0",
     "breakpoint-sass": "catalog:",
     "ceval": "workspace:*",

@@ -1,8 +1,8 @@
+import { TinyColor } from '@ctrl/tinycolor';
 import type { Chart, ChartConfiguration } from 'chart.js';
-import { fontColor, fontFamily, lineColor, tooltipBgColor } from '../common';
+import { primaryColor, tooltipConfig } from '../common';
 
-function main(canvas: HTMLCanvasElement, data: number[], color: Color): Chart {
-  const isSente = color === 'sente';
+function main(canvas: HTMLCanvasElement, data: number[]): Chart {
   const config: ChartConfiguration<'line'> = {
     type: 'line',
     data: {
@@ -10,12 +10,13 @@ function main(canvas: HTMLCanvasElement, data: number[], color: Color): Chart {
       datasets: [
         {
           data: data,
-          borderColor: lineColor,
-          borderWidth: 1,
-          backgroundColor: isSente ? 'black' : 'white',
+          borderColor: primaryColor(),
+          borderWidth: 3,
+          backgroundColor: new TinyColor(primaryColor()).setAlpha(0.2).toString(),
           fill: true,
           pointHitRadius: 200,
-          pointHoverBorderColor: lineColor,
+          pointHoverBackgroundColor: primaryColor(),
+          pointHoverBorderColor: primaryColor(),
           pointRadius: 0,
           pointHoverRadius: 5,
           spanGaps: true,
@@ -27,18 +28,18 @@ function main(canvas: HTMLCanvasElement, data: number[], color: Color): Chart {
       layout: {
         padding: 10,
       },
+      elements: {
+        line: {
+          tension: 0.1,
+        },
+      },
+      clip: false,
       plugins: {
         legend: {
           display: false,
         },
         tooltip: {
-          borderColor: fontColor,
-          borderWidth: 1,
-          backgroundColor: tooltipBgColor,
-          caretPadding: 15,
-          titleColor: fontColor,
-          titleFont: fontFamily(13),
-          displayColors: false,
+          ...tooltipConfig,
         },
         datalabels: {
           display: false,

@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import dayOfYear from 'dayjs/plugin/dayOfYear';
 import duration from 'dayjs/plugin/duration';
 import utc from 'dayjs/plugin/utc';
-import { fontColor, fontFamily, gridColor, hoverBorderColor, tooltipBgColor } from '../common';
+import { borderColor, fontClearColor, fontFamily, tooltipConfig } from '../common';
 import type { PerfRatingHistory } from '../interface';
 
 window.Chart.register(zoomPlugin);
@@ -107,7 +107,7 @@ function main(ratingHistoryOpts: { data: string; singlePerfName: string }): void
             display: false,
           },
           grid: {
-            color: gridColor,
+            color: borderColor(),
           },
           position: 'right',
           ticks: {
@@ -135,12 +135,8 @@ function main(ratingHistoryOpts: { data: string; singlePerfName: string }): void
           },
         },
         tooltip: {
+          ...tooltipConfig,
           usePointStyle: true,
-          backgroundColor: tooltipBgColor,
-          bodyColor: fontColor,
-          titleColor: fontColor,
-          borderColor: fontColor,
-          borderWidth: 1,
           yAlign: 'center',
           caretPadding: 10,
           rtl: document.dir === 'rtl',
@@ -219,7 +215,7 @@ function makeDatasets(step: number, { data, singlePerfName }: Opts, singlePerfIn
       type: 'line',
       label: serie.name,
       borderColor: perfStyle.color,
-      hoverBorderColor: hoverBorderColor,
+      hoverBorderColor: fontClearColor(),
       backgroundColor: perfStyle.color,
       pointRadius: data.length === 1 ? 3 : 0,
       pointHoverRadius: 6,

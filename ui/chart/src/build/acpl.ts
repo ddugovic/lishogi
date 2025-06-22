@@ -1,38 +1,41 @@
 import * as winningChances from 'ceval/winning-chances';
 import type { ChartConfiguration, ChartDataset, PointStyle } from 'chart.js';
+import { plyOffset } from 'game/game';
 import { i18n } from 'i18n';
 import {
-  accent,
+  accentColor,
   axisOpts,
-  fontColor,
   fontFamily,
+  goteColor,
   maybeChart,
   plyLine,
   selectPly,
-  tooltipBgColor,
+  senteColor,
+  tooltipConfig,
 } from '../common';
 import division from '../division';
 import type { AcplChart, AnalyseData, Player } from '../interface';
 
-function main(el: HTMLCanvasElement, data: AnalyseData, mainline: Tree.Node[]): AcplChart {
+function main(
+  el: HTMLCanvasElement,
+  data: AnalyseData,
+  mainline: Tree.Node[],
+  ply: number | undefined,
+): AcplChart {
   const possibleChart = maybeChart(el);
   if (possibleChart) return possibleChart as AcplChart;
   const blurBackgroundColorWhite = 'white';
   const blurBackgroundColorBlack = 'black';
-  const ply = plyLine(0);
   const divisionLines = division(data.game.division);
   const firstPly = mainline[0].ply;
+  const plyLineChart = plyLine(ply || firstPly);
   const isPartial = (d: AnalyseData) => !d.analysis || d.analysis.partial;
 
   const makeDataset = (
     d: AnalyseData,
     mainline: Tree.Node[],
   ): { acpl: ChartDataset<'line'>; moveLabels: string[]; adviceHoverColors: string[] } => {
-    const pointBackgroundColors: (
-      | typeof accent
-      | typeof blurBackgroundColorWhite
-      | typeof blurBackgroundColorBlack
-    )[] = [];
+    const pointBackgroundColors: string[] = [];
     const adviceHoverColors: string[] = [];
     const moveLabels: string[] = [];
     const pointStyles: PointStyle[] = [];
@@ -47,13 +50,14 @@ function main(el: HTMLCanvasElement, data: AnalyseData, mainline: Tree.Node[]): 
         cp = node.eval.mate > 0 ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY;
       else if (node.eval?.mate) cp = isSente ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY;
       if (node.eval?.cp) cp = node.eval.cp;
-      const plyOffset = ((d.game.startedAtPly || 0) - ((d.game.startedAtStep || 1) - 1)) % 2;
+      const offset = plyOffset(data as any);
+
       const winchance = winningChances.povChances('sente', { cp: cp });
       // Plot winchance because logarithmic but display the corresponding cp.eval from AnalyseData in the tooltip
       winChances.push({ x: node.ply, y: winchance });
 
       const { advice, color: glyphColor } = glyphProperties(node);
-      const label = `${node.ply + plyOffset}.  ${node.notation}`;
+      const label = `${node.ply - offset}.  ${node.notation}`;
       let annotation = '';
       if (advice) annotation = ` [${i18n(advice)}]`;
       const isBlur =
@@ -64,27 +68,27 @@ function main(el: HTMLCanvasElement, data: AnalyseData, mainline: Tree.Node[]): 
       pointStyles.push(isBlur ? 'rect' : 'circle');
       pointSizes.push(isBlur ? 5 : 0);
       pointBackgroundColors.push(
-        isBlur ? (isSente ? blurBackgroundColorWhite : blurBackgroundColorBlack) : accent,
+        isBlur ? (isSente ? blurBackgroundColorBlack : blurBackgroundColorWhite) : accentColor(),
       );
-      adviceHoverColors.push(glyphColor ?? accent);
+      adviceHoverColors.push(glyphColor ?? accentColor());
     });
     return {
       acpl: {
         label: i18n('advantage'),
         data: winChances,
-        borderWidth: 1,
+        borderWidth: 2,
         fill: {
           target: 'origin',
-          below: 'black',
-          above: 'white',
+          above: senteColor(),
+          below: goteColor(),
         },
         pointRadius: d.player.blurs || d.opponent.blurs ? pointSizes : 0,
         pointHoverRadius: 5,
         pointHitRadius: 100,
-        borderColor: accent,
+        borderColor: accentColor(),
         pointBackgroundColor: pointBackgroundColors,
         pointStyle: pointStyles,
-        hoverBackgroundColor: accent,
+        hoverBackgroundColor: accentColor(),
         order: 5,
         datalabels: { display: false },
       },
@@ -101,7 +105,7 @@ function main(el: HTMLCanvasElement, data: AnalyseData, mainline: Tree.Node[]): 
     type: 'line',
     data: {
       labels: moveLabels.map((_, index) => index),
-      datasets: [acpl, ply, ...divisionLines],
+      datasets: [acpl, plyLineChart, ...divisionLines],
     },
     options: {
       interaction: {
@@ -109,21 +113,20 @@ function main(el: HTMLCanvasElement, data: AnalyseData, mainline: Tree.Node[]): 
         axis: 'x',
         intersect: false,
       },
+      elements: {
+        line: {
+          tension: 0.1,
+        },
+      },
       scales: axisOpts(firstPly + 1, mainline.length + firstPly),
       animation: false,
       maintainAspectRatio: false,
       responsive: true,
       plugins: {
         tooltip: {
-          borderColor: fontColor,
-          borderWidth: 1,
-          backgroundColor: tooltipBgColor,
-          bodyColor: fontColor,
-          titleColor: fontColor,
+          ...tooltipConfig,
           titleFont: fontFamily(14, 'bold'),
           bodyFont: fontFamily(13),
-          caretPadding: 10,
-          displayColors: false,
           filter: (item: any) => item.datasetIndex === 0,
           callbacks: {
             label: (item: any) => {
@@ -166,7 +169,6 @@ function main(el: HTMLCanvasElement, data: AnalyseData, mainline: Tree.Node[]): 
     acplChart.update('none');
   };
   window.lishogi.pubsub.on('ply', acplChart.selectPly);
-  window.lishogi.pubsub.emit('ply.trigger');
   if (!isPartial(data)) christmasTree(acplChart, mainline, adviceHoverColors);
   return acplChart;
 }
@@ -202,8 +204,8 @@ function christmasTree(chart: AcplChart, mainline: Tree.Node[], hoverColors: str
   });
   $('div.advice-summary').on('mouseleave', 'div.symbol', function (this: HTMLElement) {
     chart.setActiveElements([]);
-    chart.data.datasets[0].pointHoverBackgroundColor = accent;
-    chart.data.datasets[0].pointBorderColor = accent;
+    chart.data.datasets[0].pointHoverBackgroundColor = accentColor();
+    chart.data.datasets[0].pointBorderColor = accentColor();
     chart.update('none');
   });
 }

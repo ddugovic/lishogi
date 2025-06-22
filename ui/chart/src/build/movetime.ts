@@ -1,20 +1,26 @@
 import type { Chart, ChartDataset, PointStyle } from 'chart.js';
+import { cssVar } from 'common/styles';
+import { plyOffset } from 'game/game';
 import { i18nPluralSame } from 'i18n';
 import {
   type MovePoint,
   axisOpts,
-  fontColor,
-  fontFamily,
-  lineColor,
+  goteColor,
   maybeChart,
   plyLine,
+  primaryColor,
   selectPly,
-  tooltipBgColor,
+  senteColor,
+  tooltipConfig,
 } from '../common';
 import division from '../division';
 import type { AnalyseData, Player, PlyChart } from '../interface';
 
-function movetime(el: HTMLCanvasElement, data: AnalyseData): PlyChart | undefined {
+function movetime(
+  el: HTMLCanvasElement,
+  data: AnalyseData,
+  ply: number | undefined,
+): PlyChart | undefined {
   const possibleChart = maybeChart(el);
   if (possibleChart) return possibleChart as PlyChart;
   const moveCentis = data.game.moveCentis;
@@ -38,6 +44,7 @@ function movetime(el: HTMLCanvasElement, data: AnalyseData): PlyChart | undefine
   for (let i = 0; i <= firstPly; i++) {
     labels.push('');
   }
+  const offset = plyOffset(data as any);
 
   const logC = Math.log(3) ** 2;
 
@@ -57,7 +64,7 @@ function movetime(el: HTMLCanvasElement, data: AnalyseData): PlyChart | undefine
     const colorName = color ? 'sente' : 'gote';
 
     const y = Math.max(Math.log(0.005 * Math.min(centis, 12e4) + 3) ** 2 - logC, x > 1 ? 0.3 : 0);
-    let label = `${ply}. ${notation}`;
+    let label = `${ply - (offset % 2)}. ${notation}`;
     const movePoint: MovePoint = {
       x: node ? node.ply : tree[x].ply + 1,
       y: color ? y : -y,
@@ -104,45 +111,54 @@ function movetime(el: HTMLCanvasElement, data: AnalyseData): PlyChart | undefine
   const totalSeriesMax = colorSeriesMax(totalSeriesPlot);
   const moveSeriesMax = colorSeriesMax(moveSeriesPlot);
 
-  const lineBuilder = (series: PlotSeries): ChartDataset[] =>
+  const lineBuilder = (series: PlotSeries, lineOnly: boolean): ChartDataset[] =>
     colors.map(color => ({
       type: 'line',
       data: series[color].map(point => ({
         x: point.x,
         y: point.y / totalSeriesMax,
       })),
-      borderColor: lineColor,
-      borderWidth: 1.5,
-      pointHitRadius: 200,
-      pointHoverBorderColor: lineColor,
+      borderColor: primaryColor(),
+      borderWidth: 2,
+      pointHoverBackgroundColor: color === 'sente' ? senteColor() : goteColor(),
+      pointHitRadius: lineOnly ? 200 : 0,
+      pointHoverBorderColor: lineOnly ? primaryColor() : 'transparent',
       pointRadius: 0,
       pointHoverRadius: 5,
       pointStyle: undefined,
-      fill: {
-        target: 'origin',
-        above: 'rgba(0,0,0,0.1)',
-        below: 'rgba(153, 153, 153, .1)',
-      },
-      order: 1,
+      fill: lineOnly
+        ? {}
+        : {
+            target: 'origin',
+            above: senteColor(),
+            below: goteColor(),
+          },
+      order: lineOnly ? 1 : 3,
       datalabels: { display: false },
     }));
 
   const moveSeriesSet: ChartDataset[] = colors.map(color => ({
     type: 'bar',
     data: moveSeriesPlot[color].map(point => ({ x: point.x, y: point.y / moveSeriesMax })),
-    backgroundColor: color === 'sente' ? 'black' : 'white',
+    maxBarThickness: 75,
+    backgroundColor: color === 'sente' ? cssVar('--c-sente2') : cssVar('--c-gote2'),
+    hitRadius: 200,
     grouped: false,
     categoryPercentage: 2,
     barPercentage: 1,
     order: 2,
-    borderColor: color === 'sente' ? '#616161' : '#838383',
+    borderSkipped: false,
     borderWidth: 1,
     datalabels: { display: false },
   }));
   const divisionLines = division(data.game.division);
-  const datasets: ChartDataset[] = [...moveSeriesSet];
-  datasets.push(...lineBuilder(totalSeriesPlot));
-  datasets.push(plyLine(firstPly), ...divisionLines);
+  const datasets: ChartDataset[] = [];
+  datasets.push(...moveSeriesSet);
+  if (labels.length > 12) {
+    datasets.push(...lineBuilder(totalSeriesPlot, false));
+    datasets.push(...lineBuilder(totalSeriesPlot, true));
+  }
+  datasets.push(plyLine(ply || firstPly), ...divisionLines);
 
   const config: Chart['config'] = {
     type: 'line' /* Needed for compat. with plyline and divisionlines.
@@ -162,18 +178,15 @@ function movetime(el: HTMLCanvasElement, data: AnalyseData): PlyChart | undefine
         // Omit game-ending action to sync acpl and movetime charts
         labels.length - (labels[labels.length - 1].includes('-') ? 1 : 0),
       ),
+      layout: {
+        padding: 10,
+      },
       plugins: {
         legend: {
           display: false,
         },
         tooltip: {
-          borderColor: fontColor,
-          borderWidth: 1,
-          backgroundColor: tooltipBgColor,
-          caretPadding: 15,
-          titleColor: fontColor,
-          titleFont: fontFamily(13),
-          displayColors: false,
+          ...tooltipConfig,
           callbacks: {
             title: (items: any) =>
               labels[items[0].dataset.label === 'bar' ? items[0].parsed.x * 2 : items[0].parsed.x],
@@ -191,7 +204,6 @@ function movetime(el: HTMLCanvasElement, data: AnalyseData): PlyChart | undefine
   const movetimeChart = new window.Chart(el, config) as PlyChart;
   movetimeChart.selectPly = selectPly.bind(movetimeChart);
   window.lishogi.pubsub.on('ply', movetimeChart.selectPly);
-  window.lishogi.pubsub.emit('ply.trigger');
   return movetimeChart;
 }
 

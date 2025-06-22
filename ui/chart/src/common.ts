@@ -1,4 +1,4 @@
-import type { Chart, ChartDataset, ChartOptions } from 'chart.js';
+import type { Chart, ChartDataset, ChartOptions, TooltipOptions } from 'chart.js';
 import { cssVar } from 'common/styles';
 
 export interface MovePoint {
@@ -10,13 +10,17 @@ export interface MovePoint {
 export const chartYMax = 1.05;
 export const chartYMin: number = -chartYMax;
 
-export const accent: string = cssVar('--c-accent');
-export const fontColor: string = cssVar('--c-font-clear');
-export const gridColor: string = cssVar('--c-border');
-export const hoverBorderColor: string = cssVar('--c-font-clear');
-export const tooltipBgColor: string = cssVar('--c-page-mask');
-export const lineColor: string = cssVar('--c-primary');
-const zeroLineColor: string = cssVar('--c-shade');
+export const accentColor: () => string = () => cssVar('--c-accent');
+export const borderColor: () => string = () => cssVar('--c-border');
+export const fontClearColor: () => string = () => cssVar('--c-font-clear');
+export const fontDimColor: () => string = () => cssVar('--c-font-dimmer');
+const bgInputColor: () => string = () => cssVar('--c-bg-input');
+export const primaryColor: () => string = () => cssVar('--c-primary');
+export const secondaryColor: () => string = () => cssVar('--c-secondary');
+export const senteColor: () => string = () => cssVar('--c-sente');
+export const goteColor: () => string = () => cssVar('--c-gote');
+export const shadeColor: () => string = () => cssVar('--c-shade');
+export const bragColor: () => string = () => cssVar('--c-brag');
 
 export const axisOpts = (xmin: number, xmax: number): ChartOptions<'line'>['scales'] => ({
   x: {
@@ -33,7 +37,7 @@ export const axisOpts = (xmin: number, xmax: number): ChartOptions<'line'>['scal
     border: { display: false },
     ticks: { display: false },
     grid: {
-      color: ctx => (ctx.tick.value === 0 ? zeroLineColor : undefined),
+      color: ctx => (ctx.tick.value === 0 ? shadeColor() : undefined),
     },
   },
 });
@@ -72,7 +76,7 @@ export function plyLine(ply: number, mainline = true): ChartDataset<'line'> {
       { x: ply, y: chartYMin },
       { x: ply, y: chartYMax },
     ],
-    borderColor: accent,
+    borderColor: accentColor(),
     pointRadius: 0,
     pointHoverRadius: 0,
     borderWidth: 1,
@@ -89,3 +93,14 @@ export function selectPly(this: Chart, ply: number, onMainline: boolean): void {
   this.data.datasets[index] = line;
   this.update('none');
 }
+
+export const tooltipConfig: Partial<TooltipOptions> = {
+  borderColor: fontClearColor(),
+  borderWidth: 1,
+  backgroundColor: bgInputColor(),
+  caretPadding: 15,
+  titleColor: fontClearColor(),
+  titleFont: fontFamily(13),
+  bodyColor: fontClearColor(),
+  displayColors: false,
+};
