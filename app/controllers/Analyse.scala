@@ -45,7 +45,6 @@ final class Analyse(
           (!pov.game.metadata.analysed ?? env.fishnet.api.userAnalysisExists(pov.gameId)) zip
           (pov.game.simulId ?? env.simul.repo.find) zip
           roundC.getWatcherChat(pov.game) zip
-          (ctx.noBlind ?? env.game.crosstableApi.withMatchup(pov.game)) zip
           env.bookmark.api.exists(pov.game, ctx.me) zip
           env.api.notationDump(
             pov.game,
@@ -53,7 +52,7 @@ final class Analyse(
             NotationDump.WithFlags(clocks = false),
           ) flatMap {
             case (
-                  (((((analysis, analysisInProgress), simul), chat), crosstable), bookmarked),
+                  ((((analysis, analysisInProgress), simul), chat), bookmarked),
                   kif,
                 ) =>
               env.api.roundApi.review(
@@ -76,7 +75,6 @@ final class Analyse(
                     analysis,
                     analysisInProgress,
                     simul,
-                    crosstable,
                     userTv,
                     chat,
                     bookmarked = bookmarked,
@@ -119,16 +117,14 @@ final class Analyse(
 
   private def replayBot(pov: Pov)(implicit ctx: Context) =
     for {
-      analysis   <- env.analyse.analyser get pov.game
-      simul      <- pov.game.simulId ?? env.simul.repo.find
-      crosstable <- env.game.crosstableApi.withMatchup(pov.game)
-      kif        <- env.api.notationDump(pov.game, analysis, NotationDump.WithFlags(clocks = false))
+      analysis <- env.analyse.analyser get pov.game
+      simul    <- pov.game.simulId ?? env.simul.repo.find
+      kif      <- env.api.notationDump(pov.game, analysis, NotationDump.WithFlags(clocks = false))
     } yield Ok(
       html.analyse.replayBot(
         pov,
         kif.render,
         simul,
-        crosstable,
       ),
     )
 }

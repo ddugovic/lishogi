@@ -65,7 +65,10 @@ export function init(): void {
     $('.chat__members').watchers();
 
     $('#main-wrap')
-      .on('click', '.autoselect', function (this: HTMLElement) {
+      .on('mousedown touchstart', '.autoselect', function (this: HTMLElement, e: any) {
+        if (this === document.activeElement) return;
+        e.preventDefault();
+        this.focus();
         $(this).trigger('select');
       })
       .on('click', 'button.copy', function (this: HTMLElement) {
