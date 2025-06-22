@@ -40,8 +40,6 @@ html {
   --c-darken: #{#333};
   --c-error: #{$c-red};
   --c-error-over: #{#fff};
-  --c-eval-gote: #{#a0a0a0};
-  --c-eval-sente: #{#555};
   --c-fancy: #{hsl(294deg, 62%, 48%)};
   --c-fancy-over: #{white};
   --c-font: #{hsl(0deg, 0%, 75%)};
@@ -56,6 +54,8 @@ html {
   --c-good: #{$c-secondary};
   --c-good-move: #{hsl(130deg, 67%, 62%)};
   --c-good-over: #{$c-secondary-over};
+  --c-gote: #{$c-font-dim};
+  --c-gote2: #{$c-font-clearer};
   --c-header-dropdown: #{$c-popup};
   --c-inaccuracy: #{hsl(202deg, 78%, 62%)};
   --c-inaccuracy-clear: #{hsl(202deg, 100%, 62%)};
@@ -76,7 +76,6 @@ html {
   --c-primary: #{hsl(209deg, 73%, 52%)};
   --c-primary-clear: #{c-whiter($c-primary, 20%)};
   --c-primary-dim: #{c-blacker($c-primary, 15%)};
-  --c-primary-glow: #{hsl(231deg, 99%, 66%)};
   --c-primary-over: #{#fff};
   --c-red: #{hsl(0deg, 60%, 50%)};
   --c-secondary: #{hsl(88deg, 62%, 37%)};
@@ -86,6 +85,8 @@ html {
   --c-secondary-over: #{#fff};
   --c-selected: #{rgba(20, 85, 30, 0.5)};
   --c-selected-hover: #{rgba(20, 85, 30, 0.25)};
+  --c-sente: #{$c-bg-zebra2};
+  --c-sente2: #{$c-bg-page};
   --c-shade: #{c-light($c-font, 30%)};
   --c-warn: #{$c-brag};
   --c-warn-over: #{$c-brag-over};

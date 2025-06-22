@@ -22,7 +22,6 @@ $c-font-page: $c-font-dim;
 $c-primary: hsl(209deg, 73%, 52%);
 $c-primary-dim: c-blacker($c-primary, 15%);
 $c-primary-clear: c-whiter($c-primary, 20%);
-$c-primary-glow: hsl(231deg, 99%, 66%);
 $c-primary-over: #fff;
 
 $c-secondary: hsl(88deg, 62%, 37%);
@@ -117,6 +116,7 @@ $c-font-metal-hover: $c-font-clear;
 
 $sente-symbol: '☖';
 $gote-symbol: '☗';
-
-$c-eval-sente: #555;
-$c-eval-gote: #a0a0a0;
+$c-sente: $c-bg-zebra2;
+$c-gote: $c-font-dim;
+$c-sente2: $c-bg-page;
+$c-gote2: $c-font-clearer;

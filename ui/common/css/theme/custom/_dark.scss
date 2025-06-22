@@ -53,7 +53,10 @@ html.custom-dark {
   --c-font-metal-hover: var(--c-font-clear);
   --c-font-metal: inherit;
   --metal-shadow: none;
-  --c-primary-glow: color-mix(in srgb, var(--c-primary) 75%, white);
+  --c-sente: var(--c-bg-zebra2);
+  --c-gote: var(--c-font-dim);
+  --c-sente2: color-mix(in srgb, var(--c-bg-page) 50%, black);
+  --c-gote2: var(--c-font-clearer);
 }
 
 @supports (color: oklch(from var(--c-accent) calc(1 - round(l, 1)) 0 0)) {

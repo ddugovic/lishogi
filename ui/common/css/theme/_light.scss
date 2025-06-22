@@ -22,7 +22,6 @@ $c-font-page: c-light($c-font, 37%);
 $c-primary: hsl(209deg, 73%, 46%);
 $c-primary-dim: c-whiter($c-primary, 17%);
 $c-primary-clear: c-blacker($c-primary, 17%);
-$c-primary-glow: hsl(199deg, 92%, 85%);
 
 $c-secondary-dim: c-whiter($c-secondary, 17%);
 $c-secondary-dimmer: c-whiter($c-secondary, 40%);
@@ -79,5 +78,7 @@ $c-font-metal-hover: inherit;
 $sente-symbol: '☗';
 $gote-symbol: '☖';
 
-$c-eval-sente: #888;
-$c-eval-gote: #fff;
+$c-sente: $c-font;
+$c-gote: $c-shade;
+$c-sente2: $c-font-clear;
+$c-gote2: $c-bg-box;

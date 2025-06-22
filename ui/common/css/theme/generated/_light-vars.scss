@@ -28,8 +28,6 @@ html.light {
   --c-border-page: #{hsl(0deg, 0%, 80%)};
   --c-bot: #{$c-fancy};
   --c-brag: #{hsl(37deg, 74%, 48%)};
-  --c-eval-gote: #{#fff};
-  --c-eval-sente: #{#888};
   --c-fancy: #{hsl(294deg, 61%, 62%)};
   --c-font: #{hsl(0deg, 0%, 28%)};
   --c-font-clear: #{c-light($c-font, 12%)};
@@ -40,6 +38,8 @@ html.light {
   --c-font-page: #{c-light($c-font, 37%)};
   --c-font-shadow: #{white};
   --c-good-move: #{hsl(130deg, 67%, 40%)};
+  --c-gote: #{$c-shade};
+  --c-gote2: #{$c-bg-box};
   --c-header-dropdown: #{$c-popup};
   --c-inaccuracy: #{hsl(202deg, 78%, 40%)};
   --c-link: #{$c-primary};
@@ -52,10 +52,11 @@ html.light {
   --c-primary: #{hsl(209deg, 73%, 46%)};
   --c-primary-clear: #{c-blacker($c-primary, 17%)};
   --c-primary-dim: #{c-whiter($c-primary, 17%)};
-  --c-primary-glow: #{hsl(199deg, 92%, 85%)};
   --c-secondary-clear: #{c-blacker($c-secondary, 17%)};
   --c-secondary-dim: #{c-whiter($c-secondary, 17%)};
   --c-secondary-dimmer: #{c-whiter($c-secondary, 40%)};
+  --c-sente: #{$c-font};
+  --c-sente2: #{$c-font-clear};
   --c-shade: #{c-whiter($c-font, 75%)};
   --c-warn: #{$c-brag};
   --gote-symbol: '☖';

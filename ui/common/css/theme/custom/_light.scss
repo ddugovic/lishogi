@@ -53,9 +53,12 @@ html.custom-light {
   --c-font-metal-hover: var(--c-font-clear);
   --c-font-metal: inherit;
   --metal-shadow: none;
-  --c-primary-glow: color-mix(in srgb, var(--c-primary) 75%, white);
   --sente-symbol: '☗';
   --gote-symbol: '☖';
+  --c-sente: var(--c-font);
+  --c-gote: var(--c-font-dimmer);
+  --c-sente2: color-mix(in srgb, var(--c-font) 50%, black);
+  --c-gote2: color-mix(in srgb, var(--c-bg-page) 50%, white);
 }
 
 @supports (color: oklch(from var(--c-accent) calc(1 - round(l, 1)) 0 0)) {
