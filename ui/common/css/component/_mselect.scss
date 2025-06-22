@@ -18,7 +18,7 @@
   &__label {
     @extend %box-radius, %flex-between;
 
-    background: theme.$c-bg-box;
+    background: theme.$c-bg-input;
     border: theme.$border;
     flex-flow: row nowrap;
     padding: 0.3rem 0.3rem 0.3rem 1rem;
