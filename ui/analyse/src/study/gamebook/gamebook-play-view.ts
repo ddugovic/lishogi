@@ -3,7 +3,6 @@ import { richHTML } from 'common/rich-text';
 import { bind, dataIcon } from 'common/snabbdom';
 import { i18n, i18nFormatCapitalized } from 'i18n';
 import { colorName } from 'shogi/color-name';
-import { isHandicap } from 'shogiops/handicaps';
 import { type VNode, h } from 'snabbdom';
 import { iconTag } from '../../util';
 import type GamebookPlayCtrl from './gamebook-play-ctrl';
@@ -98,13 +97,7 @@ function renderFeedback(ctrl: GamebookPlayCtrl, state: State) {
                 'em',
                 i18nFormatCapitalized(
                   'puzzle:findTheBestMoveForX',
-                  colorName(
-                    color,
-                    isHandicap({
-                      rules: ctrl.root.data.game.variant.key,
-                      sfen: ctrl.root.data.game.initialSfen,
-                    }),
-                  ),
+                  colorName(color, ctrl.root.isHandicap()),
                 ),
               ),
             ]),

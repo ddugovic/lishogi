@@ -17,7 +17,7 @@ import { debounce } from 'common/timings';
 import * as game from 'game';
 import { i18n, i18nPluralSame } from 'i18n';
 import { i18nVariant } from 'i18n/variant';
-import { flipMetaPlayers, usiToRole } from 'shogi/common';
+import { flipMetaPlayers, plyColor, usiToRole } from 'shogi/common';
 import { isImpasse as impasse } from 'shogi/impasse';
 import { makeNotation } from 'shogi/notation';
 import { Shogiground } from 'shogiground';
@@ -32,6 +32,7 @@ import {
   shogigroundSecondLionStep,
   usiToSquareNames,
 } from 'shogiops/compat';
+import { isHandicap as sgIsHandicap } from 'shogiops/handicaps';
 import { parseSfen } from 'shogiops/sfen';
 import type { NormalMove, Outcome, Piece } from 'shogiops/types';
 import { makeSquareName, makeUsi, opposite, parseSquareName, squareDist } from 'shogiops/util';
@@ -302,7 +303,7 @@ export default class AnalyseCtrl {
   }
 
   turnColor(): Color {
-    return util.plyColor(this.node.ply);
+    return plyColor(this.node.ply);
   }
 
   togglePlay(delay: AutoplayDelay): void {
@@ -785,6 +786,13 @@ export default class AnalyseCtrl {
     return impasse(this.data.game.variant.key, node.sfen, this.data.game.initialSfen);
   }
 
+  isHandicap(): boolean {
+    return sgIsHandicap({
+      rules: this.data.game.variant.key,
+      sfen: this.data.game.initialSfen,
+    });
+  }
+
   position(node: Tree.Node): Result<Position, PositionError> {
     return parseSfen(this.data.game.variant.key, node.sfen, false);
   }
@@ -1031,7 +1039,7 @@ export default class AnalyseCtrl {
   // so instead of sending both
   // let's just count the offset
   plyOffset = (): number => {
-    return this.data.game.startedAtPly - ((this.data.game.startedAtStep ?? 1) - 1);
+    return game.plyOffset(this.data);
   };
 
   // Ideally we would just use node.clock

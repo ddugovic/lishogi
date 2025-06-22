@@ -21,6 +21,10 @@ export function playedPlies(data: GameData): number {
   return data.game.plies - (data.game.startedAtPly || 0);
 }
 
+export function plyOffset(data: GameData): number {
+  return (data.game.startedAtPly ?? 0) - ((data.game.startedAtStep ?? 1) - 1);
+}
+
 export function abortable(data: GameData): boolean {
   return playable(data) && !bothPlayersHavePlayed(data) && !mandatory(data);
 }
@@ -92,6 +96,10 @@ export function getPlayer(data: GameData, color?: Color): Player | null {
 
 export function hasAi(data: GameData): boolean {
   return !!(data.player.ai || data.opponent.ai);
+}
+
+export function conditionallyPremovable(data: GameData): boolean {
+  return playable(data) && !data.clock;
 }
 
 export function userAnalysable(data: GameData): boolean {

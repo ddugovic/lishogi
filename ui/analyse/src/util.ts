@@ -4,10 +4,6 @@ import { type VNode, h } from 'snabbdom';
 
 export const emptyRedButton = 'button.button.button-red.button-empty';
 
-export function plyColor(ply: number): Color {
-  return ply % 2 === 0 ? 'sente' : 'gote';
-}
-
 export function readOnlyProp<A>(value: A): () => A {
   return (): A => value;
 }

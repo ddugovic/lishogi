@@ -12,7 +12,6 @@ import { studyModal } from 'game/view/post-game-study';
 import statusView from 'game/view/status';
 import { i18n, i18nFormatCapitalized, i18nPluralSame } from 'i18n';
 import { colorName } from 'shogi/color-name';
-import { isHandicap } from 'shogiops/handicaps';
 import { parseSfen } from 'shogiops/sfen';
 import { type VNode, h } from 'snabbdom';
 import { path as treePath } from 'tree';
@@ -40,10 +39,7 @@ import * as studyView from './study/study-view';
 import { render as renderTreeView } from './tree-view/tree-view';
 
 function renderResult(ctrl: AnalyseCtrl): MaybeVNode {
-  const handicap = isHandicap({
-    rules: ctrl.data.game.variant.key,
-    sfen: ctrl.data.game.initialSfen,
-  });
+  const handicap = ctrl.isHandicap();
   const render = (status: string, winner?: Color) =>
     h('div.status', [
       status,

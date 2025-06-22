@@ -1,6 +1,5 @@
 import { defined } from 'common/common';
 import { analysis } from 'common/links';
-import { isHandicap } from 'shogiops/handicaps';
 import { makeCsaHeader, makeCsaMoveOrDrop } from 'shogiops/notation/csa';
 import { makeKifHeader, makeKifMoveOrDrop } from 'shogiops/notation/kif';
 import { initialSfen, parseSfen } from 'shogiops/sfen';
@@ -136,7 +135,7 @@ export function renderFullKif(ctrl: AnalyseCtrl): string {
   const moves = makeKifNodes(ctrl.tree.root, pos, offset % 2).join('\n');
 
   const tags = ctrl.data.tags ?? [];
-  const handicap = isHandicap({ sfen: sfen, rules: g.variant.key });
+  const handicap = ctrl.isHandicap();
   const colorTags = [handicap ? '下手' : '先手', handicap ? '上手' : '後手'];
   // We either don't want to display these or we display them through other means
   const unwatedTagNames = ['Sente', 'Gote', 'Handicap', 'Termination', 'Result'];

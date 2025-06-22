@@ -1,7 +1,6 @@
 import { type MaybeVNodes, bind } from 'common/snabbdom';
 import { i18n, i18nFormatCapitalized, i18nVdom } from 'i18n';
 import { colorName } from 'shogi/color-name';
-import { isHandicap } from 'shogiops/handicaps';
 import type { Outcome } from 'shogiops/types';
 import { type VNode, h } from 'snabbdom';
 import type AnalyseCtrl from '../ctrl';
@@ -60,16 +59,7 @@ function renderEnd(root: AnalyseCtrl, end: Outcome): VNode {
             'em',
             h(
               'color',
-              i18nFormatCapitalized(
-                'xWinsGame',
-                colorName(
-                  end.winner,
-                  isHandicap({
-                    rules: root.data.game.variant.key,
-                    sfen: root.data.game.initialSfen,
-                  }),
-                ),
-              ),
+              i18nFormatCapitalized('xWinsGame', colorName(end.winner, root.isHandicap())),
             ),
           )
         : h('em', i18n('theGameIsADraw')),

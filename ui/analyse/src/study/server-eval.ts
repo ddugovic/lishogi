@@ -47,7 +47,12 @@ export function view(ctrl: ServerEval): VNode {
       requestIdleCallbackWithFallback(() => {
         loadLishogiScript('chart').then(() => {
           loadLishogiScript('chart.acpl').then(() => {
-            ctrl.chart = window.lishogi.modules.chartAcpl!(el, ctrl.root.data, mainline);
+            ctrl.chart = window.lishogi.modules.chartAcpl!(
+              el,
+              ctrl.root.data,
+              mainline,
+              ctrl.root.plyOffset(),
+            );
           });
         });
       }, 800);

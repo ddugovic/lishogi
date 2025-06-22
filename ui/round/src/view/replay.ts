@@ -39,10 +39,6 @@ const autoScroll = throttle(100, (movesEl: HTMLElement, ctrl: RoundController) =
   }),
 );
 
-function plyOffset(ctrl: RoundController): number {
-  return (ctrl.data.game.startedAtPly || 0) - ((ctrl.data.game.startedAtStep ?? 1) - 1);
-}
-
 export function renderResult(ctrl: RoundController): VNode | undefined {
   if (status.finished(ctrl.data) || status.aborted(ctrl.data) || status.paused(ctrl.data)) {
     const winner = ctrl.data.game.winner;
@@ -87,8 +83,7 @@ function renderMoves(ctrl: RoundController): MaybeVNodes {
   if (steps.length <= 1) return [];
 
   const els: MaybeVNodes = [];
-  const curMove =
-    ctrl.ply - (ctrl.data.game.startedAtPly || 0) + (ctrl.data.game.startedAtStep ?? 1) - 1;
+  const curMove = ctrl.ply - game.plyOffset(ctrl.data);
 
   steps.slice(1).forEach((s, i) => {
     const moveNumber = i + (ctrl.data.game.startedAtStep ?? 1);
@@ -114,6 +109,8 @@ function renderMoves(ctrl: RoundController): MaybeVNodes {
 export function analysisButton(ctrl: RoundController): VNode {
   const forecastCount = ctrl.data.forecastCount;
   const disabled = !game.userAnalysable(ctrl.data);
+  const isForecast = game.conditionallyPremovable(ctrl.data);
+
   return h(
     'a.fbt.analysis',
     {
@@ -123,9 +120,9 @@ export function analysisButton(ctrl: RoundController): VNode {
       },
       attrs: {
         disabled: disabled,
-        title: i18n('analysis'),
+        title: isForecast ? i18n('conditionalPremoves') : i18n('analysis'),
         href: `${gameRoute(ctrl.data, ctrl.data.player.color)}/analysis#${ctrl.ply}`,
-        'data-icon': 'A',
+        'data-icon': isForecast ? 'm' : 'A',
       },
     },
     forecastCount ? [`${forecastCount}`] : [],
@@ -238,7 +235,9 @@ export function render(ctrl: RoundController): VNode | undefined {
             node = node.previousSibling as HTMLElement;
             while (node) {
               if (node.tagName === 'INDEX') {
-                ctrl.userJump(Number.parseInt(node.textContent || '') + (plyOffset(ctrl) % 2));
+                ctrl.userJump(
+                  Number.parseInt(node.textContent || '') + (game.plyOffset(ctrl.data) % 2),
+                );
                 ctrl.redraw();
                 break;
               }
