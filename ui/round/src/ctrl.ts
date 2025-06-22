@@ -58,7 +58,7 @@ import * as speech from './speech';
 import * as title from './title';
 import TransientMove from './transient-move';
 import * as util from './util';
-import * as renderUser from './view/user';
+import { userTxt } from './view/user';
 import * as xhr from './xhr';
 
 interface GoneBerserk {
@@ -430,7 +430,7 @@ export default class RoundController {
     if (game.isPlayerTurn(d))
       notify(() => {
         let txt = i18n('yourTurn');
-        const opponent = renderUser.userTxt(d.opponent);
+        const opponent = userTxt(d.opponent);
         if (this.ply < 1) txt = `${i18nFormat('xJoinedTheGame', opponent)}\n${txt}`;
         else {
           const m_step = d.steps[d.steps.length - 1];
@@ -448,7 +448,7 @@ export default class RoundController {
       });
     else if (this.isPlaying() && this.ply < 1)
       notify(() => {
-        return i18nFormat('xJoinedTheGame', renderUser.userTxt(d.opponent));
+        return i18nFormat('xJoinedTheGame', userTxt(d.opponent));
       });
   };
 
@@ -697,7 +697,7 @@ export default class RoundController {
     this.goneBerserk[color] = true;
     if (color !== this.data.player.color) li.sound.play('berserk');
     this.redraw();
-    $('<i data-icon="`">').appendTo($(`.game__meta .player.${color} .user-link`));
+    $('<i class="berserk" data-icon="`">').appendTo($(`.game__meta .player.${color} .user-link`));
   };
 
   setLoading = (v: boolean, duration = 1500): void => {

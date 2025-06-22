@@ -90,7 +90,7 @@ function main(opts: CoordinatesOpts): void {
     $side.find('.user_chart').each(function (this: HTMLCanvasElement, index: number) {
       const isSente = index === 0;
       const data = isSente ? opts.points.sente : opts.points.gote;
-      (window.lishogi.modules as any).chartCoordinate(this, data, isSente ? 'sente' : 'gote');
+      (window.lishogi.modules as any).chartCoordinate(this, data);
     });
   };
   showCharts();
