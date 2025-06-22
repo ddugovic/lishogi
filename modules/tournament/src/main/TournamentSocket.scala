@@ -41,6 +41,9 @@ final private class TournamentSocket(
       delay = 1.seconds.some,
     )
 
+  def reloadFull(tourId: Tournament.ID): Unit =
+    send(RP.Out.tellRoom(RoomId(tourId), makeMessage("reload-full")))
+
   def reloadUsers(tourId: Tournament.ID, users: List[User.ID]): Unit =
     users foreach { userId =>
       send(RP.Out.tellRoomUser(RoomId(tourId), userId, reloadMsg))
