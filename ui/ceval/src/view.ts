@@ -15,7 +15,7 @@ import { renderEval, unsupportedVariants } from './util';
 import * as winningChances from './winning-chances';
 
 let gaugeLast = 0;
-const gaugeTicks: VNode[] = [...Array(8).keys()].map(i =>
+const gaugeTicks: VNode[] = [...Array(7).keys()].map(i =>
   h(i === 3 ? 'tick.zero' : 'tick', { attrs: { style: `height: ${(i + 1) * 12.5}%` } }),
 );
 
