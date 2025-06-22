@@ -88,117 +88,128 @@ object replay {
           ),
           div(cls := "analyse__tools")(div(cls := "ceval")),
           div(cls := "analyse__controls"),
-          !ctx.blind option frag(
-            div(cls := "analyse__underboard")(
-              div(cls := "analyse__underboard__menu tabs-horiz")(
-                game.analysable option
-                  span(
-                    cls       := "computer-analysis",
-                    dataPanel := "computer-analysis",
-                  )(trans.computerAnalysis()),
-                (!game.isNotationImport && !game.isCorrespondence && game.plies > 1) option
-                  span(dataPanel := "move-times")(
-                    trans.moveTimes(),
+          if (ctx.blind)
+            div(cls := "blind-content none")(
+              h2(s"DOWNLOAD"),
+              a(
+                href := s"${routes.Game.exportOne(game.id)}",
+              )(trans.kif()),
+              pov.game.variant.standard option a(
+                href := s"${routes.Game.exportOne(game.id)}?csa=1",
+              )(trans.csa()),
+            )
+          else
+            frag(
+              div(cls := "analyse__underboard")(
+                div(cls := "analyse__underboard__menu tabs-horiz")(
+                  game.analysable option
+                    span(
+                      cls       := "computer-analysis",
+                      dataPanel := "computer-analysis",
+                    )(trans.computerAnalysis()),
+                  (!game.isNotationImport && !game.isCorrespondence && game.plies > 1) option
+                    span(dataPanel := "move-times")(
+                      trans.moveTimes(),
+                    ),
+                  span(dataPanel := "game-export")(trans.export()),
+                ),
+                div(cls := "analyse__underboard__panels")(
+                  game.analysable option div(cls := "computer-analysis")(
+                    if (analysis.isDefined || analysisStarted)
+                      div(id := "acpl-chart-container")(canvas(id := "acpl-chart"))
+                    else
+                      postForm(
+                        cls    := s"future-game-analysis${ctx.isAnon ?? " must-login"}",
+                        action := routes.Analyse.requestAnalysis(gameId),
+                      )(
+                        submitButton(cls := "button text")(
+                          span(cls := "is3 text", dataIcon := "")(trans.requestAComputerAnalysis()),
+                        ),
+                      ),
                   ),
-                span(dataPanel := "game-export")(trans.export()),
-              ),
-              div(cls := "analyse__underboard__panels")(
-                game.analysable option div(cls := "computer-analysis")(
-                  if (analysis.isDefined || analysisStarted)
-                    div(id := "acpl-chart-container")(canvas(id := "acpl-chart"))
-                  else
-                    postForm(
-                      cls    := s"future-game-analysis${ctx.isAnon ?? " must-login"}",
-                      action := routes.Analyse.requestAnalysis(gameId),
+                  div(cls := "move-times")(
+                    (game.plies > 1 && !game.isNotationImport) option div(
+                      id := "movetimes-chart-container",
                     )(
-                      submitButton(cls := "button text")(
-                        span(cls := "is3 text", dataIcon := "")(trans.requestAComputerAnalysis()),
+                      canvas(id := "movetimes-chart"),
+                    ),
+                  ),
+                  div(cls := "game-export")(
+                    div(cls := "form-group")(
+                      label(cls := "form-label")("SFEN"),
+                      input(
+                        readonly,
+                        spellcheck := false,
+                        cls        := "form-control autoselect analyse__underboard__sfen",
                       ),
                     ),
-                ),
-                div(cls := "move-times")(
-                  (game.plies > 1 && !game.isNotationImport) option div(
-                    id := "movetimes-chart-container",
-                  )(
-                    canvas(id := "movetimes-chart"),
-                  ),
-                ),
-                div(cls := "game-export")(
-                  div(cls := "form-group")(
-                    label(cls := "form-label")("SFEN"),
-                    input(
-                      readonly,
-                      spellcheck := false,
-                      cls        := "form-control autoselect analyse__underboard__sfen",
-                    ),
-                  ),
-                  div(cls := "downloads")(
-                    div(cls := "game-notation")(
-                      a(
-                        dataIcon := "x",
-                        cls      := "button text",
-                        href     := s"${routes.Game.exportOne(game.id)}",
-                      )(trans.kif()),
-                      a(
-                        dataIcon := "x",
-                        cls      := s"button text${!(pov.game.variant.standard) ?? " disabled"}",
-                        href     := s"${routes.Game.exportOne(game.id)}?csa=1",
-                      )(trans.csa()),
-                      form(cls := "notation-options")(
-                        List(
-                          ("clocks", trans.clock.txt(), pov.game.imported),
-                          ("evals", trans.search.analysis.txt(), !pov.game.metadata.analysed),
-                          ("shiftJis", "SHIFT-JIS", false),
-                        ).map(v =>
-                          label(
-                            frag(
-                              input(
-                                id    := s"notation-option_${v._1}",
-                                value := v._1,
-                                tpe   := "checkbox",
-                                cls   := "regular-checkbox",
-                              )(v._3 option (st.disabled := true)),
-                              v._2,
+                    div(cls := "downloads")(
+                      div(cls := "game-notation")(
+                        a(
+                          dataIcon := "x",
+                          cls      := "button text",
+                          href     := s"${routes.Game.exportOne(game.id)}",
+                        )(trans.kif()),
+                        a(
+                          dataIcon := "x",
+                          cls      := s"button text${!(pov.game.variant.standard) ?? " disabled"}",
+                          href     := s"${routes.Game.exportOne(game.id)}?csa=1",
+                        )(trans.csa()),
+                        form(cls := "notation-options")(
+                          List(
+                            ("clocks", trans.clock.txt(), pov.game.imported),
+                            ("evals", trans.search.analysis.txt(), !pov.game.metadata.analysed),
+                            ("shiftJis", "SHIFT-JIS", false),
+                          ).map(v =>
+                            label(
+                              frag(
+                                input(
+                                  id    := s"notation-option_${v._1}",
+                                  value := v._1,
+                                  tpe   := "checkbox",
+                                  cls   := "regular-checkbox",
+                                )(v._3 option (st.disabled := true)),
+                                v._2,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    div(cls := "game-other")(
-                      Game.gifVariants.contains(pov.game.variant) option a(
-                        dataIcon := "$",
-                        cls      := "button text",
-                        target   := "_blank",
-                        href     := cdnUrl(routes.Export.gif(pov.gameId, pov.color.name).url),
-                      )("GIF"),
-                      a(
-                        dataIcon := "=",
-                        cls      := "button text embed-howto",
-                        target   := "_blank",
-                        title    := trans.embedInYourWebsite.txt(),
-                      )(
-                        "HTML",
+                      div(cls := "game-other")(
+                        Game.gifVariants.contains(pov.game.variant) option a(
+                          dataIcon := "$",
+                          cls      := "button text",
+                          target   := "_blank",
+                          href     := cdnUrl(routes.Export.gif(pov.gameId, pov.color.name).url),
+                        )("GIF"),
+                        a(
+                          dataIcon := "=",
+                          cls      := "button text embed-howto",
+                          target   := "_blank",
+                          title    := trans.embedInYourWebsite.txt(),
+                        )(
+                          "HTML",
+                        ),
+                        (game.isKifImport || game.isCsaImport) option a(
+                          dataIcon := "x",
+                          cls      := "button text",
+                          href := s"${routes.Game.exportOne(game.id)}?imported=1${game.isCsaImport ?? "&csa=1"}",
+                        )(trans.downloadImported()),
                       ),
-                      (game.isKifImport || game.isCsaImport) option a(
-                        dataIcon := "x",
-                        cls      := "button text",
-                        href := s"${routes.Game.exportOne(game.id)}?imported=1${game.isCsaImport ?? "&csa=1"}",
-                      )(trans.downloadImported()),
                     ),
-                  ),
-                  div(cls := "kif form-group")(
-                    label(cls := "form-label")(trans.kif()),
-                    textarea(
-                      readonly,
-                      spellcheck := false,
-                      cls        := "form-control autoselect",
-                    )(raw(kif)),
+                    div(cls := "kif form-group")(
+                      label(cls := "form-label")(trans.kif()),
+                      textarea(
+                        readonly,
+                        spellcheck := false,
+                        cls        := "form-control autoselect",
+                      )(raw(kif)),
+                    ),
                   ),
                 ),
               ),
+              div(cls := "analyse__acpl"),
             ),
-          ),
-          div(cls := "analyse__acpl"),
         ),
       ),
     )
