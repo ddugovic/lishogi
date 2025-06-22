@@ -17,7 +17,6 @@ import { type VNode, h } from 'snabbdom';
 import { path as treePath } from 'tree';
 import { render as acplView } from './acpl';
 import { view as actionMenu } from './action-menu';
-import renderClocks from './clocks';
 import * as control from './control';
 import type AnalyseCtrl from './ctrl';
 import forecastView from './forecast/forecast-view';
@@ -27,13 +26,13 @@ import * as shogiground from './ground';
 import type { ConcealOf } from './interfaces';
 import { view as keyboardView } from './keyboard';
 import * as notationExport from './notation-export';
+import { renderPlayerBars } from './player-bars';
 import practiceView from './practice/practice-view';
 import retroView from './retrospect/retro-view';
 import serverSideUnderboard from './server-side-underboard';
 import * as gbEdit from './study/gamebook/gamebook-edit';
 import * as gbPlay from './study/gamebook/gamebook-play-view';
 import type { StudyCtrl } from './study/interfaces';
-import renderPlayerBars from './study/player-bars';
 import * as studyPracticeView from './study/practice/study-practice-view';
 import * as studyView from './study/study-view';
 import { render as renderTreeView } from './tree-view/tree-view';
@@ -360,10 +359,10 @@ export default function (ctrl: AnalyseCtrl): VNode {
   const gamebookPlay = ctrl.gamebookPlay();
   const gamebookPlayView = gamebookPlay && gbPlay.render(gamebookPlay);
   const gamebookEditView = gbEdit.running(ctrl) ? gbEdit.render(ctrl) : undefined;
-  const playerBars = renderPlayerBars(ctrl);
-  const clocks = !playerBars && renderClocks(ctrl, true);
+  const playerBars = !ctrl.embed && !ctrl.forecast ? renderPlayerBars(ctrl) : undefined;
   const gaugeOn = ctrl.showEvalGauge();
   const needsInnerCoords = !!playerBars;
+
   return h(
     `main.sb-insert.analyse.main-v-${ctrl.data.game.variant.key}`, // sb-insert - to force snabbdom to call insert
     {
@@ -390,9 +389,8 @@ export default function (ctrl: AnalyseCtrl): VNode {
       class: {
         'comp-off': !ctrl.showComputer(),
         'gauge-on': gaugeOn,
-        'has-players': !!playerBars,
+        'has-player-bars': !!playerBars,
         'post-game': !!ctrl.study?.data.postGameStudy,
-        'has-clocks': !!clocks,
       },
     },
     [
@@ -427,7 +425,6 @@ export default function (ctrl: AnalyseCtrl): VNode {
                 ),
         },
         [
-          ...(clocks || []),
           playerBars ? playerBars[ctrl.bottomIsSente() ? 1 : 0] : null,
           shogiground.renderBoard(ctrl),
           playerBars ? playerBars[ctrl.bottomIsSente() ? 0 : 1] : null,

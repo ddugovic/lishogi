@@ -10,7 +10,6 @@ import { ctrl as chapterEditForm } from './chapter-edit-form';
 import { type StudyChapterNewFormCtrl, ctrl as chapterNewForm } from './chapter-new-form';
 import type {
   LocalPaths,
-  StudyChapter,
   StudyChapterConfig,
   StudyChapterMeta,
   StudyCtrl,
@@ -65,11 +64,6 @@ export function ctrl(
     },
     localPaths,
   };
-}
-
-export function isFinished(c: StudyChapter): boolean {
-  const result = findTag(c.tags, 'result');
-  return !!result && result !== '*';
 }
 
 export function findTag(tags: TagArray[], name: string): string | undefined {

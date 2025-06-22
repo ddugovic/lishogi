@@ -1,0 +1,114 @@
+@use 'pkg:breakpoint-sass' as breakpoint;
+@use 'pkg:common/abstract/extends';
+@use 'pkg:common/abstract/mixins';
+@use 'pkg:common/abstract/variables';
+@use 'pkg:common/abstract/uniboard';
+@use 'pkg:common/theme';
+@use './local';
+
+$player-bar-height: 1.7rem;
+
+.analyse.has-player-bars {
+  sg-board {
+    border-radius: 0;
+  }
+
+  @include breakpoint.breakpoint(local.$mq-col2) {
+    .analyse__underboard {
+      margin-top: uniboard.$col2-uniboard-controls;
+    }
+
+    .advice-summary {
+      margin-top: var(--panel-tab-height);
+    }
+  }
+
+  @include breakpoint.breakpoint(local.$mq-col1) {
+    .analyse__board {
+      margin: $player-bar-height 0;
+    }
+  }
+}
+
+.player-bar {
+  display: flex;
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: $player-bar-height;
+  font-size: 1.1em;
+  white-space: nowrap;
+
+  @include breakpoint.breakpoint(local.$mq-col2) {
+    @include mixins.hand-width(left);
+    @include mixins.board-width(width);
+  }
+
+  &-top {
+    top: #{-$player-bar-height};
+
+    .analyse__clock {
+      @extend %box-radius-top;
+    }
+  }
+
+  &-bot {
+    bottom: #{-$player-bar-height};
+
+    .analyse__clock {
+      @extend %box-radius-bottom;
+    }
+  }
+
+  .name-wrap {
+    @extend %page-text;
+
+    display: flex;
+    align-items: center;
+    margin-left: 0.2rem;
+  }
+
+  .clock-wrap {
+    height: 100%;
+    margin-left: auto;
+
+    .analyse__clock {
+      @extend %roboto, %box-shadow;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 0 0.5em;
+      background: theme.$c-bg-box;
+
+      &.active {
+        background: theme.$m-secondary_bg-box_mix_30;
+        color: theme.$c-font-clearer;
+        font-weight: bold;
+      }
+
+      .time {
+        min-width: 3.75rem;
+        text-align: center;
+
+        tenths {
+          font-size: 80%;
+        }
+      }
+    }
+  }
+
+  @include breakpoint.breakpoint(local.$mq-col1) {
+    &-top,
+    &-bot {
+      border-radius: variables.$box-radius-size;
+      background: none;
+      box-shadow: none;
+
+      .analyse__clock {
+        border-radius: variables.$box-radius-size;
+      }
+    }
+  }
+}
