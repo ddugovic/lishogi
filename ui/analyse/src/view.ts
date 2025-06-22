@@ -277,6 +277,7 @@ function controls(ctrl: AnalyseCtrl) {
   const canJumpPrev = ctrl.path !== '';
   const canJumpNext = !!ctrl.node.children[0];
   const menuIsOpen = ctrl.actionMenu.open;
+
   return h(
     'div.analyse__controls.analyse-controls',
     {
@@ -299,48 +300,30 @@ function controls(ctrl: AnalyseCtrl) {
       ctrl.embed || ctrl.forecast
         ? null
         : h(
-            `div.features${!ctrl.synthetic ? '.from-game' : ''}`,
+            'div.features',
             ctrl.studyPractice
-              ? [
-                  h('a.fbt', {
-                    attrs: {
-                      title: i18n('analysis'),
-                      target: '_blank',
-                      href: ctrl.studyPractice.analysisUrl(),
-                      'data-icon': 'A',
-                    },
-                  }),
-                ]
-              : [
-                  !ctrl.synthetic
-                    ? h('button.fbt', {
-                        attrs: {
-                          'data-icon': '4',
-                          disabled: !document.body.dataset.user,
-                          title: i18n('toStudy'),
-                          hidden: menuIsOpen,
-                        },
-                        hook: bind('click', _ => {
-                          ctrl.studyModal(true);
-                          ctrl.redraw();
-                        }),
-                      })
-                    : null,
-                  h('button.fbt', {
-                    attrs: {
-                      title: i18n('practiceWithComputer'),
-                      'data-act': 'practice',
-                      'data-icon': '',
-                      hidden: !!ctrl.retro,
-                      disabled:
-                        menuIsOpen ||
-                        !(ctrl.ceval.possible && ctrl.ceval.allowed() && !ctrl.isGamebook()),
-                    },
-                    class: {
-                      active: !!ctrl.practice,
-                    },
-                  }),
-                ],
+              ? h('a.fbt', {
+                  attrs: {
+                    title: i18n('analysis'),
+                    target: '_blank',
+                    href: ctrl.studyPractice.analysisUrl(),
+                    'data-icon': 'A',
+                  },
+                })
+              : h('button.fbt', {
+                  attrs: {
+                    title: i18n('practiceWithComputer'),
+                    'data-act': 'practice',
+                    'data-icon': '',
+                    hidden: !!ctrl.retro,
+                    disabled:
+                      menuIsOpen ||
+                      !(ctrl.ceval.possible && ctrl.ceval.allowed() && !ctrl.isGamebook()),
+                  },
+                  class: {
+                    active: !!ctrl.practice,
+                  },
+                }),
           ),
       h('div.jumps', [
         !ctrl.embed ? jumpButton('W', 'first', canJumpPrev) : undefined,

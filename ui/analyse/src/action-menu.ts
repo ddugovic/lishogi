@@ -121,37 +121,53 @@ function studyButton(ctrl: AnalyseCtrl) {
       i18n('openStudy'),
     );
   if (ctrl.study || ctrl.ongoing || ctrl.embed) return;
-  return h(
-    'form',
-    {
-      attrs: {
-        method: 'post',
-        action: '/study/as',
-      },
-      hook: bind('submit', e => {
-        const kifInput = (e.target as HTMLElement).querySelector(
-          'input[name=notation]',
-        ) as HTMLInputElement;
-        if (kifInput) kifInput.value = kifExport.renderFullKif(ctrl);
-      }),
-    },
-    [
-      !ctrl.synthetic ? hiddenInput('gameId', ctrl.data.game.id) : hiddenInput('notation', ''),
-      hiddenInput('orientation', ctrl.shogiground.state.orientation),
-      hiddenInput('variant', ctrl.data.game.variant.key),
-      hiddenInput('sfen', ctrl.tree.root.sfen),
-      h(
-        'button.button.button-empty',
-        {
-          attrs: {
-            type: 'submit',
-            'data-icon': '4',
-          },
+  else if (!ctrl.synthetic)
+    return h(
+      'button.button.button-empty',
+      {
+        attrs: {
+          'data-icon': '4',
+          disabled: !document.body.dataset.user,
         },
-        i18n('toStudy'),
-      ),
-    ],
-  );
+        hook: bind('click', _ => {
+          ctrl.studyModal(true);
+          ctrl.redraw();
+        }),
+      },
+      i18n('toStudy'),
+    );
+  else
+    return h(
+      'form',
+      {
+        attrs: {
+          method: 'post',
+          action: '/study/as',
+        },
+        hook: bind('submit', e => {
+          const kifInput = (e.target as HTMLElement).querySelector(
+            'input[name=notation]',
+          ) as HTMLInputElement;
+          if (kifInput) kifInput.value = kifExport.renderFullKif(ctrl);
+        }),
+      },
+      [
+        !ctrl.synthetic ? hiddenInput('gameId', ctrl.data.game.id) : hiddenInput('notation', ''),
+        hiddenInput('orientation', ctrl.shogiground.state.orientation),
+        hiddenInput('variant', ctrl.data.game.variant.key),
+        hiddenInput('sfen', ctrl.tree.root.sfen),
+        h(
+          'button.button.button-empty',
+          {
+            attrs: {
+              type: 'submit',
+              'data-icon': '4',
+            },
+          },
+          i18n('toStudy'),
+        ),
+      ],
+    );
 }
 
 export class Ctrl {
@@ -390,11 +406,11 @@ export function view(ctrl: AnalyseCtrl): VNode {
   return h(
     'div.action-menu',
     tools
+      .concat(deleteButton(ctrl, ctrl.opts.userId))
       .concat(notationConfig)
       .concat(cevalConfig)
       .concat(ctrl.mainline.length > 4 ? [h('h2', i18n('replayMode')), autoplayButtons(ctrl)] : [])
       .concat([
-        deleteButton(ctrl, ctrl.opts.userId),
         canContinue
           ? h(`div.continue-with.none.g_${d.game.id}`, [
               h(
