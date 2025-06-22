@@ -28,7 +28,7 @@ case class Player(
     provisional: Boolean = false,
     blurs: Blurs = Blurs.blursZero.zero,
     berserk: Boolean = false,
-    name: Option[String] = None,
+    name: Option[String] = None, // used for imported games
 ) {
 
   def playerUser =

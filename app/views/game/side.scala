@@ -18,10 +18,11 @@ object side {
       tour: Option[lila.tournament.TourAndTeamVs],
       simul: Option[lila.simul.Simul],
       userTv: Option[lila.user.User] = None,
+      backToGame: Option[lila.game.Player] = None,
       bookmarked: Boolean,
   )(implicit ctx: Context): Option[Frag] =
     ctx.noBlind option frag(
-      meta(pov, tour, simul, userTv, bookmarked),
+      meta(pov, tour, simul, userTv, backToGame, bookmarked),
       pov.game.userIds.filter(isStreaming) map views.html.streamer.bits.contextual,
     )
 
@@ -30,10 +31,30 @@ object side {
       tour: Option[lila.tournament.TourAndTeamVs],
       simul: Option[lila.simul.Simul],
       userTv: Option[lila.user.User] = None,
+      backToGame: Option[lila.game.Player] = None,
       bookmarked: Boolean,
   )(implicit ctx: Context): Option[Frag] =
     ctx.noBlind option {
       import pov.game
+
+      val tourOrSimulLink = tour map { t =>
+        a(
+          dataIcon := "g",
+          cls      := "text button button-empty",
+          href     := routes.Tournament.show(t.tour.id).url,
+        )(t.tour.trans)
+      } orElse game.tournamentId.map { tourId =>
+        a(
+          dataIcon := "g",
+          cls      := "text button button-empty",
+          href     := routes.Tournament.show(tourId).url,
+        )(tournamentIdToName(tourId))
+      } orElse simul.map { sim =>
+        a(dataIcon := "r", cls := "text button button-empty", href := routes.Simul.show(sim.id))(
+          sim.name,
+        )
+      }
+
       div(cls := "game__meta")(
         st.section(
           div(cls := "game__meta__infos", dataIcon := bits.gameIcon(game))(
@@ -100,22 +121,30 @@ object side {
             h2(cls := "top user-tv text", dataUserTv := u.id, dataIcon := "1")(u.titleUsername),
           )
         },
-        tour.map { t =>
-          st.section(cls := "game__tournament")(
-            a(cls := "text", dataIcon := "g", href := routes.Tournament.show(t.tour.id))(
-              t.tour.trans,
-            ),
-            t.tour.isArena option div(cls := "clock", dataTime := t.tour.secondsToFinish)(
-              div(cls := "time")(t.tour.clockStatus),
-            ),
-          )
-        } orElse game.tournamentId.map { tourId =>
-          st.section(cls := "game__tournament-link")(tournamentLink(tourId))
-        } orElse simul.map { sim =>
-          st.section(cls := "game__simul-link text", dataIcon := "f")(
-            a(href := routes.Simul.show(sim.id))(sim.name),
-          )
+        tour ?? { t =>
+          t.tour.isArena option
+            st.section(cls := "game__tournament-clock")(
+              div(cls := "clock", dataTime := t.tour.secondsToFinish)(
+                div(cls := "time")(t.tour.clockStatus),
+              ),
+            )
         },
+        (backToGame.isDefined || tourOrSimulLink.isDefined) option
+          st.section(cls := "game__links")(
+            frag(
+              backToGame.flatMap(game.fullIdOf) map { fullId =>
+                a(
+                  cls      := s"button button-empty${tourOrSimulLink.isEmpty ?? " text"}",
+                  dataIcon := "i",
+                  href     := routes.Round.player(fullId),
+                  title    := trans.backToGame.txt(),
+                )(
+                  tourOrSimulLink.isEmpty option trans.backToGame(),
+                )
+              },
+              tourOrSimulLink,
+            ),
+          ),
       )
     }
 }

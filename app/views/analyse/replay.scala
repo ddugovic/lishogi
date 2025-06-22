@@ -23,7 +23,6 @@ object replay {
       analysis: Option[lila.analyse.Analysis],
       analysisStarted: Boolean,
       simul: Option[lila.simul.Simul],
-      cross: Option[lila.game.Crosstable.WithMatchup],
       userTv: Option[lila.user.User],
       chatOption: Option[lila.chat.UserChat.Mine],
       bookmarked: Boolean,
@@ -42,70 +41,8 @@ object replay {
         palantir = ctx.me.exists(_.canPalantir),
       )
     }
-    val exportLinks = div(
-      ctx.noBlind option frag(
-        Game.gifVariants.contains(pov.game.variant) option a(
-          dataIcon := "$",
-          cls      := "text",
-          target   := "_blank",
-          href     := cdnUrl(routes.Export.gif(pov.gameId, pov.color.name).url),
-        )(
-          "GIF",
-        ),
-        a(dataIcon := "=", cls := "text embed-howto", target := "_blank")(
-          trans.embedInYourWebsite(),
-        ),
-      ),
-    )
-    val kifLinks = div(
-      span(
-        a(
-          dataIcon := "x",
-          cls      := "text",
-          href     := s"${routes.Game.exportOne(game.id)}?clocks=0&evals=0",
-        )(
-          trans.downloadRaw(),
-        ),
-        a(
-          dataIcon := "x",
-          cls      := "text jis",
-          href     := s"${routes.Game.exportOne(game.id)}?clocks=0&evals=0&shiftJis=1",
-        )(
-          "Shift-JIS",
-        ),
-      ),
-      a(dataIcon := "x", cls := "text", href := s"${routes.Game.exportOne(game.id)}?literate=1")(
-        trans.downloadAnnotated(),
-      ),
-      game.isKifImport option a(
-        dataIcon := "x",
-        cls      := "text",
-        href     := s"${routes.Game.exportOne(game.id)}?imported=1",
-      )(
-        trans.downloadImported(),
-      ),
-    )
-    val csaLinks = pov.game.variant.standard option div(
-      a(
-        dataIcon := "x",
-        cls      := "text",
-        href     := s"${routes.Game.exportOne(game.id)}?csa=1&clocks=0",
-      )(
-        trans.downloadRaw(),
-      ),
-      a(
-        dataIcon := "x",
-        cls      := "text",
-        href     := s"${routes.Game.exportOne(game.id)}?literate=1&csa=1",
-      )(
-        trans.downloadAnnotated(),
-      ),
-      game.isCsaImport option a(
-        dataIcon := "x",
-        cls      := "text",
-        href     := s"${routes.Game.exportOne(game.id)}?imported=1&csa=1",
-      )(trans.downloadImported()),
-    )
+
+    val backToGame = ctx.me.flatMap(pov.game.player)
 
     bits.layout(
       title = titleOf(pov),
@@ -130,14 +67,18 @@ object replay {
       openGraph = povOpenGraph(pov).some,
     )(
       frag(
-        main(cls := s"analyse ${mainVariantClass(pov.game.variant)}")(
+        main(
+          cls := s"analyse ${mainVariantClass(pov.game.variant)} ${(pov.game.hasClock || pov.game.players
+              .exists(p => p.isAi || p.hasUser || p.name.exists(_ != "?"))) ?? " has-player-bars"}",
+        )(
           st.aside(cls := "analyse__side")(
             views.html.game
               .side(
                 pov,
-                none,
+                tour = none,
                 simul = simul,
                 userTv = userTv,
+                backToGame = backToGame,
                 bookmarked = bookmarked,
               ),
           ),
@@ -149,6 +90,18 @@ object replay {
           div(cls := "analyse__controls"),
           !ctx.blind option frag(
             div(cls := "analyse__underboard")(
+              div(cls := "analyse__underboard__menu tabs-horiz")(
+                game.analysable option
+                  span(
+                    cls       := "computer-analysis",
+                    dataPanel := "computer-analysis",
+                  )(trans.computerAnalysis()),
+                (!game.isNotationImport && !game.isCorrespondence && game.plies > 1) option
+                  span(dataPanel := "move-times")(
+                    trans.moveTimes(),
+                  ),
+                span(dataPanel := "game-export")(trans.export()),
+              ),
               div(cls := "analyse__underboard__panels")(
                 game.analysable option div(cls := "computer-analysis")(
                   if (analysis.isDefined || analysisStarted)
@@ -170,65 +123,83 @@ object replay {
                     canvas(id := "movetimes-chart"),
                   ),
                 ),
-                div(cls := "sfen-notation")(
-                  div(
-                    strong("SFEN"),
+                div(cls := "game-export")(
+                  div(cls := "form-group")(
+                    label(cls := "form-label")("SFEN"),
                     input(
                       readonly,
                       spellcheck := false,
-                      cls        := "copyable autoselect analyse__underboard__sfen",
+                      cls        := "form-control autoselect analyse__underboard__sfen",
                     ),
                   ),
-                  div(cls := "notation-options")(
-                    strong("KIF"),
-                    kifLinks,
+                  div(cls := "downloads")(
+                    div(cls := "game-notation")(
+                      a(
+                        dataIcon := "x",
+                        cls      := "button text",
+                        href     := s"${routes.Game.exportOne(game.id)}",
+                      )(trans.kif()),
+                      a(
+                        dataIcon := "x",
+                        cls      := s"button text${!(pov.game.variant.standard) ?? " disabled"}",
+                        href     := s"${routes.Game.exportOne(game.id)}?csa=1",
+                      )(trans.csa()),
+                      form(cls := "notation-options")(
+                        List(
+                          ("clocks", trans.clock.txt(), pov.game.imported),
+                          ("evals", trans.search.analysis.txt(), !pov.game.metadata.analysed),
+                          ("shiftJis", "SHIFT-JIS", false),
+                        ).map(v =>
+                          label(
+                            frag(
+                              input(
+                                id    := s"notation-option_${v._1}",
+                                value := v._1,
+                                tpe   := "checkbox",
+                                cls   := "regular-checkbox",
+                              )(v._3 option (st.disabled := true)),
+                              v._2,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    div(cls := "game-other")(
+                      Game.gifVariants.contains(pov.game.variant) option a(
+                        dataIcon := "$",
+                        cls      := "button text",
+                        target   := "_blank",
+                        href     := cdnUrl(routes.Export.gif(pov.gameId, pov.color.name).url),
+                      )("GIF"),
+                      a(
+                        dataIcon := "=",
+                        cls      := "button text embed-howto",
+                        target   := "_blank",
+                        title    := trans.embedInYourWebsite.txt(),
+                      )(
+                        "HTML",
+                      ),
+                      (game.isKifImport || game.isCsaImport) option a(
+                        dataIcon := "x",
+                        cls      := "button text",
+                        href := s"${routes.Game.exportOne(game.id)}?imported=1${game.isCsaImport ?? "&csa=1"}",
+                      )(trans.downloadImported()),
+                    ),
                   ),
-                  csaLinks map { csa =>
-                    div(cls := "notation-options")(
-                      strong("CSA"),
-                      csa,
-                    )
-                  },
-                  div(cls := "notation-options")(
-                    strong(trans.export()),
-                    exportLinks,
+                  div(cls := "kif form-group")(
+                    label(cls := "form-label")(trans.kif()),
+                    textarea(
+                      readonly,
+                      spellcheck := false,
+                      cls        := "form-control autoselect",
+                    )(raw(kif)),
                   ),
-                  div(cls := "kif")(kif),
                 ),
-                cross.map { c =>
-                  div(cls := "ctable")(
-                    views.html.game
-                      .crosstable(pov.player.userId.fold(c)(c.fromPov), pov.gameId.some),
-                  )
-                },
-              ),
-              div(cls := "analyse__underboard__menu")(
-                game.analysable option
-                  span(
-                    cls       := "computer-analysis",
-                    dataPanel := "computer-analysis",
-                    title := analysis.map { a =>
-                      s"Provided by ${usernameOrId(a.providedBy)}"
-                    },
-                  )(trans.computerAnalysis()),
-                !game.isNotationImport option frag(
-                  (game.plies > 1 && !game.isCorrespondence) option span(dataPanel := "move-times")(
-                    trans.moveTimes(),
-                  ),
-                  cross.isDefined option span(dataPanel := "ctable")(trans.crosstable()),
-                ),
-                span(dataPanel := "sfen-notation")(trans.export()),
               ),
             ),
           ),
           div(cls := "analyse__acpl"),
         ),
-        if (ctx.blind)
-          div(cls := "blind-content none")(
-            h2("KIF/CSA"),
-            kifLinks,
-            csaLinks,
-          ),
       ),
     )
   }

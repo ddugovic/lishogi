@@ -11,7 +11,8 @@
   font-size: 0.9em;
   align-items: flex-start;
   line-height: 1.15em;
-  margin-top: 1em;
+  min-height: var(--panel-height); // from round-underboard
+  justify-content: center;
 
   .hidden {
     visibility: hidden;

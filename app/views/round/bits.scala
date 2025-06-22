@@ -139,6 +139,7 @@ object bits {
       tour: Option[lila.tournament.TourAndTeamVs],
       simul: Option[lila.simul.Simul],
       userTv: Option[lila.user.User] = None,
+      backToGame: Option[lila.game.Player] = None,
       bookmarked: Boolean,
   )(implicit ctx: Context) =
     views.html.game.side(
@@ -146,6 +147,7 @@ object bits {
       tour,
       simul = simul,
       userTv = userTv,
+      backToGame = backToGame,
       bookmarked = bookmarked,
     )
 

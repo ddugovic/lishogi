@@ -9,12 +9,30 @@
   @extend %box-neat-force;
 
   background: theme.$c-bg-box;
-  padding: #{variables.$block-gap * 0.7} variables.$block-gap;
 
-  section:not(:last-child) {
-    border-bottom: theme.$border;
-    margin-bottom: math.div(variables.$block-gap * 2, 3);
-    padding-bottom: math.div(variables.$block-gap * 2, 3);
+  section {
+    padding: 0.8em variables.$block-gap;
+
+    &:not(:last-child) {
+      border-bottom: theme.$border;
+    }
+
+    &.game__links {
+      display: flex;
+      padding: 0;
+
+      a {
+        border-radius: 0;
+
+        &:last-child {
+          flex: 1;
+        }
+
+        &:nth-child(2) {
+          border-left: theme.$border;
+        }
+      }
+    }
   }
 
   &__infos {
@@ -48,6 +66,10 @@
     &.orientation-gote {
       flex-direction: column;
     }
+
+    .berserk::before {
+      margin-left: 4px;
+    }
   }
 
   .bookmark {
@@ -73,13 +95,12 @@
   }
 }
 
-.game__tournament {
+.game__tournament-clock {
   .clock {
     @extend %roboto;
 
     font-size: 2em;
     text-align: center;
-    margin-top: 0.2em;
   }
 }
 

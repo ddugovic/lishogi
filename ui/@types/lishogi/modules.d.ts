@@ -14,6 +14,7 @@ export interface LishogiModules {
     el: HTMLCanvasElement,
     data: any,
     mainline: Tree.Node[],
+    ply: number,
   ) => {
     updateData: (data: any, mainline: Tree.Node[]) => void;
     selectPly: (ply: number, isMainline: boolean) => void;
@@ -21,7 +22,7 @@ export interface LishogiModules {
   chartMovetime?: (
     el: HTMLCanvasElement,
     data: any,
-    hunter: boolean,
+    ply: number,
   ) => {
     selectPly: (ply: number, isMainline: boolean) => void;
   };

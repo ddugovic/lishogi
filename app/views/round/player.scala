@@ -63,7 +63,13 @@ object player {
     )(
       main(cls := s"round ${mainVariantClass(pov.game.variant)}")(
         st.aside(cls := "round__side")(
-          bits.side(pov, tour.map(_.tourAndTeamVs), simul, bookmarked = bookmarked),
+          bits.side(
+            pov,
+            tour.map(_.tourAndTeamVs),
+            simul,
+            backToGame = none,
+            bookmarked = bookmarked,
+          ),
           chatOption.map(_ => chat.frag),
         ),
         bits.roundAppPreload(pov, true),

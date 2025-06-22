@@ -52,7 +52,7 @@ object watcher {
     )(
       main(cls := s"round ${mainVariantClass(pov.game.variant)}")(
         st.aside(cls := "round__side")(
-          bits.side(pov, tour, simul, userTv, bookmarked),
+          bits.side(pov, tour, simul, userTv, backToGame = none, bookmarked),
           chatOption.map(_ => chat.frag),
         ),
         bits.roundAppPreload(pov, false),
@@ -74,7 +74,8 @@ object watcher {
       frag(
         main(cls := s"round ${mainVariantClass(pov.game.variant)}")(
           st.aside(cls := "round__side")(
-            game.side(pov, none, simul = none, userTv = none, bookmarked = false),
+            game
+              .side(pov, none, simul = none, userTv = none, backToGame = none, bookmarked = false),
             div(cls := "for-crawler")(
               h1(titleGame(pov.game)),
               p(describePov(pov)),

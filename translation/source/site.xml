@@ -109,6 +109,8 @@
 	<string name="openingExplorer">Opening explorer</string>
 	<string name="xOpeningExplorer">%s opening explorer</string>
 	<string name="allSet">All set!</string>
+	<string name="kif" comment="KIF notation, most likely language specific translation doesn't exist">KIF</string>
+	<string name="csa" comment="CSA notation, most likely language specific translation doesn't exist">CSA</string>
 	<string name="importKif">Import KIF</string>
 	<string name="importCsa">Import CSA</string>
 	<string name="delete">Delete</string>

@@ -8,70 +8,35 @@
 $col1-panel-height: 30vh;
 $col2-panel-height: 240px;
 
+:root {
+  --panel-height: #{$col1-panel-height};
+  --panel-tab-height: 2.3em;
+
+  @include breakpoint.breakpoint(local.$mq-col2) {
+    --panel-height: #{$col2-panel-height};
+  }
+}
+
 .comp-off .computer-analysis {
   display: none !important;
 }
 
 .analyse__underboard {
-  @include mixins.has-bg-img {
-    @extend %box-radius-force;
-
-    background-color: theme.$c-bg-box;
-    padding-left: 1rem;
-  }
-
   &__menu {
-    @extend %flex-center-nowrap;
-
-    justify-content: center;
-    align-items: flex-start;
-    border-top: 2px solid theme.$c-border;
-
     > span {
-      @extend %roboto, %box-radius-bottom;
+      @extend %roboto;
 
-      flex: 1 1 0;
-      text-align: center;
       font-size: 0.9em;
-      padding: 0.4em 0.1em;
-      cursor: pointer;
-      position: relative;
-
-      @include mixins.transition(color, 0.25s);
-
-      &::after {
-        content: '';
-        background: theme.$m-accent_alpha_neg40;
-        height: 2px;
-        position: absolute;
-        width: 96%;
-        left: 2%;
-        top: -2px;
-
-        @include mixins.transition(all, 0.25s);
-
-        transform: scale(0);
-      }
-
-      &.active,
-      &:hover::after {
-        transform: scale(1);
-      }
-
-      &.active {
-        color: theme.$c-accent;
-      }
+      flex: 1;
+      height: var(--panel-tab-height);
     }
   }
 
   &__panels {
-    --panel-height: #{$col1-panel-height};
+    @extend %box-radius-bottom;
 
     min-height: var(--panel-height);
-
-    @include breakpoint.breakpoint(local.$mq-col2) {
-      --panel-height: #{$col2-panel-height};
-    }
+    background: theme.$c-bg-box;
 
     > div {
       height: var(--panel-height);
@@ -82,14 +47,9 @@ $col2-panel-height: 240px;
         display: block;
       }
     }
-
-    .crosstable table {
-      margin-top: 60px;
-    }
   }
 
-  .computer-analysis,
-  .ctable {
+  .computer-analysis {
     align-items: center;
     justify-content: center;
     position: relative;
@@ -103,54 +63,72 @@ $col2-panel-height: 240px;
     text-align: center;
   }
 
-  .sfen-notation {
+  .game-export {
+    --panel-height: 500px;
+
     overflow-x: visible;
     overflow-y: auto;
-    font-size: 0.9em;
+    padding: 1.5em 1.2em;
 
-    > div {
-      @extend %flex-center-nowrap;
+    input:not(.regular-checkbox),
+    textarea {
+      display: block;
+      width: 100%;
+      height: calc(2.7em + 2px);
+      background-clip: padding-box;
+    }
 
-      margin-bottom: 1em;
+    .downloads {
+      margin: 2rem 0;
+
+      a {
+        display: block;
+        padding: 1em 0;
+        width: calc(50% - 0.5rem);
+      }
+
+      .game-notation,
+      .game-other {
+        display: flex;
+        flex-wrap: wrap;
+        column-gap: 1rem;
+        margin-bottom: 1rem;
+
+        &:last-child {
+          margin-bottom: 2rem;
+        }
+
+        .notation-options {
+          width: 100%;
+          text-align: center;
+          margin-top: 0.5rem;
+
+          label {
+            display: inline-flex;
+            align-items: center;
+            margin-left: 1rem;
+
+            .regular-checkbox {
+              @extend %checkbox;
+
+              margin-right: 0.3em;
+            }
+          }
+        }
+      }
+
+      .game-other {
+        gap: 1rem;
+      }
     }
 
     .kif {
-      white-space: pre-wrap;
-      font-family: monospace;
-    }
+      margin-bottom: 0;
 
-    strong {
-      display: inline-block;
-      margin-right: 1em;
-      min-width: 3rem;
-    }
-
-    .notation-options {
-      div {
-        @extend %flex-wrap;
-
-        flex: 1;
-      }
-
-      a,
-      span {
-        display: flex;
-        flex: 0 0 50%;
-        line-height: 1.6em;
-      }
-
-      .jis {
-        margin-left: 0.5rem;
+      textarea {
+        min-height: 12rem;
       }
     }
-  }
-
-  &__sfen {
-    width: 100%;
-    border: 0;
-    background: none;
-    padding: 0.3em;
-    margin-right: 0.5em;
   }
 }
 

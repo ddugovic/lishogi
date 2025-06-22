@@ -11,7 +11,6 @@ object replayBot {
       pov: Pov,
       kif: String,
       simul: Option[lila.simul.Simul],
-      cross: Option[lila.game.Crosstable.WithMatchup],
   )(implicit ctx: Context) = {
     views.html.analyse.bits.layout(
       title = replay titleOf pov,
@@ -20,7 +19,7 @@ object replayBot {
     ) {
       main(cls := s"analyse ${mainVariantClass(pov.game.variant)}")(
         st.aside(cls := "analyse__side")(
-          views.html.game.side(pov, none, simul = simul, bookmarked = false),
+          views.html.game.side(pov, none, simul = simul, backToGame = none, bookmarked = false),
         ),
         div(cls := s"analyse__board main-board ${variantClass(pov.game.variant)}")(
           shogigroundEmpty(pov.game.variant, pov.color),
@@ -40,11 +39,6 @@ object replayBot {
               ),
               div(cls := "kif")(kif),
             ),
-            cross.map { c =>
-              div(cls := "ctable active")(
-                views.html.game.crosstable(pov.player.userId.fold(c)(c.fromPov), pov.gameId.some),
-              )
-            },
           ),
         ),
         div(cls := "analyse__acpl"),

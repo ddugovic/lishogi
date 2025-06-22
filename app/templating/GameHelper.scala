@@ -129,7 +129,7 @@ trait GameHelper {
   def gameVsText(game: Game, withRatings: Boolean = false)(implicit lang: Lang): String =
     Namer.gameVsTextBlocking(game, withRatings)(lightUser, lang)
 
-  val berserkIconSpan = iconTag("`")
+  val berserkIconSpan = i(dataIcon := "`", cls := "berserk")
 
   def playerLink(
       player: Player,
@@ -222,25 +222,19 @@ trait GameHelper {
   def gameLink(
       game: Game,
       color: Color,
-      ownerLink: Boolean = false,
       tv: Boolean = false,
-  )(implicit ctx: Context): String = {
-    val owner = ownerLink ?? ctx.me.flatMap(game.player)
+  ): String = {
     if (tv) routes.Tv.index
-    else
-      owner.fold(routes.Round.watcher(game.id, color.name)) { o =>
-        routes.Round.player(game fullIdOf o.color)
-      }
+    else routes.Round.watcher(game.id, color.name)
   }.toString
 
-  def gameLink(pov: Pov)(implicit ctx: Context): String = gameLink(pov.game, pov.color)
+  def gameLink(pov: Pov): String = gameLink(pov.game, pov.color)
 
   private def miniBoardCls(gameId: String, variant: Variant, isLive: Boolean): String =
     s"mini-board mini-board-${gameId} parse-sfen ${variantClass(variant)}${isLive ?? " live"}"
 
   def gameSfen(
       pov: Pov,
-      ownerLink: Boolean = false,
       tv: Boolean = false,
       withTitle: Boolean = true,
       withLink: Boolean = true,
@@ -251,7 +245,7 @@ trait GameHelper {
     val variant = game.variant
     val tag     = if (withLink) a else span
     tag(
-      href        := withLink.option(gameLink(game, pov.color, ownerLink, tv)),
+      href        := withLink.option(gameLink(game, pov.color, tv)),
       title       := withTitle.option(gameTitle(game, pov.color)),
       cls         := miniBoardCls(game.id, variant, isLive),
       dataLive    := isLive.option(game.id),

@@ -9,7 +9,7 @@
   font-size: 1.3rem;
 
   .fbt {
-    @extend %box-radius-bottom;
+    @extend %box-radius;
 
     text-align: center;
   }

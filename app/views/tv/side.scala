@@ -1,6 +1,5 @@
 package views.html.tv
 
-import controllers.routes
 import play.api.i18n.Lang
 
 import lila.api.Context
@@ -68,11 +67,7 @@ object side {
         ),
       ),
       game.tournamentId map { tourId =>
-        st.section(cls := "game__tournament-link")(
-          a(href := routes.Tournament.show(tourId), dataIcon := "g", cls := "text")(
-            tournamentIdToName(tourId),
-          ),
-        )
+        st.section(cls := "game__tournament-link")(tournamentLink(tourId))
       },
     )
   }

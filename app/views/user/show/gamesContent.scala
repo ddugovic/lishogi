@@ -47,7 +47,7 @@ object gamesContent {
                   cls := "none",
                 ),
                 views.html.game
-                  .widgets(pager.currentPageResults, user = u.some, ownerLink = ctx is u),
+                  .widgets(pager.currentPageResults, user = u.some),
               ),
             )
           else
@@ -74,7 +74,7 @@ object gamesContent {
                 )
               }
             else
-              views.html.game.widgets(pager.currentPageResults, user = u.some, ownerLink = ctx is u),
+              views.html.game.widgets(pager.currentPageResults, user = u.some),
           ),
       ),
     )

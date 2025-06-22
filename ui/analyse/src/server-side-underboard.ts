@@ -11,10 +11,12 @@ export default function (element: HTMLElement, ctrl: AnalyseCtrl): void {
   const li = window.lishogi;
 
   $(element).replaceWith(ctrl.opts.$underboard!);
+  applyNotationPreferences();
 
   const data = ctrl.data;
   const $panels = $('.analyse__underboard__panels > div');
   const $menu = $('.analyse__underboard__menu');
+
   const inputSfen = document.querySelector('.analyse__underboard__sfen') as HTMLInputElement;
   inputSfen.value = ctrl.node.sfen;
 
@@ -59,7 +61,12 @@ export default function (element: HTMLElement, ctrl: AnalyseCtrl): void {
     else if (loading && !$('#acpl-chart-container-loader').length) $panel.append(chartLoader());
     loadLishogiScript('chart').then(() => {
       loadLishogiScript('chart.acpl').then(() => {
-        li.modules.chartAcpl!($('#acpl-chart')[0] as HTMLCanvasElement, data, ctrl.mainline);
+        li.modules.chartAcpl!(
+          $('#acpl-chart')[0] as HTMLCanvasElement,
+          data,
+          ctrl.mainline,
+          ctrl.node.ply,
+        );
       });
     });
   }
@@ -76,7 +83,7 @@ export default function (element: HTMLElement, ctrl: AnalyseCtrl): void {
           li.modules.chartMovetime!(
             $('#movetimes-chart')[0] as HTMLCanvasElement,
             data,
-            ctrl.opts.hunter,
+            ctrl.node.ply,
           );
         });
       });
@@ -97,7 +104,7 @@ export default function (element: HTMLElement, ctrl: AnalyseCtrl): void {
     }).length;
   if (foundStored) setPanel(stored);
   else {
-    const $menuCt = $menu.children('[data-panel="sfen-notation"]');
+    const $menuCt = $menu.children('[data-panel="game-export"]');
     ($menuCt.length ? $menuCt : $menu.children(':first-child')).trigger('mousedown');
   }
   if (!data.analysis) {
@@ -111,20 +118,54 @@ export default function (element: HTMLElement, ctrl: AnalyseCtrl): void {
     });
   }
 
-  $panels.on('click', '.kif', function (this: HTMLElement) {
-    const selection = window.getSelection();
-    const range = document.createRange();
-    range.selectNodeContents(this);
-    selection!.removeAllRanges();
-    selection!.addRange(range);
-  });
   $panels.on('click', '.embed-howto', function (this: HTMLElement) {
     const url = `${baseUrl()}/embed/${data.game.id}${location.hash}`;
-    const iframe = `<iframe src="${url}?theme=auto&bg=auto"\nwidth=600 height=400 frameborder=0></iframe>`;
+    const iframe = `<iframe src="${url}?theme=auto&bg=auto"\nwidth=600 height=371 frameborder=0></iframe>`;
     $.modal(
       $(
-        `<strong style="font-size:1.5em">${$(this).html()}</strong><br /><br /><pre>${escapeHtml(iframe)}</pre><br />${iframe}<br /><br /><a class="text" data-icon="" href="/developers#embed-game">Read more about embedding games</a>`,
+        `<strong style="font-size:1.5em">${$(this).html()}</strong><br /><br /><pre>${escapeHtml(iframe)}</pre><br />${iframe}<br /><br /><a class="text" data-icon="" href="/developers#embed-game">${i18n('study:readMoreAboutEmbedding')}</a>`,
       ),
     );
+  });
+
+  function updateNotationLinks(params: Record<string, boolean>): void {
+    const links = document.querySelectorAll<HTMLAnchorElement>('.game-notation a');
+
+    links.forEach(link => {
+      const url = new URL(link.href);
+      for (const [param, enabled] of Object.entries(params)) {
+        url.searchParams.set(param, enabled ? '1' : '0');
+      }
+      link.href = url.toString();
+    });
+  }
+
+  function applyNotationPreferences(): void {
+    const checkboxes = document.querySelectorAll<HTMLInputElement>(
+      'form.notation-options input[type="checkbox"]',
+    );
+    const params: Record<string, boolean> = {};
+
+    checkboxes.forEach(checkbox => {
+      const param = checkbox.value;
+      const stored = localStorage.getItem(`game-export.notation-${param}`);
+      const enabled = stored !== null ? stored === 'true' : param === 'clocks';
+
+      checkbox.checked = enabled;
+      params[param] = enabled;
+    });
+
+    updateNotationLinks(params);
+  }
+
+  document.querySelector('form.notation-options')?.addEventListener('change', e => {
+    const target = e.target as HTMLInputElement;
+    if (target.tagName === 'INPUT' && target.type === 'checkbox') {
+      const param = target.value;
+      const enabled = target.checked;
+
+      window.lishogi.storage.set(`game-export.notation-${param}`, enabled.toString());
+      updateNotationLinks({ [param]: enabled });
+    }
   });
 }

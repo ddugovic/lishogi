@@ -72,10 +72,6 @@
       align-items: stretch;
     }
 
-    div.from-game {
-      flex: 1 1 32px;
-    }
-
     .jumps {
       flex: 3 1 auto;
     }
@@ -84,11 +80,6 @@
       @extend %page-text;
 
       flex: 0 0 2.5rem;
-    }
-
-    .active {
-      margin-top: -3px;
-      padding-top: 3px;
     }
 
     ::before {
