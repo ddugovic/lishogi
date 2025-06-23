@@ -113,6 +113,8 @@
 	<string name="openingExplorer">Průzkumník zahájení</string>
 	<string name="xOpeningExplorer">%s průzkumník zahájení</string>
 	<string name="allSet">Vše nastaveno!</string>
+	<string name="kif" comment="KIF notation, most likely language specific translation doesn't exist">KIF</string>
+	<string name="csa" comment="CSA notation, most likely language specific translation doesn't exist">CSA</string>
 	<string name="importKif">Vložit KIF</string>
 	<string name="importCsa">Vložit CSA</string>
 	<string name="delete">Smazat</string>
@@ -448,6 +450,7 @@
 	<string name="toStudy">Do studie</string>
 	<string name="importGame">Importuj hru</string>
 	<string name="importedGame">Hra byla importována.</string>
+	<string name="importedByX">Imported by %s</string>
 	<string name="importGameKifCsaExplanation">Vložení partie ve formátu KIF nebo CSA vám umožní přehrání partii, získáte počítačovou analýzu, chat ke hře a URL ke sdílení hry.</string>
 	<plurals name="nbImportedGames">
 		<item quantity="one">%s importovaná</item>
@@ -879,6 +882,7 @@
 	<string name="lobby">Výzvy</string>
 	<string name="presets" comment="Tab in lobby, try to keep it short">Předvolby</string>
 	<string name="anonymous">Anonymní</string>
+	<string name="anonymousUser" comment="A player without account (ex. Playing a game against Anonymous)">Anonymous</string>
 	<string name="yourScore">Vaše skóre: %s</string>
 	<string name="language">Jazyk</string>
 	<string name="background">Pozadí</string>
@@ -1112,4 +1116,11 @@
 	<string name="hakoiriMusumeExplanation" comment="Mini game on 404 pages">Help the king escape through the bottom opening of the board by sliding the pieces.</string>
 	<string name="startDate">Start date</string>
 	<string name="endDate">End date</string>
+	<string name="xJoinedTheGame">%s joined the game</string>
+	<string name="connectingToTheGame">Connecting to the game</string>
+	<string name="bestMoveWasX">Best move was %s</string>
+	<string name="mateCreatedDescription">Checkmate is now unavoidable</string>
+	<string name="mateDelayedDescription" comment="Sequence of moves">Not the best checkmate sequence</string>
+	<string name="mateLostDescription" comment="Sequence of moves">Lost forced checkmate sequence</string>
+	<string name="dotSymbol" comment="If your language uses different symbol (jp: 。)">.</string>
 </resources>

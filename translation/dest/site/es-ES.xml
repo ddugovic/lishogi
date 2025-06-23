@@ -109,6 +109,8 @@
 	<string name="openingExplorer">Explorador de aperturas</string>
 	<string name="xOpeningExplorer">Explorador de la apertura %s</string>
 	<string name="allSet">¡Listo!</string>
+	<string name="kif" comment="KIF notation, most likely language specific translation doesn't exist">KIF</string>
+	<string name="csa" comment="CSA notation, most likely language specific translation doesn't exist">CSA</string>
 	<string name="importKif">Importar PGN</string>
 	<string name="importCsa">Importar CSA</string>
 	<string name="delete">Borrar</string>
@@ -402,6 +404,7 @@
 	<string name="toStudy">Estudiar</string>
 	<string name="importGame">Importar partida</string>
 	<string name="importedGame">Partida importada.</string>
+	<string name="importedByX">Imported by %s</string>
 	<string name="importGameKifCsaExplanation">Pega una partida KIF o CSA para obtener una repetición navegable, análisis por ordenador, chat de juego y una URL para compartir.</string>
 	<plurals name="nbImportedGames">
 		<item quantity="one">%s partida importada</item>
@@ -807,6 +810,7 @@
 	<string name="lobby">Sala de espera</string>
 	<string name="presets" comment="Tab in lobby, try to keep it short">Ajustes</string>
 	<string name="anonymous">Anónimo</string>
+	<string name="anonymousUser" comment="A player without account (ex. Playing a game against Anonymous)">Anonymous</string>
 	<string name="yourScore">Tu puntuación: %s</string>
 	<string name="language">Idioma</string>
 	<string name="background">Fondo</string>
@@ -1028,4 +1032,11 @@
 	<string name="hakoiriMusumeExplanation" comment="Mini game on 404 pages">Help the king escape through the bottom opening of the board by sliding the pieces.</string>
 	<string name="startDate">Start date</string>
 	<string name="endDate">End date</string>
+	<string name="xJoinedTheGame">%s joined the game</string>
+	<string name="connectingToTheGame">Connecting to the game</string>
+	<string name="bestMoveWasX">Best move was %s</string>
+	<string name="mateCreatedDescription">Checkmate is now unavoidable</string>
+	<string name="mateDelayedDescription" comment="Sequence of moves">Not the best checkmate sequence</string>
+	<string name="mateLostDescription" comment="Sequence of moves">Lost forced checkmate sequence</string>
+	<string name="dotSymbol" comment="If your language uses different symbol (jp: 。)">.</string>
 </resources>
