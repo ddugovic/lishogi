@@ -23,6 +23,7 @@ export const ids: Record<StatusName, StatusId> = {
   bareKing: 43,
   repetition: 44,
   specialVariantEnd: 45,
+  illegalMove: 46,
 };
 
 export function statusIdToName(statusId: StatusId): StatusName | undefined {

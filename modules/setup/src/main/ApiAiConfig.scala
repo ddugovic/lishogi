@@ -58,6 +58,7 @@ final case class ApiAiConfig(
             Player.make(shogi.Gote, user, perfPicker),
           ),
           mode = shogi.Mode.Casual,
+          proMode = false,
           source =
             if (sfen.filterNot(_.initialOf(variant)).isDefined) Source.Position else Source.Ai,
           daysPerTurn = makeDaysPerTurn,

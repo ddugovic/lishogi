@@ -38,6 +38,8 @@ final class JsonView(rematches: Rematches) {
       .add("check" -> game.situation.check)
       .add("rematch" -> rematches.getAcceptedId(game.id))
       .add("postGameStudy" -> game.postGameStudy)
+      .add("isProMode" -> game.isProMode)
+      .add("illegalUsi" -> game.illegalUsi.map(_.usi))
 
   def ownerPreview(pov: Pov)(lightUserSync: LightUser.GetterSync) =
     Json
@@ -73,6 +75,7 @@ final class JsonView(rematches: Rematches) {
       )
       .add("secondsLeft" -> pov.remainingSeconds)
       .add("tournamentId" -> pov.game.tournamentId)
+      .add("isProMode" -> pov.game.isProMode)
       .add("winner" -> pov.game.winnerColor)
 }
 
@@ -98,17 +101,8 @@ object JsonView {
     Json.obj(
       "users"   -> c.users,
       "nbGames" -> c.nbGames,
-      // "results" -> c.results
     )
   }
-
-  // implicit val matchupWrites = OWrites[Crosstable.Matchup] { m =>
-  //   Json.obj(
-  //     "users" -> m.users,
-  //     "nbGames" -> m.users.nbGames
-  //   )
-  // }
-  // implicit val crosstableWithMatchupWrites = Json.writes[Crosstable.WithMatchup]
 
   implicit val blursWriter: OWrites[Blurs] = OWrites { blurs =>
     Json.obj(

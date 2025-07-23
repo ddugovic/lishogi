@@ -15,13 +15,23 @@ final case class ApiConfig(
     rated: Boolean,
     color: Color,
     sfen: Option[Sfen] = None,
+    proMode: Boolean = false,
     acceptByToken: Option[String] = None,
 ) {
 
   val strictSfen = false
 
   def >> =
-    (variant.key.some, clock, days, rated, color.name.some, sfen.map(_.value), acceptByToken).some
+    (
+      variant.key.some,
+      clock,
+      days,
+      rated,
+      color.name.some,
+      sfen.map(_.value),
+      proMode.some,
+      acceptByToken,
+    ).some
 
   def perfType: Option[PerfType] = PerfPicker.perfType(shogi.Speed(clock), variant, days)
 
@@ -52,6 +62,7 @@ object ApiConfig extends BaseHumanConfig {
       r: Boolean,
       c: Option[String],
       sf: Option[String],
+      pm: Option[Boolean],
       tok: Option[String],
   ) =
     new ApiConfig(
@@ -60,6 +71,7 @@ object ApiConfig extends BaseHumanConfig {
       days = d,
       rated = r,
       color = Color.orDefault(~c),
+      proMode = ~pm,
       sfen = sf map Sfen.apply,
       acceptByToken = tok,
     )

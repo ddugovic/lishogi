@@ -76,8 +76,14 @@ final private class Finisher(
       lila.mon.round.expiration.count.increment()
       playban.noStart(Pov(game, culprit))
       if (game.isMandatory) apply(game, _.NoStart, winner = Some(!culprit.color))
-      else apply(game, _.Aborted, winner = none, message = trans.gameAborted.some)
-    }
+  def illegal(game: Game)(implicit proxy: GameProxy): Fu[Events] = {
+    val winner = !game.player.color
+    apply(
+      game,
+      _.IllegalMove,
+      winner = winner.some,
+    ) >>- messenger.system(game, trans.xPlayedIllegalMove, (!winner, game.isHandicap).some)
+  }
 
   def other(
       game: Game,
@@ -143,6 +149,7 @@ final private class Finisher(
         id = game.id,
         winnerColor = winner,
         winnerId = winner map (game.player(_).userId | ""),
+        illegalUsi = prog.game.illegalUsi,
         status = prog.game.status,
       ) >>
       userRepo

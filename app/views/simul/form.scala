@@ -162,6 +162,15 @@ object form {
         trans.simulDescription(),
         help = trans.anythingTellParticipants().some,
       )(form3.textarea(_)(rows := 10)),
+      form3.split(
+        form3.checkbox(
+          form("proMode"),
+          trans.proMode(),
+          help = trans.proModeDescription().some,
+          half = true,
+        ),
+        form3.hiddenFalse(form("proMode")),
+      ),
     )
 
   }

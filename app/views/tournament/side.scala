@@ -85,6 +85,9 @@ object side {
         tour.isArena && tour.noStreak option div(cls := "text", dataIcon := "Q")(
           trans.arena.noArenaStreaks(),
         ),
+        tour.proMode option div(cls := "text", dataIcon := "8")(
+          trans.proMode(),
+        ),
         !tour.isScheduled option frag(trans.by(userIdLink(tour.createdBy.some)), br),
         frag(
           absClientDateTime(

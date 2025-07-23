@@ -101,6 +101,7 @@ final class UserAnalysis(
           sentePlayer = lila.game.Player.make(shogi.Sente),
           gotePlayer = lila.game.Player.make(shogi.Gote),
           mode = shogi.Mode.Casual,
+          proMode = false,
           source = if (imported) lila.game.Source.Import else lila.game.Source.Api,
           notationImport = None,
         )

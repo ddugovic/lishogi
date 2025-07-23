@@ -235,6 +235,7 @@ export default class SetupCtrl {
         ratingMin: getNumber('ratingMin', minRatingChoices),
         ratingMax: getNumber('ratingMax', maxRatingChoices),
         mode: getNumber('mode', modeChoices),
+        proMode: false, // for now
       };
     } catch (e) {
       console.error('Failed to parse saved form data', e);
@@ -302,6 +303,7 @@ export default class SetupCtrl {
       sfen: this.data.position === Position.fromPosition ? this.data.sfen : '',
       level: this.data.level,
       mode: this.data.mode,
+      proMode: this.data.proMode,
       ratingRange: this.ratingRange(),
       color: color,
     };
@@ -353,6 +355,7 @@ export default class SetupCtrl {
     ratingMin: 500,
     ratingMax: 500,
     mode: Mode.Casual,
+    proMode: false,
   };
 }
 
@@ -371,6 +374,7 @@ interface SetupData {
   handicap: string;
   level: number;
   mode: number;
+  proMode: boolean;
   ratingMin: number;
   ratingMax: number;
 }

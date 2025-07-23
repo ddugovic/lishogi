@@ -84,6 +84,7 @@ final private class Biter(
         sentePlayer = Player.make(shogi.Sente, senteUser, perfPicker),
         gotePlayer = Player.make(shogi.Gote, goteUser, perfPicker),
         mode = hook.realMode,
+        proMode = false,
         source = lila.game.Source.Lobby,
         notationImport = None,
       )
@@ -102,6 +103,7 @@ final private class Biter(
         sentePlayer = Player.make(shogi.Sente, senteUser, perfPicker),
         gotePlayer = Player.make(shogi.Gote, goteUser, perfPicker),
         mode = seek.realMode,
+        proMode = false,
         source = lila.game.Source.Lobby,
         daysPerTurn = seek.daysPerTurn,
         notationImport = None,

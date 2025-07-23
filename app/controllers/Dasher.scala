@@ -15,10 +15,12 @@ final class Dasher(env: Env) extends LilaController(env) {
   implicit private val pieceSetsJsonWriter: Writes[List[PieceSet]] =
     Writes[List[lila.pref.PieceSet]] { sets =>
       JsArray(sets.map { set =>
-        Json.obj(
-          "key"  -> set.key,
-          "name" -> set.name,
-        )
+        Json
+          .obj(
+            "key"  -> set.key,
+            "name" -> set.name,
+          )
+          .add("pro" -> set.pro)
       })
     }
 

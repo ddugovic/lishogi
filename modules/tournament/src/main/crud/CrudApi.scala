@@ -69,6 +69,7 @@ final class CrudApi(tournamentRepo: TournamentRepo) {
       variant = shogi.variant.Standard,
       position = none,
       mode = shogi.Mode.Rated,
+      proMode = false,
       password = none,
       candidatesOnly = false,
       maxPlayers = none,

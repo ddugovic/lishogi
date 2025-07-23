@@ -74,6 +74,8 @@ export default function status(
       return i18n('bareKing');
     case 'specialVariantEnd':
       return i18n('check'); // enough for now
+    case 'illegalMove':
+      return i18n('illegalMove');
     default:
       return name || '?';
   }

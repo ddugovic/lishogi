@@ -68,6 +68,9 @@ object show {
                   ),
                 ),
               ),
+              ~sim.proMode option div(cls := "text", dataIcon := "8")(
+                trans.proMode(),
+              ),
               trans.simulHostExtraTime(),
               ": ",
               pluralize("minute", sim.clock.hostExtraMinutes),

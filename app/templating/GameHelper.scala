@@ -191,6 +191,7 @@ trait GameHelper {
       case S.RoyalsLost        => trans.royalsLost.txt()
       case S.BareKing          => trans.bareKing.txt()
       case S.SpecialVariantEnd => trans.check.txt()
+      case S.IllegalMove       => trans.illegalMove.txt()
       case S.Timeout =>
         game.loserColor
           .map(l => transWithColorName(trans.xLeftTheGame, l, game.isHandicap))

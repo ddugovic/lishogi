@@ -34,6 +34,7 @@ case class Game(
     pausedSeconds: Option[Int] = None,
     sealedUsi: Option[Usi] = None,
     mode: Mode = Mode.default,
+    proMode: Option[ProMode] = None,
     bookmarks: Int = 0,
     createdAt: DateTime = DateTime.now,
     movedAt: DateTime = DateTime.now,
@@ -673,6 +674,10 @@ case class Game(
 
   def synthetic = id == Game.syntheticId
 
+  def isProMode                = proMode.isDefined
+  def illegalUsi               = proMode.flatMap(_.illegalUsi)
+  def withIllegalUsi(usi: Usi) = copy(proMode = ProMode(usi.some).some)
+
   private def playerMaps[A](f: Player => Option[A]): List[A] = players flatMap f
 
   def pov(c: Color)                                 = Pov(this, c)
@@ -791,6 +796,7 @@ object Game {
       sentePlayer: Player,
       gotePlayer: Player,
       mode: Mode,
+      proMode: Boolean,
       source: Source,
       notationImport: Option[NotationImport],
       daysPerTurn: Option[Int] = None,
@@ -809,6 +815,7 @@ object Game {
         status = Status.Created,
         daysPerTurn = daysPerTurn,
         mode = mode,
+        proMode = proMode option ProMode.empty,
         metadata = Metadata(
           source = source.some,
           notationImport = notationImport,
@@ -855,6 +862,7 @@ object Game {
     val periodsSente       = "pw"
     val periodsGote        = "pb"
     val rated              = "ra"
+    val proMode            = "pm"
     val analysed           = "an"
     val arrangementId      = "ar"
     val postGameStudy      = "pgs"
@@ -878,6 +886,12 @@ object Game {
     val pausedSeconds      = "ps"
     val perfType           = "pt" // only set on student games for aggregation
   }
+}
+
+case class ProMode(illegalUsi: Option[Usi])
+object ProMode {
+  val empty: ProMode              = ProMode(none)
+  def apply(str: String): ProMode = ProMode(Usi.apply(str))
 }
 
 // At what turns we entered a new period

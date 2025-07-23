@@ -56,6 +56,7 @@ final class SimulApi(
       clock = setup.clock,
       variants = setup.actualVariants,
       position = setup.position,
+      proMode = setup.proMode,
       host = me,
       color = setup.color,
       text = setup.text,
@@ -239,6 +240,7 @@ final class SimulApi(
             sentePlayer = lila.game.Player.make(shogi.Sente, senteUser.some, perfPicker),
             gotePlayer = lila.game.Player.make(shogi.Gote, goteUser.some, perfPicker),
             mode = shogi.Mode.Casual,
+            proMode = ~simul.proMode,
             source = lila.game.Source.Simul,
             notationImport = None,
           )

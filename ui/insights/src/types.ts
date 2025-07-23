@@ -131,6 +131,7 @@ export const StatusObject = {
   bareKing: 43,
   repetition: 44,
   specialVariantEnd: 45,
+  illegalMove: 46,
 } as const;
 export type StatusId = (typeof StatusObject)[keyof typeof StatusObject];
 export type StatusKey = keyof typeof StatusObject;

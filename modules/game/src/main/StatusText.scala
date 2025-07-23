@@ -24,6 +24,7 @@ object StatusText {
       case RoyalsLost                  => s"${winner(win)} wins by capturing all royal pieces."
       case BareKing                    => s"${winner(win)} wins due to bare king rule."
       case SpecialVariantEnd if variant.checkshogi => s"${winner(win)} wins by check."
+      case IllegalMove                             => s"${loser(win)} made an illegal move."
       case Timeout if win.isDefined                => s"${loser(win)} left the game."
       case Timeout | Draw                          => "The game is a draw."
       case Outoftime                               => s"${winner(win)} wins on time."

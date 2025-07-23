@@ -180,6 +180,21 @@ object form {
   def featuresFields(form: Form[_])(implicit ctx: Context) =
     form3.fieldset(trans.features.txt(), toggle = false.some)(
       form3.split(
+        form3.checkbox(
+          form("proMode"),
+          trans.proMode(),
+          help = trans.proModeDescription().some,
+          half = true,
+        ),
+        form3.hiddenFalse(form("proMode")),
+        form3.checkbox(
+          form("rated"),
+          trans.rated(),
+          help = raw("Games are rated<br>and impact players ratings").some,
+        ),
+        form3.hiddenFalse(form("rated")),
+      ),
+      form3.split(
         div(cls := "f-arena")(
           form3.checkbox(
             form("berserkable"),
@@ -198,12 +213,6 @@ object form {
         ),
       ),
       form3.split(
-        form3.checkbox(
-          form("rated"),
-          trans.rated(),
-          help = raw("Games are rated<br>and impact players ratings").some,
-        ),
-        form3.hiddenFalse(form("rated")),
         form3.checkbox(
           form("hasChat"),
           trans.chatRoom(),
@@ -252,7 +261,7 @@ final private class TourFields(form: Form[_], tour: Option[Tournament])(implicit
       form3.select(
         _,
         Format.all.map(f => (f.key, f.trans)),
-        disabled = disabledAfterCreate,
+        disabled = disabledAfterCreate || isTeamBattle,
       ),
     )
 

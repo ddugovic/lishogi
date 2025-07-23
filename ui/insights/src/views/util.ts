@@ -109,6 +109,8 @@ export function translateStatusName(statusName: string | undefined): string {
       return i18n('unknown');
     case 'specialVariantEnd':
       return i18n('variant');
+    case 'illegalMove':
+      return i18n('illegalMove');
     case 'noStart':
       return i18nFormat('xDidntMove', 'X');
     default:

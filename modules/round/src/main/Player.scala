@@ -1,6 +1,8 @@
 package lila.round
 
 import cats.data.Validated
+import cats.data.Validated.Invalid
+import cats.data.Validated.Valid
 
 import shogi.Centis
 import shogi.LagMetrics
@@ -30,8 +32,9 @@ final private class Player(
 )(implicit ec: scala.concurrent.ExecutionContext) {
 
   sealed private trait UsiResult
-  private case object Flagged                       extends UsiResult
-  private case class UsiApplied(progress: Progress) extends UsiResult
+  private case object Flagged                         extends UsiResult
+  private case class Illegal(game: Game, err: String) extends UsiResult
+  private case class UsiApplied(progress: Progress)   extends UsiResult
 
   private[round] def human(play: HumanPlay, round: RoundDuct)(
       pov: Pov,
@@ -47,7 +50,8 @@ final private class Player(
               .leftMap(e => s"$pov $e")
               .fold(errs => fufail(ClientError(errs.toString)), fuccess)
               .flatMap {
-                case Flagged => finisher.outOfTime(game)
+                case Flagged       => finisher.outOfTime(game)
+                case Illegal(g, _) => finisher.illegal(g)
                 case UsiApplied(progress) =>
                   proxy.save(progress) >>
                     postHumanOrBotPlay(round, pov, progress, usi)
@@ -68,10 +72,11 @@ final private class Player(
         round ! TooManyPlies
         fuccess(Nil)
       case Pov(game, color) if game playableBy color =>
-        applyUsi(game, usi, false, botLag)
+        applyUsi(game, usi, blur = false, botLag)
           .fold(errs => fufail(ClientError(errs.toString)), fuccess)
           .flatMap {
-            case Flagged => finisher.outOfTime(game)
+            case Flagged         => finisher.outOfTime(game)
+            case Illegal(_, err) => fufail(ClientError(err.toString))
             case UsiApplied(progress) =>
               proxy.save(progress) >> postHumanOrBotPlay(round, pov, progress, usi)
           }
@@ -109,7 +114,8 @@ final private class Player(
       applyUsi(game, usi, blur = false, metrics = fishnetLag)
         .fold(errs => fufail(ClientError(errs.toString)), fuccess)
         .flatMap {
-          case Flagged => finisher.outOfTime(game)
+          case Flagged         => finisher.outOfTime(game)
+          case Illegal(_, err) => fufail(ClientError(err.toString))
           case UsiApplied(progress) =>
             proxy.save(progress) >>-
               notifyUsi(usi, progress.game) >> {
@@ -141,11 +147,16 @@ final private class Player(
       blur: Boolean,
       metrics: LagMetrics,
   ): Validated[String, UsiResult] =
-    game.shogi(usi, metrics) map { nsg =>
-      if (nsg.clock.exists(_.outOfTime(game.turnColor, withGrace = false))) Flagged
-      else if (game.prePaused && !nsg.situation.end(withImpasse = true))
-        UsiApplied(game.pauseAndSealUsi(usi, nsg, blur))
-      else UsiApplied(game.applyGame(nsg, blur))
+    game.shogi(usi, metrics) match {
+      case Valid(nsg) =>
+        Valid(
+          if (nsg.clock.exists(_.outOfTime(game.turnColor, withGrace = false))) Flagged
+          else if (game.prePaused && !nsg.situation.end(withImpasse = true))
+            UsiApplied(game.pauseAndSealUsi(usi, nsg, blur))
+          else UsiApplied(game.applyGame(nsg, blur)),
+        )
+      case Invalid(err) if game.isProMode => Valid(Illegal(game.withIllegalUsi(usi), err))
+      case i @ Invalid(_)                 => i
     }
 
   private def notifyOfPausedGame(usi: Usi, game: Game): Funit = {

@@ -62,6 +62,7 @@ final class FormFactory {
         "mode"      -> mode(withRated = ctx.isAuth),
         "color"     -> color,
         "sfen"      -> sfenField,
+        "proMode"   -> optional(boolean),
       )(FriendConfig.from)(_.>>)
         .verifying("Invalid clock", _.validClock)
         .verifying("Invalid timemode", _.validTimeMode(ctx.isAuth))
@@ -148,6 +149,7 @@ final class FormFactory {
         "rated"         -> boolean,
         "color"         -> optional(color),
         "sfen"          -> sfenField,
+        "proMode"       -> optional(boolean),
         "acceptByToken" -> optional(nonEmptyText),
       )(ApiConfig.from)(_.>>)
         .verifying("invalidSfen", _.validSfen)
@@ -169,9 +171,10 @@ final class FormFactory {
       mapping(
         variant,
         clock,
-        "days"  -> optional(days),
-        "rated" -> boolean,
-        "sfen"  -> sfenField,
+        "days"    -> optional(days),
+        "rated"   -> boolean,
+        "sfen"    -> sfenField,
+        "proMode" -> optional(boolean),
       )(OpenConfig.from)(_.>>)
         .verifying("invalidSfen", _.validSfen)
         .verifying("rated without a clock", c => c.clock.isDefined || c.days.isDefined || !c.rated),

@@ -45,6 +45,10 @@ object bits {
               else trans.nbDays.pluralSame(days)
             } getOrElse shortClockName(c.clock.map(_.config)),
           ),
+          c.proMode option frag(
+            br,
+            small(trans.proMode()),
+          ),
         ),
       ),
       div(cls := "game-color") {

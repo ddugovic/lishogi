@@ -112,6 +112,7 @@ export interface ApiEnd {
     sp: number;
     gp: number;
   };
+  illegalUsi?: Usi;
 }
 
 interface Pref {

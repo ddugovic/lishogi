@@ -129,6 +129,7 @@ object Event {
           )
         })
         .add("boosted" -> game.boosted)
+        .add("illegalUsi" -> game.illegalUsi.map(_.usi))
   }
 
   case object Reload extends Empty {

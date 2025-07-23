@@ -110,6 +110,7 @@ case class ImportData(notation: String, analyse: Option[String]) {
             sentePlayer = Player.make(shogi.Sente) withName name(_.Sente, _.SenteElo),
             gotePlayer = Player.make(shogi.Gote) withName name(_.Gote, _.GoteElo),
             mode = Mode.Casual,
+            proMode = false,
             source = Source.Import,
             notationImport = NotationImport
               .make(

@@ -116,6 +116,7 @@ final class TournamentApi(
           else old.position,
         noBerserk = !(~data.berserkable),
         noStreak = !(~data.streakable),
+        proMode = ~data.proMode,
         teamBattle = old.teamBattle,
         description = data.description,
         hasChat = data.hasChat | true,

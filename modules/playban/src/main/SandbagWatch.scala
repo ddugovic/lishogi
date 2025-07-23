@@ -62,7 +62,7 @@ final private class SandbagWatch(
     }
 
   private def isSandbag(game: Game): Boolean =
-    game.plies <= game.variant.numberOfFiles * game.variant.numberOfRanks / 10
+    game.plies <= ((game.variant.numberOfFiles * game.variant.numberOfRanks / 10) - (game.isProMode ?? 3))
 }
 
 private object SandbagWatch {

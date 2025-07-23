@@ -8,6 +8,7 @@ type PieceSetKey = string;
 type PieceSet = {
   key: PieceSetKey;
   name: string;
+  pro?: string;
 };
 type Tab = 'standard' | 'chushogi' | 'kyotoshogi';
 
@@ -113,7 +114,7 @@ function pieceView(current: PieceSetKey) {
       'a.no-square',
       {
         attrs: { title: p.name, 'data-value': p.key },
-        class: { active: current === p.key },
+        class: { active: current === p.key, 'not-pro': !p.pro },
       },
       h('piece'),
     );

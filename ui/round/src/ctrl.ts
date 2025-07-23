@@ -2,6 +2,7 @@ import { loadScript } from 'common/assets';
 import { requestIdleCallbackWithFallback } from 'common/common';
 import notify from 'common/notification';
 import * as game from 'game';
+import type { Player } from 'game/interfaces';
 import * as status from 'game/status';
 import { i18n, i18nFormat } from 'i18n';
 import { type KeyboardMove, ctrl as makeKeyboardMove } from 'keyboard-move';
@@ -10,6 +11,7 @@ import { makeNotation, makeNotationLine } from 'shogi/notation';
 import { Shogiground } from 'shogiground';
 import type { Api as SgApi } from 'shogiground/api';
 import type { Config as SgConfig } from 'shogiground/config';
+import type { DrawShape } from 'shogiground/draw';
 import type { State } from 'shogiground/state';
 import type * as sg from 'shogiground/types';
 import { samePiece } from 'shogiground/util';
@@ -119,6 +121,7 @@ export default class RoundController {
     this.goneBerserk[d.opponent.color] = d.opponent.berserk;
 
     this.shogiground = Shogiground(ground.makeConfig(this));
+    this.showIllegalShape();
 
     this.initNotation();
 
@@ -200,6 +203,35 @@ export default class RoundController {
     if (!this.data.expiration) return;
     this.redraw();
     setTimeout(this.showExpiration, 250);
+  };
+
+  private getIllegalShape = (): DrawShape | undefined => {
+    if (
+      this.data.game.status.name === 'illegalMove' &&
+      this.data.game.illegalUsi &&
+      this.ply == round.lastPly(this.data)
+    ) {
+      const parsed = parseUsi(this.data.game.illegalUsi)!;
+      const to = makeSquareName(parsed.to);
+
+      return isDrop(parsed)
+        ? {
+            orig: { color: opposite(this.data.game.winner!), role: parsed.role },
+            dest: to,
+            brush: 'red',
+          }
+        : {
+            orig: makeSquareName(parsed.from),
+            dest: to,
+            description: parsed.promotion ? '+' : undefined,
+            brush: 'red',
+          };
+    } else return;
+  };
+
+  private showIllegalShape = () => {
+    const illegalShape = this.getIllegalShape();
+    if (illegalShape) this.shogiground.setAutoShapes([illegalShape]);
   };
 
   private onUserMove = (orig: Key, dest: Key, prom: boolean, meta: sg.MoveMetadata) => {
@@ -324,6 +356,7 @@ export default class RoundController {
     const splitSfen = s.sfen.split(' ');
     const variant = this.data.game.variant.key;
     const posRes = this.isPlaying() ? parseSfen(variant, s.sfen, false) : undefined;
+    const illegalShape = this.getIllegalShape();
     const config: SgConfig = {
       sfen: { board: splitSfen[0], hands: splitSfen[2] },
       lastDests: s.usi ? usiToSquareNames(s.usi) : undefined,
@@ -331,16 +364,23 @@ export default class RoundController {
       turnColor: this.ply % 2 === 0 ? 'sente' : 'gote',
       activeColor: this.isPlaying() ? this.data.player.color : undefined,
       drawable: {
+        autoShapes: illegalShape ? [illegalShape] : [],
         squares: [],
       },
     };
     if (this.replaying()) this.shogiground.stop();
     else {
       config.movable = {
-        dests: this.isPlaying() && posRes ? util.getMoveDests(posRes) : new Map(),
+        dests:
+          this.isPlaying() && posRes
+            ? util.getMoveDests(posRes, !!this.data.game.isProMode)
+            : new Map(),
       };
       config.droppable = {
-        dests: this.isPlaying() && posRes ? util.getDropDests(posRes) : new Map(),
+        dests:
+          this.isPlaying() && posRes
+            ? util.getDropDests(posRes, !!this.data.game.isProMode)
+            : new Map(),
       };
     }
     const move = s.usi && parseUsi(s.usi);
@@ -373,7 +413,7 @@ export default class RoundController {
 
   isLate = (): boolean => this.replaying() && status.playing(this.data);
 
-  playerAt = (position: Position): game.Player =>
+  playerAt = (position: Position): Player =>
     (this.flip as any) ^ ((position === 'top') as any) ? this.data.opponent : this.data.player;
 
   flipNow = (): void => {
@@ -452,7 +492,7 @@ export default class RoundController {
       });
   };
 
-  playerByColor = (c: Color): game.Player =>
+  playerByColor = (c: Color): Player =>
     this.data[c === this.data.player.color ? 'player' : 'opponent'];
 
   apiMove = (o: ApiMove): void => {
@@ -510,10 +550,16 @@ export default class RoundController {
         turnColor: d.game.player,
         lastDests: keys,
         movable: {
-          dests: playing && activeColor && posRes ? util.getMoveDests(posRes) : new Map(),
+          dests:
+            playing && activeColor && posRes
+              ? util.getMoveDests(posRes, !!this.data.game.isProMode)
+              : new Map(),
         },
         droppable: {
-          dests: playing && activeColor && posRes ? util.getDropDests(posRes) : new Map(),
+          dests:
+            playing && activeColor && posRes
+              ? util.getDropDests(posRes, !!this.data.game.isProMode)
+              : new Map(),
         },
         checks: o.check,
         drawable: {
@@ -600,6 +646,13 @@ export default class RoundController {
     d.game.winner = o.winner;
     d.game.status = o.status;
     d.game.boosted = o.boosted;
+    d.game.illegalUsi = o.illegalUsi;
+
+    // To force user jump reload
+    if (o.status.name === 'illegalMove') this.ply = this.ply + 1;
+
+    this.transientMove.clear();
+    this.showIllegalShape();
     this.userJump(round.lastPly(d));
     // If losing/drawing on time but locally it is the opponent's turn, move did not reach server before the end
     if (
@@ -700,13 +753,14 @@ export default class RoundController {
     $('<i class="berserk" data-icon="`">').appendTo($(`.game__meta .player.${color} .user-link`));
   };
 
-  setLoading = (v: boolean, duration = 1500): void => {
+  setLoading = (v: boolean, duration = 1500, f: (() => any) | undefined = undefined): void => {
     clearTimeout(this.loadingTimeout);
     if (v) {
       this.loading = true;
       this.loadingTimeout = setTimeout(() => {
         this.loading = false;
         this.redraw();
+        f?.();
       }, duration);
       this.redraw();
     } else if (this.loading) {
@@ -729,7 +783,7 @@ export default class RoundController {
     if (v && this.usiToSubmit) this.sendUsiData(this.usiToSubmit);
     else this.jump(this.ply);
     this.cancelMoveOrDrop();
-    if (toSubmit) this.setLoading(true, 300);
+    if (toSubmit) this.setLoading(true, 300, this.autoScroll);
   };
 
   cancelMoveOrDrop = (): void => {

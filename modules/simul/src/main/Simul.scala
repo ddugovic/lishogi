@@ -27,6 +27,7 @@ case class Simul(
     finishedAt: Option[DateTime],
     hostSeenAt: Option[DateTime],
     color: Option[String],
+    proMode: Option[Boolean],
     text: String,
     team: Option[String],
 ) {
@@ -159,6 +160,7 @@ object Simul {
       variants: List[Variant],
       position: Option[Sfen],
       color: String,
+      proMode: Boolean,
       text: String,
       estimatedStartAt: Option[DateTime],
       team: Option[String],
@@ -189,6 +191,7 @@ object Simul {
       finishedAt = none,
       hostSeenAt = DateTime.now.some,
       color = color.some,
+      proMode = proMode.some,
       text = text,
       team = team,
     )

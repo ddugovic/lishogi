@@ -231,40 +231,7 @@ final class Challenge(
                   } orElse config.days.map {
                     TimeControl.Correspondence.apply
                   } getOrElse TimeControl.Unlimited
-                  val challenge = lila.challenge.Challenge.make(
-                    variant = config.variant,
-                    initialSfen = config.sfen,
-                    timeControl = timeControl,
-                    mode = config.mode,
-                    color = config.color.name,
-                    challenger = ChallengeModel.toRegistered(config.variant, timeControl)(me),
-                    destUser = destUser,
-                    rematchOf = none,
-                  )
-                  (destUser, config.acceptByToken) match {
-                    case (Some(dest), Some(strToken)) =>
-                      apiChallengeAccept(dest, challenge, strToken)
-                    case _ =>
-                      destUser ?? { env.challenge.granter(me.some, _, config.perfType) } flatMap {
-                        case Some(denied) =>
-                          BadRequest(
-                            jsonError(lila.challenge.ChallengeDenied.translated(denied)),
-                          ).fuccess
-                        case _ =>
-                          (env.challenge.api create challenge) map {
-                            case true =>
-                              JsonOk(
-                                env.challenge.jsonView
-                                  .api(
-                                    challenge,
-                                    SocketVersion(0),
-                                    lila.challenge.Direction.Out.some,
-                                  ),
-                              )
-                            case false =>
-                              BadRequest(jsonError("Challenge not created"))
-                          }
-                      } map (_ as JSON)
+                      proMode = config.proMode,
                   }
                 }
               }(rateLimitedFu)
@@ -311,28 +278,7 @@ final class Challenge(
             ChallengeIpRateLimit(HTTPRequest lastRemoteAddress req) {
               import lila.challenge.Challenge._
               val timeControl = TimeControl.make(config.clock, config.days)
-              val challenge = lila.challenge.Challenge
-                .make(
-                  variant = config.variant,
-                  initialSfen = config.sfen,
-                  timeControl = timeControl,
-                  mode = shogi.Mode(config.rated),
-                  color = "random",
-                  challenger = Challenger.Open,
-                  destUser = none,
-                  rematchOf = none,
-                  isOpen = true,
-                )
-              (env.challenge.api create challenge) map {
-                case true =>
-                  JsonOk(
-                    env.challenge.jsonView.api(challenge, SocketVersion(0), none) ++ Json.obj(
-                      "urlSente" -> s"${env.net.baseUrl}/${challenge.id}?color=sente",
-                      "urlGote"  -> s"${env.net.baseUrl}/${challenge.id}?color=gote",
-                    ),
-                  )
-                case false =>
-                  BadRequest(jsonError("Challenge not created"))
+                    proMode = config.proMode,
               }
             }(rateLimitedFu) dmap (_ as JSON),
         )

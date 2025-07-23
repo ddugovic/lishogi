@@ -151,6 +151,7 @@ final class JsonView(
           .add("maxGames" -> tour.isOrganized.option(lila.tournament.Format.Organized.maxGames))
           .add("spotlight" -> tour.spotlight)
           .add("berserkable" -> tour.berserkable)
+          .add("proMode" -> tour.proMode)
           .add(
             "position" -> tour.position.ifTrue(full).map(sfen => positionJson(sfen)),
           )

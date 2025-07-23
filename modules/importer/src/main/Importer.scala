@@ -5,7 +5,7 @@ import lila.game.GameRepo
 
 final class Importer(gameRepo: GameRepo)(implicit ec: scala.concurrent.ExecutionContext) {
 
-  def apply(data: ImportData, user: Option[String], forceId: Option[String] = None): Fu[Game] = {
+  def apply(data: ImportData, user: Option[String], forceId: Option[String] = none): Fu[Game] = {
 
     def gameExists(processing: => Fu[Game]): Fu[Game] =
       gameRepo.findNotationImport(data.notation) flatMap { _.fold(processing)(fuccess) }
@@ -19,7 +19,8 @@ final class Importer(gameRepo: GameRepo)(implicit ec: scala.concurrent.Execution
           gameRepo.finish(
             id = game.id,
             winnerColor = game.winnerColor,
-            winnerId = None,
+            winnerId = none,
+            illegalUsi = game.illegalUsi,
             status = game.status,
           )
         } inject game

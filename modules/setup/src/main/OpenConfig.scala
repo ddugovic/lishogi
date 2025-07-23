@@ -12,11 +12,12 @@ final case class OpenConfig(
     days: Option[Int],
     rated: Boolean,
     sfen: Option[Sfen] = None,
+    proMode: Boolean = false,
 ) {
 
   val strictSfen = false
 
-  def >> = (variant.key.some, clock, days, rated, sfen.map(_.value)).some
+  def >> = (variant.key.some, clock, days, rated, sfen.map(_.value), proMode.some).some
 
   def perfType: Option[PerfType] = PerfPicker.perfType(shogi.Speed(clock), variant, none)
 
@@ -36,6 +37,7 @@ object OpenConfig {
       days: Option[Int],
       rated: Boolean,
       sf: Option[String],
+      pm: Option[Boolean],
   ) =
     new OpenConfig(
       variant = shogi.variant.Variant.orDefault(~v),
@@ -43,5 +45,6 @@ object OpenConfig {
       days = days,
       rated = rated,
       sfen = sf map Sfen.clean,
+      proMode = ~pm,
     )
 }

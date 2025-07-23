@@ -17,7 +17,8 @@ case class FriendConfig(
     days: Int,
     mode: Mode,
     color: Color,
-    sfen: Option[Sfen] = None,
+    sfen: Option[Sfen],
+    proMode: Boolean,
 ) extends HumanConfig
     with Positional {
 
@@ -34,6 +35,7 @@ case class FriendConfig(
     mode.id.some,
     color.name,
     sfen.map(_.value),
+    proMode.some,
   ).some
 
   def isPersistent = timeMode == TimeMode.Unlimited || timeMode == TimeMode.Correspondence
@@ -55,6 +57,7 @@ object FriendConfig extends BaseHumanConfig {
       m: Option[Int],
       c: String,
       sfen: Option[String],
+      pm: Option[Boolean],
   ) =
     new FriendConfig(
       variant = shogi.variant.Variant(v) err "Invalid game variant " + v,
@@ -67,6 +70,7 @@ object FriendConfig extends BaseHumanConfig {
       mode = m.fold(Mode.default)(Mode.orDefault),
       color = Color(c) err "Invalid color " + c,
       sfen = sfen map Sfen.apply,
+      proMode = ~pm,
     )
 
   val default = FriendConfig(
@@ -79,6 +83,8 @@ object FriendConfig extends BaseHumanConfig {
     days = 2,
     mode = Mode.default,
     color = Color.default,
+    sfen = none,
+    proMode = false,
   )
 
   import lila.db.BSON
@@ -98,6 +104,7 @@ object FriendConfig extends BaseHumanConfig {
         mode = Mode orDefault (r int "m"),
         color = Color.Sente,
         sfen = r.getO[Sfen]("f") filter (_.value.nonEmpty),
+        proMode = r.boolD("pm"),
       )
 
     def writes(w: BSON.Writer, o: FriendConfig) =
@@ -111,6 +118,7 @@ object FriendConfig extends BaseHumanConfig {
         "d"  -> o.days,
         "m"  -> o.mode.id,
         "f"  -> o.sfen,
+        "pm" -> w.boolO(o.proMode),
       )
   }
 }

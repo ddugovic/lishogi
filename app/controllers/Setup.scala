@@ -109,42 +109,7 @@ final class Setup(
                     } orElse config.makeDaysPerTurn.map {
                       TimeControl.Correspondence.apply
                     } getOrElse TimeControl.Unlimited
-                    val challenge = lila.challenge.Challenge.make(
-                      variant = config.variant,
-                      initialSfen = config.sfen,
-                      timeControl = timeControl,
-                      mode = config.mode,
-                      color = config.color.name,
-                      challenger = (ctx.me, HTTPRequest sid req) match {
-                        case (Some(user), _) => toRegistered(config.variant, timeControl)(user)
-                        case (_, Some(sid))  => Challenger.Anonymous(sid)
-                        case _               => Challenger.Open
-                      },
-                      destUser = destUser,
-                      rematchOf = none,
-                    )
-                    (env.challenge.api create challenge) flatMap {
-                      case true => {
-                        negotiate(
-                          html = notFound,
-                          json =
-                            if (getBool("redirect"))
-                              fuccess(
-                                Ok(
-                                  Json.obj(
-                                    "id"  -> challenge.id,
-                                    "url" -> routes.Round.watcher(challenge.id, "sente").url,
-                                  ),
-                                ),
-                              )
-                            else challengeC.showChallenge(challenge),
-                        )
-                      }
-                      case false =>
-                        negotiate(
-                          html = notFound,
-                          json = fuccess(BadRequest(jsonError("Challenge not created"))),
-                        )
+                        proMode = config.proMode,
                     }
                 }
               },

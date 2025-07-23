@@ -75,6 +75,10 @@ object side {
                       (if (game.rated) trans.rated else trans.casual).txt(),
                       separator,
                       bits.variantLink(game.variant),
+                      game.isProMode option frag(
+                        br,
+                        small(trans.proMode()),
+                      ),
                     ),
                 ),
                 game.notationImport.flatMap(_.date).map(frag(_)) getOrElse {

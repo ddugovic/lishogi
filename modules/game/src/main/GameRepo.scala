@@ -367,6 +367,7 @@ final class GameRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCont
       id: ID,
       winnerColor: Option[Color],
       winnerId: Option[String],
+      illegalUsi: Option[shogi.format.usi.Usi],
       status: Status,
   ) =
     coll.update.one(
@@ -376,6 +377,7 @@ final class GameRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCont
         $doc(
           F.winnerId    -> winnerId,
           F.winnerColor -> winnerColor.map(_.sente),
+          F.proMode     -> illegalUsi.map(_.usi),
           F.status      -> status,
         ),
       ) ++ $doc(

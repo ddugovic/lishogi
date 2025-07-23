@@ -57,6 +57,10 @@ object player {
             ),
         ),
       ),
+      moreCss = pov.game.isProMode ?? frag(
+        cssTag("round.pro-mode"),
+        proPieceSetOverride(pov.game.variant),
+      ),
       openGraph = povOpenGraph(pov).some,
       shogiground = false,
       playing = true,
@@ -87,4 +91,13 @@ object player {
       ),
     )
   }
+
+  private def proPieceSetOverride(
+      variant: shogi.variant.Variant,
+  )(implicit ctx: Context): Option[Frag] =
+    if (variant.kyotoshogi)
+      !ctx.currentKyoPieceSet.pro ?? kyoPieceSprite(lila.pref.KyoPieceSet.default).some
+    else if (variant.chushogi)
+      !ctx.currentChuPieceSet.pro ?? chuPieceSprite(lila.pref.ChuPieceSet.default).some
+    else !ctx.currentPieceSet.pro ?? defaultPieceSprite(lila.pref.PieceSet.default).some
 }

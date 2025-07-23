@@ -41,6 +41,7 @@ final class DataForm {
       teamBattleByTeam = teamBattleId,
       berserkable = true.some,
       streakable = true.some,
+      proMode = false.some,
       description = none,
       hasChat = true.some,
     )
@@ -64,6 +65,7 @@ final class DataForm {
       teamBattleByTeam = none,
       berserkable = tour.berserkable.some,
       streakable = tour.streakable.some,
+      proMode = tour.proMode.some,
       description = tour.description,
       hasChat = tour.hasChat.some,
     )
@@ -92,8 +94,10 @@ final class DataForm {
               _.realVariant == tour.variant || tour.nbPlayers == 0,
             )
             .verifying(
-              "Can't change time control after players have joined",
-              _.speed == tour.speed || tour.nbPlayers == 0,
+            )
+            .verifying(
+              "Can't change to professional mode after players have joined",
+              ~_.proMode == tour.proMode || tour.nbPlayers == 0,
             )
             .verifying(
               "Can't change format after tournament is created",
@@ -133,6 +137,7 @@ final class DataForm {
       "teamBattleByTeam" -> optional(nonEmptyText),
       "berserkable"      -> optional(boolean),
       "streakable"       -> optional(boolean),
+      "proMode"          -> optional(boolean),
       "description"      -> optional(cleanNonEmptyText(maxLength = 3000)),
       "hasChat"          -> optional(boolean),
     )(TournamentSetup.apply)(TournamentSetup.unapply)
@@ -186,6 +191,7 @@ private[tournament] case class TournamentSetup(
     teamBattleByTeam: Option[String],
     berserkable: Option[Boolean],
     streakable: Option[Boolean],
+    proMode: Option[Boolean],
     description: Option[String],
     hasChat: Option[Boolean],
 ) {

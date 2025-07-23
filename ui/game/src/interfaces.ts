@@ -32,6 +32,8 @@ interface Game {
   postGameStudy?: string;
   rated?: boolean;
   perf: string;
+  isProMode?: boolean;
+  illegalUsi?: Usi;
 }
 
 export interface AnalyseGame {
@@ -83,6 +85,7 @@ export type StatusName =
   | 'outoftime'
   | 'noStart'
   | 'cheat'
+  | 'illegalMove'
   | 'unknownFinish';
 
 export type StatusId = number;
@@ -141,7 +144,7 @@ export interface Team {
   name: string;
 }
 
-interface Simul {
+export interface Simul {
   id: string;
   name: string;
   hostId: string;

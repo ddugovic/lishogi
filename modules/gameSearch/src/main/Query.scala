@@ -150,6 +150,7 @@ object Query {
     case s if s.is(_.RoyalsLost)        => Some(s.id -> "Royals lost")
     case s if s.is(_.BareKing)          => Some(s.id -> "Bare king")
     case s if s.is(_.SpecialVariantEnd) => Some(s.id -> "Special variant end")
+    case s if s.is(_.IllegalMove)       => Some(s.id -> "Illegal move")
     case s                              => Some(s.id -> s.toString)
   }.flatten
 }

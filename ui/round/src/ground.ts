@@ -29,6 +29,8 @@ export function makeConfig(ctrl: RoundController): Config {
   const posRes = playing ? parseSfen(variant, step.sfen, false) : undefined;
   const splitSfen = step.sfen.split(' ');
   const sealedUsi = data.player.sealedUsi && usiToSquareNames(data.player.sealedUsi);
+  const enablePre = data.pref.enablePremove && !data.game.isProMode;
+
   return {
     sfen: { board: splitSfen[0], hands: splitSfen[2] },
     orientation: boardOrientation(data, ctrl.flip),
@@ -43,7 +45,7 @@ export function makeConfig(ctrl: RoundController): Config {
     },
     highlight: {
       lastDests: data.pref.highlightLastDests,
-      check: data.pref.highlightCheck && variant !== 'chushogi',
+      check: data.pref.highlightCheck && variant !== 'chushogi' && !data.game.isProMode,
     },
     events: {
       move: hooks.onMove,
@@ -69,7 +71,7 @@ export function makeConfig(ctrl: RoundController): Config {
     },
     movable: {
       free: false,
-      dests: playing && posRes ? util.getMoveDests(posRes) : new Map(),
+      dests: playing && posRes ? util.getMoveDests(posRes, !!data.game.isProMode) : new Map(),
       showDests: data.pref.destination,
       events: {
         after: hooks.onUserMove,
@@ -77,7 +79,7 @@ export function makeConfig(ctrl: RoundController): Config {
     },
     droppable: {
       free: false,
-      dests: playing && posRes ? util.getDropDests(posRes) : new Map(),
+      dests: playing && posRes ? util.getDropDests(posRes, !!data.game.isProMode) : new Map(),
       showDests: data.pref.destination && data.pref.dropDestination,
       events: {
         after: hooks.onUserDrop,
@@ -118,13 +120,13 @@ export function makeConfig(ctrl: RoundController): Config {
       duration: data.pref.animationDuration,
     },
     premovable: {
-      enabled: data.pref.enablePremove,
-      generate: data.pref.enablePremove ? premove(variant) : undefined,
+      enabled: enablePre,
+      generate: enablePre ? premove(variant) : undefined,
       showDests: data.pref.destination,
     },
     predroppable: {
-      enabled: data.pref.enablePremove,
-      generate: data.pref.enablePremove ? predrop(variant) : undefined,
+      enabled: enablePre,
+      generate: enablePre ? predrop(variant) : undefined,
       showDests: data.pref.destination && data.pref.dropDestination,
     },
     draggable: {

@@ -115,6 +115,7 @@ object BSONHandlers {
         maxPlayers = r intO "maxPlayers",
         noBerserk = r boolD "noBerserk",
         noStreak = r boolD "noStreak",
+        proMode = r boolD "proMode",
         schedule = for {
           doc   <- r.getO[Bdoc]("schedule")
           freq  <- doc.getAsOpt[Schedule.Freq]("freq")
@@ -153,6 +154,7 @@ object BSONHandlers {
         "maxPlayers"     -> o.maxPlayers.filterNot(_ == Format.maxPlayers(o.format)),
         "noBerserk"      -> w.boolO(o.noBerserk),
         "noStreak"       -> w.boolO(o.noStreak),
+        "proMode"        -> w.boolO(o.proMode),
         "schedule" -> o.schedule.map { s =>
           $doc(
             "freq"  -> s.freq,
