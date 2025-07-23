@@ -27,7 +27,7 @@ object blindLobby {
 
   private def renderGame(pov: Pov)(implicit ctx: Context) =
     li(
-      a(href := gameLink(pov))(
+      a(href := gameLink(pov, ctx.me))(
         playerText(pov.opponent),
         " ",
         pov.isMyTurn ?? pov.remainingSeconds map { secondsFromNow(_, true) },

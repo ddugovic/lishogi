@@ -20,8 +20,8 @@ object bits {
     )
 
   def mini(pov: Pov)(implicit ctx: Context): Frag =
-    a(href := gameLink(pov))(
-      gameSfen(pov, withLink = false),
+    a(href := gameLink(pov, ctx.me))(
+      gameSfen(pov, ctx.me, withLink = false),
       vstext(pov),
     )
 

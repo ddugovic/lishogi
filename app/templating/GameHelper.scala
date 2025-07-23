@@ -19,6 +19,7 @@ import lila.game.Pov
 import lila.i18n.defaultLang
 import lila.i18n.{ I18nKeys => trans }
 import lila.user.Title
+import lila.user.User
 
 trait GameHelper {
   self: I18nHelper with UserHelper with StringHelper with ShogigroundHelper with ShogiHelper =>
@@ -223,19 +224,28 @@ trait GameHelper {
   def gameLink(
       game: Game,
       color: Color,
+      me: Option[User],
       tv: Boolean = false,
   ): String = {
     if (tv) routes.Tv.index
-    else routes.Round.watcher(game.id, color.name)
+    else
+      me.ifTrue(game.playableEvenPaused || game.aborted)
+        .flatMap(game.fullIdOf)
+        .fold(
+          routes.Round.watcher(game.id, color.name),
+        ) { fullId =>
+          routes.Round.player(fullId)
+        }
   }.toString
 
-  def gameLink(pov: Pov): String = gameLink(pov.game, pov.color)
+  def gameLink(pov: Pov, me: Option[User]): String = gameLink(pov.game, pov.color, me)
 
   private def miniBoardCls(gameId: String, variant: Variant, isLive: Boolean): String =
     s"mini-board mini-board-${gameId} parse-sfen ${variantClass(variant)}${isLive ?? " live"}"
 
   def gameSfen(
       pov: Pov,
+      me: Option[User],
       tv: Boolean = false,
       withTitle: Boolean = true,
       withLink: Boolean = true,
@@ -246,7 +256,7 @@ trait GameHelper {
     val variant = game.variant
     val tag     = if (withLink) a else span
     tag(
-      href        := withLink.option(gameLink(game, pov.color, tv)),
+      href        := withLink.option(gameLink(game, pov.color, me, tv)),
       title       := withTitle.option(gameTitle(game, pov.color)),
       cls         := miniBoardCls(game.id, variant, isLive),
       dataLive    := isLive.option(game.id),

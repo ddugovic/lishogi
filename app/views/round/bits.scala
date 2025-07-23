@@ -119,7 +119,7 @@ object bits {
         playing.partition(_.isMyTurn) pipe { case (myTurn, otherTurn) =>
           (myTurn ++ otherTurn.take(6 - myTurn.size)) take 9 map { pov =>
             a(href := routes.Round.player(pov.fullId), cls := pov.isMyTurn.option("my_turn"))(
-              gameSfen(pov, withLink = false, withTitle = false, withLive = false),
+              gameSfen(pov, ctx.me, withLink = false, withTitle = false, withLive = false),
               span(cls := "meta")(
                 playerText(pov.opponent, withRating = false),
                 span(cls := "indicator")(

@@ -52,7 +52,7 @@ object gamesContent {
             )
           else
             div(cls := "search__status")(
-              strong("No game found"),
+              strong(trans.noGameFound()),
               " - ",
               permalink,
             )
@@ -68,8 +68,8 @@ object gamesContent {
             ),
             if (filterName == "playing" && pager.nbResults > 2)
               pager.currentPageResults.flatMap { Pov(_, u) }.map { p =>
-                a(href := gameLink(p), cls := "paginated")(
-                  gameSfen(p, withLink = false),
+                a(href := gameLink(p, ctx.me), cls := "paginated")(
+                  gameSfen(p, ctx.me, withLink = false),
                   views.html.game.bits.vstext(p),
                 )
               }
