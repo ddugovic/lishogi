@@ -12,6 +12,7 @@ import lila.game.Game
 import lila.game.Game.PlayerId
 import lila.game.GameRepo
 import lila.game.Pov
+import lila.game.Rematches
 import lila.hub.actorApi.map.Tell
 import lila.hub.actorApi.round.Abort
 import lila.hub.actorApi.round.BotPlay
@@ -25,7 +26,7 @@ import lila.user.User
 final class BotPlayer(
     chatApi: lila.chat.ChatApi,
     gameRepo: GameRepo,
-    isOfferingRematch: lila.round.IsOfferingRematch,
+    rematches: Rematches,
 )(implicit
     ec: scala.concurrent.ExecutionContext,
     system: akka.actor.ActorSystem,
@@ -67,11 +68,11 @@ final class BotPlayer(
 
   def rematchDecline(id: Game.ID, me: User): Fu[Boolean] = rematch(id, me, false)
 
-  private def rematch(id: Game.ID, me: User, accept: Boolean): Fu[Boolean] =
-    gameRepo game id map {
-      _.flatMap(Pov(_, me)).filter(p => isOfferingRematch(p.gameId, !p.color)) ?? { pov =>
+  private def rematch(challengeId: Game.ID, me: User, accept: Boolean): Fu[Boolean] =
+    rematches.prevGameIdOffering(challengeId) ?? gameRepo.game map {
+      _.flatMap(Pov(_, me)) ?? { pov =>
         // delay so it feels more natural
-        lila.common.Future.delay(if (accept) 100.millis else 2.seconds) {
+        lila.common.Future.delay(if (accept) 100.millis else 1.seconds) {
           fuccess {
             tellRound(pov.gameId, (if (accept) RematchYes else RematchNo) (pov.playerId))
           }

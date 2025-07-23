@@ -25,7 +25,7 @@ final private[tv] class TvTrouper(
   Bus.subscribe(this, "startGame")
 
   private val channelTroupers: Map[Tv.Channel, ChannelTrouper] = Tv.Channel.all.map { c =>
-    c -> new ChannelTrouper(c, onSelect = this.!, gameProxyRepo.game, rematches.of)
+    c -> new ChannelTrouper(c, onSelect = this.!, gameProxyRepo.game, rematches.getAcceptedId)
   }.toMap
 
   private var channelChampions = Map[Tv.Channel, Tv.Champion]()

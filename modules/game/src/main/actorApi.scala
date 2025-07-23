@@ -41,3 +41,5 @@ case class BoardTakeback(game: Game)
 object BoardTakeback {
   def makeChan(gameId: Game.ID) = s"boardTakeback:$gameId"
 }
+
+case class NotifyRematch(newGame: Game)

@@ -67,7 +67,7 @@ final class BotJsonView(
           .mkString(" ")),
       )
       .add("winner" -> game.winnerColor)
-      .add("rematch" -> rematches.of(game.id))
+      .add("rematch" -> rematches.getAcceptedId(game.id))
   }
 
   def chatLine(username: String, text: String, player: Boolean) =

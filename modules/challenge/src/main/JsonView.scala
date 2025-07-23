@@ -88,6 +88,7 @@ final class JsonView(
         ),
       )
       .add("direction" -> direction.map(_.name))
+      .add("rematchOf" -> c.rematchOf)
       .add("initialSfen" -> c.initialSfen)
 
   private def iconChar(c: Challenge) =

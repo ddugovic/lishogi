@@ -10,7 +10,6 @@ final class Env(
     gameRepo: lila.game.GameRepo,
     lightUserApi: lila.user.LightUserApi,
     rematches: lila.game.Rematches,
-    isOfferingRematch: lila.round.IsOfferingRematch,
     isOnline: IsOnline,
 )(implicit
     ec: scala.concurrent.ExecutionContext,

@@ -12,6 +12,7 @@ import lila.challenge.Challenge
 import lila.common.Bus
 import lila.game.Game
 import lila.game.Pov
+import lila.game.Rematches
 import lila.game.actorApi.FinishGame
 import lila.game.actorApi.StartGame
 import lila.user.LightUserApi
@@ -24,6 +25,7 @@ final class EventStream(
     onlineApiUsers: lila.bot.OnlineApiUsers,
     userRepo: UserRepo,
     gameJsonView: lila.game.JsonView,
+    rematches: Rematches,
     lightUserApi: LightUserApi,
 )(implicit
     ec: scala.concurrent.ExecutionContext,
@@ -125,8 +127,18 @@ final class EventStream(
         case lila.hub.actorApi.round.RematchOffer(gameId) =>
           challengeMaker.makeRematchFor(gameId, me) foreach {
             _ foreach { c =>
-              queue offer challengeJson("challenge")(c.copy(_id = gameId)).some
+              queue offer challengeJson("challenge")(c).some
             }
+          }
+
+        // pretend like the rematch cancel is a challenge cancel
+        case lila.hub.actorApi.round.RematchCancel(gameId) =>
+          rematches.getOffered(gameId).map(_.nextId) foreach { challengeId =>
+            val json = Json.obj(
+              "type"      -> "challengeCanceled",
+              "challenge" -> Json.obj("id" -> challengeId),
+            )
+            queue.offer(json.some).unit
           }
       }
 
@@ -154,7 +166,7 @@ final class EventStream(
   private def challengeJson(tpe: String)(c: Challenge) =
     Json.obj(
       "type"      -> tpe,
-      "challenge" -> challengeJsonView(none)(c)(lila.i18n.defaultLang),
+      "challenge" -> challengeJsonView(none)(c),
     )
 
   private def compatJson(bot: Boolean, board: Boolean) =

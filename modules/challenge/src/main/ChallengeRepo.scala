@@ -14,17 +14,21 @@ final private class ChallengeRepo(coll: Coll, maxPerUser: Max)(implicit
 
   def byId(id: Challenge.ID) = coll.one[Challenge]($id(id))
 
+  def byRematchId(gameId: lila.game.Game.ID) =
+    coll.one[Challenge]($doc("rematchOf" -> gameId))
+
   def byIdFor(id: Challenge.ID, dest: lila.user.User) =
     coll.one[Challenge]($id(id) ++ $doc("destUser.id" -> dest.id))
 
   def exists(id: Challenge.ID) = coll.countSel($id(id)).dmap(0 <)
 
   def insert(c: Challenge): Funit =
-    coll.insert.one(c) >> c.challengerUser.?? { challenger =>
-      createdByChallengerId(challenger.id).flatMap {
-        case challenges if challenges.sizeIs <= maxPerUser.value => funit
-        case challenges => challenges.drop(maxPerUser.value).map(_.id).map(remove).sequenceFu.void
-      }
+    coll.insert.one(c).void.recover(lila.db.ignoreDuplicateKey) >> c.challengerUser.?? {
+      challenger =>
+        createdByChallengerId(challenger.id).flatMap {
+          case challenges if challenges.sizeIs <= maxPerUser.value => funit
+          case challenges => challenges.drop(maxPerUser.value).map(_.id).map(remove).sequenceFu.void
+        }
     }
 
   def update(c: Challenge): Funit = coll.update.one($id(c.id), c).void

@@ -96,13 +96,26 @@ final class ChallengeApi(
             (repo accept c) >>- {
               uncacheAndNotify(c)
               Bus.publish(Event.Accept(c, user.map(_.id)), "challenge")
+              c.rematchOf foreach { gameId =>
+                rematches.accept(gameId, pov.game.id)
+                import lila.hub.actorApi.map.TellIfExists
+                import lila.game.actorApi.NotifyRematch
+                lila.common.Bus
+                  .publish(TellIfExists(gameId, NotifyRematch(pov.game)), "roundSocket")
+              }
             } inject pov.some
           }
         }
     }
 
   def sendRematchOf(game: Game, user: User): Fu[Boolean] =
-    challengeMaker.makeRematchOf(game, user) flatMap { _ ?? create }
+    challengeMaker.makeRematchOf(game, user) flatMap {
+      _ ?? { c =>
+        repo.byId(c.id).flatMap { existing =>
+          existing.isEmpty ?? create(c)
+        }
+      }
+    }
 
   def setDestUser(c: Challenge, u: User): Funit = {
     val challenge = c setDestUser u
@@ -111,6 +124,9 @@ final class ChallengeApi(
       Bus.publish(Event.Create(challenge), "challenge")
     }
   }
+
+  def removeByRematchId(id: Challenge.ID) =
+    repo.byRematchId(id).map2(c => remove(c).void)
 
   def removeByUserId(userId: User.ID) =
     repo allWithUserId userId flatMap { cs =>

@@ -23,7 +23,7 @@ case class Challenge(
     finalColor: shogi.Color,
     challenger: Challenge.Challenger,
     destUser: Option[Challenge.Challenger.Registered],
-    rematchOf: Option[String],
+    rematchOf: Option[lila.game.Game.ID],
     createdAt: DateTime,
     seenAt: Option[DateTime], // None for open challenges, so they don't sweep
     expiresAt: DateTime,

@@ -36,7 +36,7 @@ final class JsonView(rematches: Rematches) {
       .add("winner" -> game.winnerColor)
       .add("lastMove" -> game.lastUsiStr)
       .add("check" -> game.situation.check)
-      .add("rematch" -> rematches.of(game.id))
+      .add("rematch" -> rematches.getAcceptedId(game.id))
       .add("postGameStudy" -> game.postGameStudy)
 
   def ownerPreview(pov: Pov)(lightUserSync: LightUser.GetterSync) =

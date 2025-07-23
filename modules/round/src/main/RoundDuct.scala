@@ -388,6 +388,9 @@ final private[round] class RoundDuct(
     case RematchYes(playerId) => handle(PlayerId(playerId))(rematcher.yes)
     case RematchNo(playerId)  => handle(PlayerId(playerId))(rematcher.no)
 
+    case lila.game.actorApi.NotifyRematch(newGame) =>
+      fuccess(publish(rematcher.redirectEvents(newGame)))
+
     case TakebackYes(playerId) =>
       handle(playerId) { pov =>
         takebacker.yes(~takebackSituation)(pov) map { case (events, situation) =>

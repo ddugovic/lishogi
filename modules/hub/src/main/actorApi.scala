@@ -279,6 +279,8 @@ package round {
   case class RematchOffer(gameId: String)
   case class RematchYes(playerId: String)
   case class RematchNo(playerId: String)
+  case class RematchCancel(gameId: String)
+  case class RematchChallengeDelete(gameId: String)
   case class Abort(playerId: String)
   case class Resign(playerId: String)
   case class Mlat(micros: Int)
