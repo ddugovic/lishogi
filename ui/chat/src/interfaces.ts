@@ -17,6 +17,7 @@ export interface ChatOpts {
   noteText?: string;
   plugin?: ChatPlugin;
   alwaysEnabled: boolean;
+  withColorTags?: boolean;
 }
 
 export interface ChatPlugin {

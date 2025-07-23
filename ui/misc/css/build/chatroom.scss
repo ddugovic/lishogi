@@ -1,0 +1,62 @@
+@use 'pkg:breakpoint-sass' as breakpoint;
+@use 'pkg:common/abstract/extends';
+@use 'pkg:common/abstract/variables';
+@use 'pkg:common/abstract/uniboard';
+@use 'pkg:common/theme';
+@use 'pkg:chat/chat';
+
+main.chat-room {
+  height: calc(100vh - #{variables.$site-header-outer-height} - #{variables.$block-gap});
+  display: flex;
+  flex-direction: column;
+
+  .chat__members {
+    @extend %box-neat-top;
+
+    display: flex;
+    align-items: center;
+    height: 3rem;
+    margin: 0 3rem;
+    padding: 0 1.5rem;
+    background: theme.$c-bg-zebra2;
+
+    .title {
+      margin-right: 0.5rem;
+    }
+  }
+
+  .chat-room__content {
+    min-height: 0;
+    height: 100%;
+
+    @include breakpoint.breakpoint(uniboard.$mq-col2-uniboard) {
+      margin: 0 3rem 1.5rem 3rem;
+    }
+
+    .mchat {
+      @extend %box-radius-bottom;
+      height: 100%;
+
+      &__tabs {
+        display: none;
+      }
+
+      &__content {
+        background: theme.$c-bg-zebra;
+      }
+
+      &__messages {
+        max-height: unset;
+
+        li {
+          font-size: 1rem;
+          border-left: 5px solid transparent;
+        }
+      }
+
+      &__say {
+        padding: 0.75rem 0.75rem;
+      }
+    }
+  }
+}

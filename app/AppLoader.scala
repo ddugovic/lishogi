@@ -94,6 +94,7 @@ final class LilaComponents(ctx: ApplicationLoader.Context)
   lazy val bookmark: Bookmark             = wire[Bookmark]
   lazy val playApi: PlayApi               = wire[PlayApi]
   lazy val challenge: Challenge           = wire[Challenge]
+  lazy val chatroom: Chatroom             = wire[Chatroom]
   lazy val coach: Coach                   = wire[Coach]
   lazy val clas: Clas                     = wire[Clas]
   lazy val coordinate: Coordinate         = wire[Coordinate]

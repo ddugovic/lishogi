@@ -83,6 +83,7 @@ package shutup {
     case class Study(id: String)       extends PublicSource("study")
     case class Watcher(gameId: String) extends PublicSource("watcher")
     case class Team(id: String)        extends PublicSource("team")
+    case class Chatroom(id: String)    extends PublicSource("chatroom")
     case class Unknown(source: String) extends PublicSource("unknown")
   }
 }

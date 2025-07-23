@@ -128,6 +128,8 @@ object RoomSocket {
         rooms.tellIfPresent(id.value, NotifyVersion("chat_timeout", userId, false))
       case OnReinstate(id, userId) =>
         rooms.tellIfPresent(id.value, NotifyVersion("chat_reinstate", userId, false))
+      case OnClear(id) =>
+        rooms.tellIfPresent(id.value, NotifyVersion("chat_clear", Json.obj(), false))
     }
   }
 

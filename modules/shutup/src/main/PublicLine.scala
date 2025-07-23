@@ -28,6 +28,7 @@ object PublicLine {
         case Array("w", gameId) => Source.Watcher(gameId)
         case Array("u", id)     => Source.Study(id)
         case Array("e", id)     => Source.Team(id)
+        case Array("h", id)     => Source.Chatroom(id)
         case Array(_, source)   => Source.Unknown(source)
         case _                  => Source.Unknown(v.take(32))
       }
@@ -39,6 +40,7 @@ object PublicLine {
         case Source.Study(id)       => s"u:$id"
         case Source.Watcher(gameId) => s"w:$gameId"
         case Source.Team(id)        => s"e:$id"
+        case Source.Chatroom(id)    => s"h:$id"
         case Source.Unknown(source) => s"i:$source"
       }),
   )

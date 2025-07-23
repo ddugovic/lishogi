@@ -292,6 +292,13 @@ function renderLine(ctrl: ChatCtrl, line: Line) {
 
   return h(
     'li',
+    ctrl.opts.withColorTags
+      ? {
+          attrs: {
+            style: `border-color:${userIdToHexColor(line.u)}`,
+          },
+        }
+      : {},
     ctrl.moderation()
       ? [line.u ? modLineAction() : null, userNode, textNode]
       : [
@@ -307,4 +314,15 @@ function renderLine(ctrl: ChatCtrl, line: Line) {
           textNode,
         ],
   );
+}
+
+function userIdToHexColor(userId: string | undefined): string {
+  userId = userId || '';
+  let hash = 0;
+  for (let i = 0; i < userId.length; i++) {
+    hash = userId.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  const color = (hash & 0x00ffffff).toString(16).padStart(6, '0');
+  return `#${color}`;
 }

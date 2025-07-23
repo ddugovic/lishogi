@@ -16,6 +16,7 @@ object BusChan {
   case object Simul      extends BusChan
   case object Study      extends BusChan
   case object Team       extends BusChan
+  case object Chatroom   extends BusChan
   case object Global     extends BusChan
 
   type Select = BusChan.type => BusChan

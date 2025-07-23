@@ -55,6 +55,7 @@ final class Env(
     val appeal: lila.appeal.Env,
     val pref: lila.pref.Env,
     val chat: lila.chat.Env,
+    val chatroom: lila.chatroom.Env,
     val puzzle: lila.puzzle.Env,
     val coordinate: lila.coordinate.Env,
     val tv: lila.tv.Env,
@@ -225,6 +226,7 @@ final class EnvBoot(
   lazy val appeal: lila.appeal.Env           = wire[lila.appeal.Env]
   lazy val pref: lila.pref.Env               = wire[lila.pref.Env]
   lazy val chat: lila.chat.Env               = wire[lila.chat.Env]
+  lazy val chatroom: lila.chatroom.Env       = wire[lila.chatroom.Env]
   lazy val puzzle: lila.puzzle.Env           = wire[lila.puzzle.Env]
   lazy val coordinate: lila.coordinate.Env   = wire[lila.coordinate.Env]
   lazy val tv: lila.tv.Env                   = wire[lila.tv.Env]

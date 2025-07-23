@@ -80,6 +80,7 @@ object topnav {
             a(href := userUrl)(trans.players()),
             a(href := routes.PlayApi.botOnline)(trans.bots()),
             a(href := routes.Team.home())(trans.team.teams()),
+            ctx.noKid option a(href := routes.Chatroom.get)(trans.chatRoom()),
             ctx.noKid option a(href := routes.ForumCateg.index)(trans.forum()),
             a(href := routes.Blog.index())(trans.blog()),
             ctx.me

@@ -196,6 +196,22 @@ final class ChatApi(
       }
     }
 
+    def clearInactive(id: Chat.Id, busChan: BusChan.Select): Funit =
+      coll.update
+        .one(
+          $id(id) ++
+            $doc(
+              Chat.BSONFields.updatedAt $lt DateTime.now.minusMinutes(15),
+              Chat.BSONFields.lines $exists true,
+            ),
+          $unset(Chat.BSONFields.lines),
+        ) map { res =>
+        (res.nModified > 0) ?? {
+          cached invalidate id
+          publish(id, actorApi.OnClear(id), busChan)
+        }
+      }
+
     private def isMod(user: User) = lila.security.Granter(_.ChatTimeout)(user)
 
     def reinstate(list: List[ChatTimeout.Reinstate]) =

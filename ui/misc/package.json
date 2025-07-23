@@ -10,6 +10,7 @@
     "breakpoint-sass": "catalog:",
     "canvas-confetti": "^1.9.3",
     "common": "workspace:*",
+    "chat": "workspace:*",
     "flatpickr": "^4.6.13",
     "i18n": "workspace:*",
     "shogi": "workspace:*",

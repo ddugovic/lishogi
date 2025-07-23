@@ -20,6 +20,7 @@ export default function (opts: ChatOpts, redraw: Redraw): ChatCtrl {
   data.domVersion = 1; // increment to force redraw
   const maxLines = 200;
   const maxLinesDrop = 50; // how many lines to drop at once
+  data.maxLineLength = 140;
 
   const palantir = {
     instance: undefined,
@@ -52,8 +53,8 @@ export default function (opts: ChatOpts, redraw: Redraw): ChatCtrl {
   const post = (text: string): void => {
     text = text.trim();
     if (!text) return;
-    if (text.length > 140) {
-      alert(`Max length: 140 chars. ${text.length} chars used.`);
+    if (text.length > data.maxLineLength) {
+      alert(`Max length: ${data.maxLineLength} chars. ${text.length} chars used.`);
       return;
     }
     li.pubsub.emit('socket.send', 'talk', text);
@@ -73,6 +74,12 @@ export default function (opts: ChatOpts, redraw: Redraw): ChatCtrl {
       vm.timeout = false;
       redraw();
     }
+  };
+
+  const onClear = () => {
+    data.lines = [];
+    data.domVersion++;
+    redraw();
   };
 
   const onMessage = (line: Line) => {
@@ -127,6 +134,7 @@ export default function (opts: ChatOpts, redraw: Redraw): ChatCtrl {
     ['socket.in.message', onMessage],
     ['socket.in.chat_timeout', onTimeout],
     ['socket.in.chat_reinstate', onReinstate],
+    ['socket.in.chat_clear', onClear],
     ['chat.writeable', onWriteable],
     ['chat.permissions', onPermissions],
     ['palantir.toggle', palantir.enabled],

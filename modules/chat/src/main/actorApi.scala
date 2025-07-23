@@ -13,3 +13,4 @@ case class Timeout(
 
 case class OnTimeout(chatId: Chat.Id, userId: String)
 case class OnReinstate(chatId: Chat.Id, userId: String)
+case class OnClear(chatId: Chat.Id)

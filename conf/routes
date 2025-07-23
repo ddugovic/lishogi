@@ -454,6 +454,9 @@ POST  /forum/post/:id                  controllers.ForumPost.edit(id: String)
 POST  /forum/post/:id/react/:reaction/:v controllers.ForumPost.react(id: String, reaction: String, v: Boolean)
 GET   /forum/redirect/post/:id         controllers.ForumPost.redirect(id: String)
 
+# Chat room
+GET   /chat-room                       controllers.Chatroom.get
+
 # Msg
 GET   /inbox                           controllers.Msg.home
 GET   /inbox/search                    controllers.Msg.search(q: String)
