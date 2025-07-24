@@ -32,9 +32,8 @@ object layout {
         s"""<meta name="theme-color" content="${if (ctx.pref.isLightBackground) "#dbd7d1"
           else "#2e2a24"}">"""
       }
-    def backgroundClass(bg: String, customBackground: Option[lila.pref.CustomBackground]) =
-      customBackground
-        .ifTrue(bg == "custom")
+    def backgroundClass(bg: String, activeCustomBackground: Option[lila.pref.CustomBackground]) =
+      activeCustomBackground
         .fold(bg)(cb => s"${bg}-${if (cb.light) "light" else "dark"}")
     def cssVariables(
         zoom: Option[Int],

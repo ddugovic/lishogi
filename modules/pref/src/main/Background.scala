@@ -55,3 +55,19 @@ case class CustomBackground(
       s"--custom-red: $red;",
     ).mkString("")
 }
+
+object CustomBackground {
+  // gruvbox
+  val default = CustomBackground(
+    light = false,
+    bgPage = "#1d2021",
+    bgImg = "",
+    font = "#ebdbb2",
+    accent = "#fb4934",
+    primary = "#83a598",
+    secondary = "#8c8e0d",
+    brag = "#bf811d",
+    green = "#629924",
+    red = "#c33",
+  )
+}

@@ -55,9 +55,9 @@ case class Pref(
   def isLightBackground =
     (background == "light") || (background == "custom" && ~customBackground.map(_.light))
 
-  def activeCustomTheme = (theme == "custom") ?? customTheme
+  def activeCustomTheme = (theme == "custom") option customThemeOrDefault
 
-  def activeCustomBackground = (background == "custom") ?? customBackground
+  def activeCustomBackground = (background == "custom") option customBackgroundOrDefault
 
   def activeBgImgUrl = bgImg
     .ifTrue(background == "transp")
@@ -124,6 +124,8 @@ case class Pref(
   def isUsingThickGrid = thickGrid == ThickGrid.YES
 
   def gridWidth = customThemeOrDefault.gridWidth
+
+  def customBackgroundOrDefault = customBackground | CustomBackground.default
 
   def isZen = zen == Zen.YES
 }
