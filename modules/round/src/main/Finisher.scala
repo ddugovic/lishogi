@@ -12,7 +12,6 @@ import lila.game.Pov
 import lila.game.RatingDiffs
 import lila.game.actorApi.AbortedBy
 import lila.game.actorApi.FinishGame
-import lila.i18n.I18nKey
 import lila.i18n.{ I18nKeys => trans }
 import lila.playban.PlaybanApi
 import lila.user.User
@@ -76,6 +75,9 @@ final private class Finisher(
       lila.mon.round.expiration.count.increment()
       playban.noStart(Pov(game, culprit))
       if (game.isMandatory) apply(game, _.NoStart, winner = Some(!culprit.color))
+      else apply(game, _.Aborted, winner = none)
+    } >>- messenger.system(game, trans.gameAborted)
+
   def illegal(game: Game)(implicit proxy: GameProxy): Fu[Events] = {
     val winner = !game.player.color
     apply(
@@ -89,9 +91,8 @@ final private class Finisher(
       game: Game,
       status: Status.type => Status,
       winner: Option[Color],
-      message: Option[I18nKey] = None,
   )(implicit proxy: GameProxy): Fu[Events] =
-    apply(game, status, winner, message) >>- playban.other(game, status, winner).unit
+    apply(game, status, winner) >>- playban.other(game, status, winner).unit
 
   private def recordLagStats(game: Game): Unit =
     for {
@@ -128,7 +129,6 @@ final private class Finisher(
       prev: Game,
       makeStatus: Status.type => Status,
       winner: Option[Color],
-      message: Option[I18nKey] = None,
   )(implicit proxy: GameProxy): Fu[Events] = {
     val status = makeStatus(Status)
     val prog   = lila.game.Progress(prev, prev.finish(status, winner))
@@ -161,7 +161,6 @@ final private class Finisher(
           case (senteO, goteO) => {
             val finish = FinishGame(game, senteO, goteO)
             updateCountAndPerfs(finish) map { ratingDiffs =>
-              message foreach { messenger.system(game, _) }
               gameRepo game game.id foreach { newGame =>
                 newGame foreach proxy.setFinishedGame
                 val newFinish = finish.copy(game = newGame | game)

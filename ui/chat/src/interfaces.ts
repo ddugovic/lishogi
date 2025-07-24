@@ -38,6 +38,7 @@ interface ChatData {
   restricted: boolean;
   palantir: boolean;
   domVersion: number;
+  maxLineLength: number;
 }
 
 export interface Line {

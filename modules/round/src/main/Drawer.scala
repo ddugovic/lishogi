@@ -15,12 +15,17 @@ final private[round] class Drawer(
   def yes(pov: Pov)(implicit proxy: GameProxy): Fu[Events] = pov.game.drawable ?? {
     pov match {
       case pov if pov.opponent.isOfferingDraw =>
-        finisher.other(pov.game, _.Draw, winner = none, message = trans.drawOfferAccepted.some)
+        finisher.other(
+          pov.game,
+          _.Draw,
+          winner = none,
+        ) >>- messenger.system(pov.game, trans.drawOfferAccepted)
+
       case Pov(g, color) if g playerCanOfferDraw color =>
         val progress = Progress(g) map { g =>
           g.updatePlayer(color, _ offerDraw g.plies)
         }
-        messenger.system(g, trans.xOffersDraw, color.toString)
+        messenger.system(g, trans.xOffersDraw, (color, g.isHandicap).some)
         proxy.save(progress) >>-
           publishDrawOffer(progress.game) inject
           List(Event.DrawOffer(by = color.some))
@@ -39,7 +44,7 @@ final private[round] class Drawer(
         } inject List(Event.DrawOffer(by = none))
       case Pov(g, color) if pov.opponent.isOfferingDraw =>
         proxy.save {
-          messenger.system(g, trans.xDeclinesDraw, color.toString)
+          messenger.system(g, trans.xDeclinesDraw, (color, g.isHandicap).some)
           Progress(g) map { g =>
             g.updatePlayer(!color, _.removeDrawOffer)
           }

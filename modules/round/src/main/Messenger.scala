@@ -15,13 +15,27 @@ final class Messenger(api: ChatApi) {
 
   private val dateTimeFormatter = DateTimeFormat forStyle "MS"
   private def timestampMessage(str: String, stepNumber: Int): String =
-    s"[${dateTimeFormatter print DateTime.now} ($stepNumber. move)]${str.toLowerCase.capitalize}"
+    s"[${dateTimeFormatter print DateTime.now} ($stepNumber. move)]$str"
 
-  def systemWithTimestamp(game: Game, trans: I18nKey, args: String*): Unit =
-    system(true)(game, timestampMessage(s"key:${trans.key}:${args.mkString(",")}", game.plies))
+  private def colorAndHandicapFormat(colorAndHandicap: Option[(shogi.Color, Boolean)]): String =
+    colorAndHandicap ?? { ch => s"${ch._1.toString}:${ch._2}" }
 
-  def system(game: Game, trans: I18nKey, args: String*): Unit =
-    system(true)(game, s"key:${trans.key}:${args.mkString(",")}")
+  def systemWithTimestamp(
+      game: Game,
+      trans: I18nKey,
+      colorAndHandicap: Option[(shogi.Color, Boolean)] = none,
+  ): Unit =
+    system(true)(
+      game,
+      timestampMessage(s"key:${trans.key}:${colorAndHandicapFormat(colorAndHandicap)}", game.plies),
+    )
+
+  def system(
+      game: Game,
+      trans: I18nKey,
+      colorAndHandicap: Option[(shogi.Color, Boolean)] = none,
+  ): Unit =
+    system(true)(game, s"key:${trans.key}:${colorAndHandicapFormat(colorAndHandicap)}")
 
   def system(game: Game, message: String): Unit =
     system(true)(game, message)

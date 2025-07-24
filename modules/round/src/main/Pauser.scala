@@ -38,7 +38,7 @@ final private[round] class Pauser(
           messenger.systemWithTimestamp(
             g,
             trans.xOffersAdjournment,
-            color.toString,
+            (color, g.isHandicap).some,
           )
           Progress(g, g.updatePlayer(color, _.offerPause))
         } inject List(Event.PauseOffer(by = color.some))
@@ -54,7 +54,7 @@ final private[round] class Pauser(
         } inject List(Event.PauseOffer(by = none))
       case Pov(g, color) if pov.opponent.isOfferingPause =>
         proxy.save {
-          messenger.systemWithTimestamp(g, trans.xDeclinesAdjournment, color.toString)
+          messenger.systemWithTimestamp(g, trans.xDeclinesAdjournment, (color, g.isHandicap).some)
           Progress(g, g.updatePlayer(!color, _.removePauseOffer))
         } inject List(Event.PauseOffer(by = none))
       case _ => fuccess(List(Event.ReloadOwner))
@@ -101,7 +101,7 @@ final private[round] class Pauser(
             )
         } else if (!isOfferingResume(g.id, color)) {
           resumeOffers.put(g.id, Pauser.ResumeOffers(sente = color.sente, gote = color.gote))
-          messenger.system(g, trans.xOffersResumption, color.toString)
+          messenger.system(g, trans.xOffersResumption, (color, g.isHandicap).some)
           fuccess(Left(List(Event.ResumeOffer(by = color.some))))
         } else fuccess(Left(List(Event.ReloadOwner)))
       case _ => fuccess(Left(List(Event.ReloadOwner)))
@@ -112,7 +112,7 @@ final private[round] class Pauser(
       if (isOfferingResumeFromPov(pov)) {
         messenger.system(pov.game, trans.resumptionOfferCanceled)
       } else if (isOfferingResumeFromPov(!pov)) {
-        messenger.system(pov.game, trans.xDeclinesResumption, pov.color.toString)
+        messenger.system(pov.game, trans.xDeclinesResumption, (pov.color, pov.game.isHandicap).some)
       }
       resumeOffers invalidate pov.gameId
       fuccess(List(Event.ResumeOffer(by = none)))
