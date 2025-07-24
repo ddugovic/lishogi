@@ -172,7 +172,7 @@ final private class ChallengeRepo(coll: Coll, maxPerUser: Max)(implicit
   ) =
     coll.update
       .one(
-        selectCreated ++ $id(challenge.id),
+        selectCreatedOrOffline ++ $id(challenge.id),
         $doc(
           "$set" -> $doc(
             "status"    -> status.id,
@@ -184,5 +184,6 @@ final private class ChallengeRepo(coll: Coll, maxPerUser: Max)(implicit
 
   private[challenge] def remove(id: Challenge.ID) = coll.delete.one($id(id)).void
 
-  private val selectCreated = $doc("status" -> Status.Created.id)
+  private val selectCreated          = $doc("status" -> Status.Created.id)
+  private val selectCreatedOrOffline = $doc("status" $in List(Status.Created.id, Status.Offline.id))
 }
