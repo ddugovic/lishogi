@@ -14,18 +14,7 @@ export default function boot(
     const match = RegExp(`[?&]${name}=([^&]*)`).exec(location.search);
     return match ? (decodeURIComponent(match[1].replace(/\+/g, ' ')) as T) : undefined;
   };
-  const onFirstConnect = () => {
-    const gameId = getParameterByName<string>('hook_like');
-    if (!gameId) return;
-    window.lishogi.xhr.text('POST', `/setup/hook/${window.lishogi.sri}/like/${gameId}`, {
-      url: {
-        rr: ctrl?.setupCtrl.ratingRange() || '',
-      },
-    });
-    ctrl?.setTab('real_time', false);
-    ctrl?.redraw();
-    history.replaceState(null, '', '/');
-  };
+
   window.lishogi.socket = new window.lishogi.StrongSocket('/lobby/socket/v4', false, {
     receive: (t: string, d: any) => {
       ctrl?.socket.receive(t, d);
@@ -62,7 +51,6 @@ export default function boot(
     },
     options: {
       name: 'lobby',
-      onFirstConnect: onFirstConnect,
     },
   });
 
@@ -70,6 +58,7 @@ export default function boot(
   opts.socketSend = window.lishogi.socket.send;
   opts.variant = getParameterByName<VariantKey>('variant');
   opts.sfen = getParameterByName<Sfen>('sfen');
+  opts.hookLike = getParameterByName('hook_like');
 
   ctrl = start(opts);
 

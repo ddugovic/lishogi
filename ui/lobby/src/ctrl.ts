@@ -95,6 +95,21 @@ export default class LobbyController {
         this.data.hooks = [];
         this.socket.realTimeIn();
       }
+      if (opts.hookLike) {
+        this.setupCtrl.initData('hook');
+        window.lishogi.xhr
+          .json('POST', `/setup/hook/${window.lishogi.sri}/like/${opts.hookLike}`, {
+            url: {
+              rr: this.setupCtrl.ratingRange() || '',
+            },
+          })
+          .then(res => {
+            if (res.hook.seek) this.setTab('seeks', false);
+            else this.setTab('real_time', false);
+            this.redraw();
+          });
+        history.replaceState(null, '', '/');
+      }
     });
   }
 

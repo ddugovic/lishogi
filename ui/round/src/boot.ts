@@ -101,7 +101,7 @@ export function boot(
     });
   if (location.pathname.lastIndexOf('/round-next/', 0) === 0)
     history.replaceState(null, '', `/${data.game.id}`);
-  if (location.pathname.length === 9 && data.player.id)
+  if (location.pathname.length === 9 && data.player.id && data.player.user)
     history.replaceState(null, '', `/${data.game.id}${data.player.id}`);
   $('#zentog').on('click', () => li.pubsub.emit('zen'));
   li.storage.make('reload-round-tabs').listen(li.reload);

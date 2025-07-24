@@ -15,17 +15,20 @@
       }
     }
 
-    &.cancel td {
-      background: theme.$m-secondary_alpha_neg60;
+    &.cancel {
+      td {
+        background: theme.$m-secondary_alpha_neg60;
+        color: theme.$c-font-clear;
+      }
+
+      &:hover td {
+        background: theme.$m-secondary_alpha_neg50;
+      }
     }
 
     &.join:hover td {
       background: theme.$m-accent_alpha_neg50;
       color: theme.$c-accent-over;
-    }
-
-    &:not(.disabled):hover ::before {
-      opacity: 1;
     }
 
     &.variants td {
@@ -93,10 +96,6 @@
       margin-right: 8px;
       line-height: 0.9;
       font-size: 1.6em;
-    }
-
-    ::before {
-      opacity: 0.6;
     }
   }
 

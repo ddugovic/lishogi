@@ -52,7 +52,7 @@ function innerModal(ctrl: SetupCtrl): MaybeVNodes {
       ctrl.key === 'ai'
         ? i18n('playWithTheMachine')
         : ctrl.key === 'friend'
-          ? i18n('playWithAFriend')
+          ? `${i18n('playWithAFriend')}${ctrl.data.user ? ` - ${ctrl.data.user}` : ''}`
           : i18n('createAGame'),
     ),
     variant(ctrl),

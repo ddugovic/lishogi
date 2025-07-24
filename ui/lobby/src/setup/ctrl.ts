@@ -236,6 +236,7 @@ export default class SetupCtrl {
         ratingMax: getNumber('ratingMax', maxRatingChoices),
         mode: getNumber('mode', modeChoices),
         proMode: false, // for now
+        user: extraData?.user,
       };
     } catch (e) {
       console.error('Failed to parse saved form data', e);
@@ -312,7 +313,13 @@ export default class SetupCtrl {
     if (this.key === 'hook') url += `/${window.lishogi.sri}`;
 
     window.lishogi.xhr
-      .json('POST', url, { url: { redirect: true }, formData: postData })
+      .json('POST', url, {
+        url: {
+          redirect: true,
+          user: this.data.user && this.key === 'friend' ? this.data.user : undefined,
+        },
+        formData: postData,
+      })
       .then(data => {
         if (this.key === 'hook') {
           this.root.setTab(this.isCorres() ? 'seeks' : 'real_time');
@@ -326,7 +333,7 @@ export default class SetupCtrl {
           res
             .json()
             .then((body: any) => {
-              this.error = JSON.stringify(body.error);
+              this.error = JSON.stringify(body.error?.global || body.error);
               this.redraw();
             })
             .catch(() => {
@@ -356,6 +363,7 @@ export default class SetupCtrl {
     ratingMax: 500,
     mode: Mode.Casual,
     proMode: false,
+    user: undefined,
   };
 }
 
@@ -377,6 +385,7 @@ interface SetupData {
   proMode: boolean;
   ratingMin: number;
   ratingMax: number;
+  user: string | undefined;
 }
 
 export type SetupDataKey = keyof SetupData;
