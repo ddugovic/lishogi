@@ -7,6 +7,10 @@
     @extend %box-radius-right, %box-shadow-bottom;
 
     background: theme.$c-bg-box;
+
+    &.no-clock {
+      @extend %box-radius;
+    }
   }
 }
 

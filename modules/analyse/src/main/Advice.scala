@@ -28,7 +28,7 @@ sealed trait Advice {
       }) + s"${i18n(trans.dotSymbol.key)} " + {
         withBestMove ?? {
           info.variation.headOption ?? { usi =>
-            i18n(trans.bestMoveWasX.key, s"[usi:${ply - 1}.$usi]")
+            i18n(trans.bestMoveWasX.key, lila.common.String.usiNotationFormat(ply - 1, usi))
           }
         }
       }

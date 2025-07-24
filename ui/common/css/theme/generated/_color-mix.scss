@@ -15,6 +15,7 @@ html {
   --m-bad_bg-zebra2_mix_20: color-mix(in srgb, var(--c-bad) 20%, var(--c-bg-zebra2) 80%);
   --m-bad_bg-zebra2_mix_60: color-mix(in srgb, var(--c-bad) 60%, var(--c-bg-zebra2) 40%);
   --m-bad_darken_mix_80: color-mix(in srgb, var(--c-bad) 80%, var(--c-darken) 20%);
+  --m-bad_font_mix_80: color-mix(in srgb, var(--c-bad) 80%, var(--c-font) 20%);
   --m-bg-box_alpha_neg20: oklch(from var(--c-bg-box) l c h / 0.8);
   --m-bg-box_alpha_neg50: oklch(from var(--c-bg-box) l c h / 0.5);
   --m-bg-box_bg-page_mix_50: color-mix(in srgb, var(--c-bg-box) 50%, var(--c-bg-page) 50%);
@@ -59,6 +60,7 @@ html {
   --m-good_bg-high_mix_80: color-mix(in srgb, var(--c-good) 80%, var(--c-bg-high) 20%);
   --m-good_darken_mix_50: color-mix(in srgb, var(--c-good) 50%, var(--c-darken) 50%);
   --m-good_darken_mix_85: color-mix(in srgb, var(--c-good) 85%, var(--c-darken) 15%);
+  --m-good_font_mix_80: color-mix(in srgb, var(--c-good) 80%, var(--c-font) 20%);
   --m-good_lightness_4: oklch(from var(--c-good) calc(l + 0.04) c h);
   --m-link_alpha_neg60: oklch(from var(--c-link) l c h / 0.4);
   --m-link_bg-box_mix_10: color-mix(in srgb, var(--c-link) 10%, var(--c-bg-box) 90%);
@@ -67,8 +69,8 @@ html {
   --m-link_bg-box_mix_80: color-mix(in srgb, var(--c-link) 80%, var(--c-bg-box) 20%);
   --m-link_bg-page_mix_20: color-mix(in srgb, var(--c-link) 20%, var(--c-bg-page) 80%);
   --m-link_font_mix_35: color-mix(in srgb, var(--c-link) 35%, var(--c-font) 65%);
+  --m-primary_alpha_neg75: oklch(from var(--c-primary) l c h / 0.25);
   --m-primary_alpha_neg80: oklch(from var(--c-primary) l c h / 0.2);
-  --m-primary_alpha_neg85: oklch(from var(--c-primary) l c h / 0.15);
   --m-primary_bg-box_mix_10: color-mix(in srgb, var(--c-primary) 10%, var(--c-bg-box) 90%);
   --m-primary_bg-box_mix_12: color-mix(in srgb, var(--c-primary) 12%, var(--c-bg-box) 88%);
   --m-primary_bg-box_mix_15: color-mix(in srgb, var(--c-primary) 15%, var(--c-bg-box) 85%);
@@ -90,13 +92,13 @@ html {
   --m-secondary_alpha_neg50: oklch(from var(--c-secondary) l c h / 0.5);
   --m-secondary_alpha_neg60: oklch(from var(--c-secondary) l c h / 0.4);
   --m-secondary_alpha_neg80: oklch(from var(--c-secondary) l c h / 0.2);
+  --m-secondary_alpha_neg85: oklch(from var(--c-secondary) l c h / 0.15);
   --m-secondary_bg-box_mix_10: color-mix(in srgb, var(--c-secondary) 10%, var(--c-bg-box) 90%);
   --m-secondary_bg-box_mix_15: color-mix(in srgb, var(--c-secondary) 15%, var(--c-bg-box) 85%);
   --m-secondary_bg-box_mix_20: color-mix(in srgb, var(--c-secondary) 20%, var(--c-bg-box) 80%);
   --m-secondary_bg-box_mix_30: color-mix(in srgb, var(--c-secondary) 30%, var(--c-bg-box) 70%);
   --m-secondary_bg-box_mix_40: color-mix(in srgb, var(--c-secondary) 40%, var(--c-bg-box) 60%);
   --m-secondary_bg-box_mix_50: color-mix(in srgb, var(--c-secondary) 50%, var(--c-bg-box) 50%);
-  --m-secondary_bg-box_mix_70: color-mix(in srgb, var(--c-secondary) 70%, var(--c-bg-box) 30%);
   --m-secondary_bg-header-dropdown_mix_15: color-mix(in srgb, var(--c-secondary) 15%, var(--c-bg-header-dropdown) 85%);
   --m-secondary_bg-header-dropdown_mix_27: color-mix(in srgb, var(--c-secondary) 27%, var(--c-bg-header-dropdown) 73%);
   --m-secondary_bg-header-dropdown_mix_36: color-mix(in srgb, var(--c-secondary) 36%, var(--c-bg-header-dropdown) 64%);

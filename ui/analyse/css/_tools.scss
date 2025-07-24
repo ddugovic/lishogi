@@ -23,8 +23,6 @@
     }
 
     .sub-box {
-      @extend %border-bottom-active;
-
       user-select: none;
 
       .title {

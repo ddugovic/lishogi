@@ -83,7 +83,7 @@ final class Env(
 
   lazy val gifExport = new GifExport(ws, appConfig.get[String]("game.gifUrl"))
 
-  val maxHot = 6
+  val maxHot = 5
   lazy val hotFeaturable = cacheApi.unit[List[Study.MiniStudy]] {
     _.refreshAfterWrite(2 minutes)
       .buildAsyncFuture(_ => studyRepo.hot(maxHot))

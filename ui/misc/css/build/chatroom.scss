@@ -35,6 +35,7 @@ main.chat-room {
 
     .mchat {
       @extend %box-radius-bottom;
+
       height: 100%;
 
       &__tabs {

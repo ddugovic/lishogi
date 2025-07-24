@@ -129,4 +129,8 @@ object String {
     """(?i)(prize|\$|€|£|¥|₽|元|₹|₱|₿|rupee|rupiah|ringgit|usd|dollar|paypal|cash|award|\bfees?\b)""".r.unanchored
 
   def looksLikePrize(txt: String) = prizeRegex matches txt
+
+  // used in system chat (maybe someday) and comments
+  def usiNotationFormat(ply: Int, usi: String): String =
+    s"[usi:$ply.$usi]"
 }

@@ -200,22 +200,24 @@ object show {
               t.enabled && ctx.noKid option
                 st.section(cls := "team-show__forum")(
                   h2(a(href := teamForumUrl(t.id))(trans.forum())),
-                  info.forumPosts.take(10).map { post =>
-                    a(
-                      cls  := "team-show__forum__post",
-                      href := routes.ForumPost.redirect(post.postId),
-                    )(
-                      div(cls := "meta")(
-                        strong(post.topicName),
-                        em(
-                          post.userId map usernameOrId,
-                          " - ",
-                          momentFromNow(post.createdAt),
+                  div(cls := "team-show__forum__posts")(
+                    info.forumPosts.take(10).map { post =>
+                      a(
+                        cls  := "team-show__forum__post",
+                        href := routes.ForumPost.redirect(post.postId),
+                      )(
+                        div(cls := "meta")(
+                          strong(post.topicName),
+                          em(
+                            post.userId map usernameOrId,
+                            " - ",
+                            momentFromNow(post.createdAt),
+                          ),
                         ),
-                      ),
-                      p(shorten(post.text, 200)),
-                    )
-                  },
+                        p(shorten(post.text, 200)),
+                      )
+                    },
+                  ),
                   a(cls := "more", href := teamForumUrl(t.id))(t.name, " ", trans.forum(), " »"),
                 ),
             ),

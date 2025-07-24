@@ -2,6 +2,7 @@ import { loadCssPath } from 'common/assets';
 import notify from 'common/notification';
 import throttle from 'common/throttle';
 import * as game from 'game';
+import type { Simul } from 'game/interfaces';
 import { i18n } from 'i18n';
 import type RoundController from './ctrl';
 import type { RoundData, Untyped } from './interfaces';
@@ -157,7 +158,7 @@ export function make(send: Socket.Send, ctrl: RoundController): RoundSocket {
         location.href = `/${gameId}`;
       }
     },
-    simulEnd(simul: game.Simul) {
+    simulEnd(simul: Simul) {
       loadCssPath('misc.modal');
       $.modal(
         $(

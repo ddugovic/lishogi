@@ -96,6 +96,8 @@ case class Game(
 
   def fullIdOf(player: Player): Option[String] =
     (players contains player) option s"$id${player.id}"
+  def fullIdOf(user: User): Option[String] =
+    player(user) map { p => s"$id${p.id}" }
 
   def fullIdOf(color: Color): String = s"$id${player(color).id}"
 

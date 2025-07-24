@@ -55,6 +55,15 @@ const announceFail = (validUrl: boolean) =>
     msg: `Failed to save custom background${validUrl ? '' : ': URL should start with https'}`,
   });
 
+const saveCustomTheme: (data: CustomBackgroundData) => void = debounce(
+  (data: CustomBackgroundData) => {
+    window.lishogi.xhr
+      .text('POST', '/pref/customBackground', { formData: data })
+      .catch(() => announceFail(validateUrl(data.bgImg)));
+  },
+  750,
+);
+
 export function ctrl(
   dataInit: CustomBackgroundData | undefined,
   redraw: Redraw,
@@ -64,13 +73,8 @@ export function ctrl(
   data.light = dataInit?.light || false;
   data.bgImg = dataInit?.bgImg || '';
   colors.forEach(c => {
-    data[c] = dataInit?.[c] || presets[0].preset[c];
+    data[c] = dataInit?.[c] || customPresets[0].preset[c];
   });
-  const saveTheme = debounce(() => {
-    window.lishogi.xhr
-      .text('POST', '/pref/customBackground', { formData: data })
-      .catch(() => announceFail(validateUrl(data.bgImg)));
-  }, 750);
 
   const emitChange = debounce(() => {
     window.lishogi.pubsub.emit('background-change');
@@ -81,14 +85,14 @@ export function ctrl(
       Object.assign(data, cbd);
       applyEverything(data);
       redraw();
-      saveTheme();
+      saveCustomTheme(data);
       emitChange();
     },
     setColor: <K extends ColorKey>(key: K, value: CustomBackgroundData[K]) => {
       data[key] = value;
       applyCustomColor(key, value);
       redraw();
-      saveTheme();
+      saveCustomTheme(data);
       emitChange();
     },
     setBgColor: (value: string, isLight: boolean) => {
@@ -99,14 +103,14 @@ export function ctrl(
         applyShading(isLight);
       }
       redraw();
-      saveTheme();
+      saveCustomTheme(data);
       emitChange();
     },
     setImage: (url: string) => {
       data.bgImg = url;
       applyImage(url);
       redraw();
-      saveTheme();
+      saveCustomTheme(data);
       emitChange();
     },
     data,
@@ -169,7 +173,7 @@ function colorInput(key: ColorKey, ctrl: CustomBackgroundCtrl, title: string): V
 }
 
 function presetSelection(ctrl: CustomBackgroundCtrl): VNode {
-  const selected = presets.find(p =>
+  const selected = customPresets.find(p =>
     Object.keys(ctrl.data).every(key => p.preset[key as Key] === ctrl.data[key as Key]),
   );
   const empty = [h('option', { attrs: { selected: !selected, hidden: true, value: '' } }, '')];
@@ -180,7 +184,7 @@ function presetSelection(ctrl: CustomBackgroundCtrl): VNode {
       {
         hook: onInsert(el => {
           el.addEventListener('change', e => {
-            const preset = presets[Number.parseInt((e.target as HTMLSelectElement).value)];
+            const preset = customPresets[Number.parseInt((e.target as HTMLSelectElement).value)];
             ctrl.set(preset.preset);
             colors.forEach(c => {
               const sp = colorInputs.get(c);
@@ -190,7 +194,7 @@ function presetSelection(ctrl: CustomBackgroundCtrl): VNode {
         }),
       },
       empty.concat(
-        presets.map((p, i) =>
+        customPresets.map((p, i) =>
           h(
             'option',
             {
@@ -261,7 +265,7 @@ function applyEverything(data: CustomBackgroundData): void {
   }
 }
 
-const presets: { name: string; preset: CustomBackgroundData }[] = [
+const customPresets: { name: string; preset: CustomBackgroundData }[] = [
   {
     name: 'Gruvbox',
     preset: {

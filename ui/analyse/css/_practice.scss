@@ -1,3 +1,4 @@
+@use 'pkg:common/abstract/extends';
 @use 'pkg:common/theme';
 
 .practice-box {
@@ -45,15 +46,19 @@
     font-weight: bold;
     margin-right: 10px;
     display: flex;
+    align-items: center;
   }
 
   .verdict::before {
-    width: 30px;
+    @extend %box-radius;
+
+    width: 35px;
     height: 100%;
     margin-right: 7px;
     text-align: center;
     font-size: 1.4em;
     font-weight: normal;
+    border: 2px solid theme.$c-bg-box;
   }
 
   &.goodMove .verdict {

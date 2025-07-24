@@ -73,6 +73,7 @@ html.light {
   --m-bad_bg-box_mix_50: #{color.mix($c-bad,$c-bg-box,50%)};
   --m-bad_bg-zebra2_mix_20: #{color.mix($c-bad,$c-bg-zebra2,20%)};
   --m-bad_bg-zebra2_mix_60: #{color.mix($c-bad,$c-bg-zebra2,60%)};
+  --m-bad_font_mix_80: #{color.mix($c-bad,$c-font,80%)};
   --m-bg-box_alpha_neg20: #{color.adjust($c-bg-box,$alpha:-0.2)};
   --m-bg-box_alpha_neg50: #{color.adjust($c-bg-box,$alpha:-0.5)};
   --m-bg-box_bg-page_mix_50: #{color.mix($c-bg-box,$c-bg-page,50%)};
@@ -111,6 +112,7 @@ html.light {
   --m-font-dim_c-alpha_5: #{color.change($c-font-dim,$alpha:0.05)};
   --m-good_bg-box_mix_10: #{color.mix($c-good,$c-bg-box,10%)};
   --m-good_bg-high_mix_80: #{color.mix($c-good,$c-bg-high,80%)};
+  --m-good_font_mix_80: #{color.mix($c-good,$c-font,80%)};
   --m-link_alpha_neg60: #{color.adjust($c-link,$alpha:-0.6)};
   --m-link_bg-box_mix_10: #{color.mix($c-link,$c-bg-box,10%)};
   --m-link_bg-box_mix_15: #{color.mix($c-link,$c-bg-box,15%)};
@@ -118,8 +120,8 @@ html.light {
   --m-link_bg-box_mix_80: #{color.mix($c-link,$c-bg-box,80%)};
   --m-link_bg-page_mix_20: #{color.mix($c-link,$c-bg-page,20%)};
   --m-link_font_mix_35: #{color.mix($c-link,$c-font,35%)};
+  --m-primary_alpha_neg75: #{color.adjust($c-primary,$alpha:-0.75)};
   --m-primary_alpha_neg80: #{color.adjust($c-primary,$alpha:-0.8)};
-  --m-primary_alpha_neg85: #{color.adjust($c-primary,$alpha:-0.85)};
   --m-primary_bg-box_mix_10: #{color.mix($c-primary,$c-bg-box,10%)};
   --m-primary_bg-box_mix_12: #{color.mix($c-primary,$c-bg-box,12%)};
   --m-primary_bg-box_mix_15: #{color.mix($c-primary,$c-bg-box,15%)};
@@ -143,7 +145,6 @@ html.light {
   --m-secondary_bg-box_mix_30: #{color.mix($c-secondary,$c-bg-box,30%)};
   --m-secondary_bg-box_mix_40: #{color.mix($c-secondary,$c-bg-box,40%)};
   --m-secondary_bg-box_mix_50: #{color.mix($c-secondary,$c-bg-box,50%)};
-  --m-secondary_bg-box_mix_70: #{color.mix($c-secondary,$c-bg-box,70%)};
   --m-secondary_bg-header-dropdown_mix_15: #{color.mix($c-secondary,$c-bg-header-dropdown,15%)};
   --m-secondary_bg-header-dropdown_mix_27: #{color.mix($c-secondary,$c-bg-header-dropdown,27%)};
   --m-secondary_bg-header-dropdown_mix_36: #{color.mix($c-secondary,$c-bg-header-dropdown,36%)};

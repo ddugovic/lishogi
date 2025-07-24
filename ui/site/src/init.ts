@@ -239,19 +239,6 @@ export function init(): void {
             .then(html => $('body').prepend(html));
       }, 3000);
 
-    // edge hack, maybe remove?
-    // if (navigator.userAgent.indexOf('Edge/') > -1)
-    //   setTimeout(function () {
-    //     const sprite = $('#piece-sprite');
-    //     sprite.attr('href', sprite.attr('href').replace('.css', '.external.css'));
-
-    //     const chuSprite = $('#chu-piece-sprite');
-    //     if (chuSprite.length) chuSprite.attr('href', chuSprite.attr('href').replace('.css', '.external.css'));
-
-    //     const kyoSprite = $('#kyo-piece-sprite');
-    //     if (kyoSprite.length) kyoSprite.attr('href', kyoSprite.attr('href').replace('.css', '.external.css'));
-    //   }, 1000);
-
     // prevent zoom when keyboard shows on iOS
     if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream) {
       const el = document.querySelector('meta[name=viewport]')!;

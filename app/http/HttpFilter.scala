@@ -33,6 +33,7 @@ final class HttpFilter(env: Env)(implicit val mat: Materializer) extends Filter 
 
   private val ignoredLogUris = List(
     "/.well-known/appspecific/com.chrome.devtools.json",
+    "/manifest.json",
   )
 
   private def monitoring(req: RequestHeader, startTime: Long, result: Result) = {
