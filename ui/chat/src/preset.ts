@@ -1,3 +1,4 @@
+import { useJp } from 'common/common';
 import { bind } from 'common/snabbdom';
 import { type VNode, h } from 'snabbdom';
 
@@ -28,14 +29,24 @@ interface PresetOpts {
   post(text: string): void;
 }
 
-const groups: PresetGroups = {
+const enGroups: PresetGroups = {
   start: ['hi/Hello', 'gl/Good luck', 'hf/Have fun!', 'u2/You too!'].map(splitIt),
   end: ['gg/Good game', 'wp/Well played', 'ty/Thank you', "gtg/I've got to go", 'bye/Bye!'].map(
     splitIt,
   ),
 };
 
+const jpGroups: PresetGroups = {
+  start: ['よろしく/よろしくお願いします'].map(splitIt),
+  end: ['あり/ありがとうございました', 'おつ/お疲れ様でした', 'また/またお願いします'].map(splitIt),
+};
+
+function groupsByLang(): PresetGroups {
+  return useJp() ? jpGroups : enGroups;
+}
+
 export function presetCtrl(opts: PresetOpts): PresetCtrl {
+  const groups = groupsByLang();
   let group: string | undefined = opts.initialGroup;
 
   let said: string[] = [];
@@ -62,6 +73,7 @@ export function presetCtrl(opts: PresetOpts): PresetCtrl {
 }
 
 export function presetView(ctrl: PresetCtrl): VNode | undefined {
+  const groups = groupsByLang();
   const group = ctrl.group();
   if (!group) return;
   const sets = groups[group];
