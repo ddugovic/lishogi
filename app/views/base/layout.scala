@@ -277,8 +277,8 @@ object layout {
           ctx.pageData.inquiry.isDefined option cssTag("user.mod.inquiry"),
           ctx.userContext.impersonatedBy.isDefined option cssTag("user.mod.impersonate"),
           ctx.blind option cssTag("misc.blind"),
-          moreCss,
           defaultPieceSprite,
+          moreCss,
           meta(
             content := openGraph.fold(trans.siteDescription.txt())(o => o.description),
             name    := "description",

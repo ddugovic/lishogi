@@ -43,14 +43,14 @@ final private[setup] class Processor(
       case Left(hook) =>
         fuccess {
           Bus.publish(AddHook(hook), "lobbyTrouper")
-          Created(hook.id)
+          Created(hook.id, seek = false)
         }
       case Right(Some(seek)) =>
         ctx.userId.??(gameCache.nbPlaying) dmap { nbPlaying =>
           if (maxPlaying <= nbPlaying) Refused
           else {
             Bus.publish(AddSeek(seek), "lobbyTrouper")
-            Created(seek.id)
+            Created(seek.id, seek = true)
           }
         }
       case _ => fuccess(Refused)
@@ -62,7 +62,7 @@ object Processor {
 
   sealed trait HookResult
   object HookResult {
-    case class Created(id: String) extends HookResult
-    case object Refused            extends HookResult
+    case class Created(id: String, seek: Boolean) extends HookResult
+    case object Refused                           extends HookResult
   }
 }
