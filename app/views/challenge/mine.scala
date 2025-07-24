@@ -89,6 +89,9 @@ object mine {
                 )
               },
               !c.isOpen option cancelForm,
+              !c.hasClock option div(cls := "corres-desc")(
+                trans.challengeCorrespondenceDescription(),
+              ),
             )
           case Status.Declined =>
             div(cls := "follow-up")(
