@@ -16,11 +16,12 @@ import * as round from '../round';
 import * as util from '../util';
 
 const scrollMax = 99999;
+const minNumberOfMovesToScroll = 2;
 const moveTag = 'm2';
 
 const autoScroll = throttle(100, (movesEl: HTMLElement, ctrl: RoundController) =>
   window.requestAnimationFrame(() => {
-    if (ctrl.data.steps.length < 5) return;
+    if (ctrl.data.steps.length < minNumberOfMovesToScroll) return;
     let st: number | undefined = undefined;
     if (ctrl.ply < 1) st = 0;
     else if (ctrl.ply == round.lastPly(ctrl.data)) st = scrollMax;
@@ -109,7 +110,7 @@ function renderMoves(ctrl: RoundController): MaybeVNodes {
 export function analysisButton(ctrl: RoundController): VNode {
   const forecastCount = ctrl.data.forecastCount;
   const disabled = !game.userAnalysable(ctrl.data);
-  const isForecast = game.conditionallyPremovable(ctrl.data);
+  const isForecast = !ctrl.data.player.spectator && game.conditionallyPremovable(ctrl.data);
 
   return h(
     'a.fbt.analysis',
