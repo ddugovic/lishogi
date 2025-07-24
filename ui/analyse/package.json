@@ -5,23 +5,23 @@
   "type": "module",
   "dependencies": {
     "@badrap/result": "catalog:",
-    "@yaireo/tagify": "^4.35.1",
+    "@yaireo/tagify": "^4.35.2",
     "breakpoint-sass": "catalog:",
-    "debounce-promise": "^3.1.2",
     "ceval": "workspace:*",
     "chat": "workspace:*",
     "common": "workspace:*",
-    "shogi": "workspace:*",
-    "i18n": "workspace:*",
+    "debounce-promise": "^3.1.2",
     "game": "workspace:*",
+    "i18n": "workspace:*",
     "nvui": "workspace:*",
+    "shogi": "workspace:*",
     "shogiground": "catalog:",
     "shogiops": "catalog:",
     "snabbdom": "catalog:",
     "tree": "workspace:*"
   },
   "devDependencies": {
-    "@types/yaireo__tagify": "^4.27.0",
-    "@types/debounce-promise": "^3.1.9"
+    "@types/debounce-promise": "^3.1.9",
+    "@types/yaireo__tagify": "^4.27.0"
   }
 }

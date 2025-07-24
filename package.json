@@ -20,15 +20,15 @@
     "@config/tsconfig": "workspace:*",
     "@types/jquery": "^3.5.32",
     "@types/lishogi": "workspace:*",
-    "@types/node": "^22.15.30",
-    "tsx": "^4.19.4",
+    "@types/node": "^22.16.4",
+    "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@types/node": "catalog:",
-    "knip": "^5.60.2",
-    "prettier": "^3.5.3",
+    "knip": "^5.61.3",
+    "prettier": "^3.6.2",
     "stylelint": "~16.15.0",
     "stylelint-config-standard-scss": "^14.0.0"
   },
