@@ -153,11 +153,11 @@ function movetime(
   }));
   const divisionLines = division(data.game.division);
   const datasets: ChartDataset[] = [];
-  datasets.push(...moveSeriesSet);
-  if (labels.length > 12) {
-    datasets.push(...lineBuilder(totalSeriesPlot, false));
-    datasets.push(...lineBuilder(totalSeriesPlot, true));
+  if (labels.length > 8) {
+    datasets.push(...moveSeriesSet);
   }
+  datasets.push(...lineBuilder(totalSeriesPlot, false));
+  datasets.push(...lineBuilder(totalSeriesPlot, true));
   datasets.push(plyLine(ply || firstPly), ...divisionLines);
 
   const config: Chart['config'] = {
