@@ -71,7 +71,6 @@ final private class TournamentSocket(
     )
 
   def getWaitingUsers(tour: Tournament): Fu[WaitingUsers] = {
-    send(Protocol.Out.getWaitingUsers(RoomId(tour.id), tour.name))
     val promise = Promise[WaitingUsers]()
     allWaitingUsers.compute(
       tour.id,
@@ -80,7 +79,12 @@ final private class TournamentSocket(
           .getOrElse(WaitingUsers.emptyWithNext(tour.timeControl.estimateTotalSeconds))
           .copy(next = promise.some),
     )
-    promise.future.withTimeout(5.seconds, lila.base.LilaException("getWaitingUsers timeout"))
+    send(Protocol.Out.getWaitingUsers(RoomId(tour.id), tour.name))
+    promise.future.withTimeout(3.seconds, lila.base.LilaException("getWaitingUsers timeout"))
+    // promise.withTimeoutDefault(
+    //   3.seconds,
+    //   WaitingUsers.empty(tour.timeControl.estimateTotalSeconds)
+    // )
   }
 
   def hasUser(tourId: Tournament.ID, userId: User.ID): Boolean =
