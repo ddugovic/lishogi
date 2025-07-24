@@ -31,7 +31,8 @@ export default class MoveOn {
       d.player.spectator ||
       !game.isSwitchable(d) ||
       game.isPlayerTurn(d) ||
-      !this.get()
+      !this.get() ||
+      !document.querySelector('.round__now-playing') // no other game currently played
     )
       return;
     if (force) this.redirect(`/round-next/${d.game.id}`);
