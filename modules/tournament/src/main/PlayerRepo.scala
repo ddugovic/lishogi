@@ -219,19 +219,17 @@ final class PlayerRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCo
   def find(tourId: Tournament.ID, userId: User.ID): Fu[Option[Player]] =
     coll.one[Player](selectTourUser(tourId, userId))
 
-  def findActiveTuple2(
+  def existsActiveAll(
       tourId: Tournament.ID,
-      userIds: (User.ID, User.ID),
-  ): Fu[Option[(Player, Player)]] =
-    coll.list[Player](
-      selectTour(tourId) ++ $doc("uid" $in List(userIds._1, userIds._2)) ++ selectActive,
-      2,
-    ) map { players =>
-      players match {
-        case List(p1, p2) => (p1, p2).some
-        case _            => none
-      }
-    }
+      userIds: List[User.ID],
+  ): Fu[Boolean] =
+    coll
+      .countSel(
+        selectTour(tourId) ++
+          selectActive ++
+          $doc("uid" $in userIds),
+      )
+      .dmap(userIds.length ==)
 
   def update(tourId: Tournament.ID, userId: User.ID)(f: Player => Fu[Player]) =
     find(tourId, userId) orFail s"No such player: $tourId/$userId" flatMap f flatMap { player =>

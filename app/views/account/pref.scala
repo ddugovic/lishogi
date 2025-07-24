@@ -172,6 +172,10 @@ object pref {
               radios(form("challenge"), translatedChallengeChoices),
             ),
             setting(
+              s"${trans.letOtherPlayersChallengeYou.txt()} - ${trans.tournament.txt()}",
+              radios(form("tourChallenge"), translatedTourChallengeChoices),
+            ),
+            setting(
               trans.letOtherPlayersMessageYou(),
               radios(form("message"), translatedMessageChoices),
             ),

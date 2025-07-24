@@ -14,40 +14,24 @@ export default function (send: Socket.Send, ctrl: TournamentController): Tournam
     reloadFull() {
       ctrl.askFullReload();
     },
-    redirect(fullId: string) {
-      ctrl.redirectFirst(fullId.slice(0, 8), true);
+    redirect(url: string) {
+      const id = url.startsWith('challenge') ? url : url.slice(0, 8);
+      ctrl.redirectFirst(id, true);
       return true;
     },
     arrangement(arr: Arrangement) {
-      const f: (a: Arrangement) => boolean = ctrl.isRobin()
-        ? a => {
-            return users.includes(a.user1.id) && users.includes(a.user2.id);
-          }
-        : a => {
-            return a.id === arr.id;
-          };
-
-      const users = [arr.user1.id, arr.user2.id];
-      const index = ctrl.data.standing.arrangements.findIndex(a => f(a));
-      let old: Arrangement | undefined = undefined;
+      const users = [arr.user1?.id, arr.user2?.id];
+      const index = ctrl.data.standing.arrangements.findIndex(a => a.id === arr.id);
 
       if (index !== -1) {
-        old = ctrl.data.standing.arrangements[index];
         ctrl.data.standing.arrangements[index] = arr;
       } else ctrl.data.standing.arrangements.push(arr);
 
       if (
-        !old ||
-        old.user1.readyAt !== arr.user1.readyAt ||
-        old.user2.readyAt !== arr.user2.readyAt
-      )
-        ctrl.arrangementReadyRedraw(arr);
-
-      if (
         (ctrl.arrangement &&
           !ctrl.arrangement.id &&
-          users.includes(ctrl.arrangement.user2.id) &&
-          users.includes(ctrl.arrangement.user1.id)) ||
+          users.includes(ctrl.arrangement.user2?.id) &&
+          users.includes(ctrl.arrangement.user1?.id)) ||
         (ctrl.arrangement && ctrl.arrangement.id === arr.id)
       )
         ctrl.arrangement = arr;

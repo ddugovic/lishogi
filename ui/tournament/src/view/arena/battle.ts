@@ -1,9 +1,9 @@
 import { type MaybeVNode, bind, onInsert } from 'common/snabbdom';
 import { i18nPluralSame } from 'i18n';
 import { type VNode, h } from 'snabbdom';
-import type TournamentController from '../ctrl';
-import type { RankedTeam, TeamBattle } from '../interfaces';
-import { playerName } from './util';
+import type TournamentController from '../../ctrl';
+import type { RankedTeam, TeamBattle } from '../../interfaces';
+import { playerName } from '../util';
 
 export function joinWithTeamSelector(ctrl: TournamentController): VNode {
   const onClose = () => {
@@ -142,10 +142,12 @@ function teamTr(ctrl: TournamentController, battle: TeamBattle, team: RankedTeam
     'tr',
     {
       key: team.id,
-      class: {
-        active: ctrl.teamInfo.requested == team.id,
+      on: {
+        click: () => {
+          ctrl.showTeamInfo(team.id);
+          ctrl.redraw();
+        },
       },
-      hook: bind('click', _ => ctrl.showTeamInfo(team.id), ctrl.redraw),
     },
     [
       h('td.rank', `${team.rank}`),

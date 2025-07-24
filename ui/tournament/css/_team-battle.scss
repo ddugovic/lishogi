@@ -137,6 +137,12 @@ team {
 }
 
 .team-battle {
+  &__title {
+    a {
+      margin-left: 0.25rem;
+    }
+  }
+
   &__list {
     a {
       display: block;

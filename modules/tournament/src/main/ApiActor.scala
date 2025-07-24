@@ -6,6 +6,7 @@ import akka.actor._
 import org.joda.time.DateTime
 
 import lila.game.actorApi.FinishGame
+import lila.game.actorApi.StartGame
 import lila.user.User
 
 final private[tournament] class ApiActor(
@@ -18,6 +19,7 @@ final private[tournament] class ApiActor(
 
   lila.common.Bus.subscribe(
     self,
+    "startGame",
     "finishGame",
     "adjustCheater",
     "adjustBooster",
@@ -26,6 +28,8 @@ final private[tournament] class ApiActor(
   )
 
   def receive = {
+
+    case StartGame(game) => api.startGame(game).unit
 
     case FinishGame(game, _, _) => api.finishGame(game).unit
 

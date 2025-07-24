@@ -1,18 +1,8 @@
-import { type MaybeVNode, bind } from 'common/snabbdom';
+import type { MaybeVNode } from 'common/snabbdom';
 import { i18n } from 'i18n';
-import { type VNode, type VNodes, h } from 'snabbdom';
-import type TournamentController from '../ctrl';
-import type { PageData } from '../interfaces';
-import * as pagination from '../pagination';
-import * as buttons from './button';
-import { organizeArrangementButton } from './organized';
-
-export function arenaControls(ctrl: TournamentController, pag: PageData): VNode {
-  return h('div.tour__controls', [
-    h('div.pager', pagination.renderPager(ctrl, pag)),
-    h('div.right', [buttons.managePlayers(ctrl), buttons.joinWithdraw(ctrl)]),
-  ]);
-}
+import { type VNode, h } from 'snabbdom';
+import type TournamentController from '../../../ctrl';
+import * as buttons from '../../button';
 
 export function robinControls(ctrl: TournamentController): VNode {
   return h(
@@ -21,6 +11,9 @@ export function robinControls(ctrl: TournamentController): VNode {
       hook: {
         insert: () => {
           robinArrowControls(ctrl);
+        },
+        destroy: () => {
+          cleanupRobinArrowControls();
         },
       },
     },
@@ -31,55 +24,12 @@ export function robinControls(ctrl: TournamentController): VNode {
         controlButton(i18n('study:next'), 'X', 'next'),
         controlButton(i18n('study:last'), 'V', 'last'),
       ]),
-      h('div.right', [buttons.managePlayers(ctrl), buttons.joinWithdraw(ctrl)]),
+      h('div.right', buttons.joinWithdraw(ctrl)),
     ],
   );
 }
 
-export function organizedControls(ctrl: TournamentController, pag: PageData): VNode {
-  return h('div.tour__controls', [
-    h('div.pager', pagination.renderPager(ctrl, pag)),
-    h('div.right', [
-      organizeArrangementButton(ctrl),
-      buttons.managePlayers(ctrl),
-      buttons.joinWithdraw(ctrl),
-    ]),
-  ]);
-}
-
-export function backControl(f: () => void, extra: VNodes = []): VNode {
-  return h('div.tour__controls.back', [
-    h(
-      'div.pager',
-      { hook: bind('click', () => f()) },
-      h(
-        'button.fbt.is.text.' + 'back',
-        {
-          attrs: {
-            'data-icon': 'I',
-            title: i18n('back'),
-          },
-        },
-        i18n('back'),
-      ),
-    ),
-    ...extra,
-  ]);
-}
-
-function controlButton(text: string, icon: string, cls: string, el: MaybeVNode = undefined): VNode {
-  return h(
-    `button.fbt.is.${cls}`,
-    {
-      attrs: {
-        'data-icon': icon,
-        title: text,
-      },
-    },
-    el,
-  );
-}
-
+let listeners: (() => void)[] = [];
 function robinArrowControls(ctrl: TournamentController) {
   const container = document.querySelector('.r-table-wrap-arrs') as HTMLElement;
   const table = container.querySelector('table') as HTMLElement;
@@ -131,13 +81,37 @@ function robinArrowControls(ctrl: TournamentController) {
     });
   }
 
-  firstArrow.addEventListener('click', () => scrollLeft(true));
-  prevArrow.addEventListener('click', () => scrollLeft(false));
-  nextArrow.addEventListener('click', () => scrollRight(false));
-  lastArrow.addEventListener('click', () => scrollRight(true));
-
-  container.addEventListener('scroll', updateArrowState);
-  window.addEventListener('resize', updateArrowState);
+  listeners = [
+    attachListener(firstArrow, 'click', () => scrollLeft(true)),
+    attachListener(prevArrow, 'click', () => scrollLeft(false)),
+    attachListener(nextArrow, 'click', () => scrollRight(false)),
+    attachListener(lastArrow, 'click', () => scrollRight(true)),
+    attachListener(container, 'scroll', updateArrowState),
+    attachListener(window, 'resize', updateArrowState),
+  ];
 
   updateArrowState();
+}
+
+function cleanupRobinArrowControls() {
+  listeners.forEach(unbind => unbind());
+  listeners = [];
+}
+
+function attachListener(el: HTMLElement | Window, event: string, handler: EventListener) {
+  el.addEventListener(event, handler);
+  return () => el.removeEventListener(event, handler);
+}
+
+function controlButton(text: string, icon: string, cls: string, el: MaybeVNode = undefined): VNode {
+  return h(
+    `button.fbt.is.${cls}`,
+    {
+      attrs: {
+        'data-icon': icon,
+        title: text,
+      },
+    },
+    el,
+  );
 }

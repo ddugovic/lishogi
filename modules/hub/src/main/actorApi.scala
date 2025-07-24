@@ -270,6 +270,9 @@ package round {
   case class IsOnGame(color: shogi.Color, promise: Promise[Boolean])
   case class TourStandingOld(data: JsArray)
   case class TourStanding(tourId: String, data: JsArray)
+  case class TourFinishedOrDeleted(tourId: String)
+  case class ArrangementDeleted(tourId: String, arrId: String)
+  case class TourPlayerRemoved(tourId: String, userId: String)
   case class FishnetPlay(usi: Usi, ply: Int)
   case class BotPlay(
       playerId: String,

@@ -19,6 +19,8 @@ function start(opts: TournamentOpts): TournamentController {
   opts.$side = $('.tour__side').clone();
   opts.$faq = $('.tour__faq').clone();
   opts.$desc = $('.tour__desc').clone();
+  opts.playerManagmentButton = opts.$side.find('.manage-players')[0];
+  opts.teamEditButton = opts.$side.find('.tour-team-edit')[0];
 
   const ctrl = new makeCtrl(opts, redraw);
 

@@ -52,13 +52,18 @@ final class ChallengeGranter(
 
   val ratingThreshold = 300
 
-  def apply(fromOption: Option[User], dest: User, perfType: Option[PerfType])(implicit
+  def apply(
+      fromOption: Option[User],
+      dest: User,
+      perfType: Option[PerfType],
+      prefSelector: Pref => Int = (pref: Pref) => pref.challenge,
+  )(implicit
       ec: scala.concurrent.ExecutionContext,
   ): Fu[Option[ChallengeDenied]] =
     fromOption
       .fold[Fu[Option[ChallengeDenied.Reason]]](fuccess(YouAreAnon.some)) { from =>
         relationApi.fetchRelation(dest, from) zip
-          prefApi.getPref(dest).map(_.challenge) map {
+          prefApi.getPref(dest).map(prefSelector) map {
             case (Some(Block), _)          => YouAreBlocked.some
             case (_, Pref.Challenge.NEVER) => TheyDontAcceptChallenges.some
             case (Some(Follow), _)         => none // always accept from followed

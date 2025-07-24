@@ -90,3 +90,8 @@ final class GetTourName(f: (Tournament.ID, Lang) => Option[String])
   def apply(id: Tournament.ID, lang: Lang)        = f(id, lang)
   def get(id: Tournament.ID)(implicit lang: Lang) = f(id, lang)
 }
+
+final class GetArrName(f: Arrangement.ID => Option[String])
+    extends (Arrangement.ID => Option[String]) {
+  def apply(id: Arrangement.ID) = f(id)
+}

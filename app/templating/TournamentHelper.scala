@@ -37,4 +37,10 @@ trait TournamentHelper { self: I18nHelper with DateHelper with UserHelper =>
 
   def tournamentIcon(tour: Tournament): Frag =
     i(cls := tour.format.key, dataIcon := tournamentIconChar(tour))
+
+  def arrangementIdToName(id: String): Option[String] =
+    env.tournament.getArrName(id)
+
+  def arrangementIdToParam(id: String): String =
+    lila.tournament.Arrangement.RobinId.parseId(id).map(_.makeParam) | id
 }

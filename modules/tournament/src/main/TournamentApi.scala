@@ -33,7 +33,7 @@ final class TournamentApi(
     pairingRepo: PairingRepo,
     arrangementRepo: ArrangementRepo,
     tournamentRepo: TournamentRepo,
-    autoPairing: AutoPairing,
+    gameMaker: GameMaker,
     pairingSystem: arena.PairingSystem,
     callbacks: TournamentApi.Callbacks,
     tellRound: lila.round.TellRound,
@@ -78,8 +78,9 @@ final class TournamentApi(
       minutes = setup.realMinutes,
       startDate = setup.realStartDate,
       mode = setup.realMode,
+      proMode = ~setup.proMode,
       password = setup.password,
-      candidatesOnly = setup.candidatesOnly | false,
+      candidatesOnly = ~setup.candidatesOnly,
       maxPlayers = setup.maxPlayers,
       variant = setup.realVariant,
       position = setup.position,
@@ -111,8 +112,7 @@ final class TournamentApi(
         candidatesOnly = ~data.candidatesOnly,
         maxPlayers = data.maxPlayers,
         position =
-          if (old.isCreated || old.position.isDefined)
-            data.position
+          if (old.isCreated) data.position
           else old.position,
         noBerserk = !(~data.berserkable),
         noStreak = !(~data.streakable),
@@ -173,7 +173,8 @@ final class TournamentApi(
                       pairings
                         .map { pairing =>
                           pairingRepo.insert(pairing) >>
-                            autoPairing(tour, pairing, playersMap, ranking)
+                            gameMaker
+                              .autoPairing(tour, pairing, playersMap, ranking)
                               .mon(_.tournament.pairing.createAutoPairing)
                               .map { game => socket.foreach(_.startGame(tour.id, game)) }
                         }
@@ -216,7 +217,13 @@ final class TournamentApi(
        else arrangementRepo.removeByTour(tour.id)) >>
       playerRepo.removeByTour(tour.id) >> chatApi.remove(
         lila.chat.Chat.Id(tour.id),
-      ) >>- socket.foreach(_.reload(tour.id))
+      ) >>- {
+        socket.foreach(_.reload(tour.id))
+        Bus.publish(
+          lila.hub.actorApi.round.TourFinishedOrDeleted(tour.id),
+          "tourFinishedOrDeleted",
+        )
+      }
 
   private[tournament] def finish(oldTour: Tournament): Funit =
     Sequencing(oldTour.id)(tournamentRepo.startedById) { tour =>
@@ -242,6 +249,10 @@ final class TournamentApi(
                 userRepo.incToints(p.userId, p.score)
               }
             }
+            Bus.publish(
+              lila.hub.actorApi.round.TourFinishedOrDeleted(tour.id),
+              "tourFinishedOrDeleted",
+            )
             awardTrophies(tour).logFailure(logger, _ => s"${tour.id} awardTrophies")
             callbacks.indexLeaderboard(tour).logFailure(logger, _ => s"${tour.id} indexLeaderboard")
             callbacks.clearWinnersCache(tour)
@@ -299,7 +310,7 @@ final class TournamentApi(
       by: User.ID,
   ): Funit = Sequencing(tourId)(tournamentRepo.enterableById) { tour =>
     (tour.createdBy == by) ??
-      tournamentRepo.setClosed(tourId, close) >>-
+      tournamentRepo.setClosed(tour.id, close) >>-
       socket.foreach(_.reload(tour.id))
   }
 
@@ -425,37 +436,6 @@ final class TournamentApi(
     promise.future.withTimeoutDefault(5.seconds, false)
   }
 
-  def arrangementMatch(
-      lookup: Arrangement.Lookup,
-      userId: User.ID,
-      join: Boolean,
-  ): Funit =
-    ArrangementUpdate(
-      lookup,
-      userId,
-      (tour, arr) =>
-        (
-          tour.isStarted &&
-            !arr.hasGame &&
-            arr.hasUser(userId)
-        ),
-    ) { (tour, arrangement) =>
-      val canActuallyBeReadyFu =
-        if (join) (fuccess(tour.isCorrespondence) >>| !arrangementRepo.isPlaying(tour.id, userId))
-        else fuFalse
-      canActuallyBeReadyFu.flatMap { canActuallyBeReady =>
-        if (canActuallyBeReady && arrangement.opponentUser(userId).exists(_.isReady)) {
-          makeManualPairings(tour, arrangement)
-        } else if (canActuallyBeReady || arrangement.user(userId).exists(_.isReady)) {
-          val updated = arrangement.setReadyAt(userId, canActuallyBeReady ?? DateTime.now.some)
-          arrangementRepo.update(updated) >>- cached.arrangement.invalidateArrangaments(
-            arrangement.tourId,
-          ) >>-
-            socket.foreach(_.arrangementChange(updated))
-        } else funit
-      }
-    }
-
   private def makePlayerMap(tourId: Tournament.ID, users: List[User.ID]): Fu[Map[User.ID, Player]] =
     playerRepo
       .byTourAndUserIds(tourId, users)
@@ -467,82 +447,124 @@ final class TournamentApi(
           .toMap
       }
 
-  private def makeManualPairings(
+  def getArrangementById(tour: Tournament, arrId: Arrangement.ID): Fu[Option[Arrangement]] =
+    arrangementRepo.byId(arrId).orElse(createRobinArrangement(tour, arrId))
+
+  private def createRobinArrangement(
       tour: Tournament,
-      arrangement: Arrangement,
-  ): Funit =
-    makePlayerMap(tour.id, arrangement.userIds)
-      .mon(_.tournament.arrangement.createPlayerMap)
-      .flatMap { playersMap =>
-        autoPairing(tour, arrangement, playersMap) flatMap { game =>
-          arrangementRepo.update(
-            arrangement.startGame(
-              game.id,
-              if (game.sentePlayer.userId.exists(_ == arrangement.user1.id)) shogi.Color.Sente
-              else shogi.Color.Gote,
-            ),
-          ) >>-
-            socket.foreach(_.startGame(tour.id, game))
+      arrId: Arrangement.ID,
+  ): Fu[Option[Arrangement]] =
+    tour.isRobin ?? {
+      Arrangement.RobinId.parseId(arrId) ?? { robinId =>
+        (
+          fuccess(tour.id == robinId.tourId) >>&
+            playerRepo.existsActiveAll(tour.id, robinId.userIdList)
+        ) map { isValid =>
+          isValid ?? {
+            Arrangement(
+              id = robinId.makeId,
+              tourId = tour.id,
+              user1 = Arrangement
+                .User(
+                  id = robinId.user1Id,
+                )
+                .some,
+              user2 = Arrangement
+                .User(
+                  id = robinId.user2Id,
+                )
+                .some,
+            ).some
+          }
         }
       }
-      .monSuccess(_.tournament.arrangement.create)
-      .chronometer
-      .logIfSlow(75, logger)(_ => s"Robin pairing for https://lishogi.org/tournament/${tour.id}")
-      .result
+    }
 
-  def arrangementSetTime(
-      lookup: Arrangement.Lookup,
+  private[tournament] def arrangementSetTime(
+      tourId: Tournament.ID,
+      arrId: Arrangement.ID,
       userId: User.ID,
       dateTime: Option[DateTime],
   ): Funit =
-    ArrangementUpdate(
-      lookup,
-      userId,
-      (_, arr) => (!arr.hasGame && arr.hasUser(userId) && !arr.lockedScheduledAt),
-    ) { (_, arrangement) =>
-      val updated      = arrangement.setScheduledAt(userId, dateTime)
-      val scheduledSet = arrangement.scheduledAt.isEmpty && updated.scheduledAt.isDefined
-      arrangementRepo.update(updated) >>- cached.arrangement.invalidateArrangaments(
-        arrangement.tourId,
-      ) >>- socket
-        .foreach(_.arrangementChange(updated)) >>- {
-        if (scheduledSet) {
-          notifier.arrangementsAgreedTimeCache.put(
-            updated.id,
-          )
-          notifier
-            .arrangementConfirmation(updated, userId)
-            .unit
+    Sequencing(tourId)(tournamentRepo.enterableById) { tour =>
+      getArrangementById(tour, arrId) flatMap {
+        _ ?? { arr =>
+          (arr.hasUser(userId) && !arr.hasGame && !arr.lockedScheduledAt) ?? {
+            val updated      = arr.setScheduledAt(userId, dateTime)
+            val scheduledSet = arr.scheduledAt.isEmpty && updated.scheduledAt.isDefined
+            arrangementRepo.update(updated) >>- cached.arrangement.invalidateArrangements(
+              tour.id,
+            ) >>- socket
+              .foreach(_.arrangementChange(updated)) >>- {
+              if (scheduledSet) {
+                notifier.arrangementsAgreedTimeCache.put(
+                  updated.id,
+                )
+                notifier
+                  .arrangementConfirmation(updated, userId)
+                  .unit
+              }
+            }
+          }
         }
       }
     }
 
-  def arrangementOrganizerSet(
-      lookup: Arrangement.Lookup,
-      userId: User.ID,
+  private[tournament] def organizedArrangementSet(
+      tourId: Tournament.ID,
+      arrIdOpt: Option[Arrangement.ID],
       settings: Arrangement.Settings,
+      userId: User.ID,
   ): Funit =
-    ArrangementUpdate(lookup, userId, (tour, _) => (tour.createdBy == userId && tour.isOrganized)) {
-      (_, arrangement) =>
-        val updated = arrangement.setSettings(settings)
-        arrangementRepo.update(updated) >>- cached.arrangement.invalidateArrangaments(
-          arrangement.tourId,
-        ) >>- socket
-          .foreach(_.arrangementChange(updated))
+    Sequencing(tourId)(tournamentRepo.enterableById) { tour =>
+      (tour.createdBy == userId && tour.isOrganized) ?? {
+        (arrIdOpt.fold {
+          arrangementRepo.countByTour(tour.id) map { count =>
+            (count < Format.Organized.maxGames) ?? {
+              Arrangement(
+                id = lila.common.ThreadLocalRandom.nextString(8),
+                tourId = tour.id,
+                user1 = none,
+                user2 = none,
+              ).some
+            }
+          }
+        } { arrangementRepo.byId }) flatMap {
+          _ ?? { arr =>
+            (fuccess(settings.userIds.isEmpty) >>| playerRepo.existsActiveAll(
+              tourId,
+              settings.userIds,
+            )) flatMap { playersExist =>
+              (playersExist) ?? {
+                val updated = arr.setSettings(settings)
+                arrangementRepo.update(updated) >>- cached.arrangement.invalidateArrangements(
+                  tourId,
+                ) >>- socket
+                  .foreach(_.arrangementChange(updated))
+              }
+            }
+          }
+        }
+      }
     }
 
-  def arrangementDelete(
-      lookup: Arrangement.Lookup,
+  private[tournament] def organizedArrangementDelete(
+      tourId: Tournament.ID,
+      arrId: Arrangement.ID,
       userId: User.ID,
   ): Funit =
-    ArrangementUpdate(
-      lookup,
-      userId,
-      (tour, arr) => (tour.createdBy == userId && tour.isOrganized && !arr.hasGame),
-    ) { (_, arrangement) =>
-      arrangementRepo.delete(arrangement.id) >>-
-        cached.arrangement.invalidateArrangaments(arrangement.tourId) >>-
-        socket.foreach(_.reload(arrangement.tourId))
+    Sequencing(tourId)(tournamentRepo.enterableById) { tour =>
+      (tour.isOrganized && tour.createdBy == userId) ?? {
+        arrangementRepo.delete(arrId) >>-
+          cached.arrangement.invalidateArrangements(tour.id) >>-
+          {
+            socket.foreach(_.reload(tour.id))
+            Bus.publish(
+              lila.hub.actorApi.round.ArrangementDeleted(tour.id, arrId),
+              "arrangementDeleted",
+            )
+          }
+      }
     }
 
   def pageOf(tour: Tournament, userId: User.ID): Fu[Option[Int]] =
@@ -620,25 +642,29 @@ final class TournamentApi(
       }
     }
 
+  // only needed for arrangement games
+  private[tournament] def startGame(game: Game): Funit =
+    (for {
+      userIds <- game.twoUserIds
+      tourId  <- game.tournamentId
+      arrId   <- game.arrangementId
+    } yield ((tourId, arrId, userIds))) ?? { case (tourId, arrId, userIds) =>
+      Sequencing(tourId)(tournamentRepo.startedById) { tour =>
+        getArrangementById(tour, arrId) flatMap {
+          _ ?? { arr =>
+            arrangementRepo.update(arr.startGame(game.id, game.startColor)) >>- {
+              cached.arrangement.invalidateArrangements(tour.id)
+              socket.foreach(_.reloadUsers(tour.id, List(userIds._1, userIds._2)))
+            }
+          }
+        }
+      }
+    }
+
   private[tournament] def finishGame(game: Game): Funit =
     game.tournamentId ?? { tourId =>
       Sequencing(tourId)(tournamentRepo.startedById) { tour =>
-        if (tour.hasArrangements) {
-          arrangementRepo.byGame(tourId, game.id) flatMap {
-            _ ?? { arr =>
-              arrangementRepo.finish(game, arr) >>
-                game.userIds
-                  .map(updateArrangementPlayer(tour, game.some, arr))
-                  .sequenceFu
-                  .void >>- {
-                  cached.arrangement.invalidateArrangaments(tourId)
-                  cached.arrangement.invalidatePlayers(tourId)
-                  socket.foreach(_.reload(tour.id))
-                  updateTournamentStanding(tour)
-                }
-            }
-          }
-        } else {
+        game.arrangementId.fold(
           pairingRepo
             .finish(game) >> game.userIds
             .map(updateArenaPlayer(tour, game.some))
@@ -648,6 +674,21 @@ final class TournamentApi(
             socket.foreach(_.reload(tour.id))
             updateTournamentStanding(tour)
             withdrawNonMover(game)
+          },
+        ) { arrId =>
+          arrangementRepo.byId(arrId) flatMap {
+            _ ?? { arr =>
+              arrangementRepo.finish(game, arr) >>
+                game.userIds
+                  .map(updateArrangementPlayer(tour, game.some, arr))
+                  .sequenceFu
+                  .void >>- {
+                  cached.arrangement.invalidateArrangements(tour.id)
+                  cached.arrangement.invalidatePlayers(tour.id)
+                  socket.foreach(_.reload(tour.id))
+                  updateTournamentStanding(tour)
+                }
+            }
           }
         }
       }
@@ -763,6 +804,10 @@ final class TournamentApi(
           } else updateNbPlayers(tour.id)
         } >>
           tournamentRepo.setDenied(tour.id, userId :: tour.denied) >>- {
+            Bus.publish(
+              lila.hub.actorApi.round.TourPlayerRemoved(tour.id, userId),
+              "tourPlayerRemoved",
+            )
             if (tour.hasArrangements) cached.arrangement.invalidatePlayers(tour.id)
             socket.foreach(_.reload(tour.id))
           }
@@ -960,7 +1005,7 @@ final class TournamentApi(
       }
   }
 
-  def arrangemenstUpcoming(user: User, page: Int): Fu[Paginator[Arrangement]] =
+  def arrangementsUpcoming(user: User, page: Int): Fu[Paginator[Arrangement]] =
     Paginator(
       adapter = arrangementRepo.upcomingAdapter(user),
       currentPage = page,
@@ -994,37 +1039,6 @@ final class TournamentApi(
     workQueue(tourId) {
       fetch(tourId) flatMap {
         _ ?? run
-      }
-    }
-
-  def ArrangementUpdate(
-      lookup: Arrangement.Lookup,
-      userId: User.ID,
-      filter: (Tournament, Arrangement) => Boolean,
-  )(run: (Tournament, Arrangement) => Funit): Funit =
-    Sequencing(lookup.tourId)(tournamentRepo.enterableById) { tour =>
-      arrangementRepo.byLookup(lookup) flatMap { arrangementOpt =>
-        arrangementOpt
-          .fold(
-            if (tour.isOrganized && tour.createdBy == userId)
-              arrangementRepo.countByTour(tour.id) map { count =>
-                (count < Format.Organized.maxGames) ?? {
-                  Arrangement.make(tour.id, lookup.users).some
-                }
-              }
-            else if (tour.isRobin)
-              playerRepo.findActiveTuple2(lookup.tourId, lookup.users) map { players =>
-                players ?? { ps =>
-                  val orderedUsers =
-                    if (ps._1.order.zip(ps._2.order).exists { case (o1, o2) => o1 > o2 })
-                      (ps._2.userId, ps._1.userId)
-                    else (ps._1.userId, ps._2.userId)
-                  Arrangement.make(tour.id, orderedUsers).some
-                }
-              }
-            else fuccess(none),
-          )(a => fuccess(a.some))
-          .flatMap(aOpt => aOpt.filter(a => filter(tour, a)) ?? { a => run(tour, a) })
       }
     }
 

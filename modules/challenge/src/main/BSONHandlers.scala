@@ -92,5 +92,12 @@ private object BSONHandlers {
       }
   }
 
+  implicit val TournamentInfoBSONHandler: BSON[TournamentInfo] = new BSON[TournamentInfo] {
+    def reads(r: Reader) =
+      TournamentInfo(r.strD("t"), r.strD("a"), r.boolD("n"))
+    def writes(w: Writer, t: TournamentInfo) =
+      $doc("t" -> t.tournamentId, "a" -> t.arrangementId, "n" -> w.boolO(t.withName))
+  }
+
   implicit val ChallengeBSONHandler: BSONDocumentHandler[Challenge] = Macros.handler[Challenge]
 }

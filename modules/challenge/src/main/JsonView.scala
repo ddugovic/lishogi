@@ -1,6 +1,5 @@
 package lila.challenge
 
-import play.api.i18n.Lang
 import play.api.libs.json._
 
 import lila.socket.Socket.SocketVersion
@@ -10,6 +9,8 @@ final class JsonView(
     baseUrl: lila.common.config.BaseUrl,
     getLightUser: lila.common.LightUser.GetterSync,
     isOnline: lila.socket.IsOnline,
+    getTourName: lila.tournament.GetTourName,
+    getArrName: lila.tournament.GetArrName,
 ) {
 
   import Challenge._
@@ -32,15 +33,13 @@ final class JsonView(
         .add("lag" -> UserLagCache.getLagRating(r.id))
     }
 
-  def apply(a: AllChallenges)(implicit lang: Lang): JsObject =
+  def apply(a: AllChallenges): JsObject =
     Json.obj(
       "in"  -> a.in.map(apply(Direction.In.some)),
       "out" -> a.out.map(apply(Direction.Out.some)),
     )
 
-  def show(challenge: Challenge, socketVersion: SocketVersion, direction: Option[Direction])(
-      implicit lang: Lang,
-  ) =
+  def show(challenge: Challenge, socketVersion: SocketVersion, direction: Option[Direction]) =
     Json.obj(
       "challenge"     -> apply(direction)(challenge),
       "socketVersion" -> socketVersion,
@@ -50,10 +49,10 @@ final class JsonView(
       challenge: Challenge,
       socketVersion: SocketVersion,
       direction: Option[Direction],
-  )(implicit lang: Lang) =
+  ) =
     (apply(direction)(challenge)) ++ Json.obj("socketVersion" -> socketVersion)
 
-  def apply(direction: Option[Direction])(c: Challenge)(implicit lang: Lang): JsObject =
+  def apply(direction: Option[Direction])(c: Challenge): JsObject =
     Json
       .obj(
         "id"         -> c.id,
@@ -84,7 +83,18 @@ final class JsonView(
         "color" -> c.colorChoice.toString.toLowerCase,
         "perf" -> Json.obj(
           "icon" -> iconChar(c).toString,
-          "name" -> c.perfType.trans,
+          "name" -> c.perfType.key,
+        ),
+      )
+      .add(
+        "tourInfo" -> c.tourInfo.map(ti =>
+          Json
+            .obj(
+              "tourId" -> ti.tournamentId,
+              "arrId"  -> ti.arrangementId,
+            )
+            .add("tourName" -> getTourName(ti.tournamentId, lila.i18n.defaultLang))
+            .add("arrName" -> ti.withName ?? getArrName(ti.arrangementId)),
         ),
       )
       .add("direction" -> direction.map(_.name))

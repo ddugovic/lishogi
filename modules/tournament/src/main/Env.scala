@@ -104,12 +104,12 @@ final class Env(
   lazy val apiJsonView = wire[ApiJsonView]
 
   lazy val notifier = wire[Notifier]
-  system.scheduler.scheduleWithFixedDelay(100 seconds, 1 minutes) { () =>
+  system.scheduler.scheduleWithFixedDelay(100 seconds, 2 minutes) { () =>
     notifier.tours.unit
   }
-  system.scheduler.scheduleWithFixedDelay(80 seconds, 1 minutes) { () =>
-    notifier.arrangements.unit
-  }
+  // system.scheduler.scheduleWithFixedDelay(110 seconds, 2 minutes) { () =>
+  //   notifier.arrangements.unit
+  // }
 
   lazy val leaderboardApi = wire[LeaderboardApi]
 
@@ -117,9 +117,10 @@ final class Env(
 
   private lazy val leaderboardIndexer: LeaderboardIndexer = wire[LeaderboardIndexer]
 
-  private lazy val autoPairing = wire[AutoPairing]
+  private lazy val gameMaker = wire[GameMaker]
 
   lazy val getTourName = new GetTourName((id, lang) => cached.nameCache.sync(id -> lang))
+  lazy val getArrName  = new GetArrName(id => cached.arrangementNameCache.sync(id))
 
   system.actorOf(Props(wire[ApiActor]), name = config.apiActorName)
 

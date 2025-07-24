@@ -1,0 +1,62 @@
+@use 'pkg:common/theme';
+
+.slist {
+  &-clean {
+    tr {
+      border-bottom: theme.$border;
+    }
+  }
+
+  tbody {
+    tr {
+      cursor: pointer;
+
+      &.me {
+        background-color: theme.$m-secondary_alpha_neg85;
+      }
+
+      &.disabled {
+        cursor: default;
+      }
+
+      &:hover {
+        background: theme.$m-primary_bg-box_mix_30;
+      }
+    }
+
+    td,
+    th {
+      &.bold {
+        font-weight: bold;
+      }
+
+      &.small {
+        white-space: nowrap;
+        width: 1%;
+      }
+
+      &.center {
+        text-align: center;
+      }
+
+      &.right {
+        text-align: right;
+
+        .buttons {
+          display: flex;
+          justify-content: flex-end;
+          gap: 0.25rem;
+        }
+      }
+
+      &.no-pad {
+        padding: 0;
+      }
+
+      span.title {
+        color: theme.$c-brag;
+        font-weight: bold;
+      }
+    }
+  }
+}

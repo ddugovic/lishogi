@@ -59,4 +59,14 @@
       background: none;
     }
   }
+
+  &-clean {
+    tbody tr:nth-child(odd) {
+      background: none;
+    }
+
+    tbody tr:nth-child(even) {
+      background: none;
+    }
+  }
 }

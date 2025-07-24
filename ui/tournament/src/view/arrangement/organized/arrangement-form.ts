@@ -5,47 +5,43 @@ import { colorName } from 'shogi/color-name';
 import { colors } from 'shogiground/constants';
 import { opposite } from 'shogiground/util';
 import { type VNode, h } from 'snabbdom';
-import type TournamentController from '../ctrl';
-import type { Arrangement, NewArrangement } from '../interfaces';
-import { arrangementLine } from './arrangement';
-import { backControl } from './controls';
-import header from './header';
-import { arrangementHasUser, flatpickrConfig } from './util';
+import type TournamentController from '../../../ctrl';
+import type { NewArrangement } from '../../../interfaces';
+import header from '../../header';
+import { arrangementHasUser, backControl, flatpickrConfig } from '../../util';
+import { renderGames } from '../arrangements';
 
 let fInstance: any = null;
 
-export function organizedArrangementView(ctrl: TournamentController): MaybeVNodes {
+export function arrangementFormView(ctrl: TournamentController): MaybeVNodes {
   return [
     header(ctrl),
     backControl(() => {
       ctrl.showOrganizerArrangement(undefined);
     }),
-    organizerArrangement(ctrl),
+    arrangementFormWrap(ctrl),
   ];
 }
 
-function organizerArrangement(ctrl: TournamentController): MaybeVNode {
-  const state = ctrl.newArrangement;
-  if (!state) return;
+function arrangementFormWrap(ctrl: TournamentController): MaybeVNode {
+  if (!ctrl.newArrangement) return;
 
   return h(
     'div.organizer-arrangement-wrap',
-    ctrl.data.standing.arrangements.length >= ctrl.data.maxGames! && !state.id
+    ctrl.data.standing.arrangements.length >= ctrl.data.maxGames! && !ctrl.newArrangement.id
       ? h('div.max-arrs', [
           'Maximum number of games reached: ',
           i18nPluralSame('nbGames', ctrl.data.standing.arrangements.length),
         ])
-      : organizerArrangementForm(ctrl, state),
+      : arrangementForm(ctrl, ctrl.newArrangement),
   );
 }
 
-const organizerArrangementForm = (
-  ctrl: TournamentController,
-  state: Partial<Arrangement>,
-): MaybeVNode => {
+const arrangementForm = (ctrl: TournamentController, state: NewArrangement): MaybeVNode => {
   const points = state.points;
 
-  const canSubmit = state.user1?.id && state.user2?.id;
+  // modules/tournament/src/main/Format.scala
+  const canSubmit = ctrl.data.standing.arrangements.length < 350;
   const isNew = !state.id;
   const hasGame = !!state.gameId;
 
@@ -85,8 +81,9 @@ const organizerArrangementForm = (
 
   const handleSubmit = () => {
     const arrangement = {
-      id: state.id || 'new', // new id forces creation of new arrangement
-      users: `${state.user1?.id};${state.user2?.id}`,
+      id: state.id,
+      user1: state.user1?.id,
+      user2: state.user2?.id,
       name: state.name || undefined,
       color: state.color ? state.color === 'sente' : undefined,
       points: state.points ? `${state.points.l};${state.points.d};${state.points.w}` : undefined,
@@ -107,6 +104,9 @@ const organizerArrangementForm = (
     });
     ctrl.showOrganizerArrangement(undefined);
   };
+
+  const u1Disabled = !isNew && !!ctrl.newArrangement?.user1?.id;
+  const u2Disabled = !isNew && !!ctrl.newArrangement?.user2?.id;
 
   return h('div.organizer-arrangement', [
     state.id
@@ -130,17 +130,17 @@ const organizerArrangementForm = (
       }),
     ]),
     h('div.field-wrap.players', [
-      h('label', `${i18n('players')}*`),
+      h('label', i18n('players')),
       h('span.vs', 'vs'),
       h('div.sides.search-wrap', [
         h(
           'select',
           {
             attrs: {
-              disabled: !isNew,
+              disabled: u1Disabled,
             },
             class: {
-              disabled: !isNew,
+              disabled: u1Disabled,
             },
             on: {
               change: (e: Event) => {
@@ -154,10 +154,10 @@ const organizerArrangementForm = (
           'select',
           {
             attrs: {
-              disabled: !isNew,
+              disabled: u2Disabled,
             },
             class: {
-              disabled: !isNew,
+              disabled: u2Disabled,
             },
             on: {
               change: (e: Event) => {
@@ -319,13 +319,8 @@ const organizerArrangementForm = (
     ]),
     gamesBetweenUsers.length && isNew
       ? h('div.games-users-wrap', [
-          h('div.arrs-list-wrap', [
-            h('h2.arrs-title', i18n('tourArrangements:existingGamesBetweenPlayers')),
-            h(
-              'div.arrs-list',
-              gamesBetweenUsers.map(g => arrangementLine(ctrl, g)),
-            ),
-          ]),
+          h('h2', i18n('tourArrangements:existingGamesBetweenPlayers')),
+          renderGames(ctrl, gamesBetweenUsers),
         ])
       : null,
   ]);
@@ -351,7 +346,7 @@ function playerOptions(
   otherUserId: string | undefined,
 ) {
   return [
-    h('option', { attrs: { value: '', disabled: true, hidden: true, selected: !selectedUserId } }),
+    h('option', { attrs: { value: '', selected: !selectedUserId } }),
     ...ctrl.data.standing.players.map(player => {
       return h(
         'option',

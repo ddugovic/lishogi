@@ -10,13 +10,16 @@ import type {
   FeaturedPlayer,
   TeamBattle,
 } from '../interfaces';
-import { teamName } from './battle';
+import { teamName } from './arena/battle';
 import { miniBoard, player as renderPlayer } from './util';
 
 function featuredPlayer(player: FeaturedPlayer) {
   return h('div.tour__featured__player', [
     h('strong', `#${player.rank}`),
-    renderPlayer(player, true, true, false),
+    renderPlayer(player, {
+      asLink: true,
+      withRating: true,
+    }),
     player.berserk
       ? h('i', {
           attrs: {

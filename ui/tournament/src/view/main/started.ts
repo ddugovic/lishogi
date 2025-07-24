@@ -1,21 +1,20 @@
 import type { MaybeVNodes } from 'common/snabbdom';
 import { i18n, i18nFormat } from 'i18n';
 import { type VNode, h } from 'snabbdom';
-import type TournamentController from '../ctrl';
-import * as pagination from '../pagination';
-import * as tour from '../tournament';
-import { standing } from './arena';
-import { allUpcomingAndOngoing, yourUpcoming } from './arrangement';
-import { teamStanding } from './battle';
-import { arenaControls, organizedControls, robinControls } from './controls';
-import header from './header';
-import type { ViewHandler } from './main';
-import { standing as oStanding } from './organized';
-import playerInfo from './player-info';
-import { standing as rStanding } from './robin';
-import tourTable from './table';
-import teamInfo from './team-info';
-import { proverbWrap } from './util';
+import type TournamentController from '../../ctrl';
+import * as pagination from '../../pagination';
+import * as tour from '../../tournament';
+import { teamStanding } from '../arena/battle';
+import { arenaControls } from '../arena/controls';
+import { arenaStanding } from '../arena/standing';
+import { organizedList } from '../arrangement/organized/list';
+import { robinControls } from '../arrangement/robin/controls';
+import { robinList } from '../arrangement/robin/list';
+import { robinTable } from '../arrangement/robin/table';
+import header from '../header';
+import type { ViewHandler } from '../main';
+import tourTable from '../table';
+import { proverbWrap } from '../util';
 
 function joinTheGame(gameId: string) {
   return h(
@@ -45,7 +44,7 @@ function main(ctrl: TournamentController): MaybeVNodes {
       gameId ? joinTheGame(gameId) : tour.isIn(ctrl) ? notice(ctrl) : null,
       teamStanding(ctrl, 'started'),
       arenaControls(ctrl, pag),
-      standing(ctrl, pag, 'started'),
+      arenaStanding(ctrl, pag, 'started'),
       !ctrl.data.nbPlayers ? proverbWrap(ctrl) : null,
     ];
   else if (ctrl.isRobin())
@@ -53,28 +52,22 @@ function main(ctrl: TournamentController): MaybeVNodes {
       header(ctrl),
       gameId ? joinTheGame(gameId) : null,
       robinControls(ctrl),
-      rStanding(ctrl, 'started'),
+      robinTable(ctrl, 'started'),
+      robinList(ctrl),
       !ctrl.data.nbPlayers ? proverbWrap(ctrl) : null,
-      yourUpcoming(ctrl),
     ];
   else
     return [
       header(ctrl),
       gameId ? joinTheGame(gameId) : null,
-      organizedControls(ctrl, pag),
-      oStanding(ctrl, pag, 'started'),
+      organizedList(ctrl),
       !ctrl.data.nbPlayers ? proverbWrap(ctrl) : null,
-      yourUpcoming(ctrl),
-      allUpcomingAndOngoing(ctrl),
     ];
 }
 
 function table(ctrl: TournamentController): VNode | undefined {
-  return ctrl.playerInfo.id
-    ? playerInfo(ctrl)
-    : ctrl.teamInfo.requested
-      ? teamInfo(ctrl)
-      : tourTable(ctrl);
+  if (ctrl.isRobin() || ctrl.isOrganized()) return undefined;
+  else return tourTable(ctrl);
 }
 
 export const started: ViewHandler = {

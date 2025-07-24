@@ -11,17 +11,16 @@ import lila.game.Pov
 import lila.hub.actorApi.socket.SendTo
 import lila.memo.CacheApi._
 import lila.user.User
-import lila.user.UserRepo
 
 final class ChallengeApi(
     repo: ChallengeRepo,
     challengeMaker: ChallengeMaker,
-    userRepo: UserRepo,
     joiner: Joiner,
     jsonView: JsonView,
     gameCache: lila.game.Cached,
     maxPlaying: Max,
     cacheApi: lila.memo.CacheApi,
+    rematches: lila.game.Rematches,
 )(implicit
     ec: scala.concurrent.ExecutionContext,
     system: akka.actor.ActorSystem,
@@ -32,6 +31,9 @@ final class ChallengeApi(
   def allFor(userId: User.ID): Fu[AllChallenges] =
     createdByDestId(userId) zip createdByChallengerId(userId) dmap (AllChallenges.apply _).tupled
 
+  def createdByUserInTour(userId: User.ID, tourId: String): Fu[AllChallenges] =
+    repo.createdByUserInTour(userId, tourId)
+
   // returns boolean success
   def create(c: Challenge): Fu[Boolean] =
     isLimitedByMaxPlaying(c) flatMap {
@@ -41,6 +43,20 @@ final class ChallengeApi(
           uncacheAndNotify(c)
           Bus.publish(Event.Create(c), "challenge")
         } inject true
+    }
+
+  def makeTourChallenge(
+      tour: lila.tournament.Tournament,
+      arr: lila.tournament.Arrangement,
+      user: User,
+  )(implicit lang: play.api.i18n.Lang): Fu[Challenge] =
+    repo.byTourArrangement(tour.id, arr.id).dmap(_.filter(_.active)) getOrElse {
+      for {
+        c       <- challengeMaker.makeTourChallenge(tour, arr, user)
+        created <- create(c)
+        createdChallenge <-
+          if (created) fuccess(c) else fufail("Couldn't create challenge")
+      } yield (createdChallenge)
     }
 
   def byId = repo byId _
@@ -133,6 +149,19 @@ final class ChallengeApi(
       lila.common.Future.applySequentially(cs)(remove).void
     }
 
+  def removeByTourId(tourId: lila.tournament.Tournament.ID) =
+    repo.allOfTourId(tourId) flatMap { cs =>
+      lila.common.Future.applySequentially(cs)(remove).void
+    }
+
+  def removeByArrId(tourId: lila.tournament.Tournament.ID, arrId: lila.tournament.Arrangement.ID) =
+    repo.byTourArrangement(tourId, arrId).map2(c => remove(c).void)
+
+  def removeAllByUserInTour(tourId: lila.tournament.Tournament.ID, userId: User.ID) =
+    repo.allByUserInTour(tourId, userId) flatMap { cs =>
+      lila.common.Future.applySequentially(cs)(remove).void
+    }
+
   def oauthAccept(dest: User, challenge: Challenge): Fu[Option[Game]] =
     joiner(challenge, dest.some, none).map2(_.game)
 
@@ -170,11 +199,8 @@ final class ChallengeApi(
   private def notify(userId: User.ID): Funit =
     for {
       all <- allFor(userId)
-      lang <- userRepo langOf userId map {
-        _ flatMap lila.i18n.I18nLangPicker.byStr getOrElse lila.i18n.defaultLang
-      }
     } yield Bus.publish(
-      SendTo(userId, lila.socket.Socket.makeMessage("challenges", jsonView(all)(lang))),
+      SendTo(userId, lila.socket.Socket.makeMessage("challenges", jsonView(all))),
       "socketUsers",
     )
 

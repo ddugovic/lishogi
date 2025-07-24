@@ -55,7 +55,7 @@ final class UserTournament(env: Env) extends LilaController(env) {
     AuthBody { implicit ctx => implicit me =>
       Reasonable(page) {
         val pager =
-          if (order == "upcoming") env.tournament.api.arrangemenstUpcoming(me, page)
+          if (order == "upcoming") env.tournament.api.arrangementsUpcoming(me, page)
           else env.tournament.api.arrangemenstUpdated(me, page)
         pager.map(p => Ok(html.tournament.user.arrangements.paginated(p, order)))
       }

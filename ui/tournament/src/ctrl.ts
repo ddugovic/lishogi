@@ -1,9 +1,8 @@
-import { defined } from 'common/common';
+import type { Challenge, ChallengeData } from 'challenge/interfaces';
 import { type StoredJsonProp, storedJsonProp } from 'common/storage';
 import { ids } from 'game/status';
 import type {
   Arrangement,
-  ArrangementUser,
   NewArrangement,
   NewArrangementSettings,
   Pages,
@@ -16,10 +15,11 @@ import type {
   TournamentDataFull,
   TournamentOpts,
 } from './interfaces';
-import { maxPerPage, myPage, players } from './pagination';
+import { myPage, players } from './pagination';
 import makeSocket, { type TournamentSocket } from './socket';
 import * as sound from './sound';
 import * as tour from './tournament';
+import type { Tab } from './view/arrangement/tabs';
 import xhr from './xhr';
 
 interface CtrlTeamInfo {
@@ -30,6 +30,7 @@ interface CtrlTeamInfo {
 export default class TournamentController {
   opts: TournamentOpts;
   data: TournamentDataFull;
+  challengeData: ChallengeData;
   socket: TournamentSocket;
   page: number;
   pages: Pages = {};
@@ -40,11 +41,10 @@ export default class TournamentController {
   playerInfo: PlayerInfo = {};
   teamInfo: CtrlTeamInfo = {};
   arrangement: Arrangement | undefined;
-  arrangementReadyMillis: number = 20 * 1000;
-  arrangementReadyTimeouts: Map<string, Timeout> = new Map();
   defaultArrangementPoints: Points = { w: 3, d: 2, l: 1 };
   playerManagement = false;
   newArrangement: NewArrangement | undefined;
+  activeTab: Tab | undefined;
   newArrangementSettings: StoredJsonProp<NewArrangementSettings>;
   shadedCandidates: string[] = [];
   disableClicks = true;
@@ -59,6 +59,10 @@ export default class TournamentController {
   constructor(opts: TournamentOpts, redraw: () => void) {
     this.opts = opts;
     this.data = opts.data;
+    this.challengeData = opts.challenges || {
+      in: [],
+      out: [],
+    };
     this.redraw = redraw;
     this.socket = makeSocket(opts.socketSend, this);
     this.page = this.data.standing.page || 1;
@@ -78,20 +82,16 @@ export default class TournamentController {
       this.dateToFinish = new Date(Date.now() + this.data.secondsToFinish * 1000);
 
     this.newArrangementSettings = storedJsonProp(
-      `arrangement.newArrangementSettings${this.data.id}`,
+      `arrangement.newArrangementSettings.${this.data.id}`,
       () => {
         return {};
       },
     );
 
-    if (this.isRobin() || this.isOrganized())
-      this.data.standing.arrangements.forEach(a => {
-        this.arrangementReadyRedraw(a);
-      });
+    if (this.isRobin()) this.activeTab = 'games';
+    else if (this.isOrganized()) this.activeTab = 'games';
 
-    window.addEventListener('beforeunload', () => {
-      if (this.arrangement && !this.tourRedirect) this.arrangementMatch(this.arrangement, false);
-    });
+    this.updateCreatorButtons();
 
     this.hashChange();
     window.addEventListener('hashchange', () => {
@@ -101,20 +101,25 @@ export default class TournamentController {
     window.lishogi.pubsub.on('socket.in.crowd', data => {
       this.nbWatchers = data.nb;
     });
+    window.lishogi.pubsub.on('socket.in.challenges', (data: ChallengeData) => {
+      const filter: (c: Challenge) => boolean = (c: Challenge) => {
+        return !!c.tourInfo && c.tourInfo.tourId === this.data.id;
+      };
+      this.challengeData = {
+        in: data.in.filter(filter),
+        out: data.out.filter(filter),
+      };
+      this.redraw();
+    });
   }
 
   hashChange = (redraw = false): void => {
     const hash = window.location.hash.slice(1);
     const userIds = hash.split(';');
-    if (
-      userIds.length === 2 &&
-      userIds[0] !== userIds[1] &&
-      this.data.system !== 'arena' &&
-      userIds.every(u => this.data.standing.players.some(p => p.id === u))
-    )
-      this.arrangement = this.findOrCreateArrangement(userIds);
-    else if (hash.length === 8)
-      this.arrangement = this.data.standing.arrangements.find(a => a.id === hash);
+    if (this.data.system === 'robin') {
+      const id = userIds.length === 2 ? this.makeRobinId(userIds as [string, string]) : undefined;
+      if (id) this.arrangement = this.findOrCreateArrangement(id);
+    } else if (hash.length === 8) this.arrangement = this.findArrangement(hash);
     if (redraw) this.redraw();
   };
 
@@ -132,12 +137,7 @@ export default class TournamentController {
     if (!this.data.me && data.me && this.data.private) window.lishogi.reload();
 
     this.data = { ...this.data, ...data };
-    this.data.me = data.me;
-    this.data.isCandidate = data.isCandidate;
-    this.data.isDenied = data.isDenied;
-    this.data.isClosed = data.isClosed;
-    this.data.candidatesOnly = data.candidatesOnly;
-    this.data.candidatesFull = data.candidatesFull;
+
     if (data.playerInfo && data.playerInfo.player.id === this.playerInfo.id)
       this.playerInfo.data = data.playerInfo;
     if (this.data.secondsToFinish)
@@ -145,11 +145,16 @@ export default class TournamentController {
 
     this.loadPage(data.standing);
     if (this.focusOnMe) this.scrollToMe();
+    if (this.activeTab === 'challenges' && !!data.isFinished) {
+      this.activeTab = 'games';
+      this.redraw();
+    }
     sound.end(this.data);
     sound.countDown(this.data);
     this.shadedCandidates = [];
     this.joinSpinner = false;
     this.recountTeams();
+    this.updateCreatorButtons();
     if (this.isArena()) this.redirectToMyGame();
   };
 
@@ -195,15 +200,13 @@ export default class TournamentController {
   loadPage = (data: Standing): void => {
     if (this.isArena()) {
       if (!data.failed || !this.pages[data.page]) this.pages[data.page] = data.players;
-    } else if (this.isOrganized()) {
-      for (let i = 1; i <= Math.ceil(data.players.length / maxPerPage); i++)
-        this.pages[i] = data.players.slice((i - 1) * maxPerPage, i * maxPerPage);
     }
   };
 
   setPage = (page: number): void => {
     this.page = page;
     if (this.isArena()) xhr.loadPage(this, page);
+    else this.redraw();
   };
 
   jumpToPageOf = (name: string): void => {
@@ -218,11 +221,6 @@ export default class TournamentController {
           .filter(p => p.name.toLowerCase() == userId)
           .forEach(this.showPlayerInfo);
       });
-    } else {
-      const index = this.data.standing.players.findIndex(p => p.id === userId);
-      if (index !== -1) this.page = Math.floor(index / maxPerPage) + 1;
-      this.searching = false;
-      this.focusOnMe = false;
     }
     this.redraw();
   };
@@ -284,91 +282,94 @@ export default class TournamentController {
     if (this.focusOnMe) this.scrollToMe();
   };
 
-  findArrangement = (users: string[]): Arrangement | undefined => {
-    return this.data.standing.arrangements.find(
-      a => users.includes(a.user1.id) && users.includes(a.user2.id),
-    );
+  findArrangement = (id: string): Arrangement | undefined => {
+    return this.data.standing.arrangements.find(a => a.id === id);
   };
 
-  findOrCreateArrangement = (users: string[]): Arrangement => {
-    const existing = this.findArrangement(users);
+  findOrCreateArrangement = (id: string): Arrangement | undefined => {
+    const existing = this.findArrangement(id);
     if (existing) return existing;
-    else {
-      const arr = {
-        id: undefined,
-        user1: {
-          id: users[0],
-        },
-        user2: {
-          id: users[1],
-        },
-      };
-      // this.data.standing.arrangements.push(arr);
-      return arr;
-    }
+    else if (this.isRobin()) {
+      const parsed = this.parseRobinId(id);
+      if (parsed) return this.createRobinArrangement(parsed.user1Id, parsed.user2Id);
+      else return;
+    } else return;
   };
+
+  private createRobinArrangement(user1Id: string, user2Id: string): Arrangement {
+    return {
+      id: `${this.data.id}/${user1Id};${user2Id}`,
+      user1: {
+        id: user1Id,
+      },
+      user2: {
+        id: user2Id,
+      },
+    };
+  }
+
+  private parseRobinId(s: string): { user1Id: string; user2Id: string } | undefined {
+    const [tourId, usersPart] = s.split('/', 2);
+    if (!usersPart) return;
+
+    const users = usersPart
+      .split(';')
+      .map(u => u.toLowerCase())
+      .sort();
+
+    if (users.length !== 2 || tourId !== this.data.id) return;
+
+    const [user1Id, user2Id] = users;
+    if (this.data.standing.players.filter(p => p.id === user1Id || p.id === user2Id).length !== 2)
+      return;
+    else return { user1Id, user2Id };
+  }
+
+  makeRobinId(users: [string, string]): string | undefined {
+    const sortedUsers = users.map(u => u.toLowerCase()).sort();
+    if (sortedUsers[0] === sortedUsers[1]) return;
+    else return `${this.data.id}/${sortedUsers[0]};${sortedUsers[1]}`;
+  }
 
   showArrangement = (arrangement: Arrangement | undefined): void => {
     this.arrangement = arrangement;
-    if (arrangement)
-      window.history.replaceState(null, '', `#${arrangement.user1.id};${arrangement.user2.id}`);
-    else history.replaceState(null, '', window.location.pathname + window.location.search);
+    if (arrangement) {
+      const anchor = this.isOrganized()
+        ? `#${arrangement.id}`
+        : `#${arrangement.user1!.id};${arrangement.user2!.id}`;
+      window.history.replaceState(null, '', anchor);
+    } else history.replaceState(null, '', window.location.pathname + window.location.search);
     this.redraw();
   };
 
-  arrangementReadyRedraw = (arrangement: Arrangement): void => {
-    if (arrangement.id && this.arrangementHasMe(arrangement)) {
-      const tm = this.arrangementReadyTimeouts.get(arrangement.id);
-      clearTimeout(tm);
-
-      const user1Time = this.arrangementUserReady(arrangement.user1);
-      const user2Time = this.arrangementUserReady(arrangement.user2);
-
-      if (defined(user1Time) || defined(user2Time)) {
-        const minTimeout = Math.min(
-          user1Time || Number.POSITIVE_INFINITY,
-          user2Time || Number.POSITIVE_INFINITY,
-        );
-        this.arrangementReadyTimeouts.set(
-          arrangement.id,
-          setTimeout(this.redraw, this.arrangementReadyMillis - minTimeout),
-        );
-      }
-    }
-  };
-
-  arrangementUserReady = (u: ArrangementUser): number | undefined => {
-    const now = Date.now();
-    const userReadyTime = u.readyAt ? now - u.readyAt : undefined;
-    return defined(userReadyTime) && userReadyTime <= this.arrangementReadyMillis
-      ? userReadyTime
-      : undefined;
-  };
-
   arrangementHasMe = (arrangement: Arrangement): boolean => {
-    return this.opts.userId === arrangement.user1.id || this.opts.userId === arrangement.user2.id;
-  };
-
-  arrangementMatch = (arrangement: Arrangement, yes: boolean): void => {
-    this.socket.send('arrangement-match', {
-      id: arrangement.id,
-      users: `${arrangement.user1.id};${arrangement.user2.id}`,
-      y: yes,
-    });
+    return this.opts.userId === arrangement.user1?.id || this.opts.userId === arrangement.user2?.id;
   };
 
   arrangementTime = (arrangement: Arrangement, date: Date | undefined): void => {
-    console.log('arrangementTime', arrangement, date, date?.getTime());
     const data: Socket.Payload = {
       id: arrangement.id,
-      users: `${arrangement.user1.id};${arrangement.user2.id}`,
     };
     if (date) data.t = date.getTime();
     this.socket.send('arrangement-time', data);
   };
 
   showOrganizerArrangement(arr: NewArrangement | undefined): void {
-    this.newArrangement = arr;
+    if (arr)
+      this.newArrangement = {
+        ...arr,
+        user1: arr.user1
+          ? {
+              id: arr.user1.id,
+            }
+          : undefined,
+        user2: arr.user2
+          ? {
+              id: arr.user2.id,
+            }
+          : undefined,
+      };
+    else this.newArrangement = undefined;
     this.redraw();
     window.scrollTo(window.scrollX, 0);
   }
@@ -385,6 +386,13 @@ export default class TournamentController {
     if (this.playerInfo.id) xhr.playerInfo(this, this.playerInfo.id);
   };
 
+  unshowPlayerInfo = (): void => {
+    if (this.playerInfo) {
+      this.playerInfo.id = undefined;
+      this.redraw();
+    }
+  };
+
   setPlayerInfoData = (data: PlayerInfo): void => {
     if (data.player.id === this.playerInfo.id) this.playerInfo.data = data;
   };
@@ -398,11 +406,37 @@ export default class TournamentController {
     if (this.teamInfo.requested) xhr.teamInfo(this, this.teamInfo.requested);
   };
 
+  unshowTeamInfo = (): void => {
+    this.teamInfo = {
+      requested: undefined,
+      loaded: undefined,
+    };
+    this.redraw();
+  };
+
   setTeamInfo = (teamInfo: TeamInfo): void => {
     if (teamInfo.id === this.teamInfo.requested) this.teamInfo.loaded = teamInfo;
   };
 
   toggleSearch = (): void => {
     this.searching = !this.searching;
+  };
+
+  updateCreatorButtons = (): void => {
+    const pmb = this.opts.playerManagmentButton;
+    if (pmb) {
+      if (this.data.isFinished) pmb.classList.add('disabled');
+
+      const candidates = this.data.candidates;
+      if (candidates?.length) {
+        pmb.classList.add('data-count');
+        pmb.setAttribute('data-count', `${candidates.length}`);
+      }
+    }
+
+    const teb = this.opts.teamEditButton;
+    if (teb) {
+      if (this.data.isFinished) teb.classList.add('disabled');
+    }
   };
 }

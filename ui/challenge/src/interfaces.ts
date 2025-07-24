@@ -51,12 +51,15 @@ export interface Challenge {
     name: string;
   };
   declined?: boolean;
+  tourInfo?: {
+    tourId: string;
+    tourName?: string;
+    arrId: string;
+    arrName?: string;
+  };
 }
 
 export interface ChallengeData {
   in: Array<Challenge>;
   out: Array<Challenge>;
-  i18n?: {
-    [key: string]: string;
-  };
 }

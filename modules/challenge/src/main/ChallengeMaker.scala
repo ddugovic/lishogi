@@ -59,4 +59,44 @@ final class ChallengeMaker(
       )
     }
   }
+
+  def makeTourChallenge(
+      tour: lila.tournament.Tournament,
+      arr: lila.tournament.Arrangement,
+      me: User,
+  )(implicit lang: Lang): Fu[Challenge] =
+    for {
+      opponent <- (arr.opponentUser(me.id).map(_.id) ?? { opp =>
+        userRepo.byId(opp)
+      }) orFail "Opponent not found"
+      denied <- granter(
+        me.some,
+        opponent,
+        none,
+        (pref: lila.pref.Pref) => pref.tourChallenge,
+      )
+      _   <- denied.fold(funit)(d => fufail(lila.challenge.ChallengeDenied.translated(d)))
+      gid <- idGenerator.game
+      myColor     = arr.color.map(c => if (arr.user1.exists(_.id == me.id)) c else !c)
+      timeControl = Challenge.TimeControl.make(tour.timeControl.clock, tour.timeControl.days)
+      challenge = Challenge.make(
+        id = gid,
+        variant = tour.variant,
+        initialSfen = tour.position,
+        timeControl = timeControl,
+        mode = tour.mode,
+        proMode = tour.proMode,
+        color = myColor.map(_.name).getOrElse("random"),
+        challenger = Challenge.toRegistered(tour.variant, timeControl)(me),
+        destUser = opponent.some,
+        tourInfo = Challenge
+          .TournamentInfo(
+            tournamentId = tour.id,
+            arrangementId = arr.id,
+            withName = tour.isOrganized,
+          )
+          .some,
+      )
+    } yield (challenge)
+
 }

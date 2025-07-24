@@ -1,24 +1,11 @@
 @use 'pkg:breakpoint-sass' as breakpoint;
+@use 'pkg:common/abstract/extends';
 @use 'pkg:common/form/cmn-toggle';
 @use 'pkg:common/base/scrollbar';
 @use 'pkg:common/theme';
 @use 'local';
 
-main.arr-table {
-  .scroll-controls {
-    display: flex;
-    justify-content: space-evenly;
-
-    .scroll-arrow {
-      cursor: pointer;
-      padding: 0.75rem;
-
-      &.disabled {
-        opacity: 0.5;
-      }
-    }
-  }
-
+main.robin {
   .r-table-wrap {
     $cell-size: 2.2rem;
     $mobile-cell-size: 3.5rem;
@@ -26,14 +13,14 @@ main.arr-table {
 
     display: flex;
 
+    &.hidden {
+      opacity: 0;
+    }
+
     table {
       background: theme.$c-bg-box;
 
       tr {
-        &:nth-child(even) {
-          background-color: theme.$c-bg-zebra;
-        }
-
         &.kicked {
           background-color: rgba(theme.$c-bad, 0.2) !important;
           color: theme.$c-font-dimmer !important;
@@ -41,10 +28,6 @@ main.arr-table {
           .user-link {
             color: theme.$c-font-dimmer !important;
           }
-        }
-
-        &.me {
-          background-color: theme.$m-primary_alpha_neg85;
         }
       }
 
@@ -61,7 +44,11 @@ main.arr-table {
         }
 
         &.me {
-          background-color: theme.$m-primary_alpha_neg85;
+          background-color: theme.$m-secondary_alpha_neg85;
+        }
+
+        &.hovered {
+          background-color: theme.$m-primary_alpha_neg75;
         }
       }
 
@@ -133,7 +120,6 @@ main.arr-table {
 
               &.same {
                 cursor: unset;
-                pointer-events: none;
                 position: relative;
 
                 &::before,
@@ -197,33 +183,15 @@ main.arr-table {
                 width: 10px;
                 height: 10px;
                 border-radius: 50%;
+                background-color: theme.$c-font;
               }
 
               & .w {
-                background-color: theme.$c-good !important;
+                background-color: theme.$m-good_font_mix_80;
               }
 
               & .l {
-                background-color: theme.$c-bad !important;
-              }
-
-              & .pre-sched {
-                &::before {
-                  content: '';
-                  position: absolute;
-                  top: 0;
-                  right: 0;
-                  width: 0;
-                  height: 0;
-                  border-left: 7px solid transparent;
-                  border-top: 7px solid theme.$c-font-dimmer;
-                }
-              }
-
-              & .sched {
-                &::before {
-                  border-top: 7px solid theme.$c-primary;
-                }
+                background-color: theme.$m-bad_font_mix_80;
               }
 
               & .ready {
@@ -238,48 +206,6 @@ main.arr-table {
 
               &:last-child {
                 border-right: none;
-              }
-
-              &:hover {
-                background-color: theme.$c-accent;
-
-                &::before {
-                  content: '';
-                  background-color: theme.$c-accent;
-                  opacity: 0.2;
-                  height: 100%;
-                  left: -5000px;
-                  position: absolute;
-                  top: 0;
-                  width: 10000px;
-                  pointer-events: none;
-                }
-
-                &::after {
-                  content: '';
-                  background-color: theme.$c-accent;
-                  opacity: 0.2;
-                  height: 10000px;
-                  left: 0;
-                  position: absolute;
-                  top: -5000px;
-                  width: 100%;
-                  pointer-events: none;
-                }
-
-                & > div.d {
-                  border-bottom-color: theme.$c-accent-over;
-                }
-
-                & > div.w,
-                & > div.l,
-                & > div.d {
-                  position: relative;
-                  width: 100%;
-                  height: 100%;
-                  border-radius: 0;
-                  z-index: 100;
-                }
               }
             }
           }
@@ -302,37 +228,7 @@ main.arr-table {
     }
   }
 
-  .arrs {
-    .arrs-title {
-      text-align: center;
-      padding: 1rem;
-      border-bottom: theme.$border;
-    }
-
-    .arrs-grid {
-      display: grid;
-      grid-template-columns: repeat(1, 1fr);
-
-      @include breakpoint.breakpoint(local.$mq-col2) {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    .view-more {
-      font-size: 1.3rem;
-      text-align: center;
-      width: 2rem;
-      margin: auto;
-      margin-bottom: 2rem;
-      color: theme.$c-font-dim;
-      cursor: pointer;
-    }
-  }
-
-  .r-how {
-    text-align: center;
-    padding: 2rem var(--box-padding);
-    padding-top: 0;
-    display: block !important;
+  .tabs-horiz {
+    margin-top: 2rem;
   }
 }

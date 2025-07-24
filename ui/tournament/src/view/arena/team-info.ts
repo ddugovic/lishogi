@@ -1,12 +1,23 @@
-import { bind, dataIcon } from 'common/snabbdom';
+import { modal } from 'common/modal';
+import { type MaybeVNode, dataIcon } from 'common/snabbdom';
 import spinner from 'common/spinner';
 import { i18n } from 'i18n';
 import { type VNode, h } from 'snabbdom';
-import type TournamentController from '../ctrl';
+import type TournamentController from '../../ctrl';
+import { numberRow, player as renderPlayer } from '../util';
 import { teamName } from './battle';
-import { numberRow, player as renderPlayer } from './util';
 
-export default function (ctrl: TournamentController): VNode | undefined {
+export function teamInfoModal(ctrl: TournamentController): MaybeVNode {
+  return ctrl.teamInfo.requested
+    ? modal({
+        class: 'actor-info-modal',
+        content: [teamInfo(ctrl)],
+        onClose: () => ctrl.unshowTeamInfo(),
+      })
+    : undefined;
+}
+
+function teamInfo(ctrl: TournamentController): VNode | undefined {
   const battle = ctrl.data.teamBattle;
   const data = ctrl.teamInfo.loaded;
   if (!battle) return undefined;
@@ -30,10 +41,6 @@ export default function (ctrl: TournamentController): VNode | undefined {
       },
     },
     [
-      h('a.close', {
-        attrs: dataIcon('L'),
-        hook: bind('click', () => ctrl.showTeamInfo(data.id), ctrl.redraw),
-      }),
       h('div.stats', [
         h('h2', [teamTag]),
         h('table', [
@@ -66,17 +73,28 @@ export default function (ctrl: TournamentController): VNode | undefined {
       ]),
       h('div', [
         h(
-          'table.players.sublist',
+          'table.sublist',
           data.topPlayers.map((p, i) =>
             h(
               'tr',
               {
                 key: p.name,
-                hook: bind('click', () => ctrl.jumpToPageOf(p.name)),
+                on: {
+                  click: () => {
+                    ctrl.jumpToPageOf(p.name);
+                  },
+                },
               },
               [
                 h('th', `${i + 1}`),
-                h('td', renderPlayer(p, false, true, false, i < nbLeaders)),
+                h(
+                  'td',
+                  renderPlayer(p, {
+                    asLink: false,
+                    withRating: true,
+                    leader: i < nbLeaders,
+                  }),
+                ),
                 h('td.total', [
                   p.fire && !ctrl.data.isFinished
                     ? h('strong.is-gold', { attrs: dataIcon('Q') }, `${p.score}`)

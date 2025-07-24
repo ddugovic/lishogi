@@ -1,6 +1,6 @@
 import { initOneWithState } from 'common/mini-board';
 import { numberFormat } from 'common/number';
-import { proverb } from 'common/snabbdom';
+import { bind, proverb } from 'common/snabbdom';
 import { type MaybeVNode, type MaybeVNodes, dataIcon } from 'common/snabbdom';
 import { i18n } from 'i18n';
 import { type VNode, h } from 'snabbdom';
@@ -35,31 +35,35 @@ export function ratio2percent(r: number): string {
 }
 
 export function playerName(p: { name: string; title?: string } | undefined): MaybeVNodes {
-  return p?.title ? [h('span.title', p.title), ` ${p.name}`] : [p?.name || i18n('anonymousUser')];
+  return p?.title ? [h('span.title', p.title), ` ${p.name}`] : [p?.name || '?'];
 }
 
 export function player(
   p: BasePlayer,
-  asLink: boolean,
-  withRating: boolean,
-  defender = false,
-  leader = false,
+  config: {
+    asLink?: boolean;
+    withRating?: boolean;
+    defender?: boolean;
+    leader?: boolean;
+    status?: { online: boolean };
+  },
 ): VNode {
   return h(
-    `a.ulpt.user-link${((p.title || '') + p.name).length > 15 ? '.long' : ''}`,
+    `a.ulpt.user-link${((p.title || '') + p.name).length > 15 ? '.long' : ''}${config.status?.online ? '.online' : ''}`,
     {
-      attrs: asLink ? { href: `/@/${p.name}` } : { 'data-href': `/@/${p.name}` },
+      attrs: config.asLink ? { href: `/@/${p.name}` } : { 'data-href': `/@/${p.name}` },
       hook: {
         destroy: vnode => $.powerTip.destroy(vnode.elm as HTMLElement),
       },
     },
     [
+      config.status ? h(`i.line${p.patron ? '.patron' : ''}`) : null,
       h(
-        `span.name${defender ? '.defender' : leader ? '.leader' : ''}`,
-        defender ? { attrs: dataIcon('5') } : leader ? { attrs: dataIcon('8') } : {},
+        `span.name${config.defender ? '.defender.text' : config.leader ? '.leader.text' : ''}`,
+        config.defender ? { attrs: dataIcon('5') } : config.leader ? { attrs: dataIcon('8') } : {},
         playerName(p),
       ),
-      withRating ? h('span.rating', ` ${p.rating}${p.provisional ? '?' : ''}`) : null,
+      config.withRating ? h('span.rating', ` ${p.rating}${p.provisional ? '?' : ''}`) : null,
     ],
   );
 }
@@ -85,7 +89,7 @@ export function preloadUserTips(el: HTMLElement): void {
 }
 
 export function arrangementHasUser(a: Arrangement, userId: string): boolean {
-  return a.user1.id === userId || a.user2.id === userId;
+  return a.user1?.id === userId || a.user2?.id === userId;
 }
 
 export const flatpickrConfig: Parameters<(typeof window)['flatpickr']>[1] = {
@@ -112,4 +116,23 @@ export const flatpickrConfig: Parameters<(typeof window)['flatpickr']>[1] = {
 
 export function proverbWrap(ctrl: TournamentController): MaybeVNode {
   return ctrl.data.proverb ? proverb(ctrl.data.proverb) : null;
+}
+
+export function backControl(f: () => void): VNode {
+  return h('div.tour__controls.back', [
+    h(
+      'div.pager',
+      { hook: bind('click', () => f()) },
+      h(
+        'button.fbt.is.text.' + 'back',
+        {
+          attrs: {
+            'data-icon': 'I',
+            title: i18n('back'),
+          },
+        },
+        i18n('back'),
+      ),
+    ),
+  ]);
 }

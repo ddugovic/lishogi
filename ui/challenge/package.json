@@ -3,6 +3,11 @@
   "private": true,
   "license": "AGPL-3.0-or-later",
   "type": "module",
+  "exports": {
+    "./interfaces": {
+      "types": "./src/interfaces.ts"
+    }
+  },
   "dependencies": {
     "breakpoint-sass": "catalog:",
     "common": "workspace:*",

@@ -10,14 +10,14 @@ import lila.game.Source
 import lila.game.{ Player => GamePlayer }
 import lila.user.User
 
-final class AutoPairing(
+final class GameMaker(
     gameRepo: GameRepo,
     duelStore: DuelStore,
     lightUserApi: lila.user.LightUserApi,
     onStart: Game.ID => Unit,
-)(implicit ec: scala.concurrent.ExecutionContext, idGenerator: lila.game.IdGenerator) {
+)(implicit ec: scala.concurrent.ExecutionContext) {
 
-  def apply(
+  def autoPairing(
       tour: Tournament,
       pairing: Pairing,
       playersMap: Map[User.ID, Player],
@@ -39,6 +39,7 @@ final class AutoPairing(
         sentePlayer = makePlayer(Sente, player1),
         gotePlayer = makePlayer(Gote, player2),
         mode = tour.mode,
+        proMode = tour.proMode,
         source = Source.Tournament,
         notationImport = None,
       )
@@ -55,45 +56,6 @@ final class AutoPairing(
         ranking = ranking,
       )
     } inject game
-  }
-
-  def apply(
-      tour: Tournament,
-      arrangement: Arrangement,
-      playersMap: Map[User.ID, Player],
-  ): Fu[Game] = {
-    val player1 =
-      playersMap get arrangement.user1.id err s"Missing arrangement player1 $arrangement"
-    val player2 =
-      playersMap get arrangement.user2.id err s"Missing arrangement player2 $arrangement"
-    val player1IsSente =
-      ~arrangement.color.map(_.sente) || lila.common.ThreadLocalRandom.nextBoolean()
-    val clock = tour.timeControl.clock.map(_.toClock)
-    idGenerator.game flatMap { gid =>
-      val game = Game
-        .make(
-          shogi = shogi
-            .Game(
-              tour.position,
-              tour.variant,
-            )
-            .copy(clock = clock),
-          daysPerTurn = tour.timeControl.days,
-          initialSfen = tour.position,
-          sentePlayer = makePlayer(Sente, if (player1IsSente) player1 else player2),
-          gotePlayer = makePlayer(Gote, if (player1IsSente) player2 else player1),
-          mode = tour.mode,
-          source = Source.Tournament,
-          notationImport = None,
-        )
-        .withId(gid)
-        .withTournamentId(tour.id)
-        .withArrangementId(arrangement.id)
-        .start
-      (gameRepo insertDenormalized game) >>- {
-        onStart(game.id)
-      } inject game
-    }
   }
 
   private def makePlayer(color: Color, player: Player) =

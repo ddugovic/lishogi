@@ -3,8 +3,6 @@
 @use 'pkg:common/theme';
 @use 'pkg:common/abstract/extends';
 
-$c-challenge: theme.$c-secondary;
-
 .challenge-page {
   .challenge-id-form {
     display: flex;
@@ -38,8 +36,8 @@ $c-challenge: theme.$c-secondary;
     }
 
     .spinner {
-      width: 13em;
-      height: 16em;
+      width: 6.5em;
+      height: 8em;
       margin: 2em auto;
     }
   }
@@ -53,7 +51,7 @@ $c-challenge: theme.$c-secondary;
     @extend %flex-between, %box-radius;
 
     background: theme.$m-secondary_bg-box_mix_10;
-    border: 1px solid $c-challenge;
+    border: 1px solid theme.$c-secondary;
     padding: 0.5em 1.1em;
     margin-bottom: 3rem;
     font-size: 2em;
@@ -67,7 +65,7 @@ $c-challenge: theme.$c-secondary;
       @extend %flex-center;
 
       &::before {
-        color: $c-challenge;
+        color: theme.$c-secondary;
         font-size: 6rem;
         margin-right: 0.2em;
       }
@@ -88,8 +86,29 @@ $c-challenge: theme.$c-secondary;
 
     .mode {
       font-weight: bold;
-      color: $c-challenge;
+      color: theme.$c-secondary;
       justify-content: flex-end;
+    }
+
+    &.tour-challenge {
+      background: theme.$m-brag_bg-box_mix_15;
+      border: 1px solid theme.$c-brag;
+
+      .variant::before {
+        color: theme.$c-brag;
+      }
+
+      .game-tour {
+        flex-direction: column;
+
+        a {
+          font-weight: bold;
+        }
+      }
+
+      .mode {
+        color: theme.$c-brag;
+      }
     }
   }
 

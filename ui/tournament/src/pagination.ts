@@ -4,7 +4,7 @@ import type TournamentController from './ctrl';
 import type { PageData } from './interfaces';
 import { searchOr } from './search';
 
-export const maxPerPage = 10;
+const maxPerPage = 10;
 
 function button(
   text: string,

@@ -21,6 +21,8 @@ final class Env(
     idGenerator: lila.game.IdGenerator,
     lightUser: lila.common.LightUser.GetterSync,
     isOnline: lila.socket.IsOnline,
+    getTourName: lila.tournament.GetTourName,
+    getArrName: lila.tournament.GetArrName,
     db: lila.db.Db,
     cacheApi: lila.memo.CacheApi,
     prefApi: lila.pref.PrefApi,
@@ -53,6 +55,21 @@ final class Env(
   )
 
   lazy val jsonView = wire[JsonView]
+
+  lila.common.Bus.subscribeFuns(
+    "tourFinishedOrDeleted" -> { case lila.hub.actorApi.round.TourFinishedOrDeleted(tourId) =>
+      api.removeByTourId(tourId).unit
+    },
+    "arrangementDeleted" -> { case lila.hub.actorApi.round.ArrangementDeleted(tourId, arrId) =>
+      api.removeByArrId(tourId, arrId).unit
+    },
+    "tourPlayerRemoved" -> { case lila.hub.actorApi.round.TourPlayerRemoved(tourId, userId) =>
+      api.removeAllByUserInTour(tourId, userId).unit
+    },
+    "rematchChallengeDelete" -> { case lila.hub.actorApi.round.RematchChallengeDelete(gameId) =>
+      api.removeByRematchId(gameId).unit
+    },
+  )
 
   system.scheduler.scheduleWithFixedDelay(10 seconds, 3 seconds) { () =>
     api.sweep.unit

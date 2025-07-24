@@ -1,30 +1,28 @@
+@use 'pkg:breakpoint-sass' as breakpoint;
 @use 'pkg:common/abstract/extends';
+@use 'pkg:common/abstract/media-queries';
 @use 'pkg:common/theme';
 
 #modal-wrap.arrangement__modal {
   width: 30em;
   padding: 0;
 
-  .values {
-    text-align: left;
-    margin: 0.5rem 0;
-
-    .title {
-      font-weight: bold;
-      color: theme.$c-font-dim;
-    }
-
-    .value {
-      margin: 0 0.5rem;
-      color: theme.$c-font-clear;
-    }
-  }
-
   .arr-modal {
     .arr-header {
+      position: relative;
       background: theme.$c-bg-zebra;
       border-bottom: theme.$border;
       padding: 1rem;
+
+      .edit-icon {
+        position: absolute;
+        top: 0.35rem;
+        left: 0;
+        font-size: 16px;
+        line-height: 28px;
+        width: 32px;
+        height: 32px;
+      }
     }
 
     .arr-users {
@@ -33,10 +31,9 @@
 
       .arr-user {
         width: 100%;
-        padding: 1rem 2rem;
+        padding: 1rem 1rem;
 
         &-bottom {
-          background: theme.$c-bg-zebra;
           border-top: theme.$border;
           border-bottom: theme.$border;
         }
@@ -51,21 +48,21 @@
               font-size: 1.25rem;
               color: theme.$c-font-dimmer;
             }
-          }
 
-          .message {
-            margin-left: auto;
-            font-size: 1rem;
-            color: theme.$c-font;
-            align-self: center;
+            &.long {
+              .name {
+                font-size: 1.4rem;
+              }
 
-            &:hover {
-              color: theme.$c-link;
+              .rating {
+                font-size: 1rem;
+              }
             }
           }
 
           .points {
             margin-left: auto;
+            margin-right: 0.5rem;
             font-weight: bold;
 
             &.winner {
@@ -74,6 +71,70 @@
 
             &.loser {
               color: theme.$c-bad;
+            }
+          }
+
+          .action-wrap {
+            font-size: 1rem;
+            margin-left: auto;
+          }
+        }
+
+        .suggested-time-wrap {
+          width: 100%;
+          display: flex;
+          flex-wrap: wrap;
+          position: relative;
+
+          input {
+            width: 100%;
+            color: theme.$c-font-clear;
+            opacity: 1;
+
+            &.disabled {
+              cursor: not-allowed;
+
+              &:hover ~ button:not(:disabled) {
+                background-color: theme.$c-secondary;
+                color: theme.$c-secondary-over;
+              }
+            }
+          }
+
+          .fbt {
+            @extend %box-radius;
+
+            padding: 0 1rem;
+            height: 100%;
+            position: absolute;
+            right: 0;
+          }
+
+          .flatpickr-input-wrap {
+            width: 100%;
+          }
+
+          .calendar-button-wrap {
+            width: 100%;
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+
+            button {
+              &.button-green {
+                flex: 4;
+              }
+
+              &.button-red {
+                flex: 1;
+              }
+            }
+          }
+
+          &.hide-calendar {
+            .flatpickr-calendar,
+            .calendar-button-wrap {
+              display: none;
             }
           }
         }
@@ -91,36 +152,6 @@
             flex: 1;
           }
         }
-
-        .my-actions {
-          button.pressed {
-            @extend %active-inset-shadow;
-
-            background-color: theme.$c-primary-dim;
-            text-shadow: none;
-          }
-
-          .arr-calendar {
-            flex: 1;
-
-            &-wrap {
-              min-height: 300px;
-            }
-
-            &-buttons {
-              display: flex;
-              gap: 0.5rem;
-            }
-
-            input.flatpickr.form-control {
-              display: none;
-            }
-
-            .flatpickr-calendar {
-              margin-bottom: 0.5rem;
-            }
-          }
-        }
       }
     }
 
@@ -129,12 +160,18 @@
       flex-direction: column;
 
       .values {
-        padding: 0.5rem 2rem;
+        padding: 0.5rem 1rem;
+        text-align: left;
+        margin: 0.5rem 0;
+
+        i {
+          float: right;
+        }
       }
 
       .fbt {
         width: 100%;
-        padding: 1.5rem 0;
+        padding: 1.75rem 0;
         border-top: theme.$border;
         border-bottom: theme.$border;
         margin-bottom: 0.5rem;
@@ -158,6 +195,26 @@
       .arr-start-wrap {
         padding-bottom: 1rem;
 
+        .fbt {
+          &:hover {
+            background-color: theme.$c-accent;
+            color: theme.$c-accent-over;
+          }
+
+          &.disabled {
+            pointer-events: none;
+          }
+
+          &.ready {
+            background-color: theme.$c-primary;
+            color: theme.$c-primary-over;
+
+            &:not(.disabled):hover {
+              background-color: theme.$c-primary-clear;
+            }
+          }
+        }
+
         .help {
           font-size: 0.9rem;
           font-style: italic;
@@ -168,60 +225,28 @@
         margin: 0 1rem 1rem 1rem;
       }
     }
-  }
-}
 
-.arrs-list-wrap {
-  background: theme.$c-bg-zebra;
-  border-top: theme.$border;
-  border-bottom: theme.$border;
-  margin-top: 2rem;
-
-  .arrs-title {
-    padding: 2rem;
-  }
-
-  .arrs-list {
-    .arr-line {
+    .title-value-wrap {
       display: flex;
-      padding: 1rem 2rem;
-      justify-content: space-between;
-      border-bottom: theme.$border;
-      cursor: pointer;
+      align-items: center;
 
-      .arr-name {
+      @include breakpoint.breakpoint(media-queries.$mq-x-small) {
+        margin-left: 1rem;
+      }
+
+      .title {
         font-weight: bold;
-        margin-right: 1rem;
+        color: theme.$c-font-dim;
       }
 
-      &:nth-child(odd) {
-        background: theme.$c-bg-zebra;
+      .value {
+        margin: 0 0.5rem;
+        color: theme.$c-font-clear;
       }
 
-      &:first-child {
-        border-top: theme.$border;
-      }
-
-      &:last-child {
-        border-bottom: none;
-      }
-
-      &:hover {
-        background: theme.$c-accent;
-        color: theme.$c-accent-over;
+      .right {
+        margin-left: auto;
       }
     }
-  }
-
-  .arrs-more {
-    padding: 1rem;
-    width: 100%;
-    display: block;
-    text-align: center;
-    border-top: theme.$border;
-  }
-
-  .notours {
-    padding: 0 2rem 2rem 2rem;
   }
 }

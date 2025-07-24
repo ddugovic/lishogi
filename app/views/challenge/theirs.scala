@@ -82,7 +82,7 @@ object theirs {
             div(cls := "follow-up")(
               h1(trans.challengeDeclined()),
               bits.details(c, false),
-              a(cls := "button button-fat", href := routes.Lobby.home)(trans.newOpponent()),
+              bits.failButton(c),
             )
           case Status.Accepted =>
             div(cls := "follow-up")(
@@ -100,7 +100,7 @@ object theirs {
             div(cls := "follow-up")(
               h1(trans.challengeCanceled()),
               bits.details(c, false),
-              a(cls := "button button-fat", href := routes.Lobby.home)(trans.newOpponent()),
+              bits.failButton(c),
             )
         },
       )

@@ -32,6 +32,7 @@ case class Pref(
     replay: Int,
     colorName: Int,
     challenge: Int,
+    tourChallenge: Int,
     message: Int,
     studyInvite: Int,
     coordColor: Int,
@@ -351,6 +352,12 @@ object Pref {
       FRIEND,
       ALWAYS,
     )
+
+    val tourChoices = Seq(
+      NEVER,
+      FRIEND,
+      ALWAYS,
+    )
   }
 
   object Message {
@@ -425,6 +432,7 @@ object Pref {
     clockTenths = ClockTenths.LOWTIME,
     clockCountdown = ClockCountdown.THREE,
     challenge = Challenge.ALWAYS,
+    tourChallenge = Challenge.ALWAYS,
     message = Message.ALWAYS,
     studyInvite = StudyInvite.ALWAYS,
     coordColor = Color.RANDOM,

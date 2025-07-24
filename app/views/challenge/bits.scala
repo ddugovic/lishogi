@@ -31,10 +31,12 @@ object bits {
     )
 
   def details(c: Challenge, mine: Boolean)(implicit ctx: Context) =
-    div(cls := "details")(
+    div(cls := s"details${c.tourInfo.isDefined ?? " tour-challenge"}")(
       div(
-        cls      := "variant",
-        dataIcon := (if (c.initialSfen.isDefined) '*' else c.perfType.iconChar),
+        cls := "variant",
+        dataIcon := (if (c.tourInfo.isDefined) 'g'
+                     else if (c.initialSfen.isDefined) '*'
+                     else c.perfType.iconChar),
       )(
         div(
           views.html.game.bits.variantLink(c.variant, c.perfType.some),
@@ -51,21 +53,40 @@ object bits {
           ),
         ),
       ),
-      div(cls := "game-color") {
-        val handicap = c.initialSfen.fold(false)(sfen => shogi.Handicap.isHandicap(sfen, c.variant))
-        frag(
-          shogi.Color.fromName(c.colorChoice.toString.toLowerCase).fold(trans.randomColor.txt()) {
-            color =>
-              transWithColorName(trans.youPlayAsX, if (mine) color else !color, handicap)
-          },
-          " - ",
-          transWithColorName(
-            trans.xPlays,
-            c.initialSfen.flatMap(_.color).getOrElse(shogi.Sente),
-            handicap,
-          ),
+      c.tourInfo.fold(
+        div(cls := "game-color") {
+          val handicap =
+            c.initialSfen.fold(false)(sfen => shogi.Handicap.isHandicap(sfen, c.variant))
+          frag(
+            shogi.Color.fromName(c.colorChoice.toString.toLowerCase).fold(trans.randomColor.txt()) {
+              color =>
+                transWithColorName(trans.youPlayAsX, if (mine) color else !color, handicap)
+            },
+            " - ",
+            transWithColorName(
+              trans.xPlays,
+              c.initialSfen.flatMap(_.color).getOrElse(shogi.Sente),
+              handicap,
+            ),
+          )
+        },
+      ) { tourInfo =>
+        div(cls := "game-tour")(
+          a(
+            href := s"${routes.Tournament.show(tourInfo.tournamentId).url}#${arrangementIdToParam(tourInfo.arrangementId)}",
+          )(tournamentIdToName(tourInfo.tournamentId)),
+          tourInfo.withName option span(arrangementIdToName(tourInfo.arrangementId)),
         )
       },
       div(cls := "mode")(modeName(c.mode)),
     )
+
+  def failButton(c: Challenge)(implicit ctx: Context) =
+    c.tourInfo.fold(
+      a(cls := "button button-fat", href := routes.Lobby.home)(trans.newOpponent()),
+    ) { tourInfo =>
+      a(cls := "button button-fat", href := routes.Tournament.show(tourInfo.tournamentId).url)(
+        trans.backToTournament(),
+      )
+    }
 }

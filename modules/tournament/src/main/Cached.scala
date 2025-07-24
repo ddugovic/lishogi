@@ -25,13 +25,24 @@ final private[tournament] class Cached(
 
   val nameCache = cacheApi.sync[(Tournament.ID, Lang), Option[String]](
     name = "tournament.name",
-    initialCapacity = 1024,
+    initialCapacity = 512,
     compute = { case (id, lang) =>
       tournamentRepo byId id dmap2 { _.trans(lang) }
     },
     default = _ => none,
     strategy = Syncache.WaitAfterUptime(20 millis),
     expireAfter = Syncache.ExpireAfterAccess(25 minutes),
+  )
+
+  val arrangementNameCache = cacheApi.sync[Arrangement.ID, Option[String]](
+    name = "tournament.arrangement.name",
+    initialCapacity = 256,
+    compute = { case id =>
+      arrangementRepo nameById id
+    },
+    default = _ => none,
+    strategy = Syncache.WaitAfterUptime(50 millis),
+    expireAfter = Syncache.ExpireAfterAccess(20 minutes),
   )
 
   def ranking(tour: Tournament): Fu[Ranking] =
@@ -117,12 +128,12 @@ final private[tournament] class Cached(
   private[tournament] object arrangement {
 
     private val playersCache =
-      cacheApi[Tournament.ID, List[JsObject]](32, "tournament.robin.players") {
+      cacheApi[Tournament.ID, List[JsObject]](32, "tournament.arrangement.players") {
         _.expireAfterWrite(5 minutes)
           .buildAsyncFuture(computePlayers)
       }
     private val arrangementsCache =
-      cacheApi[Tournament.ID, List[JsObject]](32, "tournament.arrangement.players") {
+      cacheApi[Tournament.ID, List[JsObject]](32, "tournament.arrangement.arrangements") {
         _.expireAfterWrite(3 minutes)
           .buildAsyncFuture(computeArrangements)
       }
@@ -139,7 +150,7 @@ final private[tournament] class Cached(
     def invalidatePlayers(tourId: Tournament.ID): Unit =
       playersCache.invalidate(tourId)
 
-    def invalidateArrangaments(tourId: Tournament.ID): Unit =
+    def invalidateArrangements(tourId: Tournament.ID): Unit =
       arrangementsCache.invalidate(tourId)
 
     def computePlayers(tourId: Tournament.ID): Fu[List[JsObject]] =

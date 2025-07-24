@@ -281,6 +281,13 @@ trait SetupHelper { self: I18nHelper =>
       (Pref.Challenge.ALWAYS, trans.always.txt()),
     )
 
+  def translatedTourChallengeChoices(implicit lang: Lang) =
+    List(
+      (Pref.Challenge.NEVER, trans.never.txt()),
+      (Pref.Challenge.FRIEND, trans.onlyFriends.txt()),
+      (Pref.Challenge.ALWAYS, trans.always.txt()),
+    )
+
   def translatedMessageChoices(implicit lang: Lang)     = privacyBaseChoices
   def translatedStudyInviteChoices(implicit lang: Lang) = privacyBaseChoices
   def translatedPalantirChoices(implicit lang: Lang)    = privacyBaseChoices

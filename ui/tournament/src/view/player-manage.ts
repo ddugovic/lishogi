@@ -1,9 +1,9 @@
-import { type MaybeVNode, bind } from 'common/snabbdom';
+import type { MaybeVNode } from 'common/snabbdom';
 import { i18n } from 'i18n';
 import { type VNode, type VNodes, h } from 'snabbdom';
 import type TournamentController from '../ctrl';
-import { backControl } from './controls';
 import header from './header';
+import { backControl } from './util';
 
 export function playerManagementView(ctrl: TournamentController): VNodes {
   return [
@@ -51,13 +51,15 @@ function playerManagement(ctrl: TournamentController): VNode {
             class: {
               disabled: !toKick,
             },
-            hook: bind('click', () => {
-              if (confirm(i18n('notReversible'))) {
-                ctrl.playerKick(toKick);
-                toKick = '';
-                ctrl.redraw();
-              }
-            }),
+            on: {
+              click: () => {
+                if (confirm(i18n('notReversible'))) {
+                  ctrl.playerKick(toKick);
+                  toKick = '';
+                  ctrl.redraw();
+                }
+              },
+            },
           },
           i18n('kickPlayer'),
         ),
@@ -66,10 +68,12 @@ function playerManagement(ctrl: TournamentController): VNode {
         h(
           'button.button.button-red',
           {
-            hook: bind('click', () => {
-              ctrl.closeJoining(!ctrl.data.isClosed);
-              ctrl.redraw();
-            }),
+            on: {
+              click: () => {
+                ctrl.closeJoining(!ctrl.data.isClosed);
+                ctrl.redraw();
+              },
+            },
           },
           ctrl.data.isClosed ? 'Open joining' : 'Close joining',
         ),
@@ -80,7 +84,7 @@ function playerManagement(ctrl: TournamentController): VNode {
 
 function renderCandidates(ctrl: TournamentController): MaybeVNode {
   return h('div.candidates', [
-    h('h3.title', 'Tournament candidates'),
+    h('h3.title', i18n('tournamentCandidates')),
     h(
       'div.table-wrap',
       h(
@@ -102,13 +106,21 @@ function renderCandidates(ctrl: TournamentController): MaybeVNode {
                     'button.button.text',
                     {
                       attrs: { 'data-icon': 'E', title: i18n('accept') },
-                      hook: bind('click', () => ctrl.processCandidate(c.id, true)),
+                      on: {
+                        click: () => {
+                          ctrl.processCandidate(c.id, true);
+                        },
+                      },
                     },
                     i18n('accept'),
                   ),
                   h('button.button.button-red', {
                     attrs: { 'data-icon': 'L', title: i18n('decline') },
-                    hook: bind('click', () => ctrl.processCandidate(c.id, false)),
+                    on: {
+                      click: () => {
+                        ctrl.processCandidate(c.id, false);
+                      },
+                    },
                   }),
                 ]),
               ],
@@ -122,7 +134,7 @@ function renderCandidates(ctrl: TournamentController): MaybeVNode {
 
 function renderDenied(ctrl: TournamentController) {
   return h('div.denied', [
-    h('h3.title', 'Kicked and denied players'),
+    h('h3.title', i18n('kickedAndDeniedPlayers')),
     h(
       'div.table-wrap',
       h(
@@ -142,7 +154,11 @@ function renderDenied(ctrl: TournamentController) {
                 h('td.actions', [
                   h('button.button', {
                     attrs: { 'data-icon': 'P', title: i18n('accept') },
-                    hook: bind('click', () => ctrl.processCandidate(d.id, true)),
+                    on: {
+                      click: () => {
+                        ctrl.processCandidate(d.id, true);
+                      },
+                    },
                   }),
                 ]),
               ],

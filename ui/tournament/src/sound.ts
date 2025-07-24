@@ -50,7 +50,7 @@ export function end(data: TournamentDataFull): void {
 }
 
 export function countDown(data: TournamentDataFull): void {
-  if (!data.me || !data.secondsToStart) {
+  if (!data.me || !data.secondsToStart || data.system !== 'arena') {
     if (countDownTimeout) clearTimeout(countDownTimeout);
     countDownTimeout = undefined;
     return;

@@ -28,7 +28,8 @@ case class Challenge(
     createdAt: DateTime,
     seenAt: Option[DateTime], // None for open challenges, so they don't sweep
     expiresAt: DateTime,
-    open: Option[Boolean] = None,
+    open: Option[Boolean] = none,
+    tourInfo: Option[Challenge.TournamentInfo] = none,
 ) {
 
   import Challenge._
@@ -90,6 +91,9 @@ case class Challenge(
 
   def isOpen = ~open
 
+  def tournamentId  = tourInfo.map(_.tournamentId)
+  def arrangementId = tourInfo.map(_.arrangementId)
+
   lazy val perfType = perfTypeOf(variant, timeControl)
 }
 
@@ -148,6 +152,8 @@ object Challenge {
     def apply(c: Color) = c.fold[ColorChoice](Sente, Gote)
   }
 
+  case class TournamentInfo(tournamentId: String, arrangementId: String, withName: Boolean)
+
   private def speedOf(timeControl: TimeControl) =
     timeControl match {
       case TimeControl.Clock(config) => Speed(config)
@@ -166,16 +172,13 @@ object Challenge {
       )
       .|(PerfType.Correspondence)
 
-  private val idSize = 8
-
-  private def randomId = lila.common.ThreadLocalRandom nextString idSize
-
   def toRegistered(variant: Variant, timeControl: TimeControl)(u: User) =
     Challenger.Registered(u.id, Rating(u.perfs(perfTypeOf(variant, timeControl))))
 
   def randomColor = shogi.Color.fromSente(lila.common.ThreadLocalRandom.nextBoolean())
 
   def make(
+      id: String,
       variant: Variant,
       initialSfen: Option[Sfen],
       timeControl: TimeControl,
@@ -184,8 +187,9 @@ object Challenge {
       color: String,
       challenger: Challenger,
       destUser: Option[User],
-      rematchOf: Option[String],
+      rematchOf: Option[String] = none,
       isOpen: Boolean = false,
+      tourInfo: Option[TournamentInfo] = none,
   ): Challenge = {
     val (colorChoice, finalColor) = color match {
       case "sente" => ColorChoice.Sente  -> shogi.Sente
@@ -199,7 +203,7 @@ object Challenge {
       case _ => mode
     }
     new Challenge(
-      _id = randomId,
+      _id = id,
       status = Status.Created,
       variant = variant,
       initialSfen = initialSfen.filterNot(_.initialOf(variant)),
@@ -215,6 +219,7 @@ object Challenge {
       seenAt = !isOpen option DateTime.now,
       expiresAt = if (isOpen) DateTime.now.plusDays(1) else inTwoWeeks,
       open = isOpen option true,
+      tourInfo = tourInfo,
     )
   }
 }

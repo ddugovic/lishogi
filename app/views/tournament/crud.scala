@@ -14,7 +14,11 @@ import lila.tournament.crud.CrudForm
 
 object crud {
 
-  private def layout(title: String, evenMoreJs: Frag = emptyFrag, css: String = "mod.misc")(
+  private def layout(
+      title: String,
+      evenMoreJs: Frag = emptyFrag,
+      css: String = "user.mod.misc",
+  )(
       body: Frag,
   )(implicit ctx: Context) =
     views.html.base.layout(
@@ -34,7 +38,7 @@ object crud {
   def create(form: Form[_])(implicit ctx: Context) =
     layout(
       title = "New tournament",
-      css = "mod.form",
+      css = "user.mod.form",
     ) {
       div(cls := "crud page-menu__content box box-pad")(
         h1("New tournament"),
@@ -45,7 +49,7 @@ object crud {
   def edit(tour: Tournament, form: Form[_])(implicit ctx: Context) =
     layout(
       title = tour.trans,
-      css = "mod.form",
+      css = "user.mod.form",
     ) {
       div(cls := "crud edit page-menu__content box box-pad")(
         div(cls := "box__top")(

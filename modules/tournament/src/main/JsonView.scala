@@ -181,7 +181,7 @@ final class JsonView(
     standingApi clearCache tour
     cachableData invalidate tour.id
     cached.arrangement invalidatePlayers tour.id
-    cached.arrangement invalidateArrangaments tour.id
+    cached.arrangement invalidateArrangements tour.id
   }
 
   def fetchMyInfo(tour: Tournament, me: User): Fu[Option[MyInfo]] =
@@ -624,6 +624,7 @@ object JsonView {
         .obj(
           "id"     -> player.userId,
           "name"   -> light.name,
+          "patron" -> light.isPatron,
           "order"  -> ~player.order,
           "rating" -> player.rating,
           "score"  -> player.scoreNotKicked,
@@ -637,10 +638,10 @@ object JsonView {
   private[tournament] def arrangement(a: Arrangement): JsObject =
     Json
       .obj(
-        "id"    -> a.id,
-        "user1" -> arrangementUser(a.user1),
-        "user2" -> arrangementUser(a.user2),
+        "id" -> a.id,
       )
+      .add("user1", a.user1 map arrangementUser)
+      .add("user2", a.user2 map arrangementUser)
       .add("name", a.name)
       .add("color", a.color.map(_.name))
       .add("points", a.points.map(arrangementPoints))
@@ -657,7 +658,6 @@ object JsonView {
       .obj(
         "id" -> u.id,
       )
-      .add("readyAt", u.readyAt)
       .add("scheduledAt", u.scheduledAt)
 
   private def formatDate(date: DateTime) = ISODateTimeFormat.dateTime print date

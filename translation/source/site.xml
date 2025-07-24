@@ -444,6 +444,8 @@
 	<string name="memberSince">Member since</string>
 	<string name="lastSeenActive">Active %s</string>
 	<string name="challengeToPlay">Challenge to a game</string>
+	<string name="viewChallenge">View challenge</string>
+	<string name="noChallenges">No challenges</string>
 	<string name="player">Player</string>
 	<string name="list">List</string>
 	<string name="graph">Graph</string>
@@ -1039,6 +1041,9 @@
 	<string name="mateDelayedDescription" comment="Sequence of moves">Not the best checkmate sequence</string>
 	<string name="mateLostDescription" comment="Sequence of moves">Lost forced checkmate sequence</string>
 	<string name="dotSymbol" comment="If your language uses different symbol (jp: 。)">.</string>
+	<string name="tournamentCandidates">Tournament candidates</string>
+	<string name="kickedAndDeniedPlayers">Kicked and denied players</string>
+	<string name="noPlayersJoinedYet">No players joined yet</string>
 	<string name="proMode" comment="Mode where making illegal move loses the game">Professional mode</string>
 	<string name="proModeDescription" comment="Mode where making illegal move loses the game">Illegal moves result in a loss, premoves are disabled, checks are not highlighted and only certain piece sets are allowed</string>
 </resources>

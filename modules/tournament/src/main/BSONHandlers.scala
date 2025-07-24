@@ -243,28 +243,30 @@ object BSONHandlers {
   implicit val arrangementHandler: BSON[Arrangement] = new BSON[Arrangement] {
     def reads(r: BSON.Reader) = {
       val users   = r strsD Arrangement.BSONFields.users
-      val user1Id = users.headOption err "tournament arrangement first user"
-      val user2Id = users lift 1 err "tournament arrangement second user"
+      val user1Id = users.headOption.filter(_.nonEmpty)
+      val user2Id = users.lift(1).filter(_.nonEmpty)
       Arrangement(
         id = r str Arrangement.BSONFields.id,
         tourId = r str Arrangement.BSONFields.tourId,
-        user1 = Arrangement.User(
-          id = user1Id,
-          readyAt = r dateO Arrangement.BSONFields.u1ReadyAt,
-          scheduledAt = r dateO Arrangement.BSONFields.u1ScheduledAt,
-        ),
-        user2 = Arrangement.User(
-          id = user2Id,
-          readyAt = r dateO Arrangement.BSONFields.u2ReadyAt,
-          scheduledAt = r dateO Arrangement.BSONFields.u2ScheduledAt,
-        ),
+        user1 = user1Id map { u1 =>
+          Arrangement.User(
+            id = u1,
+            scheduledAt = r dateO Arrangement.BSONFields.u1ScheduledAt,
+          )
+        },
+        user2 = user2Id map { u2 =>
+          Arrangement.User(
+            id = u2,
+            scheduledAt = r dateO Arrangement.BSONFields.u2ScheduledAt,
+          )
+        },
         name = r strO Arrangement.BSONFields.name,
         color = r.getO[shogi.Color](Arrangement.BSONFields.color),
         points = r.getO[Arrangement.Points](Arrangement.BSONFields.points),
         gameId = r strO Arrangement.BSONFields.gameId,
         startedAt = r dateO Arrangement.BSONFields.startedAt,
         status = r.intO(Arrangement.BSONFields.status) flatMap shogi.Status.apply,
-        winner = r boolO Arrangement.BSONFields.winner map {
+        winner = r boolO Arrangement.BSONFields.winner flatMap {
           case true => user1Id
           case _    => user2Id
         },
@@ -276,20 +278,18 @@ object BSONHandlers {
     }
     def writes(w: BSON.Writer, o: Arrangement) =
       $doc(
-        Arrangement.BSONFields.id            -> o.id,
-        Arrangement.BSONFields.tourId        -> o.tourId,
-        Arrangement.BSONFields.users         -> BSONArray(o.user1.id, o.user2.id),
-        Arrangement.BSONFields.u1ReadyAt     -> o.user1.readyAt,
-        Arrangement.BSONFields.u2ReadyAt     -> o.user2.readyAt,
-        Arrangement.BSONFields.u1ScheduledAt -> o.user1.scheduledAt,
-        Arrangement.BSONFields.u2ScheduledAt -> o.user2.scheduledAt,
+        Arrangement.BSONFields.id     -> o.id,
+        Arrangement.BSONFields.tourId -> o.tourId,
+        Arrangement.BSONFields.users  -> BSONArray(o.user1.map(_.id) | "", o.user2.map(_.id) | ""),
+        Arrangement.BSONFields.u1ScheduledAt -> o.user1.flatMap(_.scheduledAt),
+        Arrangement.BSONFields.u2ScheduledAt -> o.user2.flatMap(_.scheduledAt),
         Arrangement.BSONFields.name          -> o.name,
         Arrangement.BSONFields.color         -> o.color,
         Arrangement.BSONFields.points        -> o.points.filterNot(_ == Arrangement.Points.default),
         Arrangement.BSONFields.gameId        -> o.gameId,
         Arrangement.BSONFields.startedAt     -> o.startedAt,
         Arrangement.BSONFields.status        -> o.status.map(_.id),
-        Arrangement.BSONFields.winner        -> o.winner.map(o.user1 ==),
+        Arrangement.BSONFields.winner        -> o.winner.map(o.user1.contains),
         Arrangement.BSONFields.plies         -> o.plies,
         Arrangement.BSONFields.scheduledAt   -> o.scheduledAt,
         Arrangement.BSONFields.lockedScheduledAt -> w.boolO(o.lockedScheduledAt),

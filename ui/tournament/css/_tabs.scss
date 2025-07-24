@@ -1,0 +1,39 @@
+@use 'pkg:common/theme';
+
+.tabs-wrap {
+  .tabs-horiz {
+    & > span {
+      flex: 1;
+
+      &.hidden {
+        visibility: hidden;
+        pointer-events: none;
+      }
+
+      &.disabled {
+        opacity: 0.6;
+        pointer-events: none;
+      }
+    }
+
+    &:not(.tour__controls) > span {
+      border-color: theme.$c-border;
+
+      &.active,
+      &:hover {
+        border-color: theme.$c-accent;
+      }
+    }
+  }
+
+  .empty-tab {
+    text-align: center;
+    padding: calc(1rem - 0.5px) 1rem;
+    border-top: theme.$border;
+    border-bottom: theme.$border;
+  }
+
+  .view-more {
+    border-radius: 0;
+  }
+}

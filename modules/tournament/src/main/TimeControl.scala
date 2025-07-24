@@ -10,6 +10,7 @@ sealed trait TimeControl {
   def days: Option[Int]
   def estimateTotalSeconds: Int
   def show(implicit lang: Lang): String
+  def key: String
 }
 
 object TimeControl {
@@ -19,6 +20,7 @@ object TimeControl {
     def days                      = none
     def estimateTotalSeconds      = value.estimateTotalSeconds
     def show(implicit lang: Lang) = value.show
+    def key                       = value.show
   }
   object RealTime {
     val id = 1
@@ -30,6 +32,7 @@ object TimeControl {
     def estimateTotalSeconds = value * 24 * 60 * 60
     def show(implicit lang: Lang) =
       s"${lila.i18n.I18nKeys.nbDays.pluralSameTxt(value)}"
+    def key = s"days:$value"
   }
   object Correspondence {
     val id = 2

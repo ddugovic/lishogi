@@ -42,7 +42,7 @@ function join(ctrl: TournamentController): MaybeVNode {
     const askToJoin = ctrl.data.candidatesOnly && !ctrl.data.me;
     const delay = ctrl.data.me?.pauseDelay;
     const joinable = ctrl.data.verdicts.accepted && !delay && !ctrl.data.isBot && !ctrl.data.isFull;
-    const highlightable = joinable && ctrl.data.createdBy !== ctrl.opts.userId;
+    const highlightable = joinable && !ctrl.isCreator();
     const button = h(
       `button.fbt.text${highlightable ? '.highlight' : ''}`,
       {
@@ -95,46 +95,23 @@ function join(ctrl: TournamentController): MaybeVNode {
 }
 
 export function joinWithdraw(ctrl: TournamentController): MaybeVNode {
-  if (!ctrl.opts.userId)
-    return h(
-      'a.fbt.text.highlight',
-      {
-        attrs: {
-          href: `/login?referrer=${window.location.pathname}`,
-          'data-icon': 'G',
-        },
-      },
-      i18n('signIn'),
-    );
-  else if (ctrl.data.isDenied) return h('div.fbt.denied', i18n('denied'));
-  else if (!ctrl.data.isFinished)
-    return isIn(ctrl) || ctrl.data.isCandidate ? withdraw(ctrl) : join(ctrl);
-  else return null;
-}
-
-export function managePlayers(ctrl: TournamentController): MaybeVNode {
-  if (ctrl.isCreator() && !ctrl.data.isFinished)
-    return h(
-      'button.fbt.manage-player',
-      {
-        class: {
-          text: !ctrl.isOrganized(),
-          'data-count': !!ctrl.data.candidates?.length,
-        },
-        attrs: {
-          disabled: !!ctrl.data.isFinished,
-          'data-icon': 'f',
-          'data-count': ctrl.data.candidates?.length ? ctrl.data.candidates?.length : false,
-        },
-        hook: bind(
-          'click',
-          () => {
-            ctrl.playerManagement = !ctrl.playerManagement;
+  if (!ctrl.opts.userId) {
+    if (ctrl.data.isFinished) return undefined;
+    else
+      return h(
+        'a.fbt.text.highlight',
+        {
+          attrs: {
+            href: `/login?referrer=${window.location.pathname}`,
+            'data-icon': 'G',
           },
-          ctrl.redraw,
-        ),
-      },
-      !ctrl.isOrganized() ? i18n('managePlayers') : undefined,
-    );
-  else return null;
+        },
+        i18n('signIn'),
+      );
+  } else {
+    if (ctrl.data.isDenied) return h('div.fbt.denied', i18n('denied'));
+    else if (!ctrl.data.isFinished)
+      return isIn(ctrl) || ctrl.data.isCandidate ? withdraw(ctrl) : join(ctrl);
+    else return undefined;
+  }
 }

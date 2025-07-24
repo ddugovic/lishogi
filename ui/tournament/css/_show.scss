@@ -1,5 +1,6 @@
 @use 'pkg:breakpoint-sass' as breakpoint;
 @use 'layout';
+@use 'slist';
 @use 'side';
 @use 'featured';
 @use 'app-header';
@@ -10,11 +11,11 @@
 @use 'stats';
 @use 'duel';
 @use 'actor-info';
-@use 'player-info';
 @use 'team-info';
 @use 'arrangement';
 @use 'robin';
 @use 'organized';
+@use 'tabs';
 @use 'player-manage';
 @use 'local';
 
@@ -37,7 +38,7 @@
   }
 
   .tour__desc {
-    margin-bottom: 4.5rem;
+    margin-bottom: 3.5rem;
 
     p {
       margin-top: 1.5rem;

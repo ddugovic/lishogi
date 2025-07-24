@@ -1,10 +1,10 @@
-import { type MaybeVNodes, bind, dataIcon } from 'common/snabbdom';
+import { type MaybeVNodes, dataIcon } from 'common/snabbdom';
 import { i18n } from 'i18n';
 import { type VNode, h } from 'snabbdom';
-import type TournamentController from '../ctrl';
-import type { ArenaPlayer, PageData, Podium } from '../interfaces';
+import type TournamentController from '../../ctrl';
+import type { ArenaPlayer, PageData } from '../../interfaces';
+import { preloadUserTips, player as renderPlayer } from '../util';
 import { teamName } from './battle';
-import { playerName, preloadUserTips, ratio2percent, player as renderPlayer } from './util';
 
 const scoreTagNames = ['score', 'streak', 'double'];
 
@@ -25,9 +25,14 @@ function playerTr(ctrl: TournamentController, player: ArenaPlayer) {
         me: ctrl.opts.userId === userId,
         long: nbScores > 35,
         xlong: nbScores > 80,
-        active: ctrl.playerInfo.id === userId,
+        disabled: !ctrl.data.isStarted || !ctrl.data.isFinished,
       },
-      hook: bind('click', _ => ctrl.showPlayerInfo(player), ctrl.redraw),
+      on: {
+        click: () => {
+          ctrl.showPlayerInfo(player);
+          ctrl.redraw();
+        },
+      },
     },
     [
       h(
@@ -42,7 +47,11 @@ function playerTr(ctrl: TournamentController, player: ArenaPlayer) {
           : player.rank,
       ),
       h('td.player', [
-        renderPlayer(player, false, true, userId === ctrl.data.defender),
+        renderPlayer(player, {
+          asLink: false,
+          withRating: true,
+          defender: userId === ctrl.data.defender,
+        }),
         ...(battle && player.team ? [' ', teamName(battle, player.team)] : []),
       ]),
       h('td.sheet', player.sheet.scores.map(scoreTag)),
@@ -55,47 +64,9 @@ function playerTr(ctrl: TournamentController, player: ArenaPlayer) {
   );
 }
 
-function podiumUsername(p: Podium) {
-  return h(
-    'a.text.ulpt.user-link',
-    {
-      attrs: { href: `/@/${p.name}` },
-    },
-    playerName(p),
-  );
-}
-
-function podiumStats(p: Podium): VNode {
-  const nb = p.nb;
-  return h('table.stats', [
-    p.performance ? h('tr', [h('th', i18n('performance')), h('td', p.performance)]) : null,
-    h('tr', [h('th', i18n('gamesPlayed')), h('td', nb.game)]),
-    ...(nb.game
-      ? [
-          h('tr', [h('th', i18n('winRate')), h('td', ratio2percent(nb.win / nb.game))]),
-          h('tr', [h('th', i18n('berserkRate')), h('td', ratio2percent(nb.berserk / nb.game))]),
-        ]
-      : []),
-  ]);
-}
-
-function podiumPosition(p: Podium, pos: string): VNode | undefined {
-  if (p) return h(`div.${pos}`, [h('div.trophy'), podiumUsername(p), podiumStats(p)]);
-  else return;
-}
-
 let lastBody: MaybeVNodes | undefined;
 
-export function podium(ctrl: TournamentController): VNode {
-  const p = ctrl.data.podium || [];
-  return h('div.tour__podium', [
-    podiumPosition(p[1], 'second'),
-    podiumPosition(p[0], 'first'),
-    podiumPosition(p[2], 'third'),
-  ]);
-}
-
-export function standing(ctrl: TournamentController, pag: PageData, klass?: string): VNode {
+export function arenaStanding(ctrl: TournamentController, pag: PageData, klass?: string): VNode {
   const tableBody = pag.currentPageResults
     ? pag.currentPageResults.map(res => playerTr(ctrl, res as ArenaPlayer))
     : lastBody;

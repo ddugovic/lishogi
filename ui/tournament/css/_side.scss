@@ -24,7 +24,7 @@
   padding: #{variables.$block-gap * 0.6} variables.$block-gap;
 
   section {
-    margin-bottom: variables.$block-gap;
+    margin-bottom: 0.3rem;
 
     @include breakpoint.breakpoint(local.$mq-col2) {
       max-height: 25vmin;
@@ -69,6 +69,22 @@
 
       &.refused {
         color: theme.$c-bad;
+      }
+    }
+  }
+
+  .tour-creator-buttons {
+    display: flex;
+    gap: 0.2rem;
+    margin-bottom: 0.3rem;
+
+    .button-thin {
+      flex: 1;
+      padding: 0.2em 0.5em;
+
+      &::after {
+        padding: 2px 4px;
+        height: 18px;
       }
     }
   }

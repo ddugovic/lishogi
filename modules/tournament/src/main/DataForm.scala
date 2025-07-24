@@ -8,7 +8,6 @@ import play.api.data.validation
 import play.api.data.validation.Constraint
 import play.api.data.validation.Constraints
 
-import cats.implicits._
 import org.joda.time.DateTime
 
 import shogi.Mode
@@ -32,7 +31,6 @@ final class DataForm {
       finishDate = none,
       variant = shogi.variant.Standard.id.toString.some,
       position = none,
-      mode = none,
       rated = true.some,
       password = none,
       candidatesOnly = false.some,
@@ -56,7 +54,6 @@ final class DataForm {
       finishDate = tour.finishesAt.some,
       variant = tour.variant.id.toString.some,
       position = tour.position,
-      mode = none,
       rated = tour.mode.rated.some,
       password = tour.password,
       candidatesOnly = tour.candidatesOnly.some,
@@ -94,6 +91,12 @@ final class DataForm {
               _.realVariant == tour.variant || tour.nbPlayers == 0,
             )
             .verifying(
+              "Can't change clock control after players have joined",
+              _.timeControlSetup.convert.key == tour.timeControl.key || tour.nbPlayers == 0,
+            )
+            .verifying(
+              "Can't change rated mode after players have joined",
+              _.realMode == tour.mode || tour.nbPlayers == 0,
             )
             .verifying(
               "Can't change to professional mode after players have joined",
@@ -124,12 +127,11 @@ final class DataForm {
         if (lila.security.Granter(_.ManageTournament)(user)) number
         else numberIn(minutes)
       },
-      "startDate"  -> optional(ISODateTimeOrTimestamp.isoDateTimeOrTimestamp),
-      "finishDate" -> optional(inTheFuture(ISODateTimeOrTimestamp.isoDateTimeOrTimestamp)),
-      "variant"    -> optional(text.verifying(v => guessVariant(v).isDefined)),
-      "position"   -> optional(lila.common.Form.sfen.clean),
-      "mode"  -> optional(number.verifying(Mode.all.map(_.id) contains _)), // deprecated, use rated
-      "rated" -> optional(boolean),
+      "startDate"        -> optional(ISODateTimeOrTimestamp.isoDateTimeOrTimestamp),
+      "finishDate"       -> optional(inTheFuture(ISODateTimeOrTimestamp.isoDateTimeOrTimestamp)),
+      "variant"          -> optional(text.verifying(v => guessVariant(v).isDefined)),
+      "position"         -> optional(lila.common.Form.sfen.clean),
+      "rated"            -> optional(boolean),
       "password"         -> optional(nonEmptyText),
       "candidatesOnly"   -> optional(boolean),
       "maxPlayers"       -> optional(number),
@@ -182,7 +184,6 @@ private[tournament] case class TournamentSetup(
     finishDate: Option[DateTime],
     variant: Option[String],
     position: Option[Sfen],
-    mode: Option[Int], // deprecated, use rated
     rated: Option[Boolean],
     password: Option[String],
     candidatesOnly: Option[Boolean],
@@ -198,7 +199,7 @@ private[tournament] case class TournamentSetup(
 
   def realMode =
     if (position.filterNot(_.initialOf(realVariant)).isDefined) Mode.Casual
-    else Mode(rated.orElse(mode.map(Mode.Rated.id ===)) | true)
+    else Mode(rated | true)
 
   def realVariant = variant.flatMap(DataForm.guessVariant) | shogi.variant.Standard
 

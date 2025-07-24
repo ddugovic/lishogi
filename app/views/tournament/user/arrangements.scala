@@ -58,7 +58,7 @@ object arrangements {
                     td(cls := "icon")(),
                     td(colspan := 2)(cls := "header")(
                       a(
-                        href := s"${routes.Tournament.show(arr.tourId).url}#${arr.id}",
+                        href := s"${routes.Tournament.show(arr.tourId).url}#${arrangementIdToParam(arr.id)}",
                       )(
                         span(cls := "name") {
                           val sortedUsers =

@@ -15,5 +15,8 @@
     "shogi": "workspace:*",
     "shogiground": "catalog:",
     "snabbdom": "catalog:"
+  },
+  "devDependencies": {
+    "challenge": "workspace:*"
   }
 }

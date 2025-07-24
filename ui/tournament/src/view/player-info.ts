@@ -1,39 +1,35 @@
-import { bind, dataIcon } from 'common/snabbdom';
+import { defined } from 'common/common';
+import { modal } from 'common/modal';
+import { type MaybeVNode, bind } from 'common/snabbdom';
 import spinner from 'common/spinner';
-import * as status from 'game/status';
 import { i18n } from 'i18n';
 import { type VNode, h } from 'snabbdom';
 import type TournamentController from '../ctrl';
 import type { TourPlayer } from '../interfaces';
-import { teamName } from './battle';
+import { teamName } from './arena/battle';
 import { numberRow, playerName, player as renderPlayer } from './util';
 
-function result(win: boolean, stat: number): string {
-  switch (win) {
-    case true:
-      return '1';
-    case false:
-      return '0';
-    default:
-      return stat >= status.ids.mate ? '½' : '*';
-  }
+export function playerInfoModal(ctrl: TournamentController): MaybeVNode {
+  return ctrl.playerInfo.id
+    ? modal({
+        class: 'actor-info-modal',
+        content: [playerInfo(ctrl)],
+        onClose: () => ctrl.unshowPlayerInfo(),
+      })
+    : undefined;
 }
 
 function playerTitle(player: TourPlayer) {
   return h('h2', [
     h('span.rank', 'rank' in player ? `${player.rank}. ` : ''),
-    renderPlayer(player, true, false, false),
+    renderPlayer(player, {
+      asLink: true,
+      withRating: false,
+    }),
   ]);
 }
 
-function setup(vnode: VNode) {
-  const el = vnode.elm as HTMLElement;
-  const p = window.lishogi.powertip;
-  p.manualUserIn(el);
-  p.manualGameIn(el);
-}
-
-export default function (ctrl: TournamentController): VNode {
+function playerInfo(ctrl: TournamentController): VNode {
   const data = ctrl.playerInfo.data;
   const tag = 'div.tour__player-info.tour__actor-info';
 
@@ -45,83 +41,83 @@ export default function (ctrl: TournamentController): VNode {
   const avgOp = poaLen
     ? Math.round(poa.reduce((a: any, b: any) => a + b.op.rating, 0) / poaLen)
     : undefined;
-  return h(
-    tag,
-    {
-      hook: {
-        insert: setup,
-        postpatch(_, vnode) {
-          setup(vnode);
-        },
-      },
-    },
-    [
-      h('a.close', {
-        attrs: dataIcon('L'),
-        hook: bind('click', () => ctrl.showPlayerInfo(data.player), ctrl.redraw),
-      }),
-      h('div.stats', [
-        playerTitle(data.player),
-        data.player.team
-          ? h(
-              'team',
-              {
-                hook: bind('click', () => ctrl.showTeamInfo(data.player.team), ctrl.redraw),
-              },
-              [teamName(ctrl.data.teamBattle!, data.player.team)],
-            )
-          : null,
-        h('table', [
-          data.player.performance
-            ? numberRow(
-                i18n('performance'),
-                data.player.performance + (nb.game < 3 ? '?' : ''),
-                'raw',
-              )
-            : null,
-          numberRow(i18n('gamesPlayed'), nb.game),
-          ...(nb.game
-            ? [
-                numberRow(i18n('winRate'), [nb.win, nb.game], 'percent'),
-                numberRow(i18n('berserkRate'), [nb.berserk, nb.game], 'percent'),
-                numberRow(i18n('averageOpponent'), avgOp, 'raw'),
-              ]
-            : []),
-        ]),
-      ]),
-      h('div', [
-        h(
-          'table.pairings.sublist',
-          {
-            hook: bind('click', e => {
-              const href = ((e.target as HTMLElement).parentNode as HTMLElement).getAttribute(
-                'data-href',
-              );
-              if (href) window.open(href, '_blank');
-            }),
-          },
-          poa.map((p: any, i: number) => {
-            const res = result(p.win, p.status);
-            return h(
-              `tr.glpt.${res === '1' ? ' win' : res === '0' ? ' loss' : ''}`,
-              {
-                key: p.id,
-                attrs: { 'data-href': `/${p.id}/${p.color}` },
-                hook: {
-                  destroy: vnode => $.powerTip.destroy(vnode.elm as HTMLElement),
+  return h(tag, [
+    h('div.stats', [
+      playerTitle(data.player),
+      data.player.team
+        ? h(
+            'team',
+            {
+              on: {
+                click: () => {
+                  ctrl.showTeamInfo(data.player.team);
+                  ctrl.redraw();
                 },
               },
-              [
-                h('th', `${Math.max(nb.game, poaLen) - i}`),
-                h('td', playerName(p.op)),
-                h('td', p.op.rating),
-                h(`td.is.color-icon.${p.color}`),
-                h('td', res),
-              ],
-            );
-          }),
-        ),
+            },
+            [teamName(ctrl.data.teamBattle!, data.player.team)],
+          )
+        : null,
+      h('table', [
+        data.player.performance
+          ? numberRow(
+              i18n('performance'),
+              data.player.performance + (nb.game < 3 ? '?' : ''),
+              'raw',
+            )
+          : null,
+        numberRow(i18n('gamesPlayed'), nb.game),
+        ...(nb.game
+          ? [
+              numberRow(i18n('winRate'), [nb.win, nb.game], 'percent'),
+              nb.berserk
+                ? numberRow(i18n('berserkRate'), [nb.berserk, nb.game], 'percent')
+                : undefined,
+              numberRow(i18n('averageOpponent'), avgOp, 'raw'),
+            ]
+          : []),
       ]),
-    ],
-  );
+    ]),
+    h('div', [
+      h(
+        'table.sublist',
+        {
+          hook: bind('click', e => {
+            const href = ((e.target as HTMLElement).parentNode as HTMLElement).getAttribute(
+              'data-href',
+            );
+            if (href) window.open(href, '_blank');
+          }),
+        },
+        poa.map((p: any, i: number) => {
+          const arr = ctrl.isArena()
+            ? undefined
+            : ctrl.data.standing.arrangements.find(a => a.gameId === p.id);
+          const score = defined(p.score)
+            ? Array.isArray(p.score)
+              ? p.score[0]
+              : p.score
+            : undefined;
+
+          return h(
+            `tr.glpt${p.win ? '.win' : p.win === false ? '.loss' : ''}`,
+            {
+              key: p.id,
+              attrs: { 'data-href': `/${p.id}/${p.color}` },
+              hook: {
+                destroy: vnode => $.powerTip.destroy(vnode.elm as HTMLElement),
+              },
+            },
+            [
+              h('th', `${Math.max(nb.game, poaLen) - i}`),
+              arr?.name ? h('td.name.bold', arr.name) : undefined,
+              h('td.name', playerName(p.op)),
+              h(`td.is.color-icon.${p.color}`),
+              h('td.score', defined(score) ? score : '*'),
+            ],
+          );
+        }),
+      ),
+    ]),
+  ]);
 }

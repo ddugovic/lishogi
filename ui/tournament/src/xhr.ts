@@ -1,5 +1,6 @@
 import throttle from 'common/throttle';
 import type TournamentController from './ctrl';
+import type { Arrangement } from './interfaces';
 
 function onFail() {
   setTimeout(window.lishogi.reload, Math.floor(Math.random() * 9000));
@@ -14,6 +15,7 @@ function join(ctrl: TournamentController, password?: string, team?: string) {
       },
     })
     .then(res => {
+      if (ctrl.isOrganized()) ctrl.activeTab = 'players';
       ctrl.redraw();
 
       if (!res.ok)
@@ -26,6 +28,18 @@ function join(ctrl: TournamentController, password?: string, team?: string) {
 
 function withdraw(ctrl: TournamentController): Promise<any> {
   return window.lishogi.xhr.json('POST', `/tournament/${ctrl.data.id}/withdraw`).catch(onFail);
+}
+
+function challenge(ctrl: TournamentController, a: Arrangement): Promise<any> {
+  const arrId = ctrl.isRobin() ? a.id : `${ctrl.data.id}/${a.id}`;
+  return window.lishogi.xhr
+    .json('POST', `/challenge/tournament/${arrId}`)
+    .then(data => {
+      if (data.redirect) window.lishogi.redirect(data.redirect);
+    })
+    .catch(err => {
+      console.log('err:', err);
+    });
 }
 
 function loadPage(ctrl: TournamentController, p: number): Promise<void> {
@@ -74,6 +88,7 @@ const teamInfo = (ctrl: TournamentController, teamId: string): Promise<void> =>
 interface Xhr {
   join: (ctrl: TournamentController, password?: string, team?: string) => void;
   withdraw: (ctrl: TournamentController) => void;
+  challenge: (ctrl: TournamentController, a: Arrangement) => void;
   loadPage: (ctrl: TournamentController, p: number) => void;
   loadPageOf: typeof loadPageOf;
   reloadSoon: (...args: any[]) => void;
@@ -85,6 +100,7 @@ interface Xhr {
 const xhrFunctions: Xhr = {
   join: throttle(1000, join),
   withdraw: throttle(1000, withdraw),
+  challenge: throttle(1000, challenge),
   loadPage: throttle(1000, loadPage),
   loadPageOf: loadPageOf,
   reloadSoon: throttle(4000, reload),

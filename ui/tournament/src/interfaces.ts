@@ -1,3 +1,4 @@
+import type { ChallengeData } from 'challenge/interfaces';
 import type { StatusId } from 'game/interfaces';
 
 export interface BasePlayer {
@@ -5,6 +6,7 @@ export interface BasePlayer {
   rating: number;
   provisional?: boolean;
   title?: string;
+  patron?: boolean;
 }
 
 export interface ArenaPlayer extends BasePlayer {
@@ -44,10 +46,13 @@ export interface TournamentOpts {
   data: TournamentDataFull;
   userId: string;
   chat: any;
+  challenges?: ChallengeData;
   classes: string;
   $side: JQuery<HTMLElement>;
   $faq: JQuery<HTMLElement>;
   $desc: JQuery<HTMLElement>;
+  playerManagmentButton?: HTMLElement;
+  teamEditButton?: HTMLElement;
   socketSend: Socket.Send;
 }
 
@@ -110,7 +115,7 @@ export interface TournamentDataFull extends TournamentDataBase {
   id: string;
   createdBy: string;
   startsAt: string;
-  system: string;
+  system: 'arena' | 'robin' | 'organized';
   fullName: string;
   minutes: number;
   perf: {
@@ -235,9 +240,9 @@ export interface DuelTeams {
 }
 
 export interface Arrangement {
-  id: string | undefined; // id doesn't exist for not saved arrangements
-  user1: ArrangementUser;
-  user2: ArrangementUser;
+  id: string;
+  user1?: ArrangementUser;
+  user2?: ArrangementUser;
   name?: string;
   color?: Color;
   points?: Points;
@@ -252,7 +257,6 @@ export interface Arrangement {
 
 export interface ArrangementUser {
   id: string;
-  readyAt?: number;
   scheduledAt?: number;
 }
 

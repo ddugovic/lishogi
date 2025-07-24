@@ -48,7 +48,7 @@ function allChallenges(ctrl: Ctrl, d: ChallengeData, nb: number): VNode {
 function challenge(ctrl: Ctrl, dir: ChallengeDirection) {
   return (c: Challenge) => {
     return h(
-      `div.challenge.${dir}.c-${c.id}`,
+      `div.challenge.${dir}.c-${c.id}${c.tourInfo ? '.tour-info' : ''}`,
       {
         class: {
           declined: !!c.declined,
@@ -56,18 +56,29 @@ function challenge(ctrl: Ctrl, dir: ChallengeDirection) {
       },
       [
         h('div.content', [
-          h('span.head', renderUser(dir === 'in' ? c.challenger : c.destUser)),
+          h('div.head', renderUser(dir === 'in' ? c.challenger : c.destUser)),
           h(
-            'span.desc',
-            [
-              c.rated ? i18n('rated') : i18n('casual'),
-              timeControl(c.timeControl),
-              i18nVariant(c.variant.key),
-            ].join(' - '),
+            'div.desc',
+            c.tourInfo
+              ? h(
+                  'a',
+                  { attrs: { href: `/tournament/${c.tourInfo.tourId}` } },
+                  [
+                    c.tourInfo.tourName || i18n('tournament'),
+                    c.tourInfo.arrName || timeControl(c.timeControl),
+                  ]
+                    .filter(s => s)
+                    .join(' - '),
+                )
+              : [
+                  c.rated ? i18n('rated') : i18n('casual'),
+                  timeControl(c.timeControl),
+                  i18nVariant(c.variant.key),
+                ].join(' - '),
           ),
         ]),
         h('i', {
-          attrs: { 'data-icon': c.perf.icon },
+          attrs: { 'data-icon': c.tourInfo ? 'g' : c.perf.icon },
         }),
         h('div.buttons', (dir === 'in' ? inButtons : outButtons)(ctrl, c)),
       ],
@@ -188,7 +199,7 @@ function empty(): VNode {
         'data-icon': '',
       },
     },
-    'No challenges.',
+    i18n('noChallenges'),
   );
 }
 

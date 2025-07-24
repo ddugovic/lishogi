@@ -4,8 +4,6 @@ import java.util.concurrent.ConcurrentHashMap
 import scala.concurrent.Promise
 import scala.concurrent.duration._
 
-import play.api.libs.json.JsObject
-
 import akka.actor._
 import org.joda.time.DateTime
 
@@ -42,7 +40,7 @@ final private class TournamentSocket(
     )
 
   def reloadFull(tourId: Tournament.ID): Unit =
-    send(RP.Out.tellRoom(RoomId(tourId), makeMessage("reload-full")))
+    send(RP.Out.tellRoom(RoomId(tourId), makeMessage("reloadFull")))
 
   def reloadUsers(tourId: Tournament.ID, users: List[User.ID]): Unit =
     users foreach { userId =>
@@ -120,40 +118,35 @@ final private class TournamentSocket(
         .unit
     case RP.In.TellRoomSri(tourId, P.In.TellSri(_, userIdOpt, tpe, o)) =>
       tpe match {
-        case "arrangement-match" =>
-          for {
-            userId <- userIdOpt
-            d      <- o obj "d"
-            lookup <- Protocol.In.readArrangementLookup(tourId.value, d)
-            join   <- d boolean "y"
-          } api.arrangementMatch(lookup, userId, join)
         case "arrangement-time" =>
           for {
             userId <- userIdOpt
             d      <- o obj "d"
-            lookup <- Protocol.In.readArrangementLookup(tourId.value, d)
+            arrId  <- d.str("id")
             dateTime = d.long("t") map { new DateTime(_) }
-          } api.arrangementSetTime(lookup, userId, dateTime)
+          } api.arrangementSetTime(tourId.value, arrId, userId, dateTime)
         case "arrangement-organizer" =>
           for {
             userId <- userIdOpt
             d      <- o obj "d"
-            lookup <- Protocol.In.readArrangementLookup(tourId.value, d)
-            name  = d.str("name").map(_.take(32)).filter(_.nonEmpty)
-            color = d.boolean("color").map(shogi.Color.fromSente)
+            arrId   = d.str("id")
+            name    = d.str("name").map(_.take(32)).filter(_.nonEmpty)
+            userId1 = d.str("user1").map(User.normalize)
+            userId2 = d.str("user2").map(User.normalize)
+            color   = d.boolean("color").map(shogi.Color.fromSente)
             points = d
               .str("points")
               .flatMap(Arrangement.Points.apply)
               .filterNot(_ == Arrangement.Points.default)
             scheduledAt = d.long("scheduledAt") map { new DateTime(_) }
-            settings    = Arrangement.Settings(name, color, points, scheduledAt)
-          } api.arrangementOrganizerSet(lookup, userId, settings)
+            settings    = Arrangement.Settings(name, userId1, userId2, color, points, scheduledAt)
+          } api.organizedArrangementSet(tourId.value, arrId, settings, userId)
         case "arrangement-delete" =>
           for {
             userId <- userIdOpt
             d      <- o obj "d"
-            lookup <- Protocol.In.readArrangementLookup(tourId.value, d)
-          } api.arrangementDelete(lookup, userId)
+            arrId  <- d.str("id")
+          } api.organizedArrangementDelete(tourId.value, arrId, userId)
         case "process-candidate" =>
           for {
             by     <- userIdOpt
@@ -189,17 +182,6 @@ final private class TournamentSocket(
     object In {
 
       case class WaitingUsers(roomId: RoomId, userIds: Set[User.ID]) extends P.In
-
-      def readArrangementLookup(tourId: Tournament.ID, d: JsObject): Option[Arrangement.Lookup] =
-        for {
-          users <- d.str("users") flatMap { userStr =>
-            userStr.toLowerCase.split(";", 2) match {
-              case Array(user1, user2) => (user1, user2).some
-              case _                   => none
-            }
-          }
-          id = d str "id"
-        } yield Arrangement.Lookup(id, tourId, users)
 
       val reader: P.In.Reader = raw => tourReader(raw) orElse RP.In.reader(raw)
 

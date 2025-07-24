@@ -108,10 +108,13 @@ object faq {
   ) = frag(
     h3(trans.tourArrangements.howDoesRoundRobinWork()),
     p(
-      trans.tourArrangements.howDoesRoundRobinWorkAnswer(trans.tourArrangements.startGameNow.txt()),
+      trans.tourArrangements.howDoesRoundRobinWorkAnswerNew(),
     ),
     h3(trans.tourArrangements.howToPlayGames()),
-    p(trans.tourArrangements.howToPlayGamesAnswer(trans.tourArrangements.startGameNow.txt())),
+    p(trans.tourArrangements.howToPlayGamesAnswerNew()),
+    a(href := routes.Prismic.page("tournament-arrangements"))(
+      trans.tourArrangements.howToPlayGames(),
+    ),
     h3(trans.tourArrangements.roundRobinScoring()),
     p(trans.tourArrangements.roundRobinScoringAnswer()),
     h3(trans.tourArrangements.roundRobinWinner()),
@@ -125,12 +128,13 @@ object faq {
   ) = frag(
     h3(trans.tourArrangements.howDoOrganizedTournamentsWork()),
     p(
-      trans.tourArrangements.howDoOrganizedTournamentsWorkAnswer(
-        trans.tourArrangements.startGameNow.txt(),
-      ),
+      trans.tourArrangements.howDoOrganizedTournamentsWorkAnswerNew(),
     ),
     h3(trans.tourArrangements.whoStartsMatches()),
-    p(trans.tourArrangements.whoStartsMatchesAnswer(trans.tourArrangements.startGameNow.txt())),
+    p(trans.tourArrangements.whoStartsMatchesAnswerNew()),
+    a(href := routes.Prismic.page("tournament-arrangements"))(
+      trans.tourArrangements.howToPlayGames(),
+    ),
     h3(trans.tourArrangements.organizedScoring()),
     p(trans.tourArrangements.organizedScoringAnswer()),
     h3(trans.arena.howIsTheWinnerDecided()),

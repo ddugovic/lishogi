@@ -12,7 +12,7 @@ import lila.notify.Notification
 import lila.notify.Notification.Notifies
 import lila.notify.NotifyApi
 
-// We want to notify 24 hours before tour/arrs happens and when arrs get confirmed
+// We want to notify 24 hours before tour happens and when arrs get confirmed
 // no notifications for tours/arrs that were just created or arranged
 final class Notifier(
     arrangementRepo: ArrangementRepo,

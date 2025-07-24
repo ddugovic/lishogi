@@ -20,6 +20,9 @@ final private class ChallengeRepo(coll: Coll, maxPerUser: Max)(implicit
   def byIdFor(id: Challenge.ID, dest: lila.user.User) =
     coll.one[Challenge]($id(id) ++ $doc("destUser.id" -> dest.id))
 
+  def byTourArrangement(tourId: String, arrId: String) =
+    coll.one[Challenge]($doc("tourInfo.t" -> tourId, "tourInfo.a" -> arrId))
+
   def exists(id: Challenge.ID) = coll.countSel($id(id)).dmap(0 <)
 
   def insert(c: Challenge): Funit =
@@ -47,6 +50,22 @@ final private class ChallengeRepo(coll: Coll, maxPerUser: Max)(implicit
       .cursor[Challenge]()
       .list()
 
+  def createdByUserInTour(userId: String, tourId: String): Fu[AllChallenges] =
+    coll
+      .find(
+        selectCreated ++ $doc("tourInfo.t" -> tourId) ++ $or(
+          $doc("destUser.id"   -> userId),
+          $doc("challenger.id" -> userId),
+        ),
+      )
+      .sort($doc("createdAt" -> 1))
+      .cursor[Challenge]()
+      .list()
+      .map(cs => {
+        val (in, out) = cs.partition(c => c.destUserId.exists(_ == userId))
+        AllChallenges(in, out)
+      })
+
   def setChallenger(c: Challenge, color: Option[shogi.Color]) =
     coll.update
       .one(
@@ -61,6 +80,26 @@ final private class ChallengeRepo(coll: Coll, maxPerUser: Max)(implicit
     createdByChallengerId(userId) zip createdByDestId(userId) dmap { case (x, y) =>
       x ::: y
     }
+
+  private[challenge] def allOfTourId(tourId: lila.tournament.Tournament.ID): Fu[List[Challenge]] =
+    coll
+      .find($doc("tourInfo.t" -> tourId))
+      .cursor[Challenge]()
+      .list()
+
+  private[challenge] def allByUserInTour(
+      tourId: lila.tournament.Tournament.ID,
+      userId: lila.user.User.ID,
+  ) =
+    coll
+      .find(
+        $doc("tourInfo.t" -> tourId) ++ $or(
+          $doc("destUser.id"   -> userId),
+          $doc("challenger.id" -> userId),
+        ),
+      )
+      .cursor[Challenge]()
+      .list()
 
   private def sameOrigAndDest(c: Challenge) =
     ~(for {

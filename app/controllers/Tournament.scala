@@ -123,6 +123,12 @@ final class Tournament(
                   canHaveChat(tour, json.some) ?? env.chat.api.userChat.cached
                     .findMine(Chat.Id(tour.id), ctx.me)
                     .dmap(some)
+                challenges <- ctx.me.ifTrue(tour.hasArrangements) ?? { me =>
+                  env.challenge.api
+                    .createdByUserInTour(me.id, tour.id)
+                    .map(env.challenge.jsonView.apply)
+                    .dmap(some)
+                }
                 _ <- chat ?? { c =>
                   env.user.lightUserApi.preloadMany(c.chat.userIds)
                 }
@@ -132,7 +138,7 @@ final class Tournament(
                 streamers   <- streamerCache get tour.id
                 shieldOwner <- env.tournament.shieldApi currentOwner tour
               } yield Ok(
-                html.tournament.show(tour, verdicts, json, chat, streamers, shieldOwner),
+                html.tournament.show(tour, verdicts, json, chat, challenges, streamers, shieldOwner),
               ).noCache)
             }
             .monSuccess(_.tournament.apiShowPartial(false, HTTPRequest clientName ctx.req)),

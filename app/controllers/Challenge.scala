@@ -28,9 +28,14 @@ final class Challenge(
   def all =
     Auth { implicit ctx => me =>
       XhrOrRedirectHome {
-        api allFor me.id map { all =>
-          Ok(env.challenge.jsonView(all)) as JSON
-        }
+        for {
+          all <- api allFor me.id
+          tourInfos = (all.in ::: all.out).flatMap(_.tourInfo).take(32)
+          tourIds   = tourInfos.map(t => (t.tournamentId, lila.i18n.defaultLang))
+          _ <- tourIds.nonEmpty ?? env.tournament.cached.nameCache.preloadMany(tourIds)
+          arrIds = tourInfos.withFilter(t => t.withName).map(t => t.arrangementId)
+          _ <- tourIds.nonEmpty ?? env.tournament.cached.arrangementNameCache.preloadMany(arrIds)
+        } yield (Ok(env.challenge.jsonView(all)) as JSON)
       }
     }
 
@@ -58,7 +63,9 @@ final class Challenge(
         else if (isForMe(c)) Direction.In.some
         else none
       val json = env.challenge.jsonView.show(c, version, direction)
-      negotiate(
+      c.tourInfo.filter(_.withName) ?? { ti =>
+        env.tournament.cached.arrangementNameCache.preloadOne(ti.arrangementId)
+      } >> negotiate(
         html =
           if (mine) fuccess {
             error match {
@@ -209,6 +216,40 @@ final class Challenge(
                 }(rateLimitedFu),
             )
         else notFound
+      }
+    }
+
+  def tournament(tourId: lila.tournament.Tournament.ID, arrId: lila.tournament.Arrangement.ID) =
+    AuthBody { implicit ctx => me =>
+      OptionFuResult(
+        for {
+          tour <- env.tournament.api.get(tourId)
+          arr <- tour ?? { t =>
+            {
+              val fullArrId = if (t.isRobin) s"${t.id}/$arrId" else arrId
+              env.tournament.api.getArrangementById(t, fullArrId)
+            }
+          }
+          tourArr = tour zip arr
+        } yield tourArr,
+      ) { case (tour, arr) =>
+        ChallengeIpRateLimit(HTTPRequest lastRemoteAddress ctx.req) {
+          for {
+            _ <- env.tournament.cached.nameCache.preloadOne((tour.id, lila.i18n.defaultLang))
+            _ <- tour.isOrganized ?? env.tournament.cached.arrangementNameCache.preloadOne(arr.id)
+            res <- api
+              .makeTourChallenge(tour, arr, me)
+              .fold(
+                err => BadRequest(jsonError(err.getMessage)),
+                challenge =>
+                  Ok(
+                    Json.obj(
+                      "redirect" -> routes.Challenge.show(challenge.id).url,
+                    ),
+                  ),
+              )
+          } yield (res)
+        }(rateLimitedFu)
       }
     }
 

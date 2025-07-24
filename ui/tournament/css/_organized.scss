@@ -1,3 +1,4 @@
+@use 'pkg:common/abstract/extends';
 @use 'pkg:common/theme';
 
 .organizer-arrangement-wrap {
@@ -100,14 +101,6 @@
         &::-webkit-scrollbar {
           display: none;
         }
-
-        & > div {
-          display: flex;
-
-          .arr-thumb-wrap {
-            flex: 1;
-          }
-        }
       }
     }
   }
@@ -118,31 +111,23 @@
 }
 
 main.organized {
-  .slist {
-    tr {
-      cursor: default !important;
+  .tabs-wrap {
+    .tabs-horiz {
+      align-items: flex-end;
+    }
 
-      .sheet {
-        padding: 0;
-
-        span {
-          padding: 0.6rem 0.4rem;
-          border-radius: 10px;
-          border: 1px solid theme.$c-font-dimmer;
-          margin: 0.15rem;
-          cursor: pointer;
+    .slist {
+      tr {
+        &.new-game {
+          background: theme.$m-good_darken_mix_50;
+          color: theme.$c-good-over;
 
           &:hover {
-            background-color: theme.$c-bg-input;
-            border-color: theme.$c-font;
+            background-color: theme.$c-good;
           }
 
-          &.w {
-            color: theme.$c-good;
-          }
-
-          &.l {
-            color: theme.$c-bad;
+          td {
+            padding: 1.5rem 0;
           }
         }
       }

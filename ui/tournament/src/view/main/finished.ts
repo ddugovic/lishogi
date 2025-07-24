@@ -4,19 +4,21 @@ import { once } from 'common/storage';
 import { i18n, i18nFormatCapitalized } from 'i18n';
 import { colorName } from 'shogi/color-name';
 import { type VNode, h } from 'snabbdom';
-import type TournamentController from '../ctrl';
-import type { TournamentDataFull } from '../interfaces';
-import * as pagination from '../pagination';
-import { podium, standing } from './arena';
-import { teamStanding } from './battle';
-import { arenaControls, organizedControls, robinControls } from './controls';
-import header from './header';
-import type { ViewHandler } from './main';
-import { standing as oStanding } from './organized';
-import playerInfo from './player-info';
-import { podium as rPodium, standing as rStanding } from './robin';
-import teamInfo from './team-info';
-import { numberRow } from './util';
+import type TournamentController from '../../ctrl';
+import type { TournamentDataFull } from '../../interfaces';
+import * as pagination from '../../pagination';
+import { teamStanding } from '../arena/battle';
+import { arenaControls } from '../arena/controls';
+import { arenaPodium } from '../arena/podium';
+import { arenaStanding } from '../arena/standing';
+import { organizedList } from '../arrangement/organized/list';
+import { arrangementPodium } from '../arrangement/podium';
+import { robinControls } from '../arrangement/robin/controls';
+import { robinList } from '../arrangement/robin/list';
+import { robinTable } from '../arrangement/robin/table';
+import header from '../header';
+import type { ViewHandler } from '../main';
+import { numberRow } from '../util';
 
 function confetti(data: TournamentDataFull): MaybeVNode {
   if (data.me && data.isRecentlyFinished && once(`tournament.end.canvas.${data.id}`))
@@ -66,36 +68,30 @@ function main(ctrl: TournamentController): MaybeVNodes {
     return [
       ...(teamS
         ? [header(ctrl), teamS]
-        : [h('div.big_top', [confetti(ctrl.data), header(ctrl), podium(ctrl)])]),
+        : [h('div.big_top', [confetti(ctrl.data), header(ctrl), arenaPodium(ctrl)])]),
       arenaControls(ctrl, pag),
-      standing(ctrl, pag),
+      arenaStanding(ctrl, pag),
     ];
   else if (ctrl.isRobin())
     return [
       ...(teamS
         ? [header(ctrl), teamS]
-        : [h('div.big_top', [confetti(ctrl.data), header(ctrl), rPodium(ctrl)])]),
+        : [h('div.big_top', [confetti(ctrl.data), header(ctrl), arrangementPodium(ctrl)])]),
       robinControls(ctrl),
-      rStanding(ctrl, 'finished'),
+      robinTable(ctrl, 'finished'),
+      robinList(ctrl),
     ];
   else
     return [
       ...(teamS
         ? [header(ctrl), teamS]
-        : [h('div.big_top', [confetti(ctrl.data), header(ctrl), rPodium(ctrl)])]),
-      organizedControls(ctrl, pag),
-      oStanding(ctrl, pag, 'finished'),
+        : [h('div.big_top', [confetti(ctrl.data), header(ctrl), arrangementPodium(ctrl)])]),
+      organizedList(ctrl),
     ];
 }
 
 function table(ctrl: TournamentController): VNode | undefined {
-  return ctrl.playerInfo.id
-    ? playerInfo(ctrl)
-    : ctrl.teamInfo.requested
-      ? teamInfo(ctrl)
-      : ctrl.data.stats
-        ? stats(ctrl.data)
-        : undefined;
+  return ctrl.data.stats ? stats(ctrl.data) : undefined;
 }
 
 export const finished: ViewHandler = {

@@ -46,13 +46,11 @@ final class ArrangementRepo(val coll: Coll)(implicit
 
   def byId(id: Arrangement.ID): Fu[Option[Arrangement]] = coll.byId[Arrangement](id)
 
-  def byLookup(lookup: Arrangement.Lookup): Fu[Option[Arrangement]] =
-    coll.one[Arrangement]((lookup.id ?? { id =>
-      $id(id)
-    }) ++ selectTourUsers(lookup.tourId, lookup.users._1, lookup.users._2))
-
   def byGame(tourId: Tournament.ID, gameId: Game.ID): Fu[Option[Arrangement]] =
     coll.one[Arrangement](selectTourGame(tourId, gameId))
+
+  def nameById(id: Arrangement.ID): Fu[Option[String]] =
+    coll.primitiveOne[String]($id(id), Arrangement.BSONFields.name)
 
   def allByTour(tourId: Tournament.ID): Fu[List[Arrangement]] =
     coll.list[Arrangement](selectTour(tourId))
@@ -70,8 +68,6 @@ final class ArrangementRepo(val coll: Coll)(implicit
           Arrangement.BSONFields.scheduledAt,
           Arrangement.BSONFields.u1ScheduledAt,
           Arrangement.BSONFields.u2ScheduledAt,
-          Arrangement.BSONFields.u1ReadyAt,
-          Arrangement.BSONFields.u2ReadyAt,
           Arrangement.BSONFields.lockedScheduledAt,
           Arrangement.BSONFields.lastNotified,
         ),
@@ -118,7 +114,7 @@ final class ArrangementRepo(val coll: Coll)(implicit
           $id(arr.id),
           $set(
             Arrangement.BSONFields.status -> g.status.id,
-            Arrangement.BSONFields.winner -> g.winnerUserId.map(_ == arr.user1.id),
+            Arrangement.BSONFields.winner -> g.winnerUserId.map(arr.user1.map(_.id).contains),
             Arrangement.BSONFields.plies  -> g.plies,
           ) ++ $unset(
             Arrangement.BSONFields.lastNotified,
@@ -156,7 +152,7 @@ final class ArrangementRepo(val coll: Coll)(implicit
     coll
       .aggregateList(maxDocs = max) { framework =>
         import framework._
-        Match(selectTour(tourId)) -> List(
+        Match(selectTour(tourId) ++ selectWithGame) -> List(
           Project($doc(Arrangement.BSONFields.users -> true, Arrangement.BSONFields.id -> false)),
           UnwindField(Arrangement.BSONFields.users),
           GroupField(Arrangement.BSONFields.users)("nb" -> SumAll),
@@ -178,7 +174,7 @@ final class ArrangementRepo(val coll: Coll)(implicit
   private[tournament] def rawStats(tourId: Tournament.ID): Fu[List[Bdoc]] = {
     coll.aggregateList(maxDocs = 3) { framework =>
       import framework._
-      Match(selectTour(tourId)) -> List(
+      Match(selectTour(tourId) ++ selectWithGame) -> List(
         Project(
           $doc(
             Arrangement.BSONFields.id     -> false,

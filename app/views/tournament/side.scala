@@ -6,7 +6,6 @@ import controllers.routes
 import lila.api.Context
 import lila.app.templating.Environment._
 import lila.app.ui.ScalatagsTemplate._
-import lila.tournament.TeamBattle
 import lila.tournament.Tournament
 import lila.tournament.TournamentShield
 
@@ -41,13 +40,30 @@ object side {
             ),
           ),
         ),
-        tour.teamBattle map teamBattle(tour),
+        ctx.userId.has(tour.createdBy) option div(cls := "tour-creator-buttons")(
+          button(cls := "button button-thin manage-players")(
+            trans.managePlayers(),
+          ),
+          tour.teamBattle.isDefined option a(
+            cls  := "button button-thin tour-team-edit",
+            href := routes.Tournament.teamBattleEdit(tour.id),
+          )(
+            "Edit team battle",
+          ),
+        ),
+        tour.teamBattle map { battle =>
+          st.section(cls := "team-battle")(
+            p(cls := "team-battle__title text", dataIcon := "f")(
+              s"Battle of ${battle.teams.size} teams and ${battle.nbLeaders} leaders",
+            ),
+          )
+        },
         tour.spotlight map { s =>
           st.section(
             lila.common.String.html.markdownLinks(s.description),
             shieldOwner map { owner =>
               p(cls := "defender", dataIcon := "5")(
-                "Defender:",
+                s"${trans.arena.defender.txt()}:",
                 userIdLink(owner.value.some),
               )
             },
@@ -110,14 +126,4 @@ object side {
       chat option views.html.chat.frag,
     )
 
-  private def teamBattle(tour: Tournament)(battle: TeamBattle)(implicit ctx: Context) =
-    st.section(cls := "team-battle")(
-      p(cls := "team-battle__title text", dataIcon := "f")(
-        s"Battle of ${battle.teams.size} teams and ${battle.nbLeaders} leaders",
-        (ctx.userId.has(tour.createdBy) || isGranted(_.ManageTournament)) option
-          a(href := routes.Tournament.teamBattleEdit(tour.id), title := "Edit team battle")(
-            iconTag("%"),
-          ),
-      ),
-    )
 }

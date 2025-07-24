@@ -7,8 +7,8 @@ import shogi.Color
 case class Arrangement(
     id: Arrangement.ID, // random
     tourId: Tournament.ID,
-    user1: Arrangement.User,
-    user2: Arrangement.User,
+    user1: Option[Arrangement.User],
+    user2: Option[Arrangement.User],
     name: Option[String] = none,
     color: Option[Color] = none, // user1 color
     points: Option[Arrangement.Points] = none,
@@ -22,7 +22,7 @@ case class Arrangement(
     lastNotified: Option[DateTime] = none,
 ) {
 
-  def users = List(user1, user2)
+  def users = List(user1, user2).flatten
 
   def userIds = users.map(_.id)
 
@@ -31,13 +31,13 @@ case class Arrangement(
   def user(userId: lila.user.User.ID) = users.find(_.id == userId)
 
   def opponentUser(userId: lila.user.User.ID) =
-    if (userId == user1.id) user2.some
-    else if (userId == user2.id) user1.some
+    if (user1.exists(_.id == userId)) user2
+    else if (user2.exists(_.id == userId)) user1
     else none
 
   def updateUser(userId: lila.user.User.ID, f: (Arrangement.User) => Arrangement.User) =
-    if (userId == user1.id) copy(user1 = f(user1))
-    else if (userId == user2.id) copy(user2 = f(user2))
+    if (user1.exists(_.id == userId)) copy(user1 = user1.map(f))
+    else if (user2.exists(_.id == userId)) copy(user2 = user2.map(f))
     else this
 
   def isWithinTolerance(date1: DateTime, date2: DateTime, toleranceSeconds: Int): Boolean =
@@ -66,14 +66,11 @@ case class Arrangement(
     }
   }
 
-  def setReadyAt(userId: lila.user.User.ID, userReadyAt: Option[DateTime]) =
-    updateUser(userId, _.copy(readyAt = userReadyAt))
-
   def startGame(gid: lila.game.Game.ID, color: Color) = {
     val now = DateTime.now
     copy(
-      user1 = user1.clearAll,
-      user2 = user2.clearAll,
+      user1 = user1.map(_.clearAll),
+      user2 = user2.map(_.clearAll),
       gameId = gid.some,
       startedAt = now.some,
       status = shogi.Status.Started.some,
@@ -85,11 +82,14 @@ case class Arrangement(
     if (gameId.isDefined)
       copy(
         name = settings.name,
-        // points = settings.points, // once we do point recalculation
+        // points = settings.points, // Requires point recalculation
       )
     else
       copy(
         name = settings.name,
+        user1 = user1 orElse settings.userId1
+          .map(id => Arrangement.User(id)), // todo someday: cancel challenges to change users
+        user2 = user2 orElse settings.userId2.map(id => Arrangement.User(id)),
         color = settings.color,
         points = settings.points,
         scheduledAt = settings.scheduledAt,
@@ -111,23 +111,46 @@ object Arrangement {
 
   type ID = String
 
+  case class RobinId(
+      tourId: Tournament.ID,
+      user1Id: lila.user.User.ID,
+      user2Id: lila.user.User.ID,
+  ) {
+    def makeId = s"$tourId/$user1Id;$user2Id"
+
+    def makeParam = s"$user1Id;$user2Id"
+
+    def userIdList = List(user1Id, user2Id)
+  }
+  object RobinId {
+    // sorts user alphabetically
+    def parseId(s: String): Option[RobinId] = s.split("/", 2).toList match {
+      case tourId :: users =>
+        users.headOption.flatMap(_.split(";").toList.map(lila.user.User.normalize).sorted match {
+          case user1 :: user2 :: Nil => Some(RobinId(tourId, user1, user2))
+          case _                     => None
+        })
+      case _ => None
+    }
+  }
+
   case class User(
       id: lila.user.User.ID,
-      readyAt: Option[DateTime],
-      scheduledAt: Option[DateTime],
+      scheduledAt: Option[DateTime] = none,
   ) {
-    def clearAll = copy(scheduledAt = none, readyAt = none)
-
-    def isReady =
-      readyAt.exists(_ isAfter DateTime.now.minusSeconds(Arrangement.readyTolerance))
+    def clearAll = copy(scheduledAt = none)
   }
 
   case class Settings(
       name: Option[String],
+      userId1: Option[lila.user.User.ID],
+      userId2: Option[lila.user.User.ID],
       color: Option[Color],
       points: Option[Points],
       scheduledAt: Option[DateTime],
-  )
+  ) {
+    def userIds = List(userId1, userId2).flatten
+  }
 
   case class Points(loss: Int, draw: Int, win: Int)
   object Points {
@@ -147,39 +170,10 @@ object Arrangement {
       }
   }
 
-  case class Lookup(
-      id: Option[ID], // Arrangements are created when needed, so ID might not exist at the time
-      tourId: Tournament.ID,
-      users: (lila.user.User.ID, lila.user.User.ID),
-  ) {
-    def userList = List(users._1, users._2)
-  }
-
-  private[tournament] def make(
-      tourId: Tournament.ID,
-      users: (lila.user.User.ID, lila.user.User.ID),
-  ): Arrangement =
-    Arrangement(
-      id = lila.common.ThreadLocalRandom.nextString(8),
-      tourId = tourId,
-      user1 = Arrangement.User(
-        id = users._1,
-        readyAt = none,
-        scheduledAt = none,
-      ),
-      user2 = Arrangement.User(
-        id = users._2,
-        readyAt = none,
-        scheduledAt = none,
-      ),
-    )
-
   object BSONFields {
     val id                = "_id"
     val tourId            = "t"
     val users             = "u"
-    val u1ReadyAt         = "r1"
-    val u2ReadyAt         = "r2"
     val u1ScheduledAt     = "d1"
     val u2ScheduledAt     = "d2"
     val name              = "n"

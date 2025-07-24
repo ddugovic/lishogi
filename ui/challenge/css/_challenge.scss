@@ -85,6 +85,7 @@
       padding: 0;
       background: transparent;
       font-size: 1.6rem;
+      border-radius: 0;
 
       @include mixins.transition;
 
@@ -97,7 +98,6 @@
     }
 
     .owner {
-      color: theme.$c-link;
       line-height: 42px;
     }
 
@@ -165,6 +165,14 @@
 
     .head .user-link {
       margin-left: -5px;
+    }
+
+    &.tour-info {
+      &:hover {
+        > i {
+          color: theme.$c-brag;
+        }
+      }
     }
   }
 

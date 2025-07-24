@@ -1,10 +1,9 @@
 @use 'pkg:common/base/scrollbar';
 @use 'pkg:common/vendor/flatpickr';
 @use 'pkg:common/component/fbt';
-@use 'pkg:common/component/glowing';
-@use 'pkg:common/component/rubber-band';
 @use 'pkg:common/component/modal';
 @use 'pkg:common/component/slist';
+@use 'pkg:common/component/tabs-horiz';
 @use 'pkg:common/component/quote';
 @use 'pkg:common/component/color-icon';
 @use 'pkg:common/component/context-streamer';

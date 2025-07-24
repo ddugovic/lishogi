@@ -1,5 +1,7 @@
 package lila.challenge
 
+import scala.util.chaining._
+
 import shogi.Color
 import shogi.Mode
 
@@ -37,10 +39,17 @@ final private class Joiner(
                 Player.make(shogi.Gote, c.finalColor.fold(destUser, challengerUser), perfPicker),
               mode = if (c.initialSfen.isDefined) Mode.Casual else c.mode,
               proMode = c.proMode,
+              source = if (c.tourInfo.isDefined) Source.Tournament else Source.Friend,
               daysPerTurn = c.daysPerTurn,
               notationImport = None,
             )
             .withId(c.id)
+            .pipe { g =>
+              c.tourInfo
+                .fold(g) { t =>
+                  g.withTournamentId(t.tournamentId).withArrangementId(t.arrangementId)
+                }
+            }
             .start
           (gameRepo insertDenormalized game) >>- onStart(game.id) inject Pov(
             game,

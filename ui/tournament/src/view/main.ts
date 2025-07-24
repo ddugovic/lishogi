@@ -3,13 +3,15 @@ import { type MaybeVNodes, onInsert } from 'common/snabbdom';
 import { i18n } from 'i18n';
 import { type VNode, h } from 'snabbdom';
 import type TournamentController from '../ctrl';
-import { arrangementModal } from './arrangement-modal';
-import { joinWithTeamSelector } from './battle';
-import { created } from './created';
-import { finished } from './finished';
-import { organizedArrangementView } from './organized-arrangement';
+import { joinWithTeamSelector } from './arena/battle';
+import { teamInfoModal } from './arena/team-info';
+import { arrangementModal } from './arrangement/arrangement-modal';
+import { arrangementFormView } from './arrangement/organized/arrangement-form';
+import { created } from './main/created';
+import { finished } from './main/finished';
+import { started } from './main/started';
+import { playerInfoModal } from './player-info';
 import { playerManagementView } from './player-manage';
-import { started } from './started';
 
 export interface ViewHandler {
   name: string;
@@ -35,7 +37,7 @@ export default function (ctrl: TournamentController): VNode {
       })
     : null;
 
-  return h(`main.${ctrl.data.system}${!ctrl.isArena() ? '.arr-table' : ''}.${ctrl.opts.classes}`, [
+  return h(`main.${ctrl.opts.classes}`, [
     h('aside.tour__side', {
       hook: onInsert(el => {
         $(el).replaceWith(ctrl.opts.$side);
@@ -49,7 +51,9 @@ export default function (ctrl: TournamentController): VNode {
     }),
     handler.table(ctrl),
     h('div.tour__main', [
-      ctrl.arrangement ? arrangementModal(ctrl, ctrl.arrangement) : null,
+      arrangementModal(ctrl),
+      playerInfoModal(ctrl),
+      teamInfoModal(ctrl),
       h(
         `div.box.${handler.name}`,
         {
@@ -58,13 +62,13 @@ export default function (ctrl: TournamentController): VNode {
         ctrl.playerManagement
           ? playerManagementView(ctrl)
           : ctrl.newArrangement
-            ? organizedArrangementView(ctrl)
+            ? arrangementFormView(ctrl)
             : [...handler.main(ctrl), h('div.tour__bottom', [desc, faq])],
       ),
     ]),
     ctrl.opts.chat
-      ? h('div.chat__members.none', [
-          h('span.number', '\xa0'),
+      ? h('div.chat__members', [
+          h('span.number', '0'),
           ' ',
           i18n('spectators'),
           ' ',

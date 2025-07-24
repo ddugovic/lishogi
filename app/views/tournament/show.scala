@@ -18,6 +18,7 @@ object show {
       verdicts: lila.tournament.Condition.All.WithVerdicts,
       data: play.api.libs.json.JsObject,
       chatOption: Option[lila.chat.UserChat.Mine],
+      challengesDataOption: Option[play.api.libs.json.JsObject],
       streamers: List[User.ID],
       shieldOwner: Option[lila.tournament.TournamentShield.OwnerId],
   )(implicit ctx: Context) =
@@ -38,6 +39,7 @@ object show {
                 resourceId = lila.chat.Chat.ResourceId(s"tournament/${c.chat.id}"),
               )
             },
+            "challenges" -> challengesDataOption,
           ),
         ),
       ),
