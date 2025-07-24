@@ -13,7 +13,7 @@ object event {
   private val dataSeconds = attr("data-seconds")
 
   def create(form: Form[_])(implicit ctx: Context) =
-    layout(title = "New event", css = "mod.form") {
+    layout(title = "New event", css = "user.mod.form") {
       div(cls := "crud page-menu__content box box-pad")(
         h1("New event"),
         postForm(cls := "content_box_content form3", action := routes.Event.create)(inForm(form)),
@@ -21,7 +21,7 @@ object event {
     }
 
   def edit(event: lila.event.Event, form: Form[_])(implicit ctx: Context) =
-    layout(title = event.title, css = "mod.form") {
+    layout(title = event.title, css = "user.mod.form") {
       div(cls := "crud edit page-menu__content box box-pad")(
         div(cls := "box__top")(
           h1(
@@ -187,7 +187,9 @@ object event {
       form3.action(form3.submit(trans.apply())),
     )
 
-  private def layout(title: String, css: String = "mod.misc")(body: Frag)(implicit ctx: Context) =
+  private def layout(title: String, css: String = "user.mod.misc")(
+      body: Frag,
+  )(implicit ctx: Context) =
     views.html.base.layout(
       title = title,
       moreCss = cssTag(css),
