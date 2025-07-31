@@ -38,6 +38,8 @@
       time {
         color: theme.$c-font-dim;
         white-space: nowrap;
+        text-align: right;
+        min-width: 80px;
       }
     }
   }

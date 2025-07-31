@@ -386,9 +386,9 @@ export default class AnalyseCtrl {
         check: li.sound.throttlePlay('check', 50),
       }
     : {
-        move: $.noop,
-        capture: $.noop,
-        check: $.noop,
+        move: () => {},
+        capture: () => {},
+        check: () => {},
       };
 
   private captureRegex = /[a-z]/gi;

@@ -8,18 +8,18 @@
   &__side {
     @extend %flex-column;
 
-    flex: 0 0 50ch;
+    flex: 0 1 50ch;
     background: theme.$c-bg-zebra;
     overflow: hidden;
     user-select: none;
     border-right: theme.$border;
 
     @include breakpoint.breakpoint(media-queries.$mq-not-medium) {
-      flex: 0 0 40ch;
+      flex: 0 1 40ch;
     }
 
     @include breakpoint.breakpoint(media-queries.$mq-not-small) {
-      flex: 1 0 100%;
+      flex: 1 1 100%;
       display: none;
 
       .pane-side & {

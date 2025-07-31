@@ -186,7 +186,6 @@ object form {
           help = trans.proModeDescription().some,
           half = true,
         ),
-        form3.hiddenFalse(form("proMode")),
         form3.checkbox(
           form("rated"),
           trans.rated(),

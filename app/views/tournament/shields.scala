@@ -52,7 +52,7 @@ object shields {
       title = trans.tournamentShields.txt(),
       moreCss = frag(cssTag("tournament.leaderboard"), cssTag("misc.slist")),
     ) {
-      main(cls := "page-menu page-small tournament-categ-shields")(
+      main(cls := "page-menu tournament-categ-shields")(
         views.html.user.bits.communityMenu("shield"),
         div(cls := "page-menu__content box")(
           h1(

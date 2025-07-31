@@ -134,6 +134,7 @@ html.light {
   --m-primary_bg-box_mix_80: #{color.mix($c-primary,$c-bg-box,80%)};
   --m-primary_bg-box_mix_90: #{color.mix($c-primary,$c-bg-box,90%)};
   --m-primary_bg-zebra2_mix_20: #{color.mix($c-primary,$c-bg-zebra2,20%)};
+  --m-primary_bg-zebra_mix_10: #{color.mix($c-primary,$c-bg-zebra,10%)};
   --m-primary_black_mix_80: #{color.mix($c-primary,black,80%)};
   --m-primary_darken_mix_80: #{color.mix($c-primary,$c-darken,80%)};
   --m-primary_lightness_10: #{color.adjust($c-primary,$lightness:10%)};

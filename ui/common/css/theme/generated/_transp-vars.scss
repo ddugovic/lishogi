@@ -8,7 +8,7 @@
 html.transp {
   --c-bg-action: #{$c-bg-metal};
   --c-bg-box: #{$c-bg-high};
-  --c-bg-header-dropdown: #{hsla(0deg, 0%, 0%, 0.75)};
+  --c-bg-header-dropdown: #{hsl(0, 0%, 16%, 0.9)};
   --c-bg-high: #{hsla(0deg, 0%, 0%, 0.6)};
   --c-bg-input: #{hsl(0deg, 0%, 16%)};
   --c-bg-low: #{hsla(0deg, 0%, 0%, 0.5)};
@@ -82,6 +82,7 @@ html.transp {
   --m-primary_bg-box_mix_70: #{color.mix($c-primary,$c-bg-box,70%)};
   --m-primary_bg-box_mix_80: #{color.mix($c-primary,$c-bg-box,80%)};
   --m-primary_bg-box_mix_90: #{color.mix($c-primary,$c-bg-box,90%)};
+  --m-primary_bg-zebra_mix_10: #{color.mix($c-primary,$c-bg-zebra,10%)};
   --m-secondary_bg-box_mix_10: #{color.mix($c-secondary,$c-bg-box,10%)};
   --m-secondary_bg-box_mix_15: #{color.mix($c-secondary,$c-bg-box,15%)};
   --m-secondary_bg-box_mix_20: #{color.mix($c-secondary,$c-bg-box,20%)};

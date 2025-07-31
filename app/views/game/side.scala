@@ -77,7 +77,7 @@ object side {
                       bits.variantLink(game.variant),
                       game.isProMode option frag(
                         br,
-                        small(trans.proMode()),
+                        small(cls := "text", dataIcon := "8")(trans.proMode()),
                       ),
                     ),
                 ),
