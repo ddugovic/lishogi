@@ -14,7 +14,6 @@
   z-index: z.get('friend-box');
   background: theme.$c-bg-popup;
   border: theme.$border;
-  border-right: 0;
   border-bottom: 0;
   border-top-left-radius: variables.$box-radius-size;
   border-top-right-radius: variables.$box-radius-size;
@@ -35,8 +34,12 @@
     @extend %metal;
 
     cursor: pointer;
-    padding: 3px 12px 3px 5px;
+    padding: 3px 5px 3px 5px;
     border-bottom: theme.$border;
+
+    i::before {
+      margin-right: 0.4em;
+    }
 
     &:hover {
       @extend %metal-hover;

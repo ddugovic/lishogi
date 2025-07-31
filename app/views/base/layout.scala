@@ -367,7 +367,10 @@ object layout {
           ctx.isAuth option div(
             id := "friend_box",
           )(
-            div(cls := "friend_box_title")(trans.nbFriendsOnline.plural(0, iconTag("S"))),
+            div(cls := "friend_box_title")(
+              iconTag("S"),
+              trans.friends(),
+            ),
             div(cls := "content_wrap none")(
               div(cls := "content list"),
             ),
