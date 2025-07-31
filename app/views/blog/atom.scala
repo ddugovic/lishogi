@@ -1,38 +1,49 @@
 package views.html.blog
 
 import controllers.routes
+import play.api.mvc.Call
+
+import org.joda.time.DateTime
+import org.joda.time.format.ISODateTimeFormat
 
 import lila.app.templating.Environment._
 import lila.app.ui.ScalatagsTemplate._
-import lila.common.config.BaseUrl
 import lila.common.paginator.Paginator
 
 object atom {
 
   def apply(
       pager: Paginator[lila.prismic.Document],
-      baseUrl: BaseUrl,
+      blogLang: lila.blog.BlogLang,
   )(implicit prismic: lila.blog.BlogApi.Context) =
     frag(
-      raw("""<?xml version="1.0" encoding="utf-8"?>"""),
+      raw("""<?xml version="1.0" encoding="UTF-8"?>"""),
       raw(
-        """<feed xml:lang="en-US" xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">""",
+        s"""<feed xml:lang="${blogLang.code}" xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">""",
       ),
-      tag("id")(s"$baseUrl${routes.Blog.index()}"),
-      link(rel := "alternate", tpe := "text/html", href := s"$baseUrl${routes.Blog.index()}"),
-      link(rel := "self", tpe := "application/atom+xml", href := s"$baseUrl${routes.Blog.atom}"),
+      tag("id")(blogTopUrl(routes.Blog.index(), blogLang)),
+      link(
+        rel  := "alternate",
+        tpe  := "text/html",
+        href := blogTopUrl(routes.Blog.index(), blogLang),
+      ),
+      link(
+        rel  := "self",
+        tpe  := "application/atom+xml",
+        href := blogTopUrl(routes.Blog.atom, blogLang),
+      ),
       tag("title")("lishogi.org blog"),
       tag("updated")(pager.currentPageResults.headOption.flatMap(atomDate("blog.date"))),
       pager.currentPageResults.flatMap(doc => lila.blog.FullPost.fromDocument("blog")(doc)).map {
         post =>
           tag("entry")(
-            tag("id")(s"$baseUrl${routes.Blog.show(post.id)}"),
+            tag("id")(s"$netBaseUrl${routes.Blog.show(post.id)}"),
             tag("published")(atomDate(post.date)),
             tag("updated")(atomDate(post.date)),
             link(
               rel  := "alternate",
               tpe  := "text/html",
-              href := s"$baseUrl${routes.Blog.show(post.id)}",
+              href := s"$netBaseUrl${routes.Blog.show(post.id)}",
             ),
             tag("title")(post.title),
             tag("category")(
@@ -55,4 +66,12 @@ object atom {
       },
       raw("</feed>"),
     )
+
+  private def blogTopUrl(call: Call, blogLang: lila.blog.BlogLang) =
+    s"${netBaseUrl}${call.url}${(blogLang == lila.blog.BlogLang.Japanese) ?? "?lang=ja"}"
+
+  private val atomDateFormatter                = ISODateTimeFormat.dateTime
+  private def atomDate(date: DateTime): String = atomDateFormatter print date
+  private def atomDate(field: String)(doc: lila.prismic.Document): Option[String] =
+    doc getDate field map (_.value.toDateTimeAtStartOfDay) map atomDate
 }

@@ -60,13 +60,15 @@ final class Blog(
   import scala.concurrent.duration._
 
   import lila.memo.CacheApi._
-  private val atomCache = env.memo.cacheApi.unit[String] {
+
+  private val atomCache = env.memo.cacheApi[BlogLang.Code, String](2, "blog.atom") {
     _.refreshAfterWrite(60.minutes)
-      .buildAsyncFuture { _ =>
+      .buildAsyncFuture { langCode =>
         blogApi.masterContext flatMap { implicit prismic =>
-          blogApi.recent(prismic.api, 1, MaxPerPage(50), BlogLang.default) map {
+          val blogLang = BlogLang.fromLangCode(langCode)
+          blogApi.recent(prismic.api, 1, MaxPerPage(50), blogLang) map {
             _ ?? { docs =>
-              views.html.blog.atom(docs, env.net.baseUrl).render
+              views.html.blog.atom(docs, blogLang).render
             }
           }
         }
@@ -74,8 +76,9 @@ final class Blog(
   }
 
   def atom =
-    Action.async {
-      atomCache.getUnit map { xml =>
+    Action.async { implicit req =>
+      val blogLang = if (~get("lang", req) == "ja") BlogLang.Japanese else BlogLang.English
+      atomCache.get(blogLang.code) map { xml =>
         Ok(xml) as XML
       }
     }
