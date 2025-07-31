@@ -34,14 +34,14 @@ object mine {
               c.destUserId.map { destId =>
                 div(cls := "waiting")(
                   userIdLink(destId.some, cssClass = "target".some),
-                  spinner,
-                  p(trans.waitingForOpponent()),
+                  span(trans.waitingForOpponent()),
+                  i(cls := "ddloader"),
                 )
               } getOrElse {
                 if (c.isOpen)
-                  div(cls := "waiting")(
-                    spinner,
-                    p(trans.waitingForOpponent()),
+                  div(cls := "waiting waiting-open")(
+                    span(trans.waitingForOpponent()),
+                    i(cls := "ddloader"),
                   )
                 else
                   div(cls := "invite")(

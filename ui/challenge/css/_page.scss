@@ -1,7 +1,7 @@
 @use 'pkg:breakpoint-sass' as breakpoint;
+@use 'pkg:common/abstract/extends';
 @use 'pkg:common/abstract/uniboard';
 @use 'pkg:common/theme';
-@use 'pkg:common/abstract/extends';
 
 .challenge-page {
   .challenge-id-form {
@@ -29,16 +29,16 @@
   }
 
   .waiting {
-    text-align: center;
+    @extend %box-neat;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: theme.$c-bg-zebra;
+    padding: 2rem;
 
     .user-link {
       font-size: 2em;
-    }
-
-    .spinner {
-      width: 6.5em;
-      height: 8em;
-      margin: 2em auto;
     }
   }
 
@@ -55,6 +55,7 @@
     padding: 0.5em 1.1em;
     margin-bottom: 3rem;
     font-size: 2em;
+    flex-wrap: nowrap;
 
     @include breakpoint.breakpoint(uniboard.$mq-col1-uniboard) {
       flex-direction: column;
@@ -84,6 +85,10 @@
       justify-content: center;
     }
 
+    .pro-mode {
+      font-size: 0.6em;
+    }
+
     .mode {
       font-weight: bold;
       color: theme.$c-secondary;
@@ -100,6 +105,7 @@
 
       .game-tour {
         flex-direction: column;
+        text-align: center;
 
         a {
           font-weight: bold;

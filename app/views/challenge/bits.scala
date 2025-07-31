@@ -47,10 +47,6 @@ object bits {
               else trans.nbDays.pluralSame(days)
             } getOrElse shortClockName(c.clock.map(_.config)),
           ),
-          c.proMode option frag(
-            br,
-            small(trans.proMode()),
-          ),
         ),
       ),
       c.tourInfo.fold(
@@ -68,6 +64,7 @@ object bits {
               c.initialSfen.flatMap(_.color).getOrElse(shogi.Sente),
               handicap,
             ),
+            c.proMode option small(cls := "pro-mode text", dataIcon := "8")(trans.proMode()),
           )
         },
       ) { tourInfo =>
@@ -76,6 +73,7 @@ object bits {
             href := s"${routes.Tournament.show(tourInfo.tournamentId).url}#${arrangementIdToParam(tourInfo.arrangementId)}",
           )(tournamentIdToName(tourInfo.tournamentId)),
           tourInfo.withName option span(arrangementIdToName(tourInfo.arrangementId)),
+          c.proMode option small(cls := "pro-mode text", dataIcon := "8")(trans.proMode()),
         )
       },
       div(cls := "mode")(modeName(c.mode)),
