@@ -1,5 +1,5 @@
 import type { Challenge, ChallengeData } from 'challenge/interfaces';
-import { type StoredJsonProp, storedJsonProp } from 'common/storage';
+import { type StoredJsonProp, type StoredProp, storedJsonProp, storedProp } from 'common/storage';
 import { ids } from 'game/status';
 import type {
   Arrangement,
@@ -18,7 +18,6 @@ import type {
 import { myPage, players } from './pagination';
 import makeSocket, { type TournamentSocket } from './socket';
 import * as sound from './sound';
-import * as tour from './tournament';
 import type { Tab } from './view/arrangement/tabs';
 import xhr from './xhr';
 
@@ -35,7 +34,6 @@ export default class TournamentController {
   page: number;
   pages: Pages = {};
   lastPageDisplayed: number | undefined;
-  focusOnMe: boolean;
   joinSpinner = false;
   tourRedirect = false;
   playerInfo: PlayerInfo = {};
@@ -44,13 +42,14 @@ export default class TournamentController {
   defaultArrangementPoints: Points = { w: 3, d: 2, l: 1 };
   playerManagement = false;
   newArrangement: NewArrangement | undefined;
-  activeTab: Tab | undefined;
+  activeTab: StoredProp<Tab> | undefined;
   newArrangementSettings: StoredJsonProp<NewArrangementSettings>;
   shadedCandidates: string[] = [];
   disableClicks = true;
   searching = false;
   joinWithTeamSelector = false;
   dateToFinish: Date | undefined;
+  reloading: string | undefined;
   redraw: () => void;
   nbWatchers = 0;
 
@@ -66,7 +65,6 @@ export default class TournamentController {
     this.redraw = redraw;
     this.socket = makeSocket(opts.socketSend, this);
     this.page = this.data.standing.page || 1;
-    this.focusOnMe = tour.isIn(this);
     setTimeout(() => {
       this.disableClicks = false;
     }, 1500);
@@ -88,8 +86,10 @@ export default class TournamentController {
       },
     );
 
-    if (this.isRobin()) this.activeTab = 'games';
-    else if (this.isOrganized()) this.activeTab = 'games';
+    if (this.isRobin()) this.activeTab = storedProp('tournament.tab.robin', 'games');
+    else if (this.isOrganized()) this.activeTab = storedProp('tournament.tab.org', 'games');
+
+    if (this.activeTab?.() === 'challenges' && !this.data.isStarted) this.activeTab('games');
 
     this.updateCreatorButtons();
 
@@ -134,27 +134,42 @@ export default class TournamentController {
 
   reload = (data: TournamentDataBase): void => {
     // we joined a private tournament! Reload the page to load the chat
-    if (!this.data.me && data.me && this.data.private) window.lishogi.reload();
+    if (!this.data.me && data.me) {
+      if (this.data.private) window.lishogi.reload();
+      else if (this.isOrganized()) this.activeTab!('players');
+    }
 
     this.data = { ...this.data, ...data };
+    // could be undefined so we need to overwrite manually
+    this.data.me = data.me;
+    this.data.isCandidate = data.isCandidate;
+    this.data.isDenied = data.isDenied;
+    this.data.isClosed = data.isClosed;
+    this.data.isFull = data.isFull;
+    this.data.candidatesOnly = data.candidatesOnly;
+    this.data.candidatesFull = data.candidatesFull;
 
     if (data.playerInfo && data.playerInfo.player.id === this.playerInfo.id)
       this.playerInfo.data = data.playerInfo;
+
     if (this.data.secondsToFinish)
       this.dateToFinish = new Date(Date.now() + this.data.secondsToFinish * 1000);
 
     this.loadPage(data.standing);
-    if (this.focusOnMe) this.scrollToMe();
-    if (this.activeTab === 'challenges' && !!data.isFinished) {
-      this.activeTab = 'games';
-      this.redraw();
-    }
+
+    if (this.activeTab?.() === 'challenges' && !!data.isFinished) this.activeTab('games');
+
     sound.end(this.data);
     sound.countDown(this.data);
+
     this.shadedCandidates = [];
     this.joinSpinner = false;
+    this.reloading = undefined;
+
     this.recountTeams();
+
     this.updateCreatorButtons();
+
     if (this.isArena()) this.redirectToMyGame();
   };
 
@@ -216,7 +231,6 @@ export default class TournamentController {
         this.loadPage(data);
         this.page = data.page;
         this.searching = false;
-        this.focusOnMe = false;
         this.pages[this.page]
           .filter(p => p.name.toLowerCase() == userId)
           .forEach(this.showPlayerInfo);
@@ -226,7 +240,6 @@ export default class TournamentController {
   };
 
   userSetPage = (page: number): void => {
-    this.focusOnMe = false;
     this.setPage(page);
   };
 
@@ -237,7 +250,6 @@ export default class TournamentController {
   withdraw = (): void => {
     xhr.withdraw(this);
     this.joinSpinner = true;
-    this.focusOnMe = false;
   };
 
   join = (password?: string, team?: string): void => {
@@ -251,7 +263,6 @@ export default class TournamentController {
     } else {
       xhr.join(this, password, team);
       this.joinSpinner = true;
-      this.focusOnMe = true;
     }
   };
 
@@ -270,16 +281,10 @@ export default class TournamentController {
   }
 
   scrollToMe = (): void => {
-    if (this.isArena() || this.isOrganized()) {
+    if (this.isArena()) {
       const page = myPage(this);
       if (page && page !== this.page) this.setPage(page);
     }
-  };
-
-  toggleFocusOnMe = (): void => {
-    if (!this.data.me) return;
-    this.focusOnMe = !this.focusOnMe;
-    if (this.focusOnMe) this.scrollToMe();
   };
 
   findArrangement = (id: string): Arrangement | undefined => {
@@ -423,15 +428,13 @@ export default class TournamentController {
   };
 
   updateCreatorButtons = (): void => {
-    const pmb = this.opts.playerManagmentButton;
+    const pmb = this.opts.playerManagementButton;
     if (pmb) {
       if (this.data.isFinished) pmb.classList.add('disabled');
 
       const candidates = this.data.candidates;
-      if (candidates?.length) {
-        pmb.classList.add('data-count');
-        pmb.setAttribute('data-count', `${candidates.length}`);
-      }
+      if (candidates?.length) pmb.classList.add('data-count');
+      pmb.setAttribute('data-count', `${candidates?.length || 0}`);
     }
 
     const teb = this.opts.teamEditButton;

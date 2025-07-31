@@ -137,7 +137,7 @@ final class ArrangementRepo(val coll: Coll)(implicit
   ): Fu[List[Tournament.ID]] =
     coll
       .find(
-        selectTourUser(tourId, userId),
+        selectTourUser(tourId, userId) ++ selectWithGame,
         $doc(Arrangement.BSONFields.gameId -> true).some,
       )
       .sort(recentSort)
@@ -203,7 +203,7 @@ final class ArrangementRepo(val coll: Coll)(implicit
   private[tournament] def updatedAdapter(user: User) =
     new lila.db.paginator.Adapter[Arrangement](
       collection = coll,
-      selector = selectUser(user.id) ++ selectWithoutGame,
+      selector = selectUser(user.id),
       projection = none,
       sort = $sort desc Arrangement.BSONFields.updatedAt,
       readPreference = ReadPreference.secondaryPreferred,

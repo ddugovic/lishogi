@@ -881,6 +881,7 @@ object I18nKeys {
   val `tournamentCandidates` = new I18nKey("tournamentCandidates")
   val `kickedAndDeniedPlayers` = new I18nKey("kickedAndDeniedPlayers")
   val `noPlayersJoinedYet` = new I18nKey("noPlayersJoinedYet")
+  val `tourClosed` = new I18nKey("tourClosed")
   val `proMode` = new I18nKey("proMode")
   val `proModeDescription` = new I18nKey("proModeDescription")
   val `opponentLeftCounter` = new I18nKey("opponentLeftCounter")

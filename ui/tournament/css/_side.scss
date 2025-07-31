@@ -89,6 +89,12 @@
     }
   }
 
+  .challenge-warning {
+    display: block;
+    font-size: 0.9rem;
+    margin-top: 0.2rem;
+  }
+
   .tour__prize {
     @extend %box-radius;
 

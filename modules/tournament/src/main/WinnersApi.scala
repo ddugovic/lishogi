@@ -29,44 +29,39 @@ case class Winner(
 case class FreqWinners(
     yearly: Option[Winner],
     monthly: Option[Winner],
-    weekly: Option[Winner],
-    daily: Option[Winner],
+    custom: Option[Winner],
 ) {
 
   lazy val top: Option[Winner] =
-    daily.filter(_.date isAfter DateTime.now.minusHours(2)) orElse
-      weekly.filter(_.date isAfter DateTime.now.minusDays(1)) orElse
-      monthly.filter(_.date isAfter DateTime.now.minusDays(3)) orElse
-      yearly orElse monthly orElse weekly orElse daily
+    custom.filter(_.date isAfter DateTime.now.minusDays(2)) orElse
+      monthly.filter(_.date isAfter DateTime.now.minusDays(7)) orElse
+      yearly orElse monthly orElse custom
 
-  lazy val userIds = List(yearly, monthly, weekly, daily).flatten.map(_.userId)
+  lazy val userIds = List(yearly, monthly, custom).flatten.map(_.userId)
 }
 
 case class AllWinners(
-    // hyperbullet: FreqWinners,
     bullet: FreqWinners,
-    superblitz: FreqWinners,
     blitz: FreqWinners,
-    hyperrapid: FreqWinners,
     rapid: FreqWinners,
     classical: FreqWinners,
-    elite: List[Winner],
-    // marathon: List[Winner],
+    correspondence: FreqWinners,
+    superblitz: FreqWinners, // to be deprecated
+    hyperrapid: FreqWinners, // to be deprecated
     variants: Map[String, FreqWinners],
 ) {
 
   lazy val top: List[Winner] = List(
-    List(bullet, superblitz, blitz, hyperrapid, rapid, classical).flatMap(_.top),
-    List(elite.headOption).flatten,
+    List(bullet, blitz, rapid, classical, correspondence, superblitz, hyperrapid).flatMap(_.top),
     WinnersApi.variants.flatMap { v =>
       variants get v.key flatMap (_.top)
     },
   ).flatten
 
   def userIds =
-    List(bullet, superblitz, blitz, hyperrapid, rapid, classical).flatMap(_.userIds) :::
-      // elite.map(_.userId) ::: marathon.map(_.userId) :::
-      elite.map(_.userId) :::
+    List(bullet, blitz, rapid, classical, correspondence, superblitz, hyperrapid).flatMap(
+      _.userIds,
+    ) :::
       variants.values.toList.flatMap(_.userIds)
 }
 
@@ -85,7 +80,7 @@ final class WinnersApi(
   implicit private val AllWinnersHandler: BSONDocumentHandler[AllWinners] =
     reactivemongo.api.bson.Macros.handler[AllWinners]
 
-  private def fetchLastFreq(freq: Freq, since: DateTime): Fu[List[Tournament]] =
+  private def fetchScheduled(freq: Freq, since: DateTime): Fu[List[Tournament]] =
     tournamentRepo.coll
       .find(
         $doc(
@@ -98,10 +93,26 @@ final class WinnersApi(
       .cursor[Tournament](ReadPreference.secondaryPreferred)
       .list(Int.MaxValue)
 
+  private def fetchCustom(since: DateTime): Fu[List[Tournament]] =
+    tournamentRepo.coll
+      .find(
+        $doc(
+          "startsAt" $gt since.minusHours(12),
+          "createdBy" $exists true,
+          "nbPlayers" $gte 3,
+          "winner" $exists true,
+        ),
+      )
+      .sort($sort desc "startsAt")
+      .cursor[Tournament](ReadPreference.secondaryPreferred)
+      .list(Int.MaxValue)
+
   private def firstStandardWinner(tours: List[Tournament], speed: Speed): Option[Winner] =
     tours
       .find { t =>
-        t.variant.standard && t.schedule.exists(_.speed == speed)
+        t.variant.standard && t.schedule.fold(t.perfType == Speed.toPerfType(speed))(
+          _.speed == speed,
+        )
       }
       .flatMap(_.winner)
 
@@ -114,36 +125,29 @@ final class WinnersApi(
 
   private def fetchAll: Fu[AllWinners] =
     for {
-      yearlies  <- fetchLastFreq(Freq.Yearly, sinceDays(2 * 365))
-      monthlies <- fetchLastFreq(Freq.Monthly, sinceDays(3 * 30))
-      weeklies  <- fetchLastFreq(Freq.Weekly, sinceDays(3 * 7))
-      dailies   <- fetchLastFreq(Freq.Daily, sinceDays(3))
-      elites    <- fetchLastFreq(Freq.Weekend, sinceDays(3 * 7))
-      // marathons <- fetchLastFreq(Freq.Marathon, sinceDays(2 * 365))
+      yearlies  <- fetchScheduled(Freq.Yearly, sinceDays(2 * 365))
+      monthlies <- fetchScheduled(Freq.Monthly, sinceDays(3 * 30))
+      custom    <- fetchCustom(sinceDays(2 * 7))
     } yield {
       def standardFreqWinners(speed: Speed): FreqWinners =
         FreqWinners(
           yearly = firstStandardWinner(yearlies, speed),
           monthly = firstStandardWinner(monthlies, speed),
-          weekly = firstStandardWinner(weeklies, speed),
-          daily = firstStandardWinner(dailies, speed),
+          custom = firstStandardWinner(custom, speed),
         )
       AllWinners(
-        // hyperbullet = standardFreqWinners(Speed.HyperBullet),
         bullet = standardFreqWinners(Speed.Bullet),
-        superblitz = standardFreqWinners(Speed.SuperBlitz),
         blitz = standardFreqWinners(Speed.Blitz),
-        hyperrapid = standardFreqWinners(Speed.HyperRapid),
         rapid = standardFreqWinners(Speed.Rapid),
         classical = standardFreqWinners(Speed.Classical),
-        elite = elites flatMap (_.winner) take 4,
-        // marathon = marathons flatMap (_.winner) take 4,
+        correspondence = standardFreqWinners(Speed.Correspondence),
+        superblitz = standardFreqWinners(Speed.SuperBlitz), // bc
+        hyperrapid = standardFreqWinners(Speed.HyperRapid), // bc
         variants = WinnersApi.variants.view.map { v =>
           v.key -> FreqWinners(
             yearly = firstVariantWinner(yearlies, v),
             monthly = firstVariantWinner(monthlies, v),
-            weekly = firstVariantWinner(weeklies, v),
-            daily = firstVariantWinner(dailies, v),
+            custom = firstVariantWinner(custom, v),
           )
         }.toMap,
       )

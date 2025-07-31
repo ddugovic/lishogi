@@ -23,18 +23,6 @@ function button(
   });
 }
 
-function scrollToMeButton(ctrl: TournamentController): VNode | undefined {
-  if (ctrl.data.me)
-    return h(`button.fbt${ctrl.focusOnMe ? '.active' : ''}`, {
-      attrs: {
-        'data-icon': '7',
-        title: 'Scroll to your player',
-      },
-      hook: bind('mousedown', ctrl.toggleFocusOnMe, ctrl.redraw),
-    });
-  else return;
-}
-
 export function renderPager(ctrl: TournamentController, pag: PageData): MaybeVNodes {
   const enabled = !!pag.currentPageResults;
   const page = ctrl.page;
@@ -45,7 +33,6 @@ export function renderPager(ctrl: TournamentController, pag: PageData): MaybeVNo
         h('span.page', `${pag.nbResults ? pag.from + 1 : 0}-${pag.to} / ${pag.nbResults}`),
         button('Next', 'X', ctrl.userNextPage, enabled && page < pag.nbPages, ctrl),
         button('Last', 'V', ctrl.userLastPage, enabled && page < pag.nbPages, ctrl),
-        scrollToMeButton(ctrl),
       ])
     : [];
 }

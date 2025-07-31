@@ -51,7 +51,7 @@ export interface TournamentOpts {
   $side: JQuery<HTMLElement>;
   $faq: JQuery<HTMLElement>;
   $desc: JQuery<HTMLElement>;
-  playerManagmentButton?: HTMLElement;
+  playerManagementButton?: HTMLElement;
   teamEditButton?: HTMLElement;
   socketSend: Socket.Send;
 }
@@ -64,6 +64,7 @@ export interface TournamentDataBase {
   isFinished?: boolean;
   isRecentlyFinished?: boolean;
   isClosed?: boolean;
+  isFull?: boolean;
   candidatesOnly?: boolean;
   candidates?: LightUser[];
   denied?: LightUser[];
@@ -127,7 +128,6 @@ export interface TournamentDataFull extends TournamentDataBase {
   rated: boolean;
   spotlight: Spotlight;
   berserkable?: boolean;
-  isFull?: boolean;
   maxGames?: number;
   position?: {
     name: string;

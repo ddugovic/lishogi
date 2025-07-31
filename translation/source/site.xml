@@ -1047,6 +1047,7 @@
 	<string name="tournamentCandidates">Tournament candidates</string>
 	<string name="kickedAndDeniedPlayers">Kicked and denied players</string>
 	<string name="noPlayersJoinedYet">No players joined yet</string>
+	<string name="tourClosed" comment="Tournament cannot be joined anymore, joining was closed">Closed</string>
 	<string name="proMode" comment="Mode where making illegal move loses the game">Professional mode</string>
 	<string name="proModeDescription" comment="Mode where making illegal move loses the game">Illegal moves result in a loss, premoves are disabled, checks are not highlighted and only certain piece sets are allowed</string>
 </resources>

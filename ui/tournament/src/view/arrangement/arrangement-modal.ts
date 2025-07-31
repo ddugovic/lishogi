@@ -20,8 +20,6 @@ export function arrangementModal(ctrl: TournamentController): MaybeVNode {
   const a = ctrl.arrangement;
   if (!a) return;
 
-  console.log('opened');
-
   const maybeLoad = throttle(10000, () => loadOnlineStatus(ctrl));
 
   return modal({
@@ -31,7 +29,7 @@ export function arrangementModal(ctrl: TournamentController): MaybeVNode {
 
       document.addEventListener('visibilitychange', maybeLoad);
       window.addEventListener('focus', maybeLoad);
-      interval = setInterval(maybeLoad, 30000);
+      interval = setInterval(maybeLoad, 35000);
       loadOnlineStatus(ctrl, true);
     },
     onClose() {
@@ -49,7 +47,6 @@ export function arrangementModal(ctrl: TournamentController): MaybeVNode {
 }
 
 function loadOnlineStatus(ctrl: TournamentController, force = false): void {
-  console.log('running:', 'loadOnlineStatus');
   if (
     ctrl.arrangement &&
     ((document.visibilityState === 'visible' && document.hasFocus()) || force)
@@ -284,6 +281,8 @@ function totalSection(ctrl: TournamentController, a: Arrangement): VNode {
   const opponentReady = challenge?.destUser?.id === ctrl.opts.userId;
   const isReady = meReady || opponentReady;
 
+  const points = ctrl.isOrganized() ? a.points || ctrl.defaultArrangementPoints : a.points;
+
   return h('div.total-section', [
     h('div.values', [
       !a.startedAt
@@ -292,11 +291,8 @@ function totalSection(ctrl: TournamentController, a: Arrangement): VNode {
       a.startedAt
         ? titleValueWrap(i18n('tourArrangements:startedAt'), formatDate(a.startedAt))
         : null,
-      a.points
-        ? titleValueWrap(
-            i18n('tourArrangements:pointsWDL'),
-            `${a.points.w}/${a.points.d}/${a.points.l}`,
-          )
+      points
+        ? titleValueWrap(i18n('tourArrangements:pointsWDL'), `${points.w}/${points.d}/${points.l}`)
         : null,
     ]),
     a.gameId

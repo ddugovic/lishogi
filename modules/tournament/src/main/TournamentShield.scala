@@ -122,7 +122,7 @@ object TournamentShield {
       } yield tourSpeed == categSpeed)
       else of.toOption.has(tour.variant)
     def trans(implicit lang: Lang) = of.fold(
-      s => Schedule.Speed.toPerfType(s).trans,
+      s => Schedule.Speed.trans(s),
       v => PerfType.byVariant(v).map(_.trans).getOrElse(key),
     )
   }
@@ -191,10 +191,10 @@ object TournamentShield {
 
     val all: List[Category] = List(
       Bullet,
-      SuperBlitz,
       Blitz,
       Rapid,
       Classical,
+      SuperBlitz,
       Minishogi,
       // Chushogi,
       Annanshogi,
@@ -211,8 +211,7 @@ object TournamentShield {
     Spotlight(
       iconFont = "5".some,
       headline = s"Battle for the $name Shield",
-      description =
-        s"""This [Shield trophy](https://lichess.org/blog/Wh36WiQAAMMApuRb/introducing-shield-tournaments) is unique.
+      description = s"""This Shield trophy is unique.
 The winner keeps it for one month,
 then must defend it during the next $name Shield tournament!""",
       homepageHours = 6.some,

@@ -319,7 +319,7 @@ const arrangementForm = (ctrl: TournamentController, state: NewArrangement): May
     ]),
     gamesBetweenUsers.length && isNew
       ? h('div.games-users-wrap', [
-          h('h2', i18n('tourArrangements:existingGamesBetweenPlayers')),
+          h('h3', i18n('tourArrangements:existingGamesBetweenPlayers')),
           renderGames(ctrl, gamesBetweenUsers),
         ])
       : null,

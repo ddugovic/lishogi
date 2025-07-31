@@ -15,7 +15,7 @@ $c-tabs-active: theme.$c-accent !default;
     font-size: 0.9em;
   }
 
-  span {
+  & > span {
     @extend %roboto, %nowrap-hidden;
 
     flex: 1 1 auto;

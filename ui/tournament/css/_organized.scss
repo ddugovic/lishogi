@@ -84,23 +84,18 @@
     }
 
     .games-users-wrap {
-      margin-top: 2rem;
       width: 100%;
 
-      h4 {
-        font-size: 1.3rem;
+      h3 {
         text-align: center;
-        margin-bottom: 3px;
+        padding: 1rem 0.25rem;
+        border-top: theme.$border;
+        border-bottom: theme.$border;
       }
 
-      .games-users {
-        overflow-x: scroll;
-        scrollbar-width: none;
-        border-top: theme.$border;
-
-        &::-webkit-scrollbar {
-          display: none;
-        }
+      .slist,
+      .slist tr:last-child {
+        border-bottom: none;
       }
     }
   }
@@ -113,7 +108,18 @@
 main.organized {
   .tabs-wrap {
     .tabs-horiz {
-      align-items: flex-end;
+      & > span {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+      }
+
+      .right {
+        position: absolute;
+        height: 100%;
+        right: 0;
+        width: calc(100% / 3);
+      }
     }
 
     .slist {

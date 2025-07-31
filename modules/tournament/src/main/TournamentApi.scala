@@ -345,7 +345,7 @@ final class TournamentApi(
               tournamentRepo.setProcessedCandidate(
                 tour.id,
                 candidates = updatedCandidates,
-                denied = userId :: tour.denied,
+                denied = if (tour.denied.contains(userId)) tour.denied else userId :: tour.denied,
               ) >>- socket.foreach(_.reloadUsers(tour.id, List(userId, by)))
           }
         }
@@ -366,7 +366,7 @@ final class TournamentApi(
         val fuJoined =
           if (
             ((tour.password == password && !tour.closed && tour.notFull) || playerExists) &&
-            !tour.denied.contains(me.id)
+            !tour.denied.contains(me.id) && !tour.candidates.contains(me.id)
           ) {
             verdicts(tour, me.some, getUserTeamIds) flatMap {
               _.accepted ?? {
@@ -657,7 +657,10 @@ final class TournamentApi(
       Sequencing(tourId)(tournamentRepo.startedById) { tour =>
         getArrangementById(tour, arrId) flatMap {
           _ ?? { arr =>
-            arrangementRepo.update(arr.startGame(game.id, game.startColor)) >>- {
+            val user1Color =
+              if (game.player(shogi.Color.Sente).userId == arr.user1.map(_.id)) shogi.Color.Sente
+              else shogi.Color.Gote
+            arrangementRepo.update(arr.startGame(game.id, user1Color)) >>- {
               cached.arrangement.invalidateArrangements(tour.id)
               socket.foreach(_.reloadUsers(tour.id, List(userIds._1, userIds._2)))
             }
@@ -791,7 +794,7 @@ final class TournamentApi(
       by: User.ID,
   ): Funit =
     Sequencing(tourId)(tournamentRepo.enterableById) { tour =>
-      (tour.createdBy == by) ?? {
+      (tour.createdBy == by && !tour.denied.contains(userId)) ?? {
         kickOrRemove(tour, userId) >> {
           if (tour.isStarted) {
             if (tour.isArena)

@@ -14,7 +14,7 @@ export function players(ctrl: TournamentController, klass?: string): VNode {
     trimPlayers ? players.slice(0, maxlength) : players
   ) as ArrangementPlayer[];
 
-  return h('div', [
+  return h('div.slist-wrap', [
     trimmedPlayers.length
       ? renderPlayers(ctrl, trimmedPlayers, klass)
       : h(

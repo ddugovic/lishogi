@@ -18,7 +18,9 @@ export function arrangements(ctrl: TournamentController): VNode {
   );
 
   const myUpcoming = upcomingOngoing.filter(arr => ctrl.arrangementHasMe(arr));
-  const othersUpcoming = upcomingOngoing.filter(arr => !ctrl.arrangementHasMe(arr));
+  const othersUpcoming = upcomingOngoing.filter(
+    arr => !ctrl.arrangementHasMe(arr) && (!!arr.scheduledAt || !!arr.gameId || ctrl.isOrganized()),
+  );
 
   const sortByScheduledAt = (arrs: Arrangement[]) =>
     arrs.sort((a, b) => {
@@ -44,9 +46,11 @@ export function arrangements(ctrl: TournamentController): VNode {
   const trimArrs = arrs.length > maxlength && !expanded;
   const trimmedArrs = trimArrs ? arrs.slice(0, maxlength) : arrs;
 
-  return h('div', [
+  const withNewGameButton = ctrl.isOrganized() && ctrl.isCreator() && !ctrl.data.isFinished;
+
+  return h('div.slist-wrap', [
     trimmedArrs.length || (ctrl.isOrganized() && ctrl.isCreator())
-      ? renderGames(ctrl, trimmedArrs)
+      ? renderGames(ctrl, trimmedArrs, withNewGameButton)
       : h(
           'div.text.empty-tab',
           {
@@ -73,7 +77,11 @@ export function arrangements(ctrl: TournamentController): VNode {
   ]);
 }
 
-export function renderGames(ctrl: TournamentController, arrs: Arrangement[]): VNode {
+export function renderGames(
+  ctrl: TournamentController,
+  arrs: Arrangement[],
+  withNewGameButton = false,
+): VNode {
   const players = ctrl.data.standing.players;
   const renderedArrs = arrs.map(a => {
     const arrPlayers = [
@@ -91,10 +99,10 @@ export function renderGames(ctrl: TournamentController, arrs: Arrangement[]): VN
         },
       },
       [
-        h('td.small', h('i', { attrs: { 'data-icon': 4 } })),
+        h('td.small.fade', h('i', { attrs: { 'data-icon': 'K' } })),
         ctrl.isOrganized() ? h('td.bold.small', a.name) : undefined,
         h(
-          'td.small',
+          `td.small.vs-names${ctrl.isRobin() ? '.bold' : ''}`,
           i18nVdom(
             'xVsY',
             h('span', playerName(arrPlayers[0])),
@@ -125,7 +133,7 @@ export function renderGames(ctrl: TournamentController, arrs: Arrangement[]): VN
           click: arrangementRowClick(ctrl),
         },
       },
-      ctrl.isOrganized() && ctrl.isCreator() && !ctrl.data.isFinished
+      withNewGameButton
         ? [
             h('tr.new-game', [
               h(

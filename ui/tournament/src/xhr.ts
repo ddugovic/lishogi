@@ -15,9 +15,6 @@ function join(ctrl: TournamentController, password?: string, team?: string) {
       },
     })
     .then(res => {
-      if (ctrl.isOrganized()) ctrl.activeTab = 'players';
-      ctrl.redraw();
-
       if (!res.ok)
         res.json().then((t: any) => {
           if (t.error) alert(t.error);
@@ -35,7 +32,10 @@ function challenge(ctrl: TournamentController, a: Arrangement): Promise<any> {
   return window.lishogi.xhr
     .json('POST', `/challenge/tournament/${arrId}`)
     .then(data => {
-      if (data.redirect) window.lishogi.redirect(data.redirect);
+      if (data.redirect) {
+        ctrl.tourRedirect = true;
+        window.lishogi.redirect(data.redirect);
+      }
     })
     .catch(err => {
       try {
@@ -64,20 +64,24 @@ function loadPageOf(ctrl: TournamentController, userId: string): Promise<any> {
 }
 
 function reload(ctrl: TournamentController, partial = true): Promise<void> {
-  return window.lishogi.xhr
-    .json('GET', `/tournament/${ctrl.data.id}`, {
-      url: {
-        page: ctrl.focusOnMe ? undefined : ctrl.page,
-        playerInfo: ctrl.playerInfo.id,
-        partial,
-      },
-    })
-    .then(data => {
-      ctrl.reload(data);
-      ctrl.redraw();
-      const extraDelay = Math.floor(ctrl.nbWatchers) * (data.me ? 1 : 3);
-      return new Promise(resolve => setTimeout(resolve, extraDelay));
-    }, onFail);
+  // try to avoid reload if we are redirecting
+  if (window.lishogi.properReload || window.lishogi.redirectInProgress || ctrl.tourRedirect) {
+    return Promise.resolve();
+  } else
+    return window.lishogi.xhr
+      .json('GET', `/tournament/${ctrl.data.id}`, {
+        url: {
+          page: ctrl.page,
+          playerInfo: ctrl.playerInfo.id,
+          partial,
+        },
+      })
+      .then(data => {
+        ctrl.reload(data);
+        ctrl.redraw();
+        const extraDelay = Math.floor(ctrl.nbWatchers) * (data.me ? 1 : 3);
+        return new Promise(resolve => setTimeout(resolve, extraDelay));
+      }, onFail);
 }
 
 const playerInfo = (ctrl: TournamentController, userId: string): Promise<void> =>

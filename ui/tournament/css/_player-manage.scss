@@ -22,7 +22,8 @@
     .table-wrap {
       max-height: 32vh;
       min-height: 60px;
-      overflow: auto;
+      overflow-x: auto;
+      overflow-y: scroll;
 
       tr.shaded {
         pointer-events: none;
@@ -43,16 +44,29 @@
     }
 
     .ban {
-      flex: 1;
+      flex: 3;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 1.5rem 0;
+      padding: 1.5rem;
       border-right: theme.$border;
+
+      button {
+        flex: 1;
+        max-width: 12rem;
+      }
     }
 
     .joining {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       padding: 1.5rem;
+
+      button {
+        flex: 1;
+      }
     }
   }
 }

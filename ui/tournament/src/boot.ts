@@ -17,8 +17,8 @@ export function boot(
   opts.socketSend = window.lishogi.socket.send;
   ctrl = start(opts);
 
-  if (opts.playerManagmentButton) {
-    opts.playerManagmentButton.addEventListener('click', () => {
+  if (opts.playerManagementButton) {
+    opts.playerManagementButton.addEventListener('click', () => {
       ctrl.playerManagement = !ctrl.playerManagement;
       ctrl.redraw();
     });

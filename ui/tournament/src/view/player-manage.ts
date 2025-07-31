@@ -65,18 +65,25 @@ function playerManagement(ctrl: TournamentController): VNode {
         ),
       ]),
       h('div.joining', [
-        h(
-          'button.button.button-red',
-          {
-            on: {
-              click: () => {
-                ctrl.closeJoining(!ctrl.data.isClosed);
-                ctrl.redraw();
+        ctrl.reloading === 'joining'
+          ? h('i.ddloader')
+          : h(
+              'button.button',
+              {
+                class: {
+                  'button-red': !ctrl.data.isClosed,
+                  'button-green': !!ctrl.data.isClosed,
+                },
+                on: {
+                  click: () => {
+                    ctrl.reloading = 'joining';
+                    ctrl.redraw();
+                    ctrl.closeJoining(!ctrl.data.isClosed);
+                  },
+                },
               },
-            },
-          },
-          ctrl.data.isClosed ? 'Open joining' : 'Close joining',
-        ),
+              ctrl.data.isClosed ? 'Open joining' : 'Close joining',
+            ),
       ]),
     ]),
   ]);

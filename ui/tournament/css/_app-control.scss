@@ -1,6 +1,7 @@
 @use 'pkg:breakpoint-sass' as breakpoint;
 @use 'pkg:common/abstract/extends';
 @use 'pkg:common/abstract/media-queries';
+@use 'pkg:common/abstract/uniboard';
 @use 'pkg:common/theme';
 
 .tour__controls {
@@ -24,12 +25,12 @@
   .pager {
     @extend %flex-center;
 
-    flex-basis: 100%;
+    flex: 1 1;
     user-select: none;
     justify-content: space-between;
 
     @include breakpoint.breakpoint(media-queries.$mq-x-small) {
-      flex-basis: unset;
+      flex: unset;
     }
 
     .page {
@@ -69,13 +70,37 @@
   .right {
     display: flex;
     align-items: center;
-    position: absolute;
-    right: 0;
-    height: 100%;
+    justify-content: flex-end;
+    position: relative;
+    width: calc(100% / 3);
+
+    &:empty {
+      width: unset;
+    }
+
+    button > span {
+      display: none;
+    }
+
+    @include breakpoint.breakpoint(media-queries.$mq-xx-small) {
+      width: unset;
+
+      button > span {
+        display: block;
+        margin-left: 0.5em;
+      }
+    }
 
     .fbt {
       display: flex;
       align-items: center;
+
+      &.withdraw {
+        &:hover {
+          background-color: theme.$c-bad;
+          color: theme.$c-bad-over;
+        }
+      }
 
       &.denied {
         pointer-events: none;
@@ -84,12 +109,12 @@
       }
 
       &.highlight {
-        $highlight-shadow: theme.$m-secondary_bg-box_mix_30;
+        $highlight-shadow: theme.$m-secondary_black_mix_60;
 
-        position: relative;
+        position: absolute;
         right: 5px;
         top: -3px;
-        padding: 8px 20px;
+        padding: 5px 15px;
         border-radius: 8px;
         text-decoration: none;
         background: theme.$c-secondary;
@@ -98,6 +123,19 @@
         transition: all 0.1s;
         will-change: transform;
         filter: brightness(1.1);
+
+        &::before {
+          display: none;
+        }
+
+        @include breakpoint.breakpoint(media-queries.$mq-xx-small) {
+          padding: 8px 20px;
+          white-space: nowrap;
+
+          &::before {
+            display: block;
+          }
+        }
 
         &:hover {
           filter: brightness(1);
@@ -128,17 +166,36 @@
       }
     }
 
-    .waiting span {
-      margin-right: 0.5rem;
+    .waiting {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: theme.$m-primary_alpha_neg80;
+      font-size: 0.8em;
+
+      @include breakpoint.breakpoint(media-queries.$mq-xx-small) {
+        width: unset;
+      }
+
+      @include breakpoint.breakpoint(uniboard.$mq-col3-uniboard) {
+        font-size: 0.9em;
+      }
+
+      span {
+        text-align: center;
+        margin-right: 0.5rem;
+        padding-left: 1rem;
+      }
     }
 
-    .spinner {
-      margin: 0;
-      width: 1.64em;
-      height: 2em;
-      margin-right: 0.5em;
-      margin-left: 35px;
-      align-self: center;
+    .ddloader {
+      margin: auto;
+
+      @include breakpoint.breakpoint(media-queries.$mq-xx-small) {
+        margin-right: 1rem;
+      }
     }
   }
 

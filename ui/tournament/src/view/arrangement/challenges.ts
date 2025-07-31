@@ -9,7 +9,7 @@ export function challenges(ctrl: TournamentController): VNode {
   const challengesExists = !!(ctrl.challengeData.in.length + ctrl.challengeData.out.length);
 
   return h(
-    'div',
+    'div.slist-wrap',
     challengesExists
       ? renderChallenges(ctrl, ctrl.challengeData.in, ctrl.challengeData.out)
       : h(

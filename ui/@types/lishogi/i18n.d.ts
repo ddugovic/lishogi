@@ -1076,6 +1076,7 @@ declare global {
     | 'tournamentCandidates'
     | 'kickedAndDeniedPlayers'
     | 'noPlayersJoinedYet'
+    | 'tourClosed'
     | 'proMode'
     | 'proModeDescription'
     | 'activity:activity'

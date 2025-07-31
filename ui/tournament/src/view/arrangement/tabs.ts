@@ -21,12 +21,12 @@ function tab(
     'span',
     {
       class: {
-        active: tab === ctrl.activeTab,
+        active: tab === ctrl.activeTab?.(),
         ...kls,
       },
       on: {
         mousedown: () => {
-          ctrl.activeTab = tab;
+          ctrl.activeTab?.(tab);
           ctrl.redraw();
         },
       },
@@ -75,9 +75,9 @@ export function tabulatedView(
 ): VNode {
   return h('div.tabs-wrap', [
     tabs(ctrl, usedTabs, asControls),
-    ctrl.activeTab === 'players'
+    ctrl.activeTab?.() === 'players'
       ? players(ctrl)
-      : ctrl.activeTab === 'challenges'
+      : ctrl.activeTab?.() === 'challenges'
         ? challenges(ctrl)
         : arrangements(ctrl),
   ]);

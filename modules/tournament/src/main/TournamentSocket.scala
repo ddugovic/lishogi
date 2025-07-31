@@ -155,14 +155,14 @@ final private class TournamentSocket(
           for {
             by     <- userIdOpt
             d      <- o obj "d"
-            userId <- d str "u"
+            userId <- d.str("u").map(User.normalize)
             accept <- d boolean "v"
           } api.processCandidate(tourId.value, userId, accept, by)
         case "player-kick" =>
           for {
             by     <- userIdOpt
             d      <- o obj "d"
-            toKick <- d str "v"
+            toKick <- d.str("v").map(User.normalize)
           } api.kickFromTour(tourId.value, toKick, by)
         case "close-joining" =>
           for {

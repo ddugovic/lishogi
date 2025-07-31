@@ -1,6 +1,10 @@
 @use 'pkg:common/theme';
 
 .slist {
+  &-wrap {
+    overflow-x: scroll;
+  }
+
   &-clean {
     tr {
       border-bottom: theme.$border;
@@ -33,6 +37,33 @@
       &.small {
         white-space: nowrap;
         width: 1%;
+      }
+
+      &.fade {
+        font-size: 0.75rem;
+        color: theme.$c-font-dim;
+      }
+
+      &.vs-names {
+        font-weight: normal;
+        font-size: 0.9rem;
+
+        span {
+          font-style: normal;
+          font-size: 1rem;
+
+          &:first-child {
+            margin-right: 0.15rem;
+          }
+
+          &:last-child {
+            margin-left: 0.15rem;
+          }
+        }
+
+        &.bold span {
+          font-weight: bold;
+        }
       }
 
       &.center {
