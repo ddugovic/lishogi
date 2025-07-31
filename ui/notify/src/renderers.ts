@@ -79,7 +79,10 @@ export const renderers: Renderers = {
   },
   arrangementConfirmation: {
     html: n => {
-      return generic(n, `/tournament/${n.content.tid}#${n.content.id}`, 'p', [
+      const split = (n.content.id as string).split('/', 2);
+      const path =
+        split.length === 2 ? `${split[0]}#${split[1]}` : `${n.content.tid}#${n.content.id}`;
+      return generic(n, `/tournament/${path}`, 'p', [
         h('span', [h('strong', [i18n('tourArrangements:gameScheduling')]), drawTime(n)]),
         h('span', i18nFormat('tourArrangements:xAcceptedTime', userFullName(n.content.user))),
       ]);
