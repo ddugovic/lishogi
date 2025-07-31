@@ -448,7 +448,10 @@ final class TournamentApi(
       }
 
   def getArrangementById(tour: Tournament, arrId: Arrangement.ID): Fu[Option[Arrangement]] =
-    arrangementRepo.byId(arrId).orElse(createRobinArrangement(tour, arrId))
+    arrangementRepo
+      .byId(arrId)
+      .orElse(createRobinArrangement(tour, arrId))
+      .dmap(_.filter(_.tourId == tour.id))
 
   private def createRobinArrangement(
       tour: Tournament,
@@ -456,13 +459,15 @@ final class TournamentApi(
   ): Fu[Option[Arrangement]] =
     tour.isRobin ?? {
       Arrangement.RobinId.parseId(arrId) ?? { robinId =>
+        val properId = robinId.makeId
         (
-          fuccess(tour.id == robinId.tourId) >>&
+          fuccess(properId == arrId) >>&
+            fuccess(tour.id == robinId.tourId) >>&
             playerRepo.existsActiveAll(tour.id, robinId.userIdList)
         ) map { isValid =>
           isValid ?? {
             Arrangement(
-              id = robinId.makeId,
+              id = properId,
               tourId = tour.id,
               user1 = Arrangement
                 .User(

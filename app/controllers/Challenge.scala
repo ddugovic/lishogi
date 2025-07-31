@@ -223,7 +223,7 @@ final class Challenge(
     AuthBody { implicit ctx => me =>
       OptionFuResult(
         for {
-          tour <- env.tournament.api.get(tourId)
+          tour <- env.tournament.api.get(tourId).dmap(_.filter(_.hasArrangements))
           arr <- tour ?? { t =>
             {
               val fullArrId = if (t.isRobin) s"${t.id}/$arrId" else arrId
