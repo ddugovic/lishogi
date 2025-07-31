@@ -107,11 +107,13 @@ case class Game(
 
   def arrangementId = metadata.arrangementId
 
-  def isTournament = tournamentId.isDefined
-  def isSimul      = simulId.isDefined
-  def isMandatory  = isTournament || isSimul
-  def isClassical  = perfType contains Classical
-  def nonMandatory = !isMandatory
+  def isTournament  = tournamentId.isDefined
+  def isArrangement = arrangementId.isDefined
+  def isSimul       = simulId.isDefined
+  def isTourOrSimul = isTournament || isSimul
+  def isStandalone  = !isTourOrSimul
+  def isMandatory   = (isTournament && !isArrangement) || isSimul
+  def isClassical   = perfType contains Classical
 
   def hasChat = !isTournament && !isSimul && nonAi
 
@@ -419,7 +421,7 @@ case class Game(
 
   def playerCouldRematch =
     finishedOrAborted &&
-      nonMandatory &&
+      isStandalone &&
       !boosted && {
         nonAi || initialSfen.isEmpty || !(clock.exists(_.config.limitSeconds < 60))
       }
@@ -433,11 +435,11 @@ case class Game(
   def boosted = rated && finished && bothPlayersHaveMoved && playedPlies < 10
 
   def moretimeable(color: Color) =
-    playable && nonMandatory && {
+    playable && isStandalone && {
       clock.??(_ moretimeable color) || correspondenceClock.??(_ moretimeable color)
     }
 
-  def abortable = status == Status.Started && playedPlies < 2 && nonMandatory
+  def abortable = status == Status.Started && playedPlies < 2 && !isMandatory
 
   def berserkable = clock.??(_.config.berserkable) && status == Status.Started && playedPlies < 2
 
@@ -568,7 +570,7 @@ case class Game(
   def timeForFirstMove: Centis =
     Centis ofSeconds {
       import Speed._
-      if (isTournament) speed match {
+      if (isTournament && !isArrangement) speed match {
         case UltraBullet => 11
         case Bullet      => 16
         case Blitz       => 21

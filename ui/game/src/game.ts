@@ -132,5 +132,5 @@ function bothPlayersHavePlayed(data: GameData): boolean {
 }
 
 function mandatory(data: GameData): boolean {
-  return !!data.tournament || !!data.simul;
+  return (!!data.tournament && data.tournament.format === 'arena') || !!data.simul;
 }

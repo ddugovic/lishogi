@@ -74,7 +74,7 @@ final private class Takebacker(
     }
 
   def isAllowedIn(game: Game): Fu[Boolean] =
-    if (game.isMandatory) fuFalse
+    if (game.isTourOrSimul) fuFalse
     else isAllowedByPrefs(game)
 
   private def isAllowedByPrefs(game: Game): Fu[Boolean] =
@@ -97,7 +97,7 @@ final private class Takebacker(
 
   private def IfAllowed[A](game: Game)(f: => Fu[A]): Fu[A] =
     if (!game.playable) fufail(ClientError("[takebacker] game is over or paused" + game.id))
-    else if (game.isMandatory) fufail(ClientError("[takebacker] game disallows it " + game.id))
+    else if (game.isTourOrSimul) fufail(ClientError("[takebacker] game disallows it " + game.id))
     else
       isAllowedByPrefs(game) flatMap {
         case true => f
