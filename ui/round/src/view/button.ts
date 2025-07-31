@@ -194,6 +194,19 @@ function rematchButtons(ctrl: RoundController): MaybeVNodes {
   ];
 }
 
+// just to get the same height for ddloader
+export function hidden(): VNode {
+  return h(
+    'button.fbt.hidden',
+    {
+      attrs: {
+        disabled: true,
+      },
+    },
+    [h('span', util.justIcon('J'))],
+  );
+}
+
 export function resume(ctrl: RoundController): MaybeVNode {
   if (!status.paused(ctrl.data)) return null;
   const d = ctrl.data;

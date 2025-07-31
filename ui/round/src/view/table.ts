@@ -23,6 +23,9 @@ const isLoading = (ctrl: RoundController): boolean => ctrl.loading || ctrl.redir
 
 const loader = () => h('i.ddloader');
 
+// hidden buttons assure correct height, one on each side so loader is in the center
+const loaderIcon = [button.hidden(), h('div.icon-loader', loader()), button.hidden()];
+
 function renderTableWith(ctrl: RoundController, buttons: MaybeVNodes): MaybeVNodes {
   return [replay.render(ctrl), buttons.find(x => !!x) ? h('div.rcontrols', buttons) : null];
 }
@@ -49,8 +52,9 @@ export const renderTablePlay = (ctrl: RoundController): MaybeVNodes => {
   const pausable = ctrl.showPauseButton();
   const paused = pausable && (status.paused(ctrl.data) || status.prepaused(ctrl.data));
   const submit = button.submitUsi(ctrl) || button.sealedUsi(ctrl);
-  const icons =
-    loading || submit || paused
+  const icons = loading
+    ? loaderIcon
+    : submit || paused
       ? []
       : [
           game.abortable(d)
@@ -91,7 +95,7 @@ export const renderTablePlay = (ctrl: RoundController): MaybeVNodes => {
           replay.analysisButton(ctrl),
         ];
   const buttons: MaybeVNodes = loading
-    ? [loader()]
+    ? []
     : submit
       ? [submit]
       : [
