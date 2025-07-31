@@ -372,53 +372,79 @@ export function pauseConfirm(ctrl: RoundController): VNode {
 }
 
 export function cancelDrawOffer(ctrl: RoundController): MaybeVNode {
-  return ctrl.data.player.offeringDraw ? h('div.pending', [h('p', i18n('drawOfferSent'))]) : null;
+  return ctrl.data.player.offeringDraw
+    ? h(
+        'div.pending',
+        {
+          hook: util.onInsert(ctrl.autoScroll),
+        },
+        [h('p', i18n('drawOfferSent'))],
+      )
+    : null;
 }
 
 export function cancelPauseOffer(ctrl: RoundController): MaybeVNode {
   return ctrl.data.player.offeringPause
-    ? h('div.pending', [h('p', i18n('adjournmentOfferSent'))])
+    ? h(
+        'div.pending',
+        {
+          hook: util.onInsert(ctrl.autoScroll),
+        },
+        [h('p', i18n('adjournmentOfferSent'))],
+      )
     : null;
 }
 
-// export function cancelResumeOffer(ctrl: RoundController): MaybeVNode {
-//   return ctrl.data.player.offeringResume
-//     ? h('div.pending', [h('p', i18n('resumptionOfferSent'))])
-//     : null;
-// }
-
 export function answerOpponentDrawOffer(ctrl: RoundController): MaybeVNode {
   return ctrl.data.opponent.offeringDraw
-    ? h('div.negotiation.draw', [
-        h('p', i18n('yourOpponentOffersADraw')),
-        acceptButton(ctrl, 'draw-yes', () => ctrl.socket.sendLoading('draw-yes')),
-        declineButton(ctrl, () => ctrl.socket.sendLoading('draw-no')),
-      ])
+    ? h(
+        'div.negotiation.draw',
+        {
+          hook: util.onInsert(ctrl.autoScroll),
+        },
+        [
+          h('p', i18n('yourOpponentOffersADraw')),
+          acceptButton(ctrl, 'draw-yes', () => ctrl.socket.sendLoading('draw-yes')),
+          declineButton(ctrl, () => ctrl.socket.sendLoading('draw-no')),
+        ],
+      )
     : null;
 }
 
 export function answerOpponentPauseOffer(ctrl: RoundController): MaybeVNode {
   return ctrl.data.opponent.offeringPause
-    ? h('div.negotiation.pause', [
-        h('p', i18n('yourOpponentOffersAnAdjournment')),
-        acceptButton(ctrl, 'pause-yes', () => ctrl.socket.sendLoading('pause-yes')),
-        declineButton(ctrl, () => ctrl.socket.sendLoading('pause-no')),
-      ])
+    ? h(
+        'div.negotiation.pause',
+        {
+          hook: util.onInsert(ctrl.autoScroll),
+        },
+        [
+          h('p', i18n('yourOpponentOffersAnAdjournment')),
+          acceptButton(ctrl, 'pause-yes', () => ctrl.socket.sendLoading('pause-yes')),
+          declineButton(ctrl, () => ctrl.socket.sendLoading('pause-no')),
+        ],
+      )
     : null;
 }
 
 export function cancelTakebackProposition(ctrl: RoundController): MaybeVNode {
   return ctrl.data.player.proposingTakeback
-    ? h('div.pending', [
-        h('p', i18n('takebackPropositionSent')),
-        h(
-          'button.button',
-          {
-            hook: util.bind('click', () => ctrl.socket.sendLoading('takeback-no')),
-          },
-          i18n('cancel'),
-        ),
-      ])
+    ? h(
+        'div.pending',
+        {
+          hook: util.onInsert(ctrl.autoScroll),
+        },
+        [
+          h('p', i18n('takebackPropositionSent')),
+          h(
+            'button.button',
+            {
+              hook: util.bind('click', () => ctrl.socket.sendLoading('takeback-no')),
+            },
+            i18n('cancel'),
+          ),
+        ],
+      )
     : null;
 }
 
@@ -465,11 +491,17 @@ function declineButton(
 
 export function answerOpponentTakebackProposition(ctrl: RoundController): MaybeVNode {
   return ctrl.data.opponent.proposingTakeback
-    ? h('div.negotiation.takeback', [
-        h('p', i18n('yourOpponentProposesATakeback')),
-        acceptButton(ctrl, 'takeback-yes', ctrl.takebackYes),
-        declineButton(ctrl, () => ctrl.socket.sendLoading('takeback-no')),
-      ])
+    ? h(
+        'div.negotiation.takeback',
+        {
+          hook: util.onInsert(ctrl.autoScroll),
+        },
+        [
+          h('p', i18n('yourOpponentProposesATakeback')),
+          acceptButton(ctrl, 'takeback-yes', ctrl.takebackYes),
+          declineButton(ctrl, () => ctrl.socket.sendLoading('takeback-no')),
+        ],
+      )
     : null;
 }
 

@@ -61,10 +61,7 @@ export function renderResult(ctrl: RoundController): VNode | undefined {
         h(
           'p.status',
           {
-            hook: util.onInsert(() => {
-              if (ctrl.autoScroll) ctrl.autoScroll();
-              else setTimeout(() => ctrl.autoScroll(), 200);
-            }),
+            hook: util.onInsert(ctrl.autoScroll),
           },
           [
             viewStatus(ctrl.data.game.status, ctrl.data.game.winner, handicap),

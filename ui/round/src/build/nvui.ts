@@ -1,4 +1,5 @@
 import * as game from 'game';
+import type { Player } from 'game/interfaces';
 import * as status from 'game/status';
 import { i18n } from 'i18n';
 import { commands } from 'nvui/command';
@@ -295,7 +296,7 @@ function renderMoves(steps: Step[], variant: VariantKey, style: Style) {
   return res;
 }
 
-function playerHtml(ctrl: RoundController, player: game.Player) {
+function playerHtml(ctrl: RoundController, player: Player) {
   if (player.ai) return engineNameFromCode(player.aiCode, player.ai);
   const d = ctrl.data;
   const user = player.user;
@@ -318,7 +319,7 @@ function playerHtml(ctrl: RoundController, player: game.Player) {
     : 'Anonymous';
 }
 
-function playerText(ctrl: RoundController, player: game.Player) {
+function playerText(ctrl: RoundController, player: Player) {
   if (player.ai) return engineNameFromCode(player.aiCode, player.ai);
   const d = ctrl.data;
   const user = player.user;

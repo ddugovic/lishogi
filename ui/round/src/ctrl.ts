@@ -97,7 +97,7 @@ export default class RoundController {
   drawConfirm?: Timeout = undefined;
   pauseConfirm?: Timeout = undefined;
   // will be replaced by view layer
-  autoScroll: () => void = $.noop;
+  autoScroll: () => void = () => {};
   challengeRematched = false;
   shouldSendMoveTime = false;
   openStudyModal = false;
