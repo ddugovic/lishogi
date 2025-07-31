@@ -11,6 +11,7 @@ function main(opts: any): void {
         window.lishogi.xhr.text('GET', opts.xhrUrl).then(html => {
           $(selector).replaceWith($(html).find(selector));
           init();
+          window.lishogi.pubsub.emit('content_loaded');
         });
       },
     },
