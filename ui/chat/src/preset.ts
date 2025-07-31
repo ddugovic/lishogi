@@ -37,8 +37,13 @@ const enGroups: PresetGroups = {
 };
 
 const jpGroups: PresetGroups = {
-  start: ['よろしく/よろしくお願いします'].map(splitIt),
-  end: ['あり/ありがとうございました', 'おつ/お疲れ様でした', 'また/またお願いします'].map(splitIt),
+  start: ['こん/こんにちは', 'よろしく/よろしくお願いします'].map(splitIt),
+  end: [
+    'gg/Good game',
+    'おつ/お疲れ様でした',
+    'あり/ありがとうございました',
+    'また/またお願いします',
+  ].map(splitIt),
 };
 
 function groupsByLang(): PresetGroups {
