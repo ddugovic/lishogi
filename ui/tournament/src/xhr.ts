@@ -38,7 +38,14 @@ function challenge(ctrl: TournamentController, a: Arrangement): Promise<any> {
       if (data.redirect) window.lishogi.redirect(data.redirect);
     })
     .catch(err => {
-      console.log('err:', err);
+      try {
+        const res = err as Response;
+        res.json().then(t => {
+          alert(t.error || t);
+        });
+      } catch {
+        alert(`Cannot challenge player - ${err}`);
+      }
     });
 }
 

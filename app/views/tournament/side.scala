@@ -119,6 +119,13 @@ object side {
             views.html.base.bits.sfenAnalysisLink(sfen),
           )
         },
+        (tour.hasArrangements && ctx.pref.tourChallenge != lila.pref.Pref.Challenge.ALWAYS) option a(
+          cls      := "text challenge-warning",
+          href     := routes.Pref.form("privacy"),
+          dataIcon := "!",
+        )(
+          "You cannot receive challenges from all users",
+        ),
       ),
       streamers.nonEmpty option div(cls := "context-streamers")(
         streamers map views.html.streamer.bits.contextual,
