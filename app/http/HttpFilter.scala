@@ -41,11 +41,14 @@ final class HttpFilter(env: Env)(implicit val mat: Materializer) extends Filter 
     val reqTime    = nowMillis - startTime
     val statusCode = result.header.status
     val client     = HTTPRequest clientName req
+
     if (env.isDev) {
-      if (logRequests && !ignoredLogUris.contains(req.uri))
+      if (logRequests && !ignoredLogUris.contains(req.uri)) {
+        val sessionId  = HTTPRequest.userSessionId(req).map(_.take(4)).getOrElse("anon")
         logger.info(
-          s"[$statusCode] ${s"[$client]".padTo(9, ' ')} ${req.method.padTo(6, ' ')} ${req.uri} -> $actionName (${reqTime}ms)",
+          s"[$statusCode] ${s"[$client]".padTo(9, ' ')} ${req.method.padTo(6, ' ')} ${req.uri} -> $actionName (${reqTime}ms) [${sessionId}]",
         )
+      }
     } else httpMon.time(actionName, client, req.method, statusCode).record(reqTime)
   }
 
