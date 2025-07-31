@@ -30,6 +30,7 @@ final class Env(
     cacheApi: lila.memo.CacheApi,
     isOnline: lila.socket.IsOnline,
     onlineIds: lila.socket.OnlineIds,
+    mode: play.api.Mode,
 )(implicit
     ec: scala.concurrent.ExecutionContext,
     system: ActorSystem,

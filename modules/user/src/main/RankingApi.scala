@@ -18,6 +18,7 @@ final class RankingApi(
     cacheApi: lila.memo.CacheApi,
     mongoCache: lila.memo.MongoCache.Api,
     lightUser: lila.common.LightUser.Getter,
+    mode: play.api.Mode,
 )(implicit ec: scala.concurrent.ExecutionContext) {
 
   import RankingApi._
@@ -67,7 +68,7 @@ final class RankingApi(
   private[user] def topPerf(perfId: Perf.ID, nb: Int): Fu[List[User.LightPerf]] =
     PerfType.id2key(perfId) ?? { perfKey =>
       coll
-        .find($doc("perf" -> perfId, "stable" -> true))
+        .find($doc("perf" -> perfId, "stable" -> (mode == play.api.Mode.Prod)))
         .sort($doc("rating" -> -1))
         .cursor[Ranking](ReadPreference.secondaryPreferred)
         .list(nb)
@@ -140,7 +141,7 @@ final class RankingApi(
     private def compute(pt: PerfType): Fu[Map[User.ID, Rank]] =
       coll
         .find(
-          $doc("perf" -> pt.id, "stable" -> true),
+          $doc("perf" -> pt.id, "stable" -> (mode == play.api.Mode.Prod)),
           $doc("_id" -> true).some,
         )
         .sort($doc("rating" -> -1))
