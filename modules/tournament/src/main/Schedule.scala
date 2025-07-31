@@ -25,7 +25,7 @@ case class Schedule(
       .byVariant(variant)
       .map(
         _.trans,
-      ) | s"${Schedule.Speed.specialPrefix(speed)}${Schedule.Speed.toPerfType(speed).trans}"
+      ) | Schedule.Speed.trans(speed)
     val sched =
       s"${freq.trans(perfTypeTrans)}"
     if (format == Format.Arena) I18nKeys.tourname.xArena.txt(sched)
@@ -154,12 +154,12 @@ object Schedule {
     val key = lila.common.String lcfirst toString
   }
   object Speed {
-    case object UltraBullet    extends Speed(5)
-    case object HyperBullet    extends Speed(10)
+    case object UltraBullet    extends Speed(5)  // to remove?
+    case object HyperBullet    extends Speed(10) // to remove
     case object Bullet         extends Speed(20)
-    case object SuperBlitz     extends Speed(25)
+    case object SuperBlitz     extends Speed(25) // to remove
     case object Blitz          extends Speed(30)
-    case object HyperRapid     extends Speed(40)
+    case object HyperRapid     extends Speed(40) // to remove
     case object Rapid          extends Speed(50)
     case object Classical      extends Speed(60)
     case object Correspondence extends Speed(80)
@@ -207,21 +207,15 @@ object Schedule {
         case Classical            => PerfType.Classical
         case Correspondence       => PerfType.Correspondence
       }
-    def specialPrefix(speed: Speed) =
+    private def specialPrefix(speed: Speed) =
       speed match {
-        case UltraBullet              => "U-"
         case HyperBullet | HyperRapid => "H-"
         case SuperBlitz               => "S-"
         case _                        => ""
       }
-  }
+    def trans(speed: Speed)(implicit lang: Lang) =
+      s"${specialPrefix(speed)}${toPerfType(speed).trans}"
 
-  sealed trait Season
-  object Season {
-    case object Spring extends Season
-    case object Summer extends Season
-    case object Autumn extends Season
-    case object Winter extends Season
   }
 
   private[tournament] def durationFor(s: Schedule): Int = {
@@ -282,23 +276,14 @@ object Schedule {
     }
   }
 
-  private val standardIncHours         = Set(1, 7, 13, 19)
-  private def standardInc(s: Schedule) = standardIncHours(s.at.getHourOfDay)
-
   private[tournament] def clockFor(s: Schedule) = {
-    import Freq._, Speed._
-    import shogi.variant._
+    import Speed._
 
     val CC = shogi.Clock.Config
     val RT = TimeControl.RealTime
     val CR = TimeControl.Correspondence
 
     (s.freq, s.variant, s.speed) match {
-      // Special cases.
-      case (Hourly, Standard, Blitz) if standardInc(s) => RT(CC(3 * 60, 2, 0, 1))
-
-      case (Shield, variant, Blitz) if !variant.standard => RT(CC(5 * 60, 0, 10, 1))
-
       case (_, _, UltraBullet)    => RT(CC(30, 0, 0, 1))       //      30
       case (_, _, HyperBullet)    => RT(CC(0, 0, 5, 1))        //            5 * 25
       case (_, _, Bullet)         => RT(CC(0, 0, 10, 1))       //           10 * 25

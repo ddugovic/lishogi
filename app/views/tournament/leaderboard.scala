@@ -10,35 +10,36 @@ import lila.rating.PerfType
 
 object leaderboard {
 
-  private def freqWinner(w: lila.tournament.Winner, freq: String)(implicit lang: Lang) =
+  private def freqWinner(w: lila.tournament.Winner)(implicit lang: Lang) =
     li(
       userIdLink(w.userId.some),
       a(
         cls   := "tourname",
-        title := w.trans,
+        title := showDate(w.date),
         href  := routes.Tournament.show(w.tourId),
-      )(freq),
+      )(w.trans),
     )
 
   private val section = st.section(cls := "tournament-leaderboards__item")
 
-  private def freqWinners(fws: lila.tournament.FreqWinners, perfType: PerfType, name: String)(
-      implicit lang: Lang,
+  private def freqWinners(
+      fws: lila.tournament.FreqWinners,
+      perfType: PerfType,
+      prefix: String = "",
+  )(implicit
+      lang: Lang,
   ) =
     section(
-      h2(cls := "text", dataIcon := perfType.iconChar)(name),
+      h2(cls := "text", dataIcon := perfType.iconChar)(s"$prefix${perfType.trans}"),
       ul(
         fws.yearly.map { w =>
-          freqWinner(w, "Yearly")
+          freqWinner(w)
         },
         fws.monthly.map { w =>
-          freqWinner(w, "Monthly")
+          freqWinner(w)
         },
-        fws.weekly.map { w =>
-          freqWinner(w, "Weekly")
-        },
-        fws.daily.map { w =>
-          freqWinner(w, "Daily")
+        fws.custom.map { w =>
+          freqWinner(w)
         },
       ),
     )
@@ -49,57 +50,23 @@ object leaderboard {
       moreCss = cssTag("tournament.leaderboard"),
       wrapClass = "full-screen-force",
     ) {
-      def eliteWinners =
-        section(
-          h2(cls := "text", dataIcon := "'")("Weekend Arena"),
-          ul(
-            winners.elite.map { w =>
-              li(
-                userIdLink(w.userId.some),
-                a(
-                  cls   := "tourname",
-                  title := w.trans,
-                  href  := routes.Tournament.show(w.tourId),
-                )(
-                  showDate(w.date),
-                ),
-              )
-            },
-          ),
-        )
 
-      // def marathonWinners =
-      //  section(
-      //    h2(cls := "text", dataIcon := "\\")("Marathon"),
-      //    ul(
-      //      winners.marathon.map { w =>
-      //        li(
-      //          userIdLink(w.userId.some),
-      //          a(title := w.tourName, href := routes.Tournament.show(w.tourId))(
-      //            w.tourName.replace(" Marathon", "")
-      //          )
-      //        )
-      //      }
-      //    )
-      //  )
       main(cls := "page-menu")(
         views.html.user.bits.communityMenu("tournament"),
         div(cls := "page-menu__content box box-pad")(
           h1(trans.tournamentWinners()),
           div(cls := "tournament-leaderboards")(
-            eliteWinners,
-            // freqWinners(winners.hyperbullet, PerfType.Bullet, "HyperBullet"),
-            freqWinners(winners.bullet, PerfType.Bullet, "Bullet"),
-            freqWinners(winners.superblitz, PerfType.Blitz, "SuperBlitz"),
-            freqWinners(winners.blitz, PerfType.Blitz, "Blitz"),
-            freqWinners(winners.hyperrapid, PerfType.Rapid, "HyperRapid"),
-            freqWinners(winners.rapid, PerfType.Rapid, "Rapid"),
-            freqWinners(winners.classical, PerfType.Classical, "Classical"),
-            // marathonWinners,
+            freqWinners(winners.bullet, PerfType.Bullet),
+            freqWinners(winners.blitz, PerfType.Blitz),
+            freqWinners(winners.rapid, PerfType.Rapid),
+            freqWinners(winners.classical, PerfType.Classical),
+            freqWinners(winners.correspondence, PerfType.Correspondence),
+            freqWinners(winners.superblitz, PerfType.Blitz, "S-"), // will be removed
+            freqWinners(winners.hyperrapid, PerfType.Rapid, "H-"), // will be removed
             lila.tournament.WinnersApi.variants.map { v =>
               PerfType.byVariant(v).map { pt =>
                 winners.variants.get(pt.key).map { w =>
-                  freqWinners(w, pt, v.name)
+                  freqWinners(w, pt)
                 }
               }
             },

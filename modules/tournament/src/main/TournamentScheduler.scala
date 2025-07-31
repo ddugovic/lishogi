@@ -1,7 +1,6 @@
 package lila.tournament
 
 import scala.concurrent.ExecutionContextExecutor
-import scala.util.chaining._
 
 import akka.actor._
 import org.joda.time.DateTime
@@ -42,21 +41,11 @@ final private class TournamentScheduler(
     val thisMonth = new OfMonth(0)
     val nextMonth = new OfMonth(1)
 
-    def nextDayOfWeek(number: Int) = today.plusDays((number + 7 - today.getDayOfWeek) % 7)
-    val nextMonday                 = nextDayOfWeek(1)
-    val nextTuesday                = nextDayOfWeek(2)
-    val nextWednesday              = nextDayOfWeek(3)
-    val nextThursday               = nextDayOfWeek(4)
-    val nextFriday                 = nextDayOfWeek(5)
-    val nextSaturday               = nextDayOfWeek(6)
-    val nextSunday                 = nextDayOfWeek(7)
-
     def secondWeekOf(month: Int) = {
       val start = orNextYear(startOfYear.withMonthOfYear(month))
       start.plusDays(15 - start.getDayOfWeek)
     }
 
-    def orNextWeek(date: DateTime) = if (date isBefore rightNow) date plusWeeks 1 else date
     def orNextYear(date: DateTime) = if (date isBefore rightNow) date plusYears 1 else date
 
     val farFuture = today plusMonths 7
@@ -85,18 +74,10 @@ Thank you all, you rock!""",
         },
       ).flatten,
       List( // yearly tournaments!
-        secondWeekOf(JANUARY).withDayOfWeek(MONDAY)      -> Bullet,
-        secondWeekOf(FEBRUARY).withDayOfWeek(TUESDAY)    -> Blitz,
-        secondWeekOf(MARCH).withDayOfWeek(WEDNESDAY)     -> SuperBlitz,
-        secondWeekOf(APRIL).withDayOfWeek(THURSDAY)      -> Rapid,
-        secondWeekOf(MAY).withDayOfWeek(FRIDAY)          -> Classical,
-        secondWeekOf(JUNE).withDayOfWeek(SATURDAY)       -> HyperRapid,
-        secondWeekOf(JULY).withDayOfWeek(MONDAY)         -> Bullet,
-        secondWeekOf(AUGUST).withDayOfWeek(TUESDAY)      -> Blitz,
-        secondWeekOf(SEPTEMBER).withDayOfWeek(WEDNESDAY) -> HyperRapid,
-        secondWeekOf(OCTOBER).withDayOfWeek(THURSDAY)    -> Rapid,
-        secondWeekOf(NOVEMBER).withDayOfWeek(FRIDAY)     -> Classical,
-        secondWeekOf(DECEMBER).withDayOfWeek(SATURDAY)   -> Blitz,
+        secondWeekOf(FEBRUARY).withDayOfWeek(TUESDAY) -> Blitz,
+        secondWeekOf(JULY).withDayOfWeek(MONDAY)      -> Bullet,
+        secondWeekOf(OCTOBER).withDayOfWeek(THURSDAY) -> Rapid,
+        secondWeekOf(NOVEMBER).withDayOfWeek(FRIDAY)  -> Classical,
       ).flatMap { case (day, speed) =>
         at(day, 13) filter farFuture.isAfter map { date =>
           Schedule(Format.Arena, Yearly, speed, Standard, none, date).plan
@@ -105,9 +86,8 @@ Thank you all, you rock!""",
       List( // yearly variant tournaments!
         secondWeekOf(JANUARY).withDayOfWeek(WEDNESDAY) -> Minishogi,
         secondWeekOf(APRIL).withDayOfWeek(WEDNESDAY)   -> Checkshogi,
-        // secondWeekOf(???).withDayOfWeek(WEDNESDAY)   -> Chushogi,
-        secondWeekOf(JUNE).withDayOfWeek(WEDNESDAY)   -> Annanshogi,
-        secondWeekOf(AUGUST).withDayOfWeek(WEDNESDAY) -> Kyotoshogi,
+        secondWeekOf(JUNE).withDayOfWeek(WEDNESDAY)    -> Annanshogi,
+        secondWeekOf(AUGUST).withDayOfWeek(WEDNESDAY)  -> Kyotoshogi,
       ).flatMap { case (day, variant) =>
         at(day, 17) filter farFuture.isAfter map { date =>
           Schedule(Format.Arena, Yearly, Blitz, variant, none, date).plan
@@ -116,8 +96,7 @@ Thank you all, you rock!""",
       List(thisMonth, nextMonth).flatMap { month =>
         List(
           List( // monthly standard tournaments!
-            month.lastWeek.withDayOfWeek(MONDAY)    -> HyperRapid,
-            month.lastWeek.withDayOfWeek(TUESDAY)   -> SuperBlitz,
+            month.lastWeek.withDayOfWeek(MONDAY)    -> Bullet,
             month.lastWeek.withDayOfWeek(WEDNESDAY) -> Blitz,
             month.lastWeek.withDayOfWeek(THURSDAY)  -> Rapid,
             month.lastWeek.withDayOfWeek(FRIDAY)    -> Classical,
@@ -127,8 +106,7 @@ Thank you all, you rock!""",
             }
           },
           List( // monthly variant tournaments!
-            month.firstWeek.withDayOfWeek(MONDAY) -> Minishogi,
-            // month.firstWeek.withDayOfWeek(TUESDAY)   -> Chushogi,
+            month.firstWeek.withDayOfWeek(MONDAY)    -> Minishogi,
             month.firstWeek.withDayOfWeek(WEDNESDAY) -> Annanshogi,
             month.firstWeek.withDayOfWeek(THURSDAY)  -> Kyotoshogi,
             month.firstWeek.withDayOfWeek(FRIDAY)    -> Checkshogi,
@@ -139,7 +117,6 @@ Thank you all, you rock!""",
           },
           List( // shield tournaments!
             month.firstWeek.withDayOfWeek(MONDAY)    -> Bullet,
-            month.firstWeek.withDayOfWeek(TUESDAY)   -> SuperBlitz,
             month.firstWeek.withDayOfWeek(WEDNESDAY) -> Blitz,
             month.firstWeek.withDayOfWeek(THURSDAY)  -> Rapid,
             month.firstWeek.withDayOfWeek(FRIDAY)    -> Classical,
@@ -154,8 +131,7 @@ Thank you all, you rock!""",
             }
           },
           List( // shield variant tournaments!
-            month.thirdWeek.withDayOfWeek(MONDAY) -> Minishogi,
-            // month.thirdWeek.withDayOfWeek(TUESDAY) -> Chushogi, // reserved
+            month.thirdWeek.withDayOfWeek(MONDAY)    -> Minishogi,
             month.thirdWeek.withDayOfWeek(WEDNESDAY) -> Annanshogi,
             month.thirdWeek.withDayOfWeek(THURSDAY)  -> Kyotoshogi,
             month.thirdWeek.withDayOfWeek(FRIDAY)    -> Checkshogi,
@@ -170,25 +146,6 @@ Thank you all, you rock!""",
             }
           },
         ).flatten
-      },
-      List( // weekly standard tournaments!
-        nextMonday    -> Bullet,
-        nextTuesday   -> SuperBlitz,
-        nextWednesday -> Blitz,
-        nextThursday  -> Rapid,
-        nextFriday    -> Classical,
-      ).flatMap { case (day, speed) =>
-        at(day, 17) map { date =>
-          Schedule(Format.Arena, Weekly, speed, Standard, none, date pipe orNextWeek).plan
-        }
-      },
-      List( // week-end elite tournaments!
-        nextSaturday -> Blitz,
-        nextSunday   -> HyperRapid,
-      ).flatMap { case (day, speed) =>
-        at(day, 13) map { date =>
-          Schedule(Format.Arena, Weekend, speed, Standard, none, date pipe orNextWeek).plan
-        }
       },
     ).flatten filter { _.schedule.at isAfter rightNow }
   }
