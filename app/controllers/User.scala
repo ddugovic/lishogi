@@ -311,11 +311,11 @@ final class User(
       }
     }
 
-  def topWeek =
+  def topMonth =
     Open { implicit ctx =>
       negotiate(
         html = notFound,
-        json = env.user.cached.topWeek.map { users =>
+        json = env.user.cached.topMonth.map { users =>
           Ok(Json toJson users.map(env.user.jsonView.lightPerfIsOnline))
         },
       )

@@ -56,7 +56,7 @@ final class Preload(
       studies.mon(_.lobby segment "studies") zip
       tv.getBestGame.mon(_.lobby segment "tvBestGame") zip
       (ctx.userId ?? timelineApi.userEntries).mon(_.lobby segment "timeline") zip
-      userCached.topWeek.mon(_.lobby segment "userTopWeek") zip
+      userCached.topMonth.mon(_.lobby segment "userTopMonth") zip
       tourWinners.all.dmap(_.top).mon(_.lobby segment "tourWinners") zip
       (ctx.noBot ?? dailyPuzzle()).mon(_.lobby segment "puzzle") zip
       (ctx.noKid ?? liveStreamApi.all

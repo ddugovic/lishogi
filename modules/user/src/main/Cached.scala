@@ -54,8 +54,8 @@ final class Cached(
       }
   }
 
-  private val topWeekCache = mongoCache.unit[List[User.LightPerf]](
-    "user:top:week",
+  private val topMonthCache = mongoCache.unit[List[User.LightPerf]](
+    "user:top:month",
     9 minutes,
   ) { loader =>
     _.refreshAfterWrite(10 minutes)
@@ -71,7 +71,7 @@ final class Cached(
       }
   }
 
-  def topWeek = topWeekCache.get {}
+  def topMonth = topMonthCache.get {}
 
   val top10NbGame = mongoCache.unit[List[User.LightCount]](
     "user:top:nbGame",
