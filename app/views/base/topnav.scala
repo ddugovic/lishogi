@@ -82,7 +82,7 @@ object topnav {
             a(href := routes.Team.home())(trans.team.teams()),
             ctx.noKid option a(href := routes.Chatroom.get)(trans.chatRoom()),
             ctx.noKid option a(href := routes.ForumCateg.index)(trans.forum()),
-            a(href := routes.Blog.index())(trans.blog()),
+            a(href := langHrefJP(routes.Blog.index()))(trans.blog()),
             ctx.me
               .exists(!_.kid) option a(href := langHref(routes.Plan.index))(trans.patron.donate()),
           ),

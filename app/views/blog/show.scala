@@ -37,8 +37,8 @@ object show {
         bits.menu(none, false),
         div(cls := s"blog page-menu__content box post")(
           h1(post.title),
-          bits.metas(post),
           div(cls := "illustration")(st.img(src := post.image)),
+          bits.metas(post),
           div(cls := "body expand-text")(
             post.doc
               .getHtml(s"${post.coll}.body", prismic.linkResolver)
@@ -49,16 +49,13 @@ object show {
           ),
           ctx.noKid option
             div(cls := "footer")(
-              (
-                post.date isAfter org.joda.time.DateTime.now.minusWeeks(4)
-              ) option
-                a(
-                  href     := routes.Blog.discuss(post.doc.id),
-                  cls      := "button text discuss",
-                  dataIcon := "d",
-                )(
-                  trans.discussBlogForum(),
-                ),
+              a(
+                href     := routes.Blog.discuss(post.doc.id),
+                cls      := "button text discuss",
+                dataIcon := "d",
+              )(
+                trans.discussBlogForum(),
+              ),
               views.html.base.bits.connectLinks,
             ),
         ),
