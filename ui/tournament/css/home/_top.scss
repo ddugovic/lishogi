@@ -19,58 +19,52 @@
 
   .tour-winners {
     position: absolute;
-    display: block;
+    display: flex;
+    min-width: 200%; // ensures smooth loop?
     white-space: nowrap;
-    min-width: 100%;
-    animation-name: first-scroll, scroll;
-    animation-delay: 2s, 17s;
-    animation-duration: 15s, 30s;
-    animation-timing-function: linear, linear;
-    animation-iteration-count: 1, infinite;
-    animation-fill-mode: forwards;
+    animation: scroll 30s linear infinite;
+    animation-delay: 2s;
     will-change: transform;
 
     & > div {
-      display: inline;
-    }
+      display: inline-flex;
+      padding: 0 1rem;
+      border-right: theme.$border;
 
-    a {
-      color: theme.$c-font;
-    }
+      .user-link {
+        font-weight: bold;
+        margin-right: 0.5rem;
+      }
 
-    .user-link {
-      color: theme.$c-brag;
-      font-weight: bold;
-      margin: 0 5px 0 20px;
+      .tourname {
+        color: theme.$c-font;
+
+        &:hover {
+          color: theme.$c-link;
+        }
+
+        &::before {
+          color: theme.$c-brag;
+        }
+      }
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .tour-winners {
       animation: none;
-      width: 100%;
       overflow-x: auto;
     }
   }
 }
 
-@keyframes first-scroll {
-  from {
+@keyframes scroll {
+  0% {
     transform: translateX(0%);
   }
 
-  to {
-    transform: translateX(-100%);
-  }
-}
-
-@keyframes scroll {
-  from {
-    transform: translateX(100%);
-  }
-
-  to {
-    transform: translateX(-100%);
+  100% {
+    transform: translateX(-50%);
   }
 }
 

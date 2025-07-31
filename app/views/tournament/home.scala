@@ -22,7 +22,10 @@ object home {
       title = trans.tournaments.txt(),
       moreCss = cssTag("tournament.home"),
       wrapClass = "full-screen-force",
-      moreJs = frag(infiniteScrollTag),
+      moreJs = frag(
+        infiniteScrollTag,
+        jsTag("tournament.home"),
+      ),
       openGraph = lila.app.ui
         .OpenGraph(
           url = s"$netBaseUrl${routes.Tournament.homeDefault(1).url}",
@@ -40,8 +43,13 @@ object home {
               winners.top.map { w =>
                 val name = w.trans
                 div(
-                  userIdLink(w.userId.some),
-                  a(cls := "tourname", title := name, href := routes.Tournament.show(w.tourId))(
+                  userIdLink(w.userId.some, withOnline = false),
+                  a(
+                    cls      := "tourname text",
+                    title    := name,
+                    href     := routes.Tournament.show(w.tourId),
+                    dataIcon := "g",
+                  )(
                     name,
                   ),
                 )
