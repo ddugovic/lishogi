@@ -1,43 +1,40 @@
-import { idleTimer } from 'common/timings';
+import { isOnline } from 'common/common';
+import { browserTaskQueueMonitor, idleTimer } from 'common/timings';
+import { i18n } from 'i18n';
 import { reload } from './navigation';
 import { pubsub } from './pubsub';
 import { storage as makeStorage } from './storage';
-import { urlWithParams } from './xhr';
+import { text, urlWithParams } from './xhr';
 
-// versioned events, acks, retries, resync
 export class StrongSocket implements IStrongSocket {
-  settings: Socket.Settings;
-  options: Socket.Options;
-  version: number | false;
-  ws: WebSocket | undefined;
-  pingSchedule: Timeout;
-  connectSchedule: Timeout;
-  ackable: Ackable = new Ackable((t, d, o) => this.send(t, d, o));
-  lastPingTime: number = performance.now();
-  pongCount = 0;
-  averageLag = 0;
-  isOpen = false;
-  tryOtherUrl = false;
-  autoReconnect = true;
-  nbConnects = 0;
-  storage: LishogiStorage = makeStorage.make('surl8');
-  private _sign?: string;
+  private ws: WebSocket | undefined;
 
-  static defaultOptions: Socket.Options = {
-    idle: false,
-    pingMaxLag: 9000, // time to wait for pong before reseting the connection
-    pingDelay: 2500, // time between pong and ping
-    autoReconnectDelay: 3500,
-    protocol: location.protocol === 'https:' ? 'wss:' : 'ws:',
-    isAuth: document.body.hasAttribute('data-user'), // todo check
-  };
-  static defaultParams: { sri: string } = {
-    sri: window.lishogi.sri,
-  };
+  private settings: Socket.Settings;
+  private options: Socket.Options;
 
-  static resolveFirstConnect: (send: Socket.Send) => void;
-  static firstConnect: Promise<Socket.Send> = new Promise<Socket.Send>(r => {
-    StrongSocket.resolveFirstConnect = r;
+  private version: number | false;
+  private lastVersionTime: number = performance.now();
+
+  private pingSchedule: Timeout;
+  private connectSchedule: Timeout;
+  private lastPingTime: number = performance.now();
+  private averageLag = 0;
+  private pongCount = 0;
+  private ready = false;
+  private wasInitiated = false;
+
+  private ackable: Ackable = new Ackable((t, d, o) => this.send(t, d, o));
+
+  private storage: LishogiStorage = makeStorage.make('surl8');
+  private heartbeat = browserTaskQueueMonitor(1000);
+  private resendWhenOpen: [string, any, any][] = [];
+
+  private baseUrls = document.body.dataset.socketDomains!.split(',');
+  private tryOtherUrl = false;
+
+  private static resolveInitiated: () => void;
+  static initiated: Promise<void> = new Promise<void>(r => {
+    StrongSocket.resolveInitiated = r;
   });
 
   constructor(
@@ -54,7 +51,12 @@ export class StrongSocket implements IStrongSocket {
       },
     };
     this.options = {
-      ...StrongSocket.defaultOptions,
+      idle: false,
+      pongTimeout: 10000, // time to wait for pong before reseting the connection
+      pingDelay: 2500, // time between pong and ping
+      autoReconnectDelay: 3500,
+      protocol: location.protocol === 'https:' ? 'wss:' : 'ws:',
+      isAuth: document.body.hasAttribute('data-user'),
       ...(settings.options || {}),
     };
     this.version = version;
@@ -62,14 +64,15 @@ export class StrongSocket implements IStrongSocket {
     this.connect();
   }
 
-  sign = (s: string): void => {
-    this._sign = s;
-    this.ackable.sign(s);
-  };
-
   connect = (): void => {
     this.destroy();
-    this.autoReconnect = true;
+
+    if (!isOnline()) {
+      updateNetworkStatusElement('offline');
+      this.scheduleConnect(4000);
+      return;
+    }
+
     const fullUrl = urlWithParams(`${this.options.protocol}//${this.baseUrl()}${this.url}`, {
       ...this.settings.params,
       v: this.version === false ? undefined : this.version.toString(),
@@ -79,27 +82,9 @@ export class StrongSocket implements IStrongSocket {
     try {
       this.ws = new WebSocket(fullUrl);
       const ws = this.ws;
-      ws.onerror = e => this.onError(e);
-      ws.onclose = () => {
-        this.isOpen = false;
-        pubsub.emit('socket.close');
-        if (this.autoReconnect) {
-          this.debug(`Will autoreconnect in ${this.options.autoReconnectDelay}`);
-          this.scheduleConnect(this.options.autoReconnectDelay);
-        }
-      };
-      ws.onopen = () => {
-        this.debug(`connected to ${fullUrl}`);
-        this.onSuccess();
-        const cl = document.body.classList;
-        cl.remove('offline');
-        cl.add('online');
-        cl.toggle('reconnected', this.nbConnects > 1);
-        this.pingNow();
-        this.isOpen = true;
-        pubsub.emit('socket.open');
-        this.ackable.resend();
-      };
+      ws.onerror = this.onError;
+      ws.onclose = this.onClose;
+      ws.onopen = this.onOpen;
       ws.onmessage = e => {
         if (e.data == 0) return this.pong();
         const m = JSON.parse(e.data);
@@ -109,7 +94,7 @@ export class StrongSocket implements IStrongSocket {
     } catch (e) {
       this.onError(e);
     }
-    this.scheduleConnect(this.options.pingMaxLag);
+    this.scheduleConnect(this.options.pongTimeout);
   };
 
   send = (t: string, d: any, o: any = {}, noRetry = false): void => {
@@ -125,49 +110,37 @@ export class StrongSocket implements IStrongSocket {
     }
 
     const message = JSON.stringify(msg);
-    if (t == 'move' && o.sign != this._sign) {
-      let stack: string;
-      try {
-        stack = new Error().stack!.split('\n').join(' / ').replace(/\s+/g, ' ');
-      } catch (e) {
-        stack = `${e.message} ${navigator.userAgent}`;
-      }
-      if (!stack.includes('round.nvui'))
-        setTimeout(() => this.send('rep', { n: `soc: ${message} ${stack}` }), 10000);
-    }
+
     this.debug(`send ${message}`);
-    try {
-      this.ws!.send(message);
-    } catch (_e) {
-      // maybe sent before socket opens,
-      // try again a second later.
-      if (!noRetry) setTimeout(() => this.send(t, msg.d, o, true), 1000);
-    }
+    if (!this.ws || this.ws.readyState === WebSocket.CONNECTING) {
+      if (!noRetry) this.resendWhenOpen.push([t, msg.d, o]);
+    } else this.ws.send(message);
   };
 
-  scheduleConnect = (delay: number): void => {
+  private scheduleConnect = (delay: number): void => {
     if (this.options.idle) delay = 10 * 1000 + Math.random() * 10 * 1000;
-    // debug('schedule connect ' + delay);
+
     clearTimeout(this.pingSchedule);
     clearTimeout(this.connectSchedule);
+
     this.connectSchedule = setTimeout(() => {
-      document.body.classList.add('offline');
-      document.body.classList.remove('online');
+      updateNetworkStatusElement('offline');
       this.tryOtherUrl = true;
       this.connect();
     }, delay);
   };
 
-  schedulePing = (delay: number): void => {
+  private schedulePing = (delay: number): void => {
     clearTimeout(this.pingSchedule);
     this.pingSchedule = setTimeout(this.pingNow, delay);
   };
 
-  pingNow = (): void => {
+  private pingNow = (): void => {
     clearTimeout(this.pingSchedule);
     clearTimeout(this.connectSchedule);
+
     const pingData =
-      this.options.isAuth && this.pongCount % 10 == 2
+      this.options.isAuth && this.pongCount % 10 === 2
         ? JSON.stringify({
             t: 'p',
             l: Math.round(0.1 * this.averageLag),
@@ -179,13 +152,15 @@ export class StrongSocket implements IStrongSocket {
     } catch (e) {
       this.debug(e, true);
     }
-    this.scheduleConnect(this.options.pingMaxLag);
+
+    this.scheduleConnect(this.options.pongTimeout);
   };
 
-  computePingDelay = (): number => this.options.pingDelay + (this.options.idle ? 1000 : 0);
+  private computePingDelay = (): number => this.options.pingDelay + (this.options.idle ? 1000 : 0);
 
-  pong = (): void => {
+  private pong = (): void => {
     clearTimeout(this.connectSchedule);
+
     this.schedulePing(this.computePingDelay());
     const currentLag = Math.min(performance.now() - this.lastPingTime, 10000);
     this.pongCount++;
@@ -197,15 +172,16 @@ export class StrongSocket implements IStrongSocket {
     pubsub.emit('socket.lag', this.averageLag);
   };
 
-  handle = (m: Socket.MsgIn): any => {
+  private handle = (m: Socket.MsgIn): any => {
     if (m.v && this.version !== false) {
       if (m.v <= this.version) {
         this.debug(`already has event ${m.v}`);
         return;
       }
-      // it's impossible but according to previous logging, it happens nonetheless
+      // shouldn't happen, but it happens nonetheless
       if (m.v > this.version + 1) return reload();
       this.version = m.v;
+      this.lastVersionTime = performance.now();
     }
     switch (m.t || false) {
       case false:
@@ -216,6 +192,16 @@ export class StrongSocket implements IStrongSocket {
       case 'ack':
         this.ackable.onServerAck(m.d);
         break;
+      case 'versionCheck':
+        this.lastVersionTime = performance.now();
+        if (this.version !== false && m.d > this.version) {
+          text('POST', '/jsmon/socketVersion', {
+            url: { v: window.location.pathname },
+          });
+          this.debug('socket version mismatch');
+          reload();
+        }
+        break;
       default:
         // return true in a receive handler to prevent pubsub and events
         if (!this.settings.receive?.(m.t, m.d)) {
@@ -225,13 +211,16 @@ export class StrongSocket implements IStrongSocket {
     }
   };
 
-  debug = (msg: string, always = false): void => {
+  private debug = (msg: string, always = false): void => {
     if (always || this.options.debug) console.debug(msg);
   };
 
   destroy = (): void => {
+    this.debug('Destroy');
+
     clearTimeout(this.pingSchedule);
     clearTimeout(this.connectSchedule);
+
     this.disconnect();
     this.ws = undefined;
   };
@@ -240,70 +229,120 @@ export class StrongSocket implements IStrongSocket {
     const ws = this.ws;
     if (ws) {
       this.debug('Disconnect');
-      this.autoReconnect = false;
       ws.onerror = ws.onclose = ws.onopen = ws.onmessage = () => {};
       ws.close();
     }
   };
 
-  onError = (e: Event): void => {
+  private onError = (e: Event): void => {
+    this.ready = false;
+
+    if (this.heartbeat.wasSuspended) return;
     this.options.debug = true;
     this.debug(`error: ${JSON.stringify(e)}`);
-    this.tryOtherUrl = true;
+  };
+
+  private onClose = (e: CloseEvent): void => {
+    this.ready = false;
+
+    this.debug('WS closed');
+
+    pubsub.emit('socket.close');
+
+    if (this.heartbeat.wasSuspended) {
+      this.onSuspended();
+      return;
+    }
+
+    if (this.ws) {
+      this.debug(`Will autoreconnect in ${this.options.autoReconnectDelay}`);
+      this.scheduleConnect(this.options.autoReconnectDelay);
+    }
+    if (e.wasClean && e.code < 1002) return;
+
+    if (isOnline()) this.tryOtherUrl = true;
     clearTimeout(this.pingSchedule);
   };
 
-  onSuccess = (): void => {
-    this.nbConnects++;
-    if (this.nbConnects == 1) {
-      StrongSocket.resolveFirstConnect(this.send);
-      let disconnectTimeout: Timeout | undefined;
-      idleTimer(
-        10 * 60 * 1000,
-        () => {
-          this.options.idle = true;
-          disconnectTimeout = setTimeout(this.destroy, 2 * 60 * 60 * 1000);
-        },
-        () => {
-          this.options.idle = false;
-          if (this.ws) clearTimeout(disconnectTimeout);
-          else location.reload();
-        },
-      );
-    }
+  private onOpen = () => {
+    this.debug('WS opened');
+
+    updateNetworkStatusElement(this.wasInitiated ? 'reconnected' : 'online');
+
+    this.pingNow();
+
+    this.resendWhenOpen.forEach(([t, d, o]) => this.send(t, d, o));
+    this.resendWhenOpen = [];
+
+    this.ackable.resend();
+
+    pubsub.emit('socket.open');
+    this.ready = true;
+
+    if (this.wasInitiated) return;
+    this.wasInitiated = true;
+    StrongSocket.resolveInitiated();
+
+    let disconnectTimeout: Timeout | undefined;
+    idleTimer(
+      10 * 60 * 1000,
+      () => {
+        this.options.idle = true;
+        disconnectTimeout = setTimeout(this.destroy, 2 * 60 * 60 * 1000);
+      },
+      () => {
+        this.options.idle = false;
+        if (this.ws) clearTimeout(disconnectTimeout);
+        else location.reload();
+      },
+    );
   };
 
-  baseUrl = (): string => {
-    const baseUrls = document.body.getAttribute('data-socket-domains')!.split(',');
+  private onSuspended(): void {
+    this.heartbeat.reset(); // not a networking error, just get our connection back
+
+    clearTimeout(this.pingSchedule);
+    clearTimeout(this.connectSchedule);
+
+    this.connect();
+  }
+
+  private baseUrl = (): string => {
     let url = this.storage.get();
-    if (!url || this.tryOtherUrl) {
-      url = baseUrls[Math.floor(Math.random() * baseUrls.length)];
+
+    if (!url || !this.baseUrls.includes(url)) {
+      url = this.baseUrls[Math.floor(Math.random() * this.baseUrls.length)];
+      this.storage.set(url);
+    } else if (this.tryOtherUrl) {
+      const i = this.baseUrls.findIndex(u => u === url);
+      url = this.baseUrls[(i + 1) % this.baseUrls.length];
       this.storage.set(url);
     }
+
+    this.tryOtherUrl = false;
     return url;
   };
 
-  pingInterval = (): number => this.computePingDelay() + this.averageLag;
+  isReady = (): boolean => this.ready;
+
   getVersion = (): number | false => this.version;
+  getLastVersionTime = (): number => this.lastVersionTime;
+  getAverageLag = (): number => this.averageLag;
+  getPingInterval = (): number => this.computePingDelay() + this.averageLag;
 }
 
 class Ackable {
   currentId = 1; // increment with each ackable message sent
   messages: Socket.MsgAck[] = [];
-  private _sign: string;
 
   constructor(readonly send: Socket.Send) {
     setInterval(this.resend, 1200);
   }
 
-  sign = (s: string): void => {
-    this._sign = s;
-  };
-
   resend = (): void => {
     const resendCutoff = performance.now() - 2500;
     this.messages.forEach(m => {
-      if (m.at < resendCutoff) this.send(m.t, m.d, { sign: this._sign });
+      if (m.at < resendCutoff) this.send(m.t, m.d);
     });
   };
 
@@ -319,4 +358,17 @@ class Ackable {
   onServerAck = (id: number): void => {
     this.messages = this.messages.filter(m => m.d.a !== id);
   };
+}
+
+function updateNetworkStatusElement(status: 'online' | 'reconnected' | 'offline'): void {
+  const cls = document.body.classList;
+  cls.toggle('online', status === 'online' || status === 'reconnected');
+  cls.toggle('offline', status === 'offline');
+  if (status === 'reconnected') cls.add('reconnected');
+
+  const el = document.getElementById('reconnecting');
+  if (el) {
+    const statusText = isOnline() ? i18n('reconnecting') : 'Offline';
+    el.textContent = statusText;
+  }
 }

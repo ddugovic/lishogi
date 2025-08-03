@@ -1,6 +1,7 @@
 import { loadScript } from 'common/assets';
 import { requestIdleCallbackWithFallback } from 'common/common';
 import notify from 'common/notification';
+import { wsIsReady, wsLastVersionTime, wsOnOpen } from 'common/ws';
 import * as game from 'game';
 import type { Player } from 'game/interfaces';
 import * as status from 'game/status';
@@ -183,6 +184,13 @@ export default class RoundController {
         xhr.setZen(zen);
       }
     });
+
+    wsOnOpen(() => {
+      setTimeout(() => {
+        if (!status.finished(d)) this.socket.versionCheck();
+      }, 1000);
+    });
+    this.versionCheck();
 
     window.lishogi.sound.preloadGameSounds(!!d.clock);
   }
@@ -903,6 +911,24 @@ export default class RoundController {
   private stepDest = (step: Step | undefined): Square | undefined => {
     if (step?.usi) return parseUsi(step.usi)?.to;
     else return;
+  };
+
+  private versionCheckTimeout?: Timeout;
+  private versionCheck = () => {
+    clearTimeout(this.versionCheckTimeout);
+
+    if (status.finished(this.data)) return;
+
+    const socketVersionTime = wsLastVersionTime();
+    if (
+      wsIsReady() &&
+      defined(socketVersionTime) &&
+      performance.now() - socketVersionTime > 35000
+    ) {
+      this.socket.versionCheck();
+    }
+
+    this.versionCheckTimeout = setTimeout(this.versionCheck, 10000);
   };
 
   private delayedInit = () => {

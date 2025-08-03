@@ -1,3 +1,5 @@
+import { wsDestroy } from 'common/ws';
+
 export function redirect(obj: string | { url: string; cookie: Cookie }): void {
   let url: string;
   if (typeof obj == 'string') url = obj;
@@ -21,7 +23,7 @@ export function redirect(obj: string | { url: string; cookie: Cookie }): void {
 export function reload(): void {
   if (window.lishogi.redirectInProgress) return;
   window.lishogi.properReload = true;
-  window.lishogi.socket.destroy(); // todo
+  wsDestroy();
   if (location.hash) location.reload();
   else location.assign(location.href);
 }

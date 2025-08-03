@@ -1,3 +1,4 @@
+import { wsOnOpen } from 'common/ws';
 import type MsgCtrl from './ctrl';
 import type { Contact, Convo, Msg, MsgData, SearchResult, User } from './interfaces';
 
@@ -86,7 +87,8 @@ export function websocketHandler(ctrl: MsgCtrl) {
     connected = false;
     ctrl.redraw();
   });
-  listen('socket.open', () => {
+
+  wsOnOpen(() => {
     if (!connected) {
       connected = true;
       ctrl.onReconnect();

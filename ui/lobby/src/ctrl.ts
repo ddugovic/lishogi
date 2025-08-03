@@ -1,5 +1,6 @@
 import { loadChushogiPieceSprite, loadKyotoshogiPieceSprite } from 'common/assets';
 import throttle from 'common/throttle';
+import { wsOnOpen } from 'common/ws';
 import Filter from './filter';
 import * as hookRepo from './hook-repo';
 import type {
@@ -90,11 +91,7 @@ export default class LobbyController {
       }, 15 * 1000);
     }
 
-    li.pubsub.on('socket.open', () => {
-      if (hookRepo.tabs.includes(this.tab)) {
-        this.data.hooks = [];
-        this.socket.realTimeIn();
-      }
+    window.lishogi.StrongSocket.initiated.then(() => {
       if (opts.hookLike) {
         this.setupCtrl.initData('hook');
         window.lishogi.xhr
@@ -109,6 +106,13 @@ export default class LobbyController {
             this.redraw();
           });
         history.replaceState(null, '', '/');
+      }
+    });
+
+    wsOnOpen(() => {
+      if (hookRepo.tabs.includes(this.tab)) {
+        this.data.hooks = [];
+        this.socket.realTimeIn();
       }
     });
   }

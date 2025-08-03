@@ -1,3 +1,4 @@
+import { wsConnect } from 'common/ws';
 import type SimulCtrl from './ctrl';
 import type { SimulOpts } from './interfaces';
 
@@ -5,16 +6,11 @@ export function boot(opts: SimulOpts, start: (opts: SimulOpts) => SimulCtrl): Si
   $('body').data('simul-id', opts.data.id);
 
   let ctrl: SimulCtrl | undefined = undefined;
-  window.lishogi.socket = new window.lishogi.StrongSocket(
-    `/simul/${opts.data.id}/socket/v4`,
-    opts.socketVersion,
-    {
-      receive: (t: string, d: any) => {
-        ctrl?.socket.receive(t, d);
-      },
+  opts.socketSend = wsConnect(`/simul/${opts.data.id}/socket/v4`, opts.socketVersion, {
+    receive: (t: string, d: any) => {
+      ctrl?.socket.receive(t, d);
     },
-  );
-  opts.socketSend = window.lishogi.socket.send;
+  }).send;
   opts.$side = $('.simul__side').clone();
 
   ctrl = start(opts);

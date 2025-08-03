@@ -1,5 +1,6 @@
 import { makeChat } from 'chat';
 import type { ChatCtrl, ChatOpts } from 'chat/interfaces';
+import { wsConnect } from 'common/ws';
 import type { TourPlayer } from 'game/interfaces';
 import { finished } from 'game/status';
 import type RoundController from './ctrl';
@@ -17,11 +18,26 @@ export function boot(
   let ctrl: RoundController | undefined = undefined;
   let chat: ChatCtrl | undefined = undefined;
   if (data.tournament) $('body').data('tournament-id', data.tournament.id);
+
   const socketUrl = opts.data.player.spectator
     ? `/watch/${data.game.id}/${data.player.color}/v6`
     : `/play/${data.game.id}${data.player.id}/v6`;
-  li.socket = new li.StrongSocket(socketUrl, data.player.version, {
-    options: { name: 'round' },
+
+  function startTournamentClock() {
+    if (data.tournament)
+      $('.game__tournament .clock').each(function (this: HTMLElement) {
+        $(this).clock({
+          time: Number.parseFloat($(this).data('time')),
+        });
+      });
+  }
+  function getPresetGroup(d: RoundData) {
+    if (d.player.spectator) return;
+    if (d.steps.length < 4) return 'start';
+    else if (finished(d)) return 'end';
+    return;
+  }
+  opts.socketSend = wsConnect(socketUrl, data.player.version, {
     params: { userTv: data.userTv?.id },
     receive(t: string, d: any) {
       ctrl?.socket.receive(t, d);
@@ -55,24 +71,9 @@ export function boot(
         }
       },
     },
-  });
-
-  function startTournamentClock() {
-    if (data.tournament)
-      $('.game__tournament .clock').each(function (this: HTMLElement) {
-        $(this).clock({
-          time: Number.parseFloat($(this).data('time')),
-        });
-      });
-  }
-  function getPresetGroup(d: RoundData) {
-    if (d.player.spectator) return;
-    if (d.steps.length < 4) return 'start';
-    else if (finished(d)) return 'end';
-    return;
-  }
+  }).send;
   opts.klasses = Array.from(element.classList);
-  opts.socketSend = li.socket.send;
+
   if (!data.tournament && !data.simul)
     opts.onChange = (d: RoundData) => {
       if (chat) chat.preset.setGroup(getPresetGroup(d));

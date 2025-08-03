@@ -1,5 +1,6 @@
 import { assetUrl, lishogiScriptPath, loadCssPath, loadLishogiScript } from 'common/assets';
 import { initAll as initMiniBoards, update as updateMiniBoard } from 'common/mini-board';
+import { wsConnect, wsConnected } from 'common/ws';
 import { i18n } from 'i18n';
 import { announce } from './announce';
 import { challengeApp } from './challenge';
@@ -9,7 +10,6 @@ import { mousetrap } from './mousetrap';
 import { redirect, reload } from './navigation';
 import { notifyApp } from './notify';
 import { pubsub } from './pubsub';
-import { StrongSocket } from './socket';
 import { storage } from './storage';
 import * as timeago from './timeago';
 import { userAutocomplete } from './user-autocomplete';
@@ -365,5 +365,5 @@ export function init(): void {
 }
 
 export function initSocket(): void {
-  if (!window.lishogi.socket) window.lishogi.socket = new StrongSocket('/socket/v4', false);
+  if (!wsConnected()) wsConnect('/socket/v4', false);
 }

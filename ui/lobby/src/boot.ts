@@ -1,4 +1,5 @@
 import { numberFormat } from 'common/number';
+import { wsConnect, wsPingInterval } from 'common/ws';
 import type LobbyController from './ctrl';
 import type { LobbyOpts } from './interfaces';
 import type { SetupKey } from './setup/ctrl';
@@ -15,7 +16,7 @@ export default function boot(
     return match ? (decodeURIComponent(match[1].replace(/\+/g, ' ')) as T) : undefined;
   };
 
-  window.lishogi.socket = new window.lishogi.StrongSocket('/lobby/socket/v4', false, {
+  opts.socketSend = wsConnect('/lobby/socket/v4', false, {
     receive: (t: string, d: any) => {
       ctrl?.socket.receive(t, d);
     },
@@ -24,7 +25,7 @@ export default function boot(
         nbUserSpread(msg.d);
         setTimeout(() => {
           nbRoundSpread(msg.r);
-        }, window.lishogi.socket.pingInterval() / 2);
+        }, wsPingInterval() / 2);
       },
       reload_timeline: () => {
         window.lishogi.xhr.text('GET', '/timeline').then(html => {
@@ -45,20 +46,15 @@ export default function boot(
         window.lishogi.pubsub.emit('content_loaded');
       },
       sfen: (e: any) => {
-        window.lishogi.StrongSocket.defaultParams.events.sfen(e);
         ctrl?.gameActivity(e.id);
       },
     },
-    options: {
-      name: 'lobby',
-    },
-  });
+  }).send;
 
-  opts.blindMode = $('body').hasClass('blind-mode');
-  opts.socketSend = window.lishogi.socket.send;
   opts.variant = getParameterByName<VariantKey>('variant');
   opts.sfen = getParameterByName<Sfen>('sfen');
   opts.hookLike = getParameterByName('hook_like');
+  opts.blindMode = $('body').hasClass('blind-mode');
 
   ctrl = start(opts);
 
@@ -125,7 +121,7 @@ function spreadNumber(selector: string, nbSteps: number) {
     if (overrideNbSteps) nbSteps = Math.abs(overrideNbSteps);
     timeouts.forEach(clearTimeout);
     timeouts = [];
-    const interv = Math.abs(window.lishogi.socket.pingInterval() / nbSteps);
+    const interv = Math.abs(wsPingInterval() / nbSteps);
     const prev = previous || nb;
     previous = nb;
     for (let i = 0; i < nbSteps; i++)

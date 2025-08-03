@@ -369,7 +369,7 @@ object layout {
               div(cls := "content list"),
             ),
           ),
-          a(id := "reconnecting", cls := "link text", dataIcon := "B")(trans.reconnecting()),
+          a(id := "reconnecting", cls := "link text", dataIcon := "B"),
         ),
       ),
     )

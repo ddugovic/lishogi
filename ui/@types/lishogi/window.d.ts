@@ -28,11 +28,10 @@ declare global {
       sound: SoundI;
 
       // file://./../../site/src/socket.ts
-      socket: IStrongSocket;
+      socket?: IStrongSocket;
       StrongSocket: {
         new (url: string, version: number | false, cfg?: any): IStrongSocket;
-        firstConnect: Promise<(tpe: string, data: any) => void>;
-        defaultParams: Record<string, any>;
+        initiated: Promise<void>;
       };
 
       // file://./../../site/src/navigation.ts
@@ -102,30 +101,16 @@ declare global {
   const __bundlename__: string;
 
   interface IStrongSocket {
-    // Constructor parameters
-    url: string;
-    version: number | false;
-    settings: Socket.Settings;
-
-    // Key methods
     connect(): void;
-    send: Socket.Send;
-    disconnect(): void;
     destroy(): void;
-    sign(s: string): void;
 
-    // Getters and utility methods
-    baseUrl(): string;
+    send: Socket.Send;
+    isReady(): boolean;
+
     getVersion(): number | false;
-    pingInterval(): number;
-
-    // Properties
-    ws?: WebSocket;
-    isOpen: boolean;
-    options: Socket.Options;
-    averageLag: number;
-    nbConnects: number;
-    autoReconnect: boolean;
+    getLastVersionTime(): number;
+    getAverageLag(): number;
+    getPingInterval(): number;
   }
 
   interface SoundI {
@@ -224,10 +209,11 @@ declare global {
     ) => Promise<T>);
 
   type PubsubCallback = (...data: any[]) => void;
+  type PubsubEvent = string;
 
   interface Pubsub {
-    on(msg: string, f: PubsubCallback): void;
-    off(msg: string, f: PubsubCallback): void;
-    emit(msg: string, ...args: any[]): void;
+    on(msg: PubsubEvent, f: PubsubCallback): void;
+    off(msg: PubsubEvent, f: PubsubCallback): void;
+    emit(msg: PubsubEvent, ...args: any[]): void;
   }
 }

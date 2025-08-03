@@ -1,6 +1,6 @@
 import type { ArcElement, ChartConfiguration, ChartDataset, ChartType } from 'chart.js';
 import { cssVar } from 'common/styles';
-import { fontClearColor, fontFamily } from '../common';
+import { wsAverageLag, wsOnOpen, wsSend } from 'common/ws';
 
 declare module 'chart.js' {
   // @ts-ignore
@@ -19,9 +19,8 @@ const v = {
 };
 
 function main(): void {
-  window.lishogi.pubsub.on('socket.open', () => {
-    window.lishogi.socket.send('moveLat', true);
-  });
+  wsOnOpen(() => wsSend('moveLat', true));
+
   $('.meter canvas').each(function (this: HTMLCanvasElement, index) {
     const colors = [cssVar('--c-good'), cssVar('--c-warn'), cssVar('--c-bad')];
     const dataset: ChartDataset<'doughnut'>[] = [
@@ -104,7 +103,7 @@ function main(): void {
       });
     else {
       setInterval(() => {
-        v.network = Math.round(window.lishogi.socket.averageLag);
+        v.network = Math.round(wsAverageLag());
         if (v.network < 0) return;
         chart.options.plugins!.needle!.value = Math.min(750, v.network);
         chart.options.plugins!.title!.text = makeTitle(index, v.network);

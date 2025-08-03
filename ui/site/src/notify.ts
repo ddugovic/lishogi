@@ -1,4 +1,5 @@
 import { loadCssPath, loadLishogiScript } from 'common/assets';
+import { wsSend } from 'common/ws';
 import { initiatingHtml } from './util';
 
 export function notifyApp(): typeof window.lishogi.notifyApp {
@@ -41,7 +42,7 @@ export function notifyApp(): typeof window.lishogi.notifyApp {
           if (!isVisible()) $toggle.trigger('click');
         },
         setNotified() {
-          window.lishogi.socket.send('notified');
+          wsSend('notified');
         },
         pulse() {
           $toggle.addClass('pulse');

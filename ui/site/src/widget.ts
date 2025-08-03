@@ -1,5 +1,6 @@
 // @ts-nocheck
 
+import { wsSend } from 'common/ws';
 import { i18nVdomPlural } from 'i18n';
 
 const widget = (name: string, prototype: any): any => {
@@ -96,7 +97,7 @@ export function initWidgets(): void {
             el.find('.content_wrap').toggleNone();
             if (!this.loaded) {
               this.loaded = true;
-              window.lishogi.socket.send('following_onlines');
+              wsSend('following_onlines');
             }
           });
 

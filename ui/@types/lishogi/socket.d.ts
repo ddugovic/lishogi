@@ -15,11 +15,11 @@ declare global {
     interface MsgAck extends MsgOut {
       at: number;
     }
-    type Send = (t: Tpe, d?: Payload, o?: any) => void;
+    type Send = (t: Tpe, d?: Payload, o?: any, noRetry?: boolean) => void;
 
     interface Options {
       idle: boolean;
-      pingMaxLag: number; // time to wait for pong before reseting the connection
+      pongTimeout: number; // time to wait for pong before reseting the connection
       pingDelay: number; // time between pong and ping
       autoReconnectDelay: number;
       protocol: string;
@@ -27,8 +27,8 @@ declare global {
       debug?: boolean;
     }
 
-    interface Params {
-      sri: Sri;
+    interface Params extends Record<string, any> {
+      sri?: Sri;
       flag?: string;
     }
 

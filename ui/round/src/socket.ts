@@ -1,6 +1,7 @@
 import { loadCssPath } from 'common/assets';
 import notify from 'common/notification';
 import throttle from 'common/throttle';
+import { wsVersion } from 'common/ws';
 import * as game from 'game';
 import type { Simul } from 'game/interfaces';
 import { i18n } from 'i18n';
@@ -13,10 +14,10 @@ const li = window.lishogi;
 
 export interface RoundSocket extends Untyped {
   send: Socket.Send;
-  handlers: Untyped;
   moreTime(): void;
   outoftime(): void;
   berserk(): void;
+  versionCheck(): void;
   sendLoading(typ: string, data?: any): void;
   receive(typ: string, data: any): boolean;
 }
@@ -62,7 +63,7 @@ export function make(send: Socket.Send, ctrl: RoundController): RoundSocket {
       handlers[o.t](o.d);
     } else
       xhr.reload(ctrl).then((data: RoundData) => {
-        const v = li.socket.getVersion();
+        const v = wsVersion();
         if (v !== false && v > data.player.version) {
           // race condition! try to reload again
           if (isRetry) li.reload();
@@ -186,10 +187,10 @@ export function make(send: Socket.Send, ctrl: RoundController): RoundSocket {
 
   return {
     send,
-    handlers,
     moreTime: throttle(300, () => send('moretime')),
     outoftime: backoff(500, 1.1, () => send('flag', ctrl.data.game.player)),
     berserk: throttle(200, () => send('berserk', null, { ackable: true })),
+    versionCheck: throttle(300, () => send('version_check')),
     sendLoading(typ: string, data?: any) {
       ctrl.setLoading(true);
       send(typ, data);

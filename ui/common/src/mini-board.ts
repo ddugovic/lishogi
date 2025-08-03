@@ -5,6 +5,7 @@ import { forsythToRole, roleToForsyth } from 'shogiops/sfen';
 import { handRoles } from 'shogiops/variant/util';
 import { loadChushogiPieceSprite, loadKyotoshogiPieceSprite } from './assets';
 import * as domData from './data';
+import { wsSend } from './ws';
 
 export const initAll = (): void => {
   const minis = Array.from(
@@ -105,10 +106,13 @@ const parseNode = (node: HTMLElement): MiniBoardState | undefined => {
 };
 
 const startWatching = (ids: string[]) => {
-  if (!window.lishogi.socket) return;
-  if (!window.lishogi.socket?.isOpen) {
-    setTimeout(() => startWatching(ids), 500);
-  } else window.lishogi.socket.send('startWatching', ids.join(' '));
+  // embeds could use this
+  if (window.lishogi.StrongSocket) {
+    // do not start watch again after disconnecting, games are probably dead anyways
+    window.lishogi.StrongSocket.initiated.then(() => {
+      wsSend('startWatching', ids.join(' '));
+    });
+  }
 };
 
 interface MiniBoardState {

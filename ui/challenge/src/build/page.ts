@@ -1,11 +1,10 @@
+import { wsConnect, wsSend } from 'common/ws';
+
 function main(opts: any): void {
   let accepting: boolean;
   const selector = '.challenge-page';
 
-  window.lishogi.socket = new window.lishogi.StrongSocket(opts.socketUrl, opts.data.socketVersion, {
-    options: {
-      name: 'challenge',
-    },
+  wsConnect(opts.socketUrl, opts.data.socketVersion, {
     events: {
       reload: () => {
         window.lishogi.xhr.text('GET', opts.xhrUrl).then(html => {
@@ -54,9 +53,7 @@ function main(opts: any): void {
 
   function pingNow() {
     if (document.getElementById('ping-challenge')) {
-      try {
-        window.lishogi.socket.send('ping');
-      } catch (_e) {}
+      wsSend('ping');
       setTimeout(pingNow, 9000);
     }
   }
