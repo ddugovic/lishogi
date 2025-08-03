@@ -48,7 +48,7 @@ html.custom-dark {
   --c-link: var(--c-primary);
   --c-link-clear: var(--c-primary-clear);
   --c-link-dim: var(--c-primary-dim);
-  --c-link-hover: oklch(fromo var(--c-primary) l 0.4 h);
+  --c-link-hover: oklch(from var(--c-primary) l calc(c + 0.075) h);
   --c-link-over: var(--c-primary-over);
   --c-font-metal-hover: var(--c-font-clear);
   --c-font-metal: inherit;
