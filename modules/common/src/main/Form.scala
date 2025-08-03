@@ -30,6 +30,7 @@ object Form {
     def errors: Seq[FormError]
   }
 
+  // todo - remove use trans
   def options(it: Iterable[Int], pattern: String): Options[Int] =
     it map { d =>
       d -> (pluralize(pattern, d) format d)

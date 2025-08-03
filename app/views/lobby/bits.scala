@@ -112,7 +112,7 @@ object bits {
   def shogiDescription(implicit ctx: Context): Frag =
     div(cls := "lobby__description lobby__box")(
       a(cls := "lobby__box__top", href := langHref(routes.Learn.index))(
-        h2(cls := "title text", dataIcon := "C")(trans.shogi()),
+        h2(cls := "title text", dataIcon := "☗")(trans.shogi()),
         span(cls := "more")(trans.more(), " »"),
       ),
       div(cls := "lobby__box__content")(

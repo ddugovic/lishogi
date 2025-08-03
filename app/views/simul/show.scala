@@ -73,7 +73,7 @@ object show {
               ),
               trans.simulHostExtraTime(),
               ": ",
-              pluralize("minute", sim.clock.hostExtraMinutes),
+              trans.nbMinutes.pluralSameTxt(sim.clock.hostExtraMinutes),
               br,
               trans.hostColorX(sim.hostColor match {
                 case Some(color) => {

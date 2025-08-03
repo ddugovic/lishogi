@@ -44,7 +44,7 @@ final class HttpFilter(env: Env)(implicit val mat: Materializer) extends Filter 
 
     if (env.isDev) {
       if (logRequests && !ignoredLogUris.contains(req.uri)) {
-        val sessionId  = HTTPRequest.userSessionId(req).map(_.take(4)).getOrElse("anon")
+        val sessionId = HTTPRequest.userSessionId(req).map(_.take(4)).getOrElse("anon")
         logger.info(
           s"[$statusCode] ${s"[$client]".padTo(9, ' ')} ${req.method.padTo(6, ' ')} ${req.uri} -> $actionName (${reqTime}ms) [${sessionId}]",
         )
