@@ -21,7 +21,7 @@ export function make(send: Socket.Send, ctrl: AnalyseCtrl): Socket {
   let anaUsiTimeout: number | undefined;
 
   // forecast mode: reload when opponent moves
-  if (!ctrl.synthetic)
+  if (ctrl.data.forecast)
     setTimeout(() => {
       send('startWatching', ctrl.data.game.id);
     }, 1000);
