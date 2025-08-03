@@ -1,6 +1,7 @@
 package controllers
 
 import scala.annotation.nowarn
+import scala.concurrent.duration._
 
 import play.api.data.Forms._
 import play.api.data._
@@ -83,12 +84,24 @@ final class Main(
       NoContent.fuccess
     }
 
-  /** Event monitoring endpoint
-    */
+  private val JsMonRateLimitPerIp = new lila.memo.RateLimit[lila.common.IpAddress](
+    credits = 30,
+    duration = 3.minute,
+    key = "js.mon.ip",
+  )
+
   def jsmon(event: String) =
-    Action {
-      lila.mon.http.jsmon(event).increment()
-      NoContent
+    Open { implicit ctx =>
+      JsMonRateLimitPerIp(HTTPRequest lastRemoteAddress ctx.req) {
+        lila.mon.http.jsmon(event).increment()
+        env.report.jsEventsApi.update(event, ctx.me.map(_.id), get("v"))
+        NoContent.fuccess
+      }(rateLimitedFu)
+    }
+
+  def getJsmon =
+    Secure(_.SeeReport) { _ => _ =>
+      env.report.jsEventsApi.getRecent dmap { JsonOk(_) }
     }
 
   def image(id: String, @nowarn("cat=unused") hash: String, @nowarn("cat=unused") name: String) =

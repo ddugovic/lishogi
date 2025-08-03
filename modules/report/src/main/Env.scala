@@ -60,6 +60,8 @@ final class Env(
 
   lazy val api = wire[ReportApi]
 
+  lazy val jsEventsApi = wire[JsEventsApi]
+
   lazy val modFilters = new ModReportFilter
 
   // api actor

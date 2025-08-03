@@ -690,6 +690,7 @@ GET   /variant/:key                    controllers.Prismic.variant(key)
 # Help
 POST  /jslog/$id<\w{12}>               controllers.Main.jslog(id: String)
 POST  /jsmon/:event                    controllers.Main.jsmon(event: String)
+GET   /jsmon                           controllers.Main.getJsmon
 
 GET   /assets/_$v<\w{6}>/*file         controllers.Main.devAsset(v, path="public", file)
 GET   /assets/*file                    controllers.ExternalAssets.at(path="public", file)
