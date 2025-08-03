@@ -166,7 +166,7 @@
 }
 
 %game-embed {
-  padding-bottom: calc(175%);
+  padding-bottom: calc(170% + 3rem);
 
   @include breakpoint.breakpoint(media-queries.$mq-x-small) {
     padding-bottom: calc(56.25%);

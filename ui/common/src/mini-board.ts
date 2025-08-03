@@ -79,7 +79,8 @@ export function update(node: HTMLElement, sfen: Sfen, lm?: Usi): void {
   const sg = domData.get<SgApi>(node, 'shogiground');
   if (sg) {
     node.dataset.sfen = sfen;
-    node.dataset.lastmove = lm;
+    if (lm) node.dataset.lastmove = lm;
+    else delete node.dataset.lastmove;
     const splitSfen = sfen.split(' ');
     sg.set({
       sfen: { board: splitSfen[0], hands: splitSfen[2] },
