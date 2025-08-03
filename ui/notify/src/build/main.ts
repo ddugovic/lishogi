@@ -16,7 +16,10 @@ function main(opts: NotifyOpts): Ctrl {
   }
 
   if (opts.data) ctrl.update(opts.data, opts.incoming);
-  // else ctrl.loadPage(1);
+  else {
+    opts.initiated = Date.now();
+    ctrl.loadPage(1);
+  }
 
   return ctrl;
 }

@@ -3,6 +3,7 @@ import type { VNode } from 'snabbdom';
 export interface NotifyOpts {
   data?: NotifyData;
   incoming: boolean;
+  initiated?: number;
   isVisible(): boolean;
   setCount(nb: number): void;
   show(): void;

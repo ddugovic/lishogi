@@ -67,7 +67,11 @@ export default function ctrl(opts: NotifyOpts, redraw: Redraw): Ctrl {
   }
 
   function setVisible() {
-    if (!data || data.pager.currentPage === 1) loadPage(1);
+    if (
+      !data ||
+      (data.pager.currentPage === 1 && (!opts.initiated || Date.now() - opts.initiated > 2000))
+    )
+      loadPage(1);
   }
 
   function setMsgRead(user: string) {
