@@ -74,6 +74,7 @@ final class SimulApi(
       clock = setup.clock,
       variants = setup.actualVariants,
       position = setup.position,
+      proMode = setup.proMode.some,
       color = setup.color.some,
       text = setup.text,
       estimatedStartAt = setup.estimatedStartAt,

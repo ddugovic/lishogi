@@ -1,5 +1,7 @@
+import { wsConnect } from 'common/ws';
+
 function main(): void {
-  window.lishogi.socket = new window.lishogi.StrongSocket('/socket/v5', false, {
+  wsConnect('/socket/v5', false, {
     params: { flag: 'simul' },
   });
 

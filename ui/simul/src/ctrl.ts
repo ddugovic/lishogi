@@ -6,6 +6,7 @@ import xhr from './xhr';
 export default class SimulCtrl {
   data: SimulData;
   socket: SimulSocket;
+  loader?: string;
 
   constructor(
     readonly opts: SimulOpts,
@@ -38,6 +39,12 @@ export default class SimulCtrl {
       ...data,
       team: this.data.team, // reload data does not contain the team anymore
     };
+    this.loader = undefined;
+  };
+
+  clear = (): void => {
+    this.loader = undefined;
+    this.redraw();
   };
 
   teamBlock = (): boolean => !!this.data.team && !this.data.team.isIn;

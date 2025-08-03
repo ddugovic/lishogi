@@ -53,8 +53,10 @@ const showText = (ctrl: SimulCtrl) =>
     : undefined;
 
 const started = (ctrl: SimulCtrl) => [
-  util.title(ctrl),
-  showText(ctrl),
+  h('div.box__top', [
+    util.title(ctrl),
+    h('div.box__top__actions', h('div.finished', i18n('eventInProgress'))),
+  ]),
   results(ctrl),
   pairings(ctrl),
 ];
@@ -64,7 +66,6 @@ const finished = (ctrl: SimulCtrl) => [
     util.title(ctrl),
     h('div.box__top__actions', h('div.finished', i18n('finished'))),
   ]),
-  showText(ctrl),
   results(ctrl),
   pairings(ctrl),
 ];

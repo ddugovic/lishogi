@@ -1,7 +1,6 @@
 import { modal } from 'common/modal';
 import { getPerfIcon } from 'common/perf-icons';
 import { type MaybeVNodes, bind, proverb } from 'common/snabbdom';
-import spinner from 'common/spinner';
 import { i18n, i18nFormat, i18nVdomPlural } from 'i18n';
 import { i18nVariant } from 'i18n/variant';
 import { h } from 'snabbdom';
@@ -11,9 +10,6 @@ import xhr from '../xhr';
 import * as util from './util';
 
 let openModal = false;
-let joining: Timeout | undefined = undefined;
-let withdrawing: Timeout | undefined = undefined;
-
 export default function (ctrl: SimulCtrl): MaybeVNodes {
   const candidates = ctrl.candidates().sort(byName);
   const accepted = ctrl.accepted().sort(byName);
@@ -189,8 +185,9 @@ export default function (ctrl: SimulCtrl): MaybeVNodes {
                   {
                     hook: bind('click', () => {
                       openModal = false;
-                      startJoining(ctrl.redraw);
-                      xhr.join(ctrl.data.id, variant);
+                      ctrl.loader = 'join';
+                      ctrl.redraw();
+                      xhr.join(ctrl, variant);
                     }),
                   },
                   [
@@ -218,8 +215,8 @@ export default function (ctrl: SimulCtrl): MaybeVNodes {
 }
 
 const joinButton = (ctrl: SimulCtrl) =>
-  joining
-    ? h('div.jw-spinner', spinner())
+  ctrl.loader === 'join'
+    ? h('i.ddloader')
     : h(
         `a.button.text${ctrl.teamBlock() ? '.disabled' : ''}`,
         {
@@ -230,8 +227,9 @@ const joinButton = (ctrl: SimulCtrl) =>
             ? {}
             : bind('click', () => {
                 if (ctrl.data.variants.length === 1) {
-                  startJoining(ctrl.redraw);
-                  xhr.join(ctrl.data.id, ctrl.data.variants[0]);
+                  ctrl.loader = 'join';
+                  ctrl.redraw();
+                  xhr.join(ctrl, ctrl.data.variants[0]);
                 } else {
                   openModal = true;
                   ctrl.redraw();
@@ -243,29 +241,16 @@ const joinButton = (ctrl: SimulCtrl) =>
           : i18n('join'),
       );
 
-const startJoining = (redraw: Redraw) => {
-  clearTimeout(joining);
-  joining = setTimeout(() => {
-    joining = undefined;
-    redraw();
-  }, 3500);
-  redraw();
-};
-
 const withdrawButton = (ctrl: SimulCtrl) =>
-  withdrawing
-    ? h('div.jw-spinner', spinner())
+  ctrl.loader === 'withdraw'
+    ? h('i.ddloader')
     : h(
         'a.button',
         {
           hook: bind('click', () => {
-            clearTimeout(withdrawing);
-            withdrawing = setTimeout(() => {
-              withdrawing = undefined;
-              ctrl.redraw();
-            }, 3500);
+            ctrl.loader = 'withdraw';
             ctrl.redraw();
-            xhr.withdraw(ctrl.data.id);
+            xhr.withdraw(ctrl);
           }),
         },
         i18n('withdraw'),

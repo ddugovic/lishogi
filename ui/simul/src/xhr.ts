@@ -1,4 +1,5 @@
 import throttle from 'common/throttle';
+import type SimulCtrl from './ctrl';
 
 // when the simul no longer exists
 const onFail = () => window.lishogi.reload();
@@ -13,8 +14,10 @@ const xhr: Record<
   ping: post('host-ping'),
   start: post('start'),
   abort: post('abort'),
-  join: throttle(3500, (id: string, variant: VariantKey) => post(`join/${variant}`)(id)),
-  withdraw: post('withdraw'),
+  join: throttle(3500, (ctrl: SimulCtrl, variant: VariantKey) =>
+    post(`join/${variant}`)(ctrl.data.id).then(() => ctrl.clear()),
+  ),
+  withdraw: (ctrl: SimulCtrl) => post('withdraw')(ctrl.data.id).then(() => ctrl.clear()),
   accept: (user: string) => post(`accept/${user}`),
   reject: (user: string) => post(`reject/${user}`),
 };
