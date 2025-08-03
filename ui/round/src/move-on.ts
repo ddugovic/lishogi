@@ -35,13 +35,22 @@ export default class MoveOn {
       !document.querySelector('.round__now-playing') // no other game currently played
     )
       return;
-    if (force) this.redirect(`/round-next/${d.game.id}`);
+    if (force) this.roundNext();
     else if (d.simul) {
-      if (d.simul.hostId === this.ctrl.opts.userId && d.simul.nbPlaying > 1)
-        this.redirect(`/round-next/${d.game.id}`);
-    } else
-      xhr.whatsNext(this.ctrl).then(data => {
-        if (data.next) this.redirect(`/${data.next}`);
-      });
+      if (d.simul.hostId === this.ctrl.opts.userId && d.simul.nbPlaying > 1) {
+        if (this.ctrl.simulPlayerMoved) this.roundNext();
+        else this.whatsNext(); // probably not even necessary
+      }
+    } else this.whatsNext();
+  };
+
+  private roundNext = (): void => {
+    this.redirect(`/round-next/${this.ctrl.data.game.id}`);
+  };
+
+  private whatsNext = (): void => {
+    xhr.whatsNext(this.ctrl).then(data => {
+      if (data.next) this.redirect(`/${data.next}`);
+    });
   };
 }

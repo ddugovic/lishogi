@@ -105,6 +105,7 @@ export default class RoundController {
   lastDrawOfferAtPly?: Ply;
   lastPauseOfferAtTime?: number;
   nvui?: NvuiPlugin;
+  simulPlayerMoved?: boolean;
 
   private music?: any;
 
@@ -777,9 +778,11 @@ export default class RoundController {
     }
   };
 
+  private redirectingTimeout: Timeout | undefined = undefined;
   setRedirecting = (): void => {
     this.redirecting = true;
-    setTimeout(() => {
+    clearTimeout(this.redirectingTimeout);
+    this.redirectingTimeout = setTimeout(() => {
       this.redirecting = false;
       this.redraw();
     }, 2500);
@@ -802,7 +805,7 @@ export default class RoundController {
     if (this.opts.onChange) setTimeout(() => this.opts.onChange(this.data), 150);
   };
 
-  private goneTick: number | undefined;
+  private goneTick: Timeout | undefined;
   setGone = (gone: number | boolean): void => {
     game.setGone(this.data, this.data.opponent.color, gone);
     clearTimeout(this.goneTick);

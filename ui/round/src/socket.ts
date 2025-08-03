@@ -150,13 +150,15 @@ export function make(send: Socket.Send, ctrl: RoundController): RoundSocket {
         ctrl.data.simul &&
         ctrl.opts.userId == ctrl.data.simul.hostId &&
         gameId !== ctrl.data.game.id &&
-        ctrl.moveOn.get() &&
-        !game.isPlayerTurn(ctrl.data)
+        ctrl.moveOn.get()
       ) {
-        ctrl.setRedirecting();
-        sound.move();
-        window.lishogi.properReload = true;
-        location.href = `/${gameId}`;
+        ctrl.simulPlayerMoved = true;
+        if (!game.isPlayerTurn(ctrl.data)) {
+          ctrl.setRedirecting();
+          sound.move();
+          window.lishogi.properReload = true;
+          location.href = `/${gameId}`;
+        }
       }
     },
     simulEnd(simul: Simul) {
