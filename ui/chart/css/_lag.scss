@@ -15,7 +15,11 @@
   }
 
   .sections {
-    @extend %flex-between;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
   }
 
   section {

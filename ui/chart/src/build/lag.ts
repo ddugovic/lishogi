@@ -1,6 +1,7 @@
 import type { ArcElement, ChartConfiguration, ChartDataset, ChartType } from 'chart.js';
 import { cssVar } from 'common/styles';
 import { wsAverageLag, wsOnOpen, wsSend } from 'common/ws';
+import { borderColor, fontClearColor, fontFamily } from '../common';
 
 declare module 'chart.js' {
   // @ts-ignore
@@ -23,13 +24,14 @@ function main(): void {
 
   $('.meter canvas').each(function (this: HTMLCanvasElement, index) {
     const colors = [cssVar('--c-good'), cssVar('--c-warn'), cssVar('--c-bad')];
+    const colorsOver = [cssVar('--c-good-over'), cssVar('--c-warn-over'), cssVar('--c-bad-over')];
     const dataset: ChartDataset<'doughnut'>[] = [
       {
         data: [500, 150, 100],
         backgroundColor: colors,
         hoverBackgroundColor: colors,
-        borderColor: '#d9d9d9',
-        borderWidth: 3,
+        borderColor: borderColor(),
+        borderWidth: 2,
         circumference: 180,
         rotation: 270,
       },
@@ -42,6 +44,11 @@ function main(): void {
       },
       options: {
         events: [],
+        layout: {
+          padding: {
+            top: -50,
+          },
+        },
         plugins: {
           legend: {
             display: false,
@@ -56,7 +63,12 @@ function main(): void {
             value: index ? v.network : v.server,
           },
           datalabels: {
-            color: 'black',
+            color: (context: any) => {
+              return colorsOver[context.dataIndex];
+            },
+            font: {
+              size: 15,
+            },
             formatter: (_: any, ctx: any) => ctx.chart.data.labels![ctx.dataIndex],
           },
         },
@@ -75,7 +87,7 @@ function main(): void {
             ctx.translate(data.x, data.y);
             ctx.rotate(Math.PI * (dest + 1.5));
             ctx.beginPath();
-            ctx.fillStyle = '#838382';
+            ctx.fillStyle = fontClearColor();
             ctx.moveTo(0 - 10, 0);
             ctx.lineWidth = 1;
             ctx.lineTo(0, -outer);
