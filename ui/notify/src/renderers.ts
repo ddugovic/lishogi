@@ -63,7 +63,7 @@ export const renderers: Renderers = {
   },
   arrangementReminder: {
     html: n => {
-      return generic(n, `/tournament/${n.content.tid}#${n.content.id}`, 'p', [
+      return generic(n, `/tournament/${arrangementPath(n)}`, 'p', [
         h('span', [h('strong', [i18n('tourArrangements:yourUpcomingGames')]), drawTime(n)]),
         h('span', [
           i18nFormat(
@@ -79,10 +79,7 @@ export const renderers: Renderers = {
   },
   arrangementConfirmation: {
     html: n => {
-      const split = (n.content.id as string).split('/', 2);
-      const path =
-        split.length === 2 ? `${split[0]}#${split[1]}` : `${n.content.tid}#${n.content.id}`;
-      return generic(n, `/tournament/${path}`, 'p', [
+      return generic(n, `/tournament/${arrangementPath(n)}`, 'p', [
         h('span', [h('strong', [i18n('tourArrangements:gameScheduling')]), drawTime(n)]),
         h('span', i18nFormat('tourArrangements:xAcceptedTime', userFullName(n.content.user))),
       ]);
@@ -250,4 +247,9 @@ function drawTime(n: Notification) {
 function userFullName(u?: LightUser) {
   if (!u) return 'Anonymous';
   return u.title ? `${u.title} ${u.name}` : u.name;
+}
+
+function arrangementPath(n: Notification): string {
+  const split = (n.content.id as string).split('/', 2);
+  return split.length === 2 ? `${split[0]}#${split[1]}` : `${n.content.tid}#${n.content.id}`;
 }
