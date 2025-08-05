@@ -120,7 +120,7 @@ final private[tournament] class Cached(
 
     private val cache = cacheApi[SheetKey, Sheet](2048, "tournament.sheet") {
       _.expireAfterAccess(3 minutes)
-        .maximumSize(32768)
+        .maximumSize(8192)
         .buildAsyncFuture(compute)
     }
   }

@@ -398,7 +398,7 @@ object RoundSocket {
   )(implicit ec: scala.concurrent.ExecutionContext) {
     import java.util.concurrent.ConcurrentHashMap
 
-    private[this] val terminations = new ConcurrentHashMap[String, Cancellable](65536)
+    private[this] val terminations = new ConcurrentHashMap[String, Cancellable](2048)
 
     def schedule(gameId: Game.Id): Unit =
       terminations

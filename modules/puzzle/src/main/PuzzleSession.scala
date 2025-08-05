@@ -170,7 +170,7 @@ final class PuzzleSessionApi(
       createSessionFor(user, theme, difficulty).tap { sessions.put(user.id, _) }.void
     }
 
-  private val sessions = cacheApi.notLoading[User.ID, PuzzleSession](16384, "puzzle.session")(
+  private val sessions = cacheApi.notLoading[User.ID, PuzzleSession](4096, "puzzle.session")(
     _.expireAfterWrite(1 hour).buildAsync(),
   )
 
