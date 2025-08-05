@@ -1,5 +1,6 @@
 import { notEmpty } from 'common/common';
 import { editor, encodeSfen, setup } from 'common/links';
+import { modal } from 'common/modal';
 import { type MaybeVNodes, bind, bindNonPassive, dataIcon } from 'common/snabbdom';
 import { imported } from 'game/game';
 import { cont as contRoute } from 'game/router';
@@ -214,7 +215,10 @@ export function view(ctrl: AnalyseCtrl): VNode {
         ? h(
             'a.button.button-empty',
             {
-              hook: bind('click', _ => $.modal($(`.continue-with.g_${d.game.id}`))),
+              hook: bind('click', _ => {
+                ctrl.continueWith = !ctrl.continueWith;
+                ctrl.redraw();
+              }),
               attrs: dataIcon('U'),
             },
             i18n('continueFromHere'),
@@ -409,38 +413,45 @@ export function view(ctrl: AnalyseCtrl): VNode {
       .concat(deleteButton(ctrl, ctrl.opts.userId))
       .concat(notationConfig)
       .concat(cevalConfig)
-      .concat(ctrl.mainline.length > 4 ? [h('h2', i18n('replayMode')), autoplayButtons(ctrl)] : [])
-      .concat([
-        canContinue
-          ? h(`div.continue-with.none.g_${d.game.id}`, [
-              h(
-                'a.button',
-                {
-                  attrs: {
-                    href: d.userAnalysis
-                      ? setup('/', ctrl.data.game.variant.key, ctrl.node.sfen, 'ai')
-                      : setup(contRoute(d, 'ai'), ctrl.data.game.variant.key, ctrl.node.sfen),
-                    rel: 'nofollow',
-                  },
-                },
-                i18n('playWithTheMachine'),
-              ),
-              h(
-                'a.button',
-                {
-                  attrs: {
-                    href: d.userAnalysis
-                      ? setup('/', ctrl.data.game.variant.key, ctrl.node.sfen, 'friend')
-                      : setup(contRoute(d, 'friend'), ctrl.data.game.variant.key, ctrl.node.sfen),
-                    rel: 'nofollow',
-                  },
-                },
-                i18n('playWithAFriend'),
-              ),
-            ])
-          : null,
-      ]),
+      .concat(ctrl.mainline.length > 4 ? [h('h2', i18n('replayMode')), autoplayButtons(ctrl)] : []),
   );
+}
+
+export function continueWithModal(ctrl: AnalyseCtrl): VNode {
+  const d = ctrl.data;
+  return modal({
+    class: 'continue-with',
+    onClose() {
+      ctrl.continueWith = false;
+      ctrl.redraw();
+    },
+    content: [
+      h(
+        'a.button',
+        {
+          attrs: {
+            href: d.userAnalysis
+              ? setup('/', ctrl.data.game.variant.key, ctrl.node.sfen, 'ai')
+              : setup(contRoute(d, 'ai'), ctrl.data.game.variant.key, ctrl.node.sfen),
+            rel: 'nofollow',
+          },
+        },
+        i18n('playWithTheMachine'),
+      ),
+      h(
+        'a.button',
+        {
+          attrs: {
+            href: d.userAnalysis
+              ? setup('/', ctrl.data.game.variant.key, ctrl.node.sfen, 'friend')
+              : setup(contRoute(d, 'friend'), ctrl.data.game.variant.key, ctrl.node.sfen),
+            rel: 'nofollow',
+          },
+        },
+        i18n('playWithAFriend'),
+      ),
+    ],
+  });
 }
 
 function ctrlBoolSetting(o: BoolSetting, ctrl: AnalyseCtrl) {

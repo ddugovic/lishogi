@@ -16,7 +16,7 @@ import { parseSfen } from 'shogiops/sfen';
 import { type VNode, h } from 'snabbdom';
 import { path as treePath } from 'tree';
 import { render as acplView } from './acpl';
-import { view as actionMenu } from './action-menu';
+import { view as actionMenu, continueWithModal } from './action-menu';
 import * as control from './control';
 import type AnalyseCtrl from './ctrl';
 import forecastView from './forecast/forecast-view';
@@ -402,7 +402,7 @@ export default function (ctrl: AnalyseCtrl): VNode {
           })
         : null,
       study ? studyView.overboard(study) : null,
-
+      ctrl.continueWith ? continueWithModal(ctrl) : null,
       h(
         addChapterId(study, `div.analyse__board.main-board.v-${ctrl.data.game.variant.key}`),
         {

@@ -175,36 +175,31 @@ export default function (ctrl: SimulCtrl): MaybeVNodes {
     ctrl.data.proverb ? proverb(ctrl.data.proverb) : null,
     openModal
       ? modal({
-          class: 'variant-select',
-          content: [
+          class: 'continue-with',
+          content: ctrl.data.variants.map(variant =>
             h(
-              'div.continue-with',
-              ctrl.data.variants.map(variant =>
+              'button.button',
+              {
+                hook: bind('click', () => {
+                  openModal = false;
+                  ctrl.loader = 'join';
+                  ctrl.redraw();
+                  xhr.join(ctrl, variant);
+                }),
+              },
+              [
                 h(
-                  'button.button',
+                  'span.text',
                   {
-                    hook: bind('click', () => {
-                      openModal = false;
-                      ctrl.loader = 'join';
-                      ctrl.redraw();
-                      xhr.join(ctrl, variant);
-                    }),
+                    attrs: {
+                      'data-icon': getPerfIcon(variant),
+                    },
                   },
-                  [
-                    h(
-                      'span.text',
-                      {
-                        attrs: {
-                          'data-icon': getPerfIcon(variant),
-                        },
-                      },
-                      i18nVariant(variant),
-                    ),
-                  ],
+                  i18nVariant(variant),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
           onClose() {
             openModal = false;
             ctrl.redraw();
