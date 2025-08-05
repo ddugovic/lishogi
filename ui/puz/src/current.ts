@@ -16,7 +16,7 @@ export default class CurrentPuzzle {
     readonly puzzle: Puzzle,
   ) {
     this.line = puzzle.line.split(' ');
-    this.pov = parseSfen('standard', puzzle.sfen).unwrap().turn;
+    this.pov = parseSfen('standard', puzzle.sfen, false).unwrap().turn;
     this.startAt = getNow();
     this.ambPromotions = puzzle.ambPromotions ?? [];
   }

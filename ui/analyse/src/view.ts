@@ -102,7 +102,7 @@ function inputs(ctrl: AnalyseCtrl): VNode | undefined {
               ctrl.sfenInput = el.value;
               el.addEventListener('input', _ => {
                 ctrl.sfenInput = el.value;
-                const position = parseSfen(ctrl.data.game.variant.key, el.value.trim());
+                const position = parseSfen(ctrl.data.game.variant.key, el.value.trim(), false);
                 el.setCustomValidity(position.isOk ? '' : 'Invalid SFEN');
               });
             });

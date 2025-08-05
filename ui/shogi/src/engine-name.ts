@@ -35,7 +35,7 @@ export function engineNameFromCode(code?: EngineCode, level?: number): string {
 }
 
 function isStandardMaterial(sfen: Sfen): boolean {
-  const pos = parseSfen('standard', sfen);
+  const pos = parseSfen('standard', sfen, false);
   if (pos.isErr) return false;
   const board = pos.value.board;
   const hands = pos.value.hands.color('sente').combine(pos.value.hands.color('gote'));

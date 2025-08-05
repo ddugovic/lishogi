@@ -163,7 +163,7 @@ function main(opts: Opts): KeyboardMoveHandler | undefined {
   };
   makeBindings(opts, submit, clear);
   return (variant: VariantKey, sfen: Sfen, lastSquare: Square | undefined, yourMove: boolean) => {
-    pos = parseSfen(variant, sfen).unwrap();
+    pos = parseSfen(variant, sfen, false).unwrap();
     lastKey = lastSquare !== undefined ? makeSquareName(lastSquare) : undefined;
     canPlay = yourMove;
     // premove/predrop

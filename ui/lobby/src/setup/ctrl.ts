@@ -1,7 +1,7 @@
 import { clockEstimateSeconds, clockToPerf } from 'common/clock';
 import { idToVariant, variantToId } from 'common/variant';
 import { engineName } from 'shogi/engine-name';
-import { RULES } from 'shogiops';
+import { RULES } from 'shogiops/constants';
 import { findHandicaps, isHandicap } from 'shogiops/handicaps';
 import { parseSfen } from 'shogiops/sfen';
 import type LobbyController from '../ctrl';

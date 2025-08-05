@@ -2,7 +2,7 @@ import { onInsert } from 'common/snabbdom';
 import { variantToId } from 'common/variant';
 import { i18n } from 'i18n';
 import { i18nVariant } from 'i18n/variant';
-import { RULES } from 'shogiops';
+import { RULES } from 'shogiops/constants';
 import { type VNode, h } from 'snabbdom';
 import type SetupCtrl from './ctrl';
 import type { SetupDataKey } from './ctrl';
