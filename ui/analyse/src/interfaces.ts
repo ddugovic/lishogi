@@ -66,7 +66,6 @@ export interface AnalyseOpts {
   $side?: JQuery;
   $underboard?: JQuery;
   chat: any;
-  socketUrl: string;
   socketVersion: number;
 }
 

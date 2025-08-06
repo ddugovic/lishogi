@@ -31,7 +31,7 @@ export function study(opts: AnalyseOpts, start: (opts: AnalyseOpts) => AnalyseCt
   let ctrl: AnalyseCtrl | undefined = undefined;
 
   opts.initialPly = 'url';
-  opts.socketSend = wsConnect(opts.socketUrl, opts.socketVersion, {
+  opts.socketSend = wsConnect(`/study/${opts.study.id}/socket/v5`, opts.socketVersion, {
     receive: (t: string, d: any) => {
       ctrl?.socket.receive(t, d);
     },

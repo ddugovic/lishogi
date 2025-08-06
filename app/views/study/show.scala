@@ -41,7 +41,6 @@ object show {
                 localMod = ctx.userId exists sc.study.canContribute,
               )
             },
-            "socketUrl"     -> socketUrl(sc.study.id.value),
             "socketVersion" -> socketVersion.value,
           ),
         ),
@@ -66,5 +65,4 @@ object show {
       ),
     )
 
-  def socketUrl(id: String) = s"/study/$id/socket/v5"
 }

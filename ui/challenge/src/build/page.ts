@@ -4,7 +4,7 @@ function main(opts: any): void {
   let accepting: boolean;
   const selector = '.challenge-page';
 
-  wsConnect(opts.socketUrl, opts.data.socketVersion, {
+  wsConnect(`/challenge/${opts.data.challenge.id}/socket/v5`, opts.data.socketVersion, {
     events: {
       reload: () => {
         window.lishogi.xhr.text('GET', opts.xhrUrl).then(html => {

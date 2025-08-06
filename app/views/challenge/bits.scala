@@ -22,10 +22,9 @@ object bits {
       moduleJsTag(
         "challenge.page",
         Json.obj(
-          "socketUrl" -> s"/challenge/${c.id}/socket/v5",
-          "xhrUrl"    -> routes.Challenge.show(c.id, color.map(_.name)).url,
-          "owner"     -> owner,
-          "data"      -> json,
+          "xhrUrl" -> routes.Challenge.show(c.id, color.map(_.name)).url,
+          "owner"  -> owner,
+          "data"   -> json,
         ),
       ),
     )
