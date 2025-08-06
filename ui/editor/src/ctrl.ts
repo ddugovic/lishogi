@@ -1,7 +1,6 @@
 import { loadChushogiPieceSprite, loadKyotoshogiPieceSprite } from 'common/assets';
 import { type Prop, defined, prop } from 'common/common';
 import { analysis, editor } from 'common/links';
-import { i18n } from 'i18n';
 import { Shogiground } from 'shogiground';
 import type { Api as SgApi } from 'shogiground/api';
 import type { NumberPair, Piece } from 'shogiground/types';
@@ -20,7 +19,7 @@ import {
   roleToForsyth,
 } from 'shogiops/sfen';
 import type { Role, Rules, Setup } from 'shogiops/types';
-import { toBW } from 'shogiops/util';
+import { toBW, toColor } from 'shogiops/util';
 import { handRoles, promotableRoles, promote, unpromote } from 'shogiops/variant/util';
 import { defaultPosition } from 'shogiops/variant/variant';
 import type { EditorData, EditorOptions, EditorState, Selected } from './interfaces';
@@ -29,7 +28,6 @@ import { makeConfig } from './shogiground';
 export default class EditorCtrl {
   options: EditorOptions;
   shogiground: SgApi;
-  redraw: Redraw;
 
   selected: Prop<Selected>;
   initTouchMovePos: NumberPair | undefined;
@@ -45,7 +43,7 @@ export default class EditorCtrl {
 
   constructor(
     public data: EditorData,
-    redraw: Redraw,
+    public redraw: Redraw,
   ) {
     this.rules = this.data.variant;
     this.options = this.data.options || {};
@@ -56,12 +54,9 @@ export default class EditorCtrl {
 
     this.bind();
 
-    this.redraw = () => {};
-    if (!this.setSfen(this.data.sfen)) {
-      alert(i18n('invalidSfen'));
-      this.startPosition();
-    }
-    this.redraw = redraw;
+    this.setShogiground(this.data.sfen);
+
+    this.updateUrl();
   }
 
   bind(): void {
@@ -113,6 +108,15 @@ export default class EditorCtrl {
     });
   }
 
+  updateUrl(pushState = false): void {
+    if (!this.data.embed) {
+      const sfen = this.getSfen();
+
+      if (pushState) window.history.pushState('', '', this.makeEditorUrl(sfen));
+      else window.history.replaceState('', '', this.makeEditorUrl(sfen));
+    }
+  }
+
   onChange(history = false, pushState = false): void {
     const sfen = this.getSfen();
     this.data.sfen = sfen;
@@ -125,10 +129,8 @@ export default class EditorCtrl {
       this.currentBeforeStack = sfen;
     }
 
-    if (!this.data.embed) {
-      if (pushState) window.history.pushState('', '', this.makeEditorUrl(sfen));
-      else window.history.replaceState('', '', this.makeEditorUrl(sfen));
-    }
+    this.updateUrl(pushState);
+
     const cur = this.selected();
     const curPiece =
       typeof cur !== 'string' ? ({ color: cur[0], role: cur[1] } as Piece) : undefined;
@@ -199,7 +201,7 @@ export default class EditorCtrl {
       board: board,
       hands: hands,
       turn: this.turn,
-      moveNumber: this.moveNumber,
+      moveNumber: this.reasonableMoveNumber(),
     };
   }
 
@@ -209,39 +211,32 @@ export default class EditorCtrl {
       makeBoardSfen(this.rules, setup.board),
       toBW(setup.turn),
       makeHandsSfen(this.rules, setup.hands),
-      Math.max(1, Math.min(this.moveNumber, 9999)),
+      this.reasonableMoveNumber(),
     ].join(' ');
   }
 
-  private getLegalSfen(): string | undefined {
+  private getPlayableSfen(): string | undefined {
     return parseSfen(this.rules, this.getSfen(), true).unwrap(
       pos => {
-        return makeSfen(pos);
+        if (!pos.isEnd()) return makeSfen(pos);
+        else return undefined;
       },
       _ => undefined,
-    );
-  }
-
-  private isPlayable(): boolean {
-    return parseSfen(this.rules, this.getSfen(), true).unwrap(
-      pos => !pos.isEnd(),
-      _ => false,
     );
   }
 
   getState(): EditorState {
     return {
       sfen: this.getSfen(),
-      legalSfen: this.getLegalSfen(),
-      playable: this.isPlayable(),
+      playableSfen: this.getPlayableSfen(),
     };
   }
 
-  makeAnalysisUrl(legalSfen: string, orientation: Color = 'sente'): string {
-    return analysis(this.rules, legalSfen, undefined, orientation);
+  makeAnalysisUrl(sfen: Sfen, orientation: Color = 'sente'): string {
+    return analysis(this.rules, sfen, undefined, orientation);
   }
 
-  makeEditorUrl(sfen: string): string {
+  makeEditorUrl(sfen: Sfen): string {
     return this.data.baseUrl + editor(this.rules, sfen, this.bottomColor());
   }
 
@@ -249,6 +244,10 @@ export default class EditorCtrl {
     return this.shogiground
       ? this.shogiground.state.orientation
       : this.options.orientation || 'sente';
+  }
+
+  reasonableMoveNumber(): number {
+    return Math.max(1, Math.min(this.moveNumber, 9999));
   }
 
   setTurn(turn: Color): void {
@@ -273,23 +272,19 @@ export default class EditorCtrl {
     );
   }
 
-  setSfen(sfen: string, history = false): boolean {
-    return parseSfen(this.rules, sfen, false).unwrap(
-      pos => {
-        const splitSfen = sfen.split(' ');
-        if (this.shogiground)
-          this.shogiground.set({ sfen: { board: splitSfen[0], hands: splitSfen[2] } });
-        this.turn = pos.turn;
-        this.moveNumber = pos.moveNumber;
+  setShogiground(sfen: Sfen): void {
+    const splitSfen = sfen.split(' ');
+    if (this.shogiground)
+      this.shogiground.set({ sfen: { board: splitSfen[0], hands: splitSfen[2] } });
+    this.turn = toColor(splitSfen[1]);
 
-        this.onChange(history);
-        return true;
-      },
-      err => {
-        console.warn(err);
-        return false;
-      },
-    );
+    this.moveNumber = Number.parseInt(splitSfen[3]) || 1;
+  }
+
+  setSfen(sfen: Sfen, history = false): void {
+    this.setShogiground(sfen);
+
+    this.onChange(history);
   }
 
   setHands(hands: Hands): void {

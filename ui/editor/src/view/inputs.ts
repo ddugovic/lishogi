@@ -6,7 +6,7 @@ import { type VNode, h } from 'snabbdom';
 import type EditorCtrl from '../ctrl';
 
 export function inputs(ctrl: EditorCtrl, sfen: string): VNode | undefined {
-  const pos = parseSfen(ctrl.rules, sfen);
+  const pos = parseSfen(ctrl.rules, sfen, false);
   return h('div.copyables', [
     h('div.sfen', [
       h('strong', 'SFEN'),
@@ -20,12 +20,11 @@ export function inputs(ctrl: EditorCtrl, sfen: string): VNode | undefined {
         on: {
           change(e) {
             const el = e.target as HTMLInputElement;
-            ctrl.setSfen(el.value.trim());
-            el.reportValidity();
+            if (el.reportValidity()) ctrl.setSfen(el.value.trim());
           },
           input(e) {
             const el = e.target as HTMLInputElement;
-            const valid = parseSfen(ctrl.rules, el.value.trim()).isOk;
+            const valid = parseSfen(ctrl.rules, el.value.trim(), false).isOk;
             el.setCustomValidity(valid ? '' : i18n('invalidSfen'));
           },
           blur(e) {

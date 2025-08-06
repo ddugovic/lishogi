@@ -28,6 +28,7 @@
       opacity: 0.5;
     }
 
+    &.active,
     &:hover {
       color: theme.$c-accent;
     }

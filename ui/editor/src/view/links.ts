@@ -30,11 +30,11 @@ function continueWith(ctrl: EditorCtrl, state: EditorState): VNode {
     {
       attrs: { 'data-icon': 'U' },
       class: {
-        disabled: !state.playable,
+        disabled: !state.playableSfen,
       },
       on: {
         click: () => {
-          if (state.playable) {
+          if (state.playableSfen) {
             openModal = true;
             ctrl.redraw();
           }
@@ -58,7 +58,7 @@ function continueWith(ctrl: EditorCtrl, state: EditorState): VNode {
                     disabled: ['chushogi', 'annanshogi'].includes(ctrl.rules),
                   },
                   attrs: {
-                    href: setup('/', ctrl.rules, state.legalSfen || '', 'ai'),
+                    href: setup('/', ctrl.rules, state.playableSfen || '', 'ai'),
                     rel: 'nofollow',
                   },
                 },
@@ -68,7 +68,7 @@ function continueWith(ctrl: EditorCtrl, state: EditorState): VNode {
                 'a.button.text',
                 {
                   attrs: {
-                    href: setup('/', ctrl.rules, state.legalSfen || '', 'friend'),
+                    href: setup('/', ctrl.rules, state.playableSfen || '', 'friend'),
                     rel: 'nofollow',
                   },
                 },

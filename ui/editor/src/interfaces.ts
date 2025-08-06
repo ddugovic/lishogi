@@ -17,8 +17,7 @@ export interface EditorOptions {
 
 export interface EditorState {
   sfen: string;
-  legalSfen: string | undefined;
-  playable: boolean;
+  playableSfen: string | undefined;
 }
 
 export type SpecialSelected = 'pointer' | 'trash';

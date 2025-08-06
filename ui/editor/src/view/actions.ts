@@ -76,6 +76,7 @@ function flipBoard(ctrl: EditorCtrl): VNode {
   return h(
     'span.action.text',
     {
+      class: { active: ctrl.shogiground.state.orientation === 'gote' },
       attrs: { 'data-icon': 'B' },
       on: {
         click() {

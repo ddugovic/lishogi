@@ -72,7 +72,7 @@ function colorTurn(ctrl: EditorCtrl, state: EditorState): VNode {
               selected: color === ctrl.turn,
             },
           },
-          i18nFormatCapitalized('xPlays', colorName(ctrl.turn, handicap)),
+          i18nFormatCapitalized('xPlays', colorName(color, handicap)),
         ),
       ),
     ),
@@ -86,7 +86,6 @@ function positions(ctrl: EditorCtrl, state: EditorState): VNode {
       {
         attrs: {
           value: handicap.sfen,
-          'data-sfen': handicap.sfen,
           selected: state.sfen === handicap.sfen,
         },
       },
@@ -95,7 +94,7 @@ function positions(ctrl: EditorCtrl, state: EditorState): VNode {
   return h(
     'div.positions',
     h(
-      'select',
+      'select#editor-positions',
       {
         props: {
           value: isHandicap({ sfen: state.sfen, rules: ctrl.rules })
@@ -105,8 +104,8 @@ function positions(ctrl: EditorCtrl, state: EditorState): VNode {
         on: {
           change(e) {
             const el = e.target as HTMLSelectElement;
-            const value = el.selectedOptions[0].getAttribute('data-sfen');
-            if (!value || !ctrl.setSfen(value)) el.value = '';
+            const value = el.selectedOptions[0].value;
+            if (value) ctrl.setSfen(value);
           },
         },
       },
