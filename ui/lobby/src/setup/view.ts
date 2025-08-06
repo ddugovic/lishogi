@@ -7,7 +7,8 @@ import spinner from 'common/spinner';
 import { i18n } from 'i18n';
 import { i18nPerf } from 'i18n/perf';
 import { colorName } from 'shogi/color-name';
-import { findHandicaps, isHandicap } from 'shogiops/handicaps';
+import { sfenColor } from 'shogi/common';
+import { findHandicaps } from 'shogiops/handicaps';
 import { type VNode, h } from 'snabbdom';
 import type SetupCtrl from './ctrl';
 import {
@@ -121,7 +122,7 @@ function positionInput(ctrl: SetupCtrl): VNode {
               insert: vnode => {
                 initOneWithState(vnode.elm as HTMLElement, {
                   sfen: ctrl.data.sfen,
-                  orientation: isHandicap({ sfen: ctrl.data.sfen }) ? 'gote' : 'sente',
+                  orientation: sfenColor(ctrl.data.sfen),
                   variant: ctrl.variantKey(),
                 });
               },
@@ -142,7 +143,8 @@ function sfenInput(ctrl: SetupCtrl): VNode {
       failure: ctrl.invalidSfen,
     },
     hook: bind('keyup', e => {
-      ctrl.set('sfen', (e.target as HTMLSelectElement).value);
+      const sfen = (e.target as HTMLSelectElement).value;
+      ctrl.set('sfen', sfen);
     }),
     attrs: {
       id: fieldId('sfen'),

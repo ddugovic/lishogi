@@ -1,8 +1,9 @@
 import { clockEstimateSeconds, clockToPerf } from 'common/clock';
+import { debounce } from 'common/timings';
 import { idToVariant, variantToId } from 'common/variant';
 import { engineName } from 'shogi/engine-name';
 import { RULES } from 'shogiops/constants';
-import { findHandicaps, isHandicap } from 'shogiops/handicaps';
+import { findHandicap, findHandicaps, isHandicap } from 'shogiops/handicaps';
 import { parseSfen } from 'shogiops/sfen';
 import type LobbyController from '../ctrl';
 import { type FormStore, makeStore } from '../form';
@@ -59,14 +60,19 @@ export default class SetupCtrl {
   set<K extends SetupDataKey>(key: K, value: SetupData[K]): void {
     if (key === 'handicap') {
       this.data.sfen = value as string;
-    }
-    if (key === 'sfen') {
-      this.data.handicap = '';
-    }
-    if (key === 'variant') {
+      this.invalidSfen = false;
+    } else if (key === 'sfen') {
+      this.data.handicap =
+        findHandicap({
+          rules: this.variantKey(),
+          sfen: value as SetupData['sfen'],
+        })?.sfen || '';
+      this.validateSfen();
+    } else if (key === 'variant') {
       this.data.sfen = '';
       this.data.handicap = '';
       this.data.position = Position.initial;
+      this.invalidSfen = false;
     }
 
     this.data[key] = value;
@@ -94,11 +100,19 @@ export default class SetupCtrl {
       : false;
   }
 
-  validateSfen(): void {
-    this.invalidSfen =
-      this.data.position !== Position.fromPosition ||
-      parseSfen(this.variantKey(), this.data.sfen, true).isErr;
-  }
+  validateSfen: () => void = debounce(() => {
+    if (this.hasSfen()) {
+      const validated = parseSfen(this.variantKey(), this.data.sfen, true);
+      if (validated.isOk) {
+        this.invalidSfen = false;
+        this.save();
+        this.redraw();
+      } else {
+        this.invalidSfen = true;
+        this.redraw();
+      }
+    }
+  }, 300);
 
   variantKey(): VariantKey {
     return idToVariant(this.data.variant);
@@ -148,8 +162,9 @@ export default class SetupCtrl {
       this.data.time >= 1 ||
       this.data.byoyomi >= 10 ||
       this.data.increment >= 5;
+    const sfenOk = this.data.position === Position.initial || !this.invalidSfen;
 
-    return !this.submitted && !this.invalidSfen && timeOk && ratedOk && aiOk;
+    return !this.submitted && !this.invalidSfen && timeOk && ratedOk && aiOk && sfenOk;
   }
 
   engineName(): string {
@@ -245,13 +260,13 @@ export default class SetupCtrl {
 
     this.updateData();
 
+    this.validateSfen();
+
     this.isExtraOpen = this.data.periods > 1 || this.data.increment > 0;
   }
 
   updateData(): void {
     if (!this.canBeRated()) this.data.mode = Mode.Casual;
-
-    if (this.data.position === Position.initial) this.invalidSfen = false;
   }
 
   open(key: SetupKey, extraData?: Record<string, string>): void {

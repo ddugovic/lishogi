@@ -3,6 +3,7 @@ import { wsConnect, wsPingInterval } from 'common/ws';
 import type LobbyController from './ctrl';
 import type { LobbyOpts } from './interfaces';
 import type { SetupKey } from './setup/ctrl';
+import { Position } from './setup/util';
 
 export default function boot(
   opts: LobbyOpts,
@@ -89,8 +90,10 @@ export default function boot(
       : {};
 
     if (setupData.sfen) {
-      setupData.position = '1';
+      setupData.position = Position.fromPosition.toString();
       setupData.handicap = '';
+    } else {
+      setupData.position = Position.initial.toString();
     }
 
     ctrl.setupCtrl.open(location.hash.slice(1) as SetupKey, setupData);

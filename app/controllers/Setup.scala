@@ -6,8 +6,6 @@ import play.api.libs.json.Json
 import play.api.mvc.Results
 import views._
 
-import shogi.format.forsyth.Sfen
-
 import lila.api.Context
 import lila.app._
 import lila.common.HTTPRequest
@@ -15,7 +13,6 @@ import lila.common.IpAddress
 import lila.game.AnonCookie
 import lila.game.Pov
 import lila.setup.Processor.HookResult
-import lila.setup.ValidSfen
 import lila.socket.Socket.Sri
 
 final class Setup(
@@ -257,19 +254,6 @@ final class Setup(
   def filterForm =
     Open { implicit ctx =>
       fuccess(html.setup.filter(forms.filter))
-    }
-
-  def validateSfen =
-    Open { implicit ctx =>
-      (for {
-        variant <- get("variant").flatMap(_.toIntOption) flatMap shogi.variant.Variant.apply
-        sfen    <- get("sfen") map Sfen.clean orElse variant.initialSfen.some
-        valid   <- ValidSfen.apply(getBool("strict"), variant)(sfen)
-      } yield valid) match {
-        case None => BadRequest.fuccess
-        case Some(v) =>
-          Ok(html.game.bits.miniBoard(v.sfen, v.situation.color, v.situation.variant)).fuccess
-      }
     }
 
   def apiAi =

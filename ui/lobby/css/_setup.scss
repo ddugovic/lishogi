@@ -102,11 +102,25 @@
 
       input {
         flex: 1;
+
+        &.failure {
+          border-color: theme.$c-bad;
+          outline-color: theme.$c-bad;
+          background: theme.$m-bad_bg-box_mix_10;
+        }
       }
     }
 
-    .setup-position-board .v-chushogi .sg-wrap {
-      margin: 1vmin 0;
+    .setup-position-board {
+      margin: auto;
+
+      @include breakpoint.breakpoint(local.$mq-col2) {
+        width: 75%;
+      }
+
+      &:has(.v-chushogi) {
+        margin-top: 1rem;
+      }
     }
   }
 
