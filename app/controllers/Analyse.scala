@@ -11,6 +11,7 @@ import lila.common.HTTPRequest
 import lila.game.NotationDump
 import lila.game.Pov
 import lila.round.JsonView.WithFlags
+import lila.socket.Socket.SocketVersion
 
 final class Analyse(
     env: Env,
@@ -37,7 +38,9 @@ final class Analyse(
       }
     }
 
-  def replay(pov: Pov, userTv: Option[lila.user.User])(implicit ctx: Context) =
+  def replay(pov: Pov, socketVersion: SocketVersion, userTv: Option[lila.user.User])(implicit
+      ctx: Context,
+  ) =
     if (HTTPRequest isCrawler ctx.req) replayBot(pov)
     else
       gameC.preloadUsers(pov.game) >> RedirectAtSfen(pov) {
@@ -71,6 +74,7 @@ final class Analyse(
                   html.analyse.replay(
                     pov,
                     data,
+                    socketVersion,
                     kif.render,
                     analysis,
                     analysisInProgress,

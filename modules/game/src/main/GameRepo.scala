@@ -220,16 +220,6 @@ final class GameRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCont
       .list[Game](Query nowPlaying userId)
       .dmap { _ flatMap { Pov.ofUserId(_, userId) } }
 
-  def lastPlayed(user: User): Fu[Option[Pov]] =
-    coll
-      .find(Query user user.id)
-      .sort($sort desc F.createdAt)
-      .cursor[Game]()
-      .list(2)
-      .dmap {
-        _.sortBy(_.movedAt).lastOption flatMap { Pov(_, user) }
-      }
-
   def quickLastPlayedId(userId: User.ID): Fu[Option[Game.ID]] =
     coll
       .find(Query user userId, $id(true).some)

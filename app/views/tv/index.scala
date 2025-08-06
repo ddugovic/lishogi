@@ -7,6 +7,7 @@ import play.api.libs.json.Json
 import lila.api.Context
 import lila.app.templating.Environment._
 import lila.app.ui.ScalatagsTemplate._
+import lila.socket.Socket.SocketVersion
 
 object index {
 
@@ -15,6 +16,7 @@ object index {
       champions: lila.tv.Tv.Champions,
       pov: lila.game.Pov,
       data: play.api.libs.json.JsObject,
+      socketVersion: SocketVersion,
       cross: Option[lila.game.Crosstable.WithMatchup],
       history: List[lila.game.Pov],
   )(implicit ctx: Context) =
@@ -26,7 +28,8 @@ object index {
         moduleJsTag(
           "round",
           Json.obj(
-            "data" -> data,
+            "data"          -> data,
+            "socketVersion" -> socketVersion.value,
           ),
         ),
       ),

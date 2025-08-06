@@ -11,16 +11,19 @@ export function replay(opts: AnalyseOpts, start: (opts: AnalyseOpts) => AnalyseC
   opts.$underboard = $('.analyse__underboard').clone();
   opts.initialPly = 'url';
 
-  const socketUrl = `/watch/${data.game.id}/${data.player.color}/v6`;
-  opts.socketSend = wsConnect(socketUrl, data.player.version, {
-    params: {
-      userTv: data.userTv?.id,
+  opts.socketSend = wsConnect(
+    `/watch/${data.game.id}/${data.player.color}/v6`,
+    opts.socketVersion,
+    {
+      params: {
+        userTv: data.userTv?.id,
+      },
+      receive: (t: string, d: any) => {
+        ctrl?.socket.receive(t, d);
+      },
+      events: {},
     },
-    receive: (t: string, d: any) => {
-      ctrl?.socket.receive(t, d);
-    },
-    events: {},
-  }).send;
+  ).send;
 
   ctrl = start(opts);
 

@@ -81,7 +81,7 @@ export function make(send: Socket.Send, ctrl: RoundController): RoundSocket {
       if (ctrl.data.opponent.proposingTakeback) notify(i18n('yourOpponentProposesATakeback'));
       ctrl.redraw();
     },
-    usi: ctrl.apiMove,
+    usi: ctrl.apiUsi,
     reload,
     redirect: ctrl.setRedirecting,
     clockInc(o) {

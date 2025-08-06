@@ -8,12 +8,14 @@ import lila.api.Context
 import lila.app.templating.Environment._
 import lila.app.ui.ScalatagsTemplate._
 import lila.game.Pov
+import lila.socket.Socket.SocketVersion
 
 object watcher {
 
   def apply(
       pov: Pov,
       data: JsObject,
+      socketVersion: SocketVersion,
       tour: Option[lila.tournament.TourAndTeamVs],
       simul: Option[lila.simul.Simul],
       cross: Option[lila.game.Crosstable.WithMatchup],
@@ -42,8 +44,9 @@ object watcher {
         moduleJsTag(
           "round",
           Json.obj(
-            "data" -> data,
-            "chat" -> chatJson,
+            "data"          -> data,
+            "socketVersion" -> socketVersion.value,
+            "chat"          -> chatJson,
           ),
         ),
       ),

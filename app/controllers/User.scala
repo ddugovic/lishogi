@@ -25,6 +25,7 @@ import lila.common.paginator.Paginator
 import lila.game.Pov
 import lila.game.{ Game => GameModel }
 import lila.rating.PerfType
+import lila.socket.Socket.SocketVersion
 import lila.socket.UserLagCache
 import lila.user.{ User => UserModel }
 
@@ -42,8 +43,8 @@ final class User(
     Open { implicit ctx =>
       OptionFuResult(env.user.repo named username) { user =>
         currentlyPlaying(user) orElse lastPlayed(user) flatMap {
-          _.fold(fuccess(Redirect(routes.User.show(username)))) { pov =>
-            roundC.watch(pov, userTv = user.some)
+          _.fold(fuccess(Redirect(routes.User.show(username)))) { case (pov, version) =>
+            roundC.watch(pov, version, userTv = user.some)
           }
         }
       }
@@ -158,8 +159,11 @@ final class User(
               case (((blocked, crosstable), followable), relation) =>
                 val ping = env.socket.isOnline(user.id) ?? UserLagCache.getLagRating(user.id)
                 negotiate(
-                  html = !ctx.is(user) ?? currentlyPlaying(user) map { pov =>
-                    Ok(html.user.mini(user, pov, blocked, followable, relation, ping, crosstable))
+                  html = !ctx.is(user) ?? currentlyPlaying(user) map { pv =>
+                    Ok(
+                      html.user
+                        .mini(user, pv.map(_._1), blocked, followable, relation, ping, crosstable),
+                    )
                       .withHeaders(CACHE_CONTROL -> "max-age=5")
                   },
                   json = {
@@ -206,16 +210,16 @@ final class User(
       }
     }
 
-  private def currentlyPlaying(user: UserModel): Fu[Option[Pov]] =
+  private def currentlyPlaying(user: UserModel): Fu[Option[(Pov, SocketVersion)]] =
     env.game.cached.lastPlayedPlayingId(user.id) flatMap {
-      _ ?? { env.round.proxyRepo.pov(_, user) }
+      _ ?? { env.round.proxyRepo.povWithVersion(_, user) }
     }
 
-  private def lastPlayed(user: UserModel): Fu[Option[Pov]] =
+  private def lastPlayed(user: UserModel): Fu[Option[(Pov, SocketVersion)]] =
     env.game.gameRepo
-      .lastPlayed(user)
-      .flatMap(_ ?? { p =>
-        env.round.proxyRepo.upgradeIfPresent(p) dmap some
+      .quickLastPlayedId(user.id)
+      .flatMap(_ ?? { gid =>
+        env.round.proxyRepo.povWithVersion(gid, user)
       })
 
   private val UserGamesRateLimitPerIP = new lila.memo.RateLimit[IpAddress](

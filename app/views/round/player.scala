@@ -7,12 +7,14 @@ import lila.api.Context
 import lila.app.templating.Environment._
 import lila.app.ui.ScalatagsTemplate._
 import lila.game.Pov
+import lila.socket.Socket.SocketVersion
 
 object player {
 
   def apply(
       pov: Pov,
       data: play.api.libs.json.JsObject,
+      socketVersion: SocketVersion,
       tour: Option[lila.tournament.GameView],
       simul: Option[lila.simul.Simul],
       cross: Option[lila.game.Crosstable.WithMatchup],
@@ -51,9 +53,10 @@ object player {
           "round",
           Json
             .obj(
-              "data"   -> data,
-              "userId" -> ctx.userId,
-              "chat"   -> chatJson,
+              "data"          -> data,
+              "socketVersion" -> socketVersion.value,
+              "userId"        -> ctx.userId,
+              "chat"          -> chatJson,
             ),
         ),
       ),

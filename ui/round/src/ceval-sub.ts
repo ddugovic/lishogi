@@ -1,5 +1,5 @@
 import type RoundController from './ctrl';
-import type { ApiMove, RoundData } from './interfaces';
+import type { ApiUsi, RoundData } from './interfaces';
 import { lastStep } from './round';
 
 const li = window.lishogi;
@@ -36,6 +36,6 @@ export function subscribe(ctrl: RoundController): void {
   });
 }
 
-export function publish(d: RoundData, move: ApiMove): void {
-  if (d.opponent.ai) li.storage.fire('ceval.sfen', move.sfen);
+export function publish(d: RoundData, apiUsi: ApiUsi): void {
+  if (d.opponent.ai) li.storage.fire('ceval.sfen', apiUsi.sfen);
 }

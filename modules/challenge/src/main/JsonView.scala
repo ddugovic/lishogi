@@ -42,7 +42,7 @@ final class JsonView(
   def show(challenge: Challenge, socketVersion: SocketVersion, direction: Option[Direction]) =
     Json.obj(
       "challenge"     -> apply(direction)(challenge),
-      "socketVersion" -> socketVersion,
+      "socketVersion" -> socketVersion.value,
     )
 
   def api(
@@ -50,7 +50,7 @@ final class JsonView(
       socketVersion: SocketVersion,
       direction: Option[Direction],
   ) =
-    (apply(direction)(challenge)) ++ Json.obj("socketVersion" -> socketVersion)
+    (apply(direction)(challenge)) ++ Json.obj("socketVersion" -> socketVersion.value)
 
   def apply(direction: Option[Direction])(c: Challenge): JsObject =
     Json

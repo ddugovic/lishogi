@@ -19,10 +19,6 @@ export function boot(
   let chat: ChatCtrl | undefined = undefined;
   if (data.tournament) $('body').data('tournament-id', data.tournament.id);
 
-  const socketUrl = opts.data.player.spectator
-    ? `/watch/${data.game.id}/${data.player.color}/v6`
-    : `/play/${data.game.id}${data.player.id}/v6`;
-
   function startTournamentClock() {
     if (data.tournament)
       $('.game__tournament .clock').each(function (this: HTMLElement) {
@@ -37,7 +33,21 @@ export function boot(
     else if (finished(d)) return 'end';
     return;
   }
-  opts.socketSend = wsConnect(socketUrl, data.player.version, {
+
+  const socketUrl = opts.data.player.spectator
+    ? `/watch/${data.game.id}/${data.player.color}/v6`
+    : `/play/${data.game.id}${data.player.id}/v6`;
+
+  if (data.player.version !== opts.socketVersion) {
+    console.error('Socket version mismatch:', data.player.version, opts.socketVersion);
+    setTimeout(() => {
+      window.lishogi.xhr.text('POST', '/jsmon/playerVersion', {
+        url: { v: `${window.location.pathname}:${opts.socketVersion}:${data.player.version}` },
+      });
+    }, 3000);
+  }
+
+  opts.socketSend = wsConnect(socketUrl, opts.socketVersion, {
     params: { userTv: data.userTv?.id },
     receive(t: string, d: any) {
       ctrl?.socket.receive(t, d);

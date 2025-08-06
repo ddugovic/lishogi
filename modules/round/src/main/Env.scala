@@ -21,6 +21,8 @@ import lila.hub.actorApi.simul.GetHostIds
 import lila.hub.actors
 import lila.round.actorApi.GetSocketStatus
 import lila.round.actorApi.SocketStatus
+import lila.socket.Socket.GetVersion
+import lila.socket.Socket.SocketVersion
 import lila.user.User
 
 @Module
@@ -170,6 +172,9 @@ final class Env(
 
   lazy val getSocketStatus = (game: Game) =>
     roundSocket.rounds.ask[SocketStatus](game.id)(GetSocketStatus)
+
+  def version(game: Game): Fu[SocketVersion] =
+    roundSocket.rounds.ask[SocketVersion](game.id)(GetVersion)
 
   private def isUserPresent(game: Game, userId: lila.user.User.ID): Fu[Boolean] =
     roundSocket.rounds.askIfPresentOrZero[Boolean](game.id)(RoundDuct.HasUserId(userId, _))

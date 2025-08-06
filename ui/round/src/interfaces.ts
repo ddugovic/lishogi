@@ -52,6 +52,7 @@ interface Tv {
 
 export interface RoundOpts {
   data: RoundData;
+  socketVersion: number;
   userId?: string;
   socketSend: Socket.Send;
   onChange(d: RoundData): void;
@@ -78,7 +79,7 @@ export interface Step {
   check?: boolean;
 }
 
-export interface ApiMove extends Step {
+export interface ApiUsi extends Step {
   clock?: {
     sente: Seconds;
     gote: Seconds;

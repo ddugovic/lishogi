@@ -80,6 +80,12 @@ final class RoundSocket(
     rounds.getOrMake(gameId).getGame addEffect { g =>
       if (!g.isDefined) finishRound(Game.Id(gameId))
     }
+
+  def getGameWithVersion(gameId: Game.ID): Fu[Option[(Game, SocketVersion)]] =
+    rounds.getOrMake(gameId).getGameWithVersion addEffect { gv =>
+      if (!gv.isDefined) finishRound(Game.Id(gameId))
+    }
+
   def getGames(gameIds: List[Game.ID]): Fu[List[(Game.ID, Option[Game])]] =
     gameIds.map { id =>
       rounds.getOrMake(id).getGame dmap { id -> _ }

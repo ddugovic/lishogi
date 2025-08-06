@@ -42,7 +42,7 @@ import {
 import * as ground from './ground';
 import type {
   ApiEnd,
-  ApiMove,
+  ApiUsi,
   MoveMetadata,
   NvuiPlugin,
   Position,
@@ -247,7 +247,7 @@ export default class RoundController {
     if (this.data.game.variant.key === 'chushogi')
       return this.onChushogiMove(orig, dest, prom, meta);
 
-    // to update hand immediately and not wait on apiMove
+    // to update hand immediately and not wait on apiUsi
     if (meta.captured) {
       const role = meta.captured.role as Role;
       const unpromotedRole = handRoles(this.data.game.variant.key).includes(role)
@@ -504,8 +504,13 @@ export default class RoundController {
   playerByColor = (c: Color): Player =>
     this.data[c === this.data.player.color ? 'player' : 'opponent'];
 
-  apiMove = (o: ApiMove): void => {
+  apiUsi = (o: ApiUsi): void => {
     const d = this.data;
+    const lastStep = round.lastStep(d);
+
+    // if we already somehow have this step ignore it
+    if (lastStep.ply === o.ply && lastStep.usi === o.usi) return;
+
     const playing = this.isPlaying();
 
     d.game.plies = o.ply;
@@ -513,11 +518,13 @@ export default class RoundController {
     const playedColor: Color = o.ply % 2 === 0 ? 'gote' : 'sente';
     const activeColor = d.player.color === d.game.player;
     const variant = d.game.variant.key;
+
     if (o.status) d.game.status = o.status;
     if (o.winner) d.game.winner = o.winner;
     this.playerByColor('sente').offeringDraw = o.sDraw;
     this.playerByColor('gote').offeringDraw = o.gDraw;
     this.setTitle();
+
     const move = parseUsi(o.usi!)!;
     const keys = usiToSquareNames(o.usi!);
     const posRes =
@@ -579,7 +586,6 @@ export default class RoundController {
       blur.onMove();
       li.pubsub.emit('ply', this.ply);
     }
-    const lastStep = round.lastStep(d);
     const step = {
       ply: lastStep.ply + 1,
       sfen: o.sfen,

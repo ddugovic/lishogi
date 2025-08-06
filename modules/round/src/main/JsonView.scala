@@ -74,7 +74,7 @@ final class JsonView(
               "player" -> {
                 commonPlayerJson(game, player, playerUser, withFlags) ++ Json.obj(
                   "id"      -> playerId,
-                  "version" -> socket.version.value,
+                  "version" -> socket.version.value, // used in reload sync
                 )
               }
                 .add("onGame" -> (player.isAi || socket.onGame(player.color)))

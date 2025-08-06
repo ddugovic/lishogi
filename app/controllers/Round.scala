@@ -11,6 +11,7 @@ import lila.common.HTTPRequest
 import lila.game.NotationDump
 import lila.game.Pov
 import lila.game.{ Game => GameModel }
+import lila.socket.Socket.SocketVersion
 import lila.tournament.{ Tournament => Tour }
 import lila.user.{ User => UserModel }
 
@@ -25,7 +26,9 @@ final class Round(
 
   private def analyser = env.analyse.analyser
 
-  private def renderPlayer(pov: Pov)(implicit ctx: Context): Fu[Result] =
+  private def renderPlayer(pov: Pov, socketVersion: SocketVersion)(implicit
+      ctx: Context,
+  ): Fu[Result] =
     negotiate(
       html =
         if (!pov.game.started) notFound
@@ -45,8 +48,9 @@ final class Round(
                     simul foreach env.simul.api.onPlayerConnection(pov.game, ctx.me)
                     Ok(
                       html.round.player(
-                        pov,
-                        data,
+                        pov = pov,
+                        data = data,
+                        socketVersion = socketVersion,
                         tour = tour,
                         simul = simul,
                         cross = crosstable,
@@ -76,14 +80,14 @@ final class Round(
 
   def player(fullId: String) =
     Open { implicit ctx =>
-      OptionFuResult(env.round.proxyRepo.pov(fullId)) { pov =>
-        renderPlayer(pov)
+      OptionFuResult(env.round.proxyRepo.povWithVersion(fullId)) { case (pov, socketVersion) =>
+        renderPlayer(pov, socketVersion)
       }
     }
 
   private def otherPovs(game: GameModel)(implicit ctx: Context) =
     ctx.me ?? { user =>
-      env.round.proxyRepo urgentGames user map {
+      env.round.proxyRepo.urgentGames(user) map {
         _ filter { pov =>
           pov.gameId != game.id && pov.game.isSwitchable && pov.game.isSimul == game.isSimul
         }
@@ -114,7 +118,10 @@ final class Round(
         otherPovs(currentGame) map getNext(currentGame) map {
           _ orElse Pov(currentGame, me)
         } flatMap {
-          case Some(next) => renderPlayer(next)
+          case Some(next) =>
+            env.round.version(next.game) flatMap { version =>
+              renderPlayer(next, version)
+            }
           case None =>
             fuccess(Redirect(currentGame.simulId match {
               case Some(simulId) => routes.Simul.show(simulId)
@@ -127,7 +134,7 @@ final class Round(
   def watcher(gameId: String, color: String) =
     Open { implicit ctx =>
       proxyPov(gameId, color) flatMap {
-        case Some(pov) =>
+        case Some((pov, version)) =>
           get("pov") match {
             case Some(requestedPov) =>
               (pov.player.userId, pov.opponent.userId) match {
@@ -139,27 +146,32 @@ final class Round(
                   Redirect(routes.Round.watcher(gameId, "sente")).fuccess
               }
             case None => {
-              watch(pov)
+              watch(pov, version)
             }
           }
         case None => challengeC showId gameId
       }
     }
 
-  private def proxyPov(gameId: String, color: String): Fu[Option[Pov]] =
+  private def proxyPov(gameId: String, color: String): Fu[Option[(Pov, SocketVersion)]] =
     shogi.Color.fromName(color) ?? {
-      env.round.proxyRepo.pov(gameId, _)
+      env.round.proxyRepo.povWithVersion(gameId, _)
     }
 
-  private[controllers] def watch(pov: Pov, userTv: Option[UserModel] = None)(implicit
+  private[controllers] def watch(
+      pov: Pov,
+      socketVersion: SocketVersion,
+      userTv: Option[UserModel] = None,
+  )(implicit
       ctx: Context,
   ): Fu[Result] =
     playablePovForReq(pov.game) match {
-      case Some(player) if userTv.isEmpty => renderPlayer(pov withColor player.color)
+      case Some(player) if userTv.isEmpty =>
+        renderPlayer(pov withColor player.color, socketVersion)
       case _ =>
         negotiate(
           html = {
-            if (pov.game.replayable) analyseC.replay(pov, userTv = userTv)
+            if (pov.game.replayable) analyseC.replay(pov, socketVersion, userTv = userTv)
             else if (HTTPRequest.isHuman(ctx.req))
               env.tournament.api.gameView.watcher(pov.game) zip
                 (pov.game.simulId ?? env.simul.repo.find) zip
@@ -178,6 +190,7 @@ final class Round(
                         html.round.watcher(
                           pov,
                           data,
+                          socketVersion,
                           tour.map(_.tourAndTeamVs),
                           simul,
                           crosstable,
@@ -265,7 +278,7 @@ final class Round(
 
   def sides(gameId: String, color: String) =
     Open { implicit ctx =>
-      OptionFuResult(proxyPov(gameId, color)) { pov =>
+      OptionFuResult(proxyPov(gameId, color)) { case (pov, _) =>
         env.tournament.api.gameView.withTeamVs(pov.game) zip
           (pov.game.simulId ?? env.simul.repo.find) zip
           env.game.crosstableApi.withMatchup(pov.game) zip

@@ -10,6 +10,7 @@ import lila.app.templating.Environment._
 import lila.app.ui.ScalatagsTemplate._
 import lila.game.Game
 import lila.game.Pov
+import lila.socket.Socket.SocketVersion
 
 object replay {
 
@@ -19,6 +20,7 @@ object replay {
   def apply(
       pov: Pov,
       data: play.api.libs.json.JsObject,
+      socketVersion: SocketVersion,
       kif: String,
       analysis: Option[lila.analyse.Analysis],
       analysisStarted: Boolean,
@@ -55,9 +57,10 @@ object replay {
         moduleJsTag(
           "analyse",
           Json.obj(
-            "mode"     -> "replay",
-            "data"     -> data,
-            "userId"   -> ctx.userId,
+            "mode"          -> "replay",
+            "data"          -> data,
+            "socketVersion" -> socketVersion.value,
+            "userId"        -> ctx.userId,
             "playerId" -> ctx.userId.flatMap(userId => pov.game.playerByUserId(userId).map(_.id)),
             "chat"     -> chatJson,
             "hunter"   -> isGranted(_.Hunter),

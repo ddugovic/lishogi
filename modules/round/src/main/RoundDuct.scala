@@ -120,7 +120,11 @@ final private[round] class RoundDuct(
   private val sentePlayer = new Player(Sente)
   private val gotePlayer  = new Player(Gote)
 
-  def getGame: Fu[Option[Game]]          = proxy.game
+  def getGame: Fu[Option[Game]] = proxy.game
+  def getGameWithVersion: Fu[Option[(Game, SocketVersion)]] = {
+    val v = version
+    proxy.game.dmap2(g => (g, v))
+  }
   def updateGame(f: Game => Game): Funit = proxy update f
 
   val process: Duct.ReceiveAsync = {

@@ -50,9 +50,10 @@ final class Tv(
       negotiate(
         html = env.tournament.api.gameView.watcher(pov.game) flatMap { tour =>
           env.api.roundApi.watcher(pov, tour, tv = onTv.some) zip
+            env.round.version(pov.game) zip
             env.game.crosstableApi.withMatchup(game) zip
-            env.tv.tv.getChampions map { case ((data, cross), champions) =>
-              Ok(html.tv.index(channel, champions, pov, data, cross, history)).noCache
+            env.tv.tv.getChampions map { case (((data, version), cross), champions) =>
+              Ok(html.tv.index(channel, champions, pov, data, version, cross, history)).noCache
             }
         },
         json = env.api.roundApi.watcher(pov, none, tv = onTv.some) dmap { Ok(_) },
