@@ -20,8 +20,11 @@ final class BotJsonView(
       "state" -> gameState(game),
     )
 
-  // Everything marked backwards will be removed soon
+  // Everything marked backwards will be removed at some point
   def gameImmutable(game: Game)(implicit lang: Lang): JsObject = {
+    val sentePov    = playerJson(game.sentePov)
+    val gotePov     = playerJson(game.gotePov)
+    val initialSfen = game.initialSfen.fold("startpos")(_.value)
     Json
       .obj(
         "id"      -> game.id,
@@ -33,18 +36,19 @@ final class BotJsonView(
         },
         "rated"       -> game.rated,
         "createdAt"   -> game.createdAt,
-        "sente"       -> playerJson(game.sentePov),
-        "white"       -> playerJson(game.sentePov),                 // backwards support
-        "gote"        -> playerJson(game.gotePov),
-        "black"       -> playerJson(game.gotePov),                  // backwards support
-        "initialSfen" -> game.initialSfen.fold("startpos")(_.value),
-        "initialFen"  -> game.initialSfen.fold("startpos")(_.value), // backwards support
+        "sente"       -> sentePov,
+        "white"       -> sentePov,   // backwards support
+        "gote"        -> gotePov,
+        "black"       -> gotePov,    // backwards support
+        "initialSfen" -> initialSfen,
+        "initialFen"  -> initialSfen, // backwards support
       )
       .add(
         "fairyInitialSfen" -> (game.variant.kyotoshogi option game.initialSfen
           .fold("startpos")(sfen => Kyoto.makeFairySfen(sfen).value)),
       )
       .add("tournamentId" -> game.tournamentId)
+      .add("arrangementId" -> game.arrangementId)
   }
 
   def gameState(game: Game): JsObject = {

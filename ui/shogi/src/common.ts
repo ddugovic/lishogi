@@ -17,3 +17,7 @@ export function flipMetaPlayers(orientation: Color): void {
     metaPlayers.classList.toggle('orientation-gote', orientation === 'gote');
   }
 }
+
+export function sfenColor(sfen: Sfen): Color {
+  return sfen.includes(' w') ? 'gote' : 'sente';
+}

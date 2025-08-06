@@ -11,7 +11,7 @@ function main(opts: NotifyOpts): Ctrl {
 
   element.innerHTML = '';
   let vnode = patch(element, view(ctrl));
-  function redraw(): void {
+  function redraw() {
     vnode = patch(vnode, view(ctrl));
   }
 

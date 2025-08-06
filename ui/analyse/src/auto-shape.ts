@@ -1,4 +1,5 @@
 import * as winningChances from 'ceval/winning-chances';
+import { sfenColor } from 'shogi/common';
 import type { DrawShape } from 'shogiground/draw';
 import { opposite } from 'shogiground/util';
 import type { Role } from 'shogiops/types';
@@ -37,7 +38,7 @@ export function makeShapesFromUsi(
 }
 
 export function compute(ctrl: AnalyseCtrl): DrawShape[] {
-  const color = ctrl.node.sfen.includes(' w') ? 'gote' : 'sente';
+  const color = sfenColor(ctrl.node.sfen);
   const rcolor = opposite(color);
 
   if (ctrl.practice) {
