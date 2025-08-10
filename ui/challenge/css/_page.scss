@@ -118,6 +118,10 @@
     }
   }
 
+  form:has(.ddloader) {
+    text-align: center;
+  }
+
   .follow-up .button {
     display: block;
     margin-top: 2em;
