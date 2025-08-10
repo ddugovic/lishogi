@@ -2,6 +2,7 @@ import { defined } from 'common/common';
 import { modal } from 'common/modal';
 import { type MaybeVNode, bind } from 'common/snabbdom';
 import spinner from 'common/spinner';
+import { ids } from 'game/status';
 import { i18n } from 'i18n';
 import { type VNode, h } from 'snabbdom';
 import type TournamentController from '../ctrl';
@@ -27,6 +28,21 @@ function playerTitle(player: TourPlayer) {
       withRating: false,
     }),
   ]);
+}
+
+function getScore(ctrl: TournamentController, p: any): number | undefined {
+  if (ctrl.isOrganized() || ctrl.isRobin()) {
+    const points =
+      ctrl.data.standing.arrangements.find(a => a.id === p.id)?.points ||
+      ctrl.defaultArrangementPoints;
+    return p.status === ids.draw
+      ? points.d
+      : p.win
+        ? points.w
+        : p.win === false
+          ? points.l
+          : undefined;
+  } else return defined(p.score) ? (Array.isArray(p.score) ? p.score[0] : p.score) : undefined;
 }
 
 function playerInfo(ctrl: TournamentController): VNode {
@@ -93,11 +109,7 @@ function playerInfo(ctrl: TournamentController): VNode {
           const arr = ctrl.isArena()
             ? undefined
             : ctrl.data.standing.arrangements.find(a => a.gameId === p.id);
-          const score = defined(p.score)
-            ? Array.isArray(p.score)
-              ? p.score[0]
-              : p.score
-            : undefined;
+          const score = getScore(ctrl, p);
 
           return h(
             `tr.glpt${p.win ? '.win' : p.win === false ? '.loss' : ''}`,

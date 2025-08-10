@@ -28,7 +28,6 @@ final class JsonView(
     lightUserApi: LightUserApi,
     playerRepo: PlayerRepo,
     pairingRepo: PairingRepo,
-    arrangementRepo: ArrangementRepo,
     tournamentRepo: TournamentRepo,
     cached: Cached,
     statsApi: TournamentStatsApi,
@@ -256,7 +255,6 @@ final class JsonView(
   private def playerInfoExtendedArrangements(tour: Tournament, info: PlayerInfoExt): Fu[JsObject] =
     for {
       ranking <- cached ranking tour
-      arrs    <- arrangementRepo.find(tour.id, info.userId)
       user    <- lightUserApi.asyncFallback(info.userId)
     } yield info match {
       case PlayerInfoExt(_, player, povs) =>
@@ -269,8 +267,8 @@ final class JsonView(
               "score"  -> player.scoreNotKicked,
               "fire"   -> player.fire,
               "nb" -> Json.obj(
-                "game" -> arrs.size,
-                "win"  -> arrs.count(_.winner.exists(_ == user.id)),
+                "game" -> povs.size,
+                "win"  -> povs.count(_.game.winner.exists(_.userId.contains(user.id))),
               ),
             )
             .add("title" -> user.title)
@@ -280,26 +278,17 @@ final class JsonView(
             .add("withdraw" -> player.withdraw)
             .add("kicked" -> player.kicked)
             .add("team" -> player.team),
-          "arrangements" -> povs.map {
-            case pov => {
-              val points = (!pov.game.playable && tour.isOrganized) ?? {
-                arrs.find(a => a.gameId.exists(_ == pov.gameId)).flatMap(_.points)
-              } | Arrangement.Points.default
-              val score = pov.game.finished ?? {
-                if (~pov.win) points.win
-                else if (pov.game.winner.isEmpty) points.draw
-                else points.loss
-              }
-              Json
-                .obj(
-                  "id"     -> pov.gameId,
-                  "color"  -> pov.color.name,
-                  "op"     -> gameUserJson(pov.opponent.userId, pov.opponent.rating),
-                  "win"    -> pov.win,
-                  "status" -> pov.game.status.id,
-                  "score"  -> score,
-                )
-            }
+          "arrangements" -> povs.map { pov =>
+            Json
+              .obj(
+                "id"     -> pov.gameId,
+                "color"  -> pov.color.name,
+                "op"     -> gameUserJson(pov.opponent.userId, pov.opponent.rating),
+                "win"    -> pov.win,
+                "status" -> pov.game.status.id,
+                // get score from arrangs
+              )
+
           },
         )
     }
