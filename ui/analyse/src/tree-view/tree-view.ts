@@ -16,7 +16,7 @@ export interface TreeView {
 }
 
 export function ctrl(initialValue: TreeViewKey = 'column'): TreeView {
-  const value = storedProp<TreeViewKey>('treeView', initialValue);
+  const value = storedProp<TreeViewKey>('analyse.treeView', initialValue);
   function inline() {
     return value() === 'inline';
   }

@@ -19,7 +19,7 @@ export default function (
   const success = prop<boolean | null>(null);
   const sound = makeSound();
   const analysisUrl = prop('');
-  const autoNext = storedProp('practice-auto-next', true);
+  const autoNext = storedProp('analyse.practice-auto-next', true);
 
   function onLoad() {
     root.showAutoShapes = readOnlyProp(true);

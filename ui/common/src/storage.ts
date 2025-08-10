@@ -15,15 +15,14 @@ const storage = window.lishogi.storage;
 export function storedProp(k: string, defaultValue: boolean): StoredBooleanProp;
 export function storedProp<T>(k: string, defaultValue: T): StoredProp<T>;
 export function storedProp(k: string, defaultValue: any) {
-  const sk = `analyse.${k}`; // remove analyse
   const isBoolean = defaultValue === true || defaultValue === false;
   let value: any;
   return (v: any) => {
     if (defined(v) && v != value) {
       value = `${v}`;
-      storage.set(sk, v);
+      storage.set(k, v);
     } else if (!defined(value)) {
-      value = storage.get(sk);
+      value = storage.get(k);
       if (value === null) value = `${defaultValue}`;
     }
     return isBoolean ? value === 'true' : value;

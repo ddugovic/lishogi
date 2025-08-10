@@ -52,7 +52,7 @@ export default function (
     return {
       loading: false,
       tab: prop<Tab>(data.chapters.length > 1 ? 'chapters' : 'members'),
-      toolTab: storedProp<ToolTab>('toolTab', 'tags'),
+      toolTab: storedProp<ToolTab>('study.toolTab', 'tags'),
       chapterId: sticked ? data.position.chapterId : data.chapter.id,
       // path is at ctrl.path
       mode: {

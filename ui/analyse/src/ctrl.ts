@@ -103,10 +103,10 @@ export default class AnalyseCtrl {
   flipped = false;
   embed: boolean;
   showComments = true; // whether to display comments in the move tree
-  showAutoShapes: StoredBooleanProp = storedProp('show-auto-shapes', true);
-  showGauge: StoredBooleanProp = storedProp('show-gauge', true);
-  showMoveAnnotation: StoredBooleanProp = storedProp('show-move-annotation', true);
-  showComputer: StoredBooleanProp = storedProp('show-computer', true);
+  showAutoShapes: StoredBooleanProp = storedProp('analyse.show-auto-shapes', true);
+  showGauge: StoredBooleanProp = storedProp('analyse.show-gauge', true);
+  showMoveAnnotation: StoredBooleanProp = storedProp('analyse.show-move-annotation', true);
+  showComputer: StoredBooleanProp = storedProp('analyse.show-computer', true);
   keyboardHelp: boolean = location.hash === '#keyboard';
   continueWith: boolean = location.hash === '#continue-with';
   studyModal: Prop<boolean> = prop(false);
