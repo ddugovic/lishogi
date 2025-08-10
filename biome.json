@@ -1,18 +1,26 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.1.4/schema.json",
   "files": {
     "ignoreUnknown": true,
-    "include": ["ui/**/src/**/*.ts", "bin/scripts/**/*.ts"]
+    "includes": ["**/ui/**/src/**/*.ts", "**/bin/scripts/**/*.ts"]
   },
   "formatter": {
     "enabled": true,
-    "useEditorconfig": true
+    "useEditorconfig": true,
+    "lineWidth": 100
   },
   "linter": {
     "enabled": true,
     "rules": {
       "recommended": true,
       "style": {
+        "useAsConstAssertion": "error",
+        "useDefaultParameterLast": "error",
+        "useEnumInitializers": "error",
+        "useSingleVarDeclarator": "error",
+        "noUnusedTemplateLiteral": "error",
+        "useNumberNamespace": "error",
+        "noInferrableTypes": "error",
         "noNonNullAssertion": "off",
         "noParameterAssign": "off",
         "noUselessElse": "off"
@@ -20,7 +28,8 @@
       "suspicious": {
         "noExplicitAny": "off",
         "noDoubleEquals": "off",
-        "noGlobalIsNan": "off"
+        "noGlobalIsNan": "off",
+        "noPrototypeBuiltins": "off"
       },
       "complexity": {
         "noForEach": "off"
@@ -35,9 +44,7 @@
       }
     }
   },
-  "organizeImports": {
-    "enabled": true
-  },
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "vcs": {
     "enabled": true,
     "clientKind": "git",
