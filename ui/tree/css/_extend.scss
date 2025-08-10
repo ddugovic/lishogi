@@ -1,7 +1,7 @@
 @use 'pkg:common/abstract/extends';
 
 %move {
-  @extend %move-notation, %nowrap-hidden;
+  @extend %nowrap-hidden;
 
   display: inline-block;
   cursor: pointer;

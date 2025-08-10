@@ -7,7 +7,7 @@ html {
   -moz-osx-font-smoothing: grayscale;
 
   @include fluid-size('font-size', 12px, 14px);
-  @extend %base-font-fallback;
+  @extend %base-font;
 }
 
 h1,

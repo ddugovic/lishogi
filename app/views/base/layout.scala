@@ -65,7 +65,6 @@ object layout {
 
   private val fontPreload = frag(
     preload(assetUrl("font/lishogi.woff2"), "font", crossorigin = true, "font/woff2".some),
-    preload(assetUrl("font/lishogi.shogi.woff2"), "font", crossorigin = true, "font/woff2".some),
   )
 
   private def boardPreload(implicit ctx: Context) =

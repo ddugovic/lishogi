@@ -6,24 +6,11 @@
 @forward 'flex';
 @forward 'box';
 
-%base-font-fallback {
-  font-family: 'Noto Sans', sans-serif;
-}
 %base-font {
-  font-family: 'Noto Sans';
+  font-family: 'Noto Sans', Sans-Serif;
 }
 %roboto {
-  font-family: Roboto;
-}
-%roboto-fat {
-  font-family: Roboto;
-  font-weight: 600;
-}
-%shogi-font {
-  font-family: 'Noto Shogi', 'Noto Sans';
-}
-%move-notation {
-  @extend %shogi-font;
+  font-family: Roboto, Sans-Serif;
 }
 
 /* text printed directly on the page background deserves special treatment (transp theme) */

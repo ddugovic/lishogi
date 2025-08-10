@@ -14,12 +14,6 @@
   font-style: normal;
 }
 
-@font-face {
-  font-family: 'Noto Shogi';
-  src:
-    local-font('lishogi.shogi.woff2') format('woff2'),
-    local-font('lishogi.shogi.woff') format('woff');
-}
 /* cyrillic-ext */
 @font-face {
   font-family: 'Noto Sans';

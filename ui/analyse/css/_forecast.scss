@@ -130,10 +130,6 @@
     @extend %roboto, %flex-center;
   }
 
-  move-notation {
-    @extend %move-notation;
-  }
-
   moves-notation > * {
     display: inline-block;
     margin-right: 0.2em;

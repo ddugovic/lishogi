@@ -13,7 +13,7 @@
   }
 
   move {
-    @extend %move-notation, %flex-center;
+    @extend %flex-center;
 
     background: theme.$m-primary_bg-box_mix_25;
     color: theme.$c-font-clear;

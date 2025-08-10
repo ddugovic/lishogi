@@ -42,9 +42,6 @@
   .moves {
     @extend %zen;
   }
-  #{local.$move-tag} {
-    @extend %move-notation;
-  }
 
   .result-wrap {
     &.victorious {

@@ -3,7 +3,7 @@
 @use '../abstract/mixins';
 
 .button {
-  @extend %roboto-fat, %button-shadow, %box-radius;
+  @extend %roboto, %button-shadow, %box-radius;
 
   background: theme.$c-primary;
   text-transform: uppercase;
@@ -12,6 +12,7 @@
   cursor: pointer;
   text-align: center;
   user-select: none;
+  font-weight: 600;
 
   @include mixins.transition;
 

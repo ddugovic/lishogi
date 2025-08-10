@@ -175,7 +175,7 @@ function renderVariationMoveOf(ctx: Ctx, node: Tree.Node, opts: RenderOpts): VNo
 
 function renderNotation(node: Tree.Node): VNode {
   const colorIcon = notationsWithColor() ? `.color-icon.${node.ply % 2 ? 'sente' : 'gote'}` : '';
-  return h(`span${colorIcon}`, node.notation);
+  return h(`move-notation${colorIcon}`, node.notation);
 }
 
 function renderMoveAndChildrenOf(ctx: Ctx, node: Tree.Node, opts: RenderOpts): MaybeVNodes {
