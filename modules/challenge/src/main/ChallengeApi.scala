@@ -50,7 +50,7 @@ final class ChallengeApi(
       arr: lila.tournament.Arrangement,
       user: User,
   )(implicit lang: play.api.i18n.Lang): Fu[Challenge] =
-    repo.byTourArrangement(tour.id, arr.id).dmap(_.filter(_.active)) getOrElse {
+    repo.activeByTourArrangement(tour.id, arr.id) getOrElse {
       for {
         c       <- challengeMaker.makeTourChallenge(tour, arr, user)
         created <- create(c)
@@ -155,7 +155,7 @@ final class ChallengeApi(
     }
 
   def removeByArrId(tourId: lila.tournament.Tournament.ID, arrId: lila.tournament.Arrangement.ID) =
-    repo.byTourArrangement(tourId, arrId).map2(c => remove(c).void)
+    repo.activeByTourArrangement(tourId, arrId).map2(c => remove(c).void)
 
   def removeAllByUserInTour(tourId: lila.tournament.Tournament.ID, userId: User.ID) =
     repo.allByUserInTour(tourId, userId) flatMap { cs =>

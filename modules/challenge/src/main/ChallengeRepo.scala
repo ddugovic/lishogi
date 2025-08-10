@@ -20,8 +20,10 @@ final private class ChallengeRepo(coll: Coll, maxPerUser: Max)(implicit
   def byIdFor(id: Challenge.ID, dest: lila.user.User) =
     coll.one[Challenge]($id(id) ++ $doc("destUser.id" -> dest.id))
 
-  def byTourArrangement(tourId: String, arrId: String) =
-    coll.one[Challenge]($doc("tourInfo.t" -> tourId, "tourInfo.a" -> arrId))
+  def activeByTourArrangement(tourId: String, arrId: String) =
+    coll.one[Challenge](
+      selectCreatedOrOffline ++ $doc("tourInfo.t" -> tourId, "tourInfo.a" -> arrId),
+    )
 
   def exists(id: Challenge.ID) = coll.countSel($id(id)).dmap(0 <)
 
