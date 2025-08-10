@@ -10,7 +10,7 @@ function inCrosstable(el: HTMLElement) {
   return containedIn(el, document.querySelector('.crosstable'));
 }
 
-function onPowertipPreRender(id: string, preload?: (url: string) => void) {
+function onPowertipRender(id: string, preload?: (url: string) => void) {
   return function (this: HTMLElement) {
     const url = ($(this).data('href') || $(this).attr('href')).replace(/\?.+$/, '');
     if (preload) preload(url);
@@ -33,15 +33,25 @@ const userPowertip = (el: HTMLElement, pos?: any) => {
       placement: pos,
       smartPlacement: true,
       mouseOnToPopup: true,
-      closeDelay: 200,
+      closeDelay: 100,
     })
     .data('powertip', ' ')
     .on({
-      powerTipRender: onPowertipPreRender('powerTip', url => {
+      powerTipRender: onPowertipRender('powerTip', url => {
         const u = url.slice(3);
         const name = $(el).data('name') || $(el).html();
         $('#powerTip').html(
-          `<div class="upt__info"><div class="upt__info__top"><span class="user-link offline">${name}</span></div></div><div class="upt__actions btn-rack">${uptA(`/@/${u}/tv`, '1')}${uptA(`/inbox/new?user=${u}`, 'c')}${uptA(`/?user=${u}#friend`, 'U')}<a class="btn-rack__btn relation-button" disabled></a></div>`,
+          `<div class="upt__info">
+            <div class="upt__info__top">
+              <span class="user-link offline">${name}</span>
+            </div>
+          </div>
+          <div class="upt__actions btn-rack">
+            ${uptA(`/@/${u}/tv`, '1')}
+            ${uptA(`/inbox/new?user=${u}`, 'c')}
+            ${uptA(`/?user=${u}#friend`, 'U')}
+            <a class="btn-rack__btn relation-button" disabled></a>
+          </div>`,
         );
       }),
     });
@@ -55,11 +65,11 @@ function gamePowertip(el: HTMLElement) {
       placement: inCrosstable(el) ? 'n' : 'w',
       smartPlacement: true,
       mouseOnToPopup: true,
-      closeDelay: 200,
+      closeDelay: 100,
       popupId: 'miniGame',
     })
     .on({
-      powerTipPreRender: onPowertipPreRender('miniGame'),
+      powerTipPreRender: onPowertipRender('miniGame'),
     })
     .data('powertip', spinnerHtml);
 }
