@@ -2,10 +2,11 @@
 @use 'pkg:common/base/fonts';
 @use 'pkg:common/base/typography';
 @use 'pkg:common/base/data-icon';
+@use 'pkg:common/base/scrollbar';
 @use 'pkg:common/shogiground/shogiground';
 @use 'pkg:common/component/board';
 @use 'pkg:common/component/hands';
-@use 'pkg:common/base/scrollbar';
+@use 'pkg:common/component/color-icon';
 @use 'pkg:common/component/fbt';
 @use 'pkg:tree/tree';
 @use '../analyse/analyse';
