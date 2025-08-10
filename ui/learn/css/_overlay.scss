@@ -21,11 +21,11 @@
   overflow: auto;
 
   > :nth-child(1) {
-    animation: slide-in 1s cubic-bezier(0.37, 0.82, 0.2, 1);
+    animation: slide-in 2s cubic-bezier(0.37, 0.82, 0.2, 1);
   }
 
   > :nth-child(2) {
-    animation: slide-in 1.5s cubic-bezier(0.37, 0.82, 0.2, 1);
+    animation: slide-in 2s cubic-bezier(0.37, 0.82, 0.2, 1);
   }
 
   > :nth-child(3) {
@@ -33,11 +33,11 @@
   }
 
   > :nth-child(4) {
-    animation: slide-in 2.5s cubic-bezier(0.37, 0.82, 0.2, 1);
+    animation: slide-in 2s cubic-bezier(0.37, 0.82, 0.2, 1);
   }
 
   > :nth-child(5) {
-    animation: slide-in 3s cubic-bezier(0.37, 0.82, 0.2, 1);
+    animation: slide-in 2s cubic-bezier(0.37, 0.82, 0.2, 1);
   }
 
   .stars {
