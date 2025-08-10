@@ -662,7 +662,7 @@ final class TournamentApi(
               else shogi.Color.Gote
             arrangementRepo.update(arr.startGame(game.id, user1Color)) >>- {
               cached.arrangement.invalidateArrangements(tour.id)
-              socket.foreach(_.reloadUsers(tour.id, List(userIds._1, userIds._2)))
+              socket.foreach(_.reloadUsers(tour.id, List(userIds._1, userIds._2, tour.createdBy)))
             }
           }
         }

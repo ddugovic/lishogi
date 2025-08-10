@@ -43,7 +43,7 @@ final private class TournamentSocket(
     send(RP.Out.tellRoom(RoomId(tourId), makeMessage("reloadFull")))
 
   def reloadUsers(tourId: Tournament.ID, users: List[User.ID]): Unit =
-    users foreach { userId =>
+    users.distinct.filterNot(_ == User.lishogiId) foreach { userId =>
       send(RP.Out.tellRoomUser(RoomId(tourId), userId, reloadMsg))
     }
 
