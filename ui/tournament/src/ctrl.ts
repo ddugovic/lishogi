@@ -50,6 +50,7 @@ export default class TournamentController {
   joinWithTeamSelector = false;
   dateToFinish: Date | undefined;
   reloading: string | undefined;
+  lastReloaded: number | undefined = Date.now();
   redraw: () => void;
   nbWatchers = 0;
 
@@ -97,7 +98,13 @@ export default class TournamentController {
     window.addEventListener('hashchange', () => {
       this.hashChange(true);
     });
-
+    // reload on reconnection
+    window.lishogi.pubsub.on('socket.open', () => {
+      if (this.lastReloaded && Date.now() - this.lastReloaded > 10000) {
+        this.lastReloaded = Date.now();
+        this.askReload();
+      }
+    });
     window.lishogi.pubsub.on('socket.in.crowd', data => {
       this.nbWatchers = data.nb;
     });
@@ -139,6 +146,7 @@ export default class TournamentController {
       else if (this.isOrganized()) this.activeTab!('players');
     }
 
+    this.lastReloaded = Date.now();
     this.data = { ...this.data, ...data };
     // could be undefined so we need to overwrite manually
     this.data.me = data.me;
