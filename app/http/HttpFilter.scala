@@ -46,7 +46,7 @@ final class HttpFilter(env: Env)(implicit val mat: Materializer) extends Filter 
       if (logRequests && !ignoredLogUris.contains(req.uri)) {
         val sessionId = HTTPRequest.userSessionId(req).map(_.take(4)).getOrElse("anon")
         logger.info(
-          s"[$statusCode] ${s"[$client]".padTo(9, ' ')} ${req.method.padTo(6, ' ')} ${req.uri} -> $actionName (${reqTime}ms) [${sessionId}]",
+          s"[$statusCode] ${s"[$client]".padTo(9, ' ')} ${req.method.padTo(6, ' ')} ${req.uri} -> $actionName (${reqTime}ms) [${sessionId}, ${org.joda.time.LocalTime.now.toString("HH:mm:ss")}]",
         )
       }
     } else httpMon.time(actionName, client, req.method, statusCode).record(reqTime)
