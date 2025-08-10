@@ -64,6 +64,7 @@ final class ArrangementRepo(val coll: Coll)(implicit
         selectTour(tourId) ++ selectUnfinished,
         $unset(
           Arrangement.BSONFields.gameId,
+          Arrangement.BSONFields.status,
           Arrangement.BSONFields.startedAt,
           Arrangement.BSONFields.scheduledAt,
           Arrangement.BSONFields.u1ScheduledAt,
