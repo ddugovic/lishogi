@@ -560,15 +560,21 @@ final class TournamentApi(
   ): Funit =
     Sequencing(tourId)(tournamentRepo.enterableById) { tour =>
       (tour.isOrganized && tour.createdBy == userId) ?? {
-        arrangementRepo.delete(arrId) >>-
-          cached.arrangement.invalidateArrangements(tour.id) >>-
-          {
-            socket.foreach(_.reload(tour.id))
-            Bus.publish(
-              lila.hub.actorApi.round.ArrangementDeleted(tour.id, arrId),
-              "arrangementDeleted",
-            )
+        arrangementRepo.byId(arrId) flatMap {
+          _ ?? { arr =>
+            (!arr.hasGame) ?? {
+              arrangementRepo.delete(arr.id) >>-
+                cached.arrangement.invalidateArrangements(tour.id) >>-
+                {
+                  socket.foreach(_.reload(tour.id))
+                  Bus.publish(
+                    lila.hub.actorApi.round.ArrangementDeleted(tour.id, arr.id),
+                    "arrangementDeleted",
+                  )
+                }
+            }
           }
+        }
       }
     }
 

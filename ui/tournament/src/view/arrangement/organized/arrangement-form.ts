@@ -309,7 +309,7 @@ const arrangementForm = (ctrl: TournamentController, state: NewArrangement): May
             'button.button.button-red',
             {
               class: {
-                disabled: hasGame,
+                disabled: hasGame || !!ctrl.data.isFinished,
               },
               hook: bind('click', () => handleDelete()),
             },
