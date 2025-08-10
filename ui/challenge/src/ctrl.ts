@@ -19,7 +19,7 @@ export default function (opts: ChallengeOpts, data: ChallengeData, redraw: () =>
 
   function notifyNew() {
     data.in.forEach(c => {
-      if (once(`c-${c.id}`, false)) {
+      if (once(`c-${c.id}`)) {
         if (!li.quietMode && data.in.length <= 3) {
           opts.show();
           li.sound.play('newChallenge');

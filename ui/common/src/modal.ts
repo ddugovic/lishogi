@@ -34,16 +34,3 @@ export function modal(d: Modal): VNode {
     ],
   );
 }
-
-export function button(name: string): VNode {
-  return h(
-    'div.form-actions.single',
-    h(
-      'button.button',
-      {
-        attrs: { type: 'submit' },
-      },
-      name,
-    ),
-  );
-}

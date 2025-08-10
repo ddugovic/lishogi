@@ -63,8 +63,7 @@ export const storedSet = <V>(propKey: string, maxSize: number): StoredSet<V> => 
   };
 };
 
-export function once(key: string, always?: boolean): boolean {
-  if (always) return true;
+export function once(key: string): boolean {
   if (!window.lishogi.storage.get(key)) {
     window.lishogi.storage.set(key, '1');
     return true;
