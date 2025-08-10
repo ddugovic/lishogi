@@ -92,13 +92,16 @@ export function robinTable(ctrl: TournamentController, klass?: string): VNode {
   const size = players.length;
 
   return h(
-    `div.r-table-wrap${klass ? `.${klass}` : ''}${size === 0 ? '.hidden' : ''}`,
+    `div.r-table-wrap${klass ? `.${klass}` : ''}${size === 0 ? '.empty' : ''}`,
     {
       hook: {
         insert: tablesHover,
       },
     },
     [
+      size === 0
+        ? h('div.no-players.text', { attrs: { 'data-icon': '' } }, i18n('noPlayersJoinedYet'))
+        : null,
       h(
         'div.r-table-wrap-players',
         h('table', [

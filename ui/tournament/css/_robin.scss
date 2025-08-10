@@ -12,9 +12,18 @@ main.robin {
     $large-cell-size: 3rem;
 
     display: flex;
+    position: relative;
 
-    &.hidden {
+    &.empty > * {
       opacity: 0;
+
+      &.no-players {
+        opacity: 1;
+        position: absolute;
+        width: 100%;
+        margin: 1rem 0;
+        text-align: center;
+      }
     }
 
     table {

@@ -52,7 +52,7 @@ const arrangementForm = (ctrl: TournamentController, state: NewArrangement): May
       ? ctrl.data.standing.arrangements.filter(
           a => arrangementHasUser(a, user1Id) && arrangementHasUser(a, user2Id),
         )
-      : [];
+      : undefined;
 
   const updateState = <K extends keyof NewArrangement>(
     key: K,
@@ -105,8 +105,8 @@ const arrangementForm = (ctrl: TournamentController, state: NewArrangement): May
     ctrl.showOrganizerArrangement(undefined);
   };
 
-  const u1Disabled = !isNew && !!ctrl.newArrangement?.user1?.id;
-  const u2Disabled = !isNew && !!ctrl.newArrangement?.user2?.id;
+  const u1Disabled = !isNew && !!state.origin?.user1?.id;
+  const u2Disabled = !isNew && !!state.origin?.user2?.id;
 
   return h('div.organizer-arrangement', [
     state.id
@@ -276,6 +276,7 @@ const arrangementForm = (ctrl: TournamentController, state: NewArrangement): May
             flatpickr().then(() => {
               fInstance = window.flatpickr(node.elm as HTMLInputElement, {
                 ...flatpickrConfig,
+                maxDate: ctrl.dateToFinish,
                 onChange: dates => {
                   state.scheduledAt = dates[0].getTime();
                   ctrl.redraw();
@@ -317,10 +318,12 @@ const arrangementForm = (ctrl: TournamentController, state: NewArrangement): May
           )
         : null,
     ]),
-    gamesBetweenUsers.length && isNew
+    isNew && gamesBetweenUsers
       ? h('div.games-users-wrap', [
           h('h3', i18n('tourArrangements:existingGamesBetweenPlayers')),
-          renderGames(ctrl, gamesBetweenUsers),
+          gamesBetweenUsers.length
+            ? renderGames(ctrl, gamesBetweenUsers)
+            : h('span', i18n('noGameFound')),
         ])
       : null,
   ]);

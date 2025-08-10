@@ -37,11 +37,11 @@ export function arrangements(ctrl: TournamentController): VNode {
     return b.startedAt - a.startedAt;
   });
 
-  const arrs = [
-    ...sortByScheduledAt(myUpcoming),
-    ...sortByScheduledAt(othersUpcoming),
-    ...sortedFinished,
-  ];
+  const sortedScheduled = [...sortByScheduledAt(myUpcoming), ...sortByScheduledAt(othersUpcoming)];
+
+  const arrs = ctrl.data.isFinished
+    ? [...sortedFinished, ...sortedScheduled]
+    : [...sortedScheduled, ...sortedFinished];
 
   const trimArrs = arrs.length > maxlength && !expanded;
   const trimmedArrs = trimArrs ? arrs.slice(0, maxlength) : arrs;
@@ -99,7 +99,10 @@ export function renderGames(
         },
       },
       [
-        h('td.small.fade', h('i', { attrs: { 'data-icon': 'K' } })),
+        h(
+          'td.small.fade',
+          h('i', { attrs: { 'data-icon': a.status && a.status >= ids.mate ? 'E' : 'J' } }),
+        ),
         ctrl.isOrganized() ? h('td.bold.small', a.name) : undefined,
         h(
           `td.small.vs-names${ctrl.isRobin() ? '.bold' : ''}`,

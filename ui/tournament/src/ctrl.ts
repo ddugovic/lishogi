@@ -81,7 +81,7 @@ export default class TournamentController {
       this.dateToFinish = new Date(Date.now() + this.data.secondsToFinish * 1000);
 
     this.newArrangementSettings = storedJsonProp(
-      `arrangement.newArrangementSettings.${this.data.id}`,
+      `arrangement.newArrangementSettings.${this.opts.userId}`,
       () => {
         return {};
       },
@@ -381,6 +381,7 @@ export default class TournamentController {
               id: arr.user2.id,
             }
           : undefined,
+        origin: arr,
       };
     else this.newArrangement = undefined;
     this.redraw();

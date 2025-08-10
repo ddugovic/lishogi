@@ -4,6 +4,8 @@ import type { MaybeVNode } from 'common/snabbdom';
 import throttle from 'common/throttle';
 import { ids } from 'game/status';
 import { i18n } from 'i18n';
+import { colorName } from 'shogi/color-name';
+import { opposite } from 'shogiground/util';
 import { type VNode, h } from 'snabbdom';
 import type TournamentController from '../../ctrl';
 import type { Arrangement, ArrangementUser } from '../../interfaces';
@@ -20,7 +22,11 @@ export function arrangementModal(ctrl: TournamentController): MaybeVNode {
   const a = ctrl.arrangement;
   if (!a) return;
 
-  const maybeLoad = throttle(10000, () => loadOnlineStatus(ctrl));
+  const maybeLoad = throttle(15000, () => {
+    if (document.visibilityState === 'visible') {
+      loadOnlineStatus(ctrl);
+    }
+  });
 
   return modal({
     class: 'arrangement__modal',
@@ -28,14 +34,12 @@ export function arrangementModal(ctrl: TournamentController): MaybeVNode {
       preloadUserTips(el);
 
       document.addEventListener('visibilitychange', maybeLoad);
-      window.addEventListener('focus', maybeLoad);
       interval = setInterval(maybeLoad, 35000);
-      loadOnlineStatus(ctrl, true);
+      loadOnlineStatus(ctrl);
     },
     onClose() {
       document.removeEventListener('visibilitychange', maybeLoad);
-      window.removeEventListener('focus', maybeLoad);
-      if (interval) clearInterval(interval);
+      clearInterval(interval);
 
       showCalendar = false;
       ctrl.showArrangement(undefined);
@@ -46,17 +50,16 @@ export function arrangementModal(ctrl: TournamentController): MaybeVNode {
   });
 }
 
-function loadOnlineStatus(ctrl: TournamentController, force = false): void {
-  if (
-    ctrl.arrangement &&
-    ((document.visibilityState === 'visible' && document.hasFocus()) || force)
-  ) {
-    const userId1 = ctrl.arrangement.user1?.id;
-    const userId2 = ctrl.arrangement.user2?.id;
+function loadOnlineStatus(ctrl: TournamentController): void {
+  const userId1 = ctrl.arrangement?.user1?.id;
+  const userId2 = ctrl.arrangement?.user2?.id;
+  const users = [userId1, userId2].filter(u => u);
+
+  if (users.length)
     window.lishogi.xhr
       .json('GET', '/api/users/status', {
         url: {
-          ids: `${userId1},${userId2}`,
+          ids: `${users.join(',')}`,
         },
       })
       .then((res: { id: string; online?: boolean }[]) => {
@@ -69,7 +72,6 @@ function loadOnlineStatus(ctrl: TournamentController, force = false): void {
         if (userId2) onlineCache.delete(userId2);
         ctrl.redraw();
       });
-  }
 }
 
 function header(ctrl: TournamentController, a: Arrangement): VNode {
@@ -77,16 +79,20 @@ function header(ctrl: TournamentController, a: Arrangement): VNode {
     ctrl.isCreator() && ctrl.isOrganized()
       ? h(
           'a.edit-icon',
-          h('i', {
+          {
             attrs: {
-              'data-icon': '%',
               title: i18n('edit'),
             },
             on: {
               click: () => {
-                ctrl.showOrganizerArrangement(a);
                 ctrl.showArrangement(undefined);
+                ctrl.showOrganizerArrangement(a);
               },
+            },
+          },
+          h('i', {
+            attrs: {
+              'data-icon': '%',
             },
           }),
         )
@@ -125,6 +131,7 @@ function playerSection(
                 online: !!onlineCache.get(player.id),
               },
             }),
+            colors(a, user),
             points(ctrl, a, user),
           ]),
           action(ctrl, a, user),
@@ -264,6 +271,17 @@ function points(ctrl: TournamentController, a: Arrangement, user: ArrangementUse
     const isLoser = a.winner && !isWinner;
     const userPoints = isWinner ? points.w : isLoser ? points.l : points.d;
     return h(`div.points${isWinner ? '.winner' : isLoser ? '.loser' : ''}`, userPoints);
+  } else return;
+}
+
+function colors(a: Arrangement, user: ArrangementUser): MaybeVNode {
+  if (!a.gameId && !!a.color) {
+    const isColorPlayer = a.user1?.id === user.id;
+    return h(`div.color-icon.${isColorPlayer ? a.color : opposite(a.color)}`, {
+      attrs: {
+        title: colorName(a.color, false),
+      },
+    });
   } else return;
 }
 

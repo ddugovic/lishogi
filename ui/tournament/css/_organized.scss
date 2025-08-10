@@ -84,7 +84,10 @@
     }
 
     .games-users-wrap {
+      @extend %box-radius-bottom;
+
       width: 100%;
+      overflow: hidden;
 
       h3 {
         text-align: center;

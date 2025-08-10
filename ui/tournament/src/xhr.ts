@@ -71,7 +71,7 @@ function reload(ctrl: TournamentController, partial = true): Promise<void> {
     return window.lishogi.xhr
       .json('GET', `/tournament/${ctrl.data.id}`, {
         url: {
-          page: ctrl.page,
+          page: ctrl.isArena() ? ctrl.page : undefined,
           playerInfo: ctrl.playerInfo.id,
           partial,
         },

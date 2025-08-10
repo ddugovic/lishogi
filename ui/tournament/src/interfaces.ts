@@ -266,7 +266,7 @@ export interface Points {
   l: number;
 }
 
-export type NewArrangement = Partial<Arrangement>;
+export type NewArrangement = Partial<Arrangement> & { origin?: Partial<Arrangement> };
 
 export interface NewArrangementSettings {
   points?: Points;

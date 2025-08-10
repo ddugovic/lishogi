@@ -1,4 +1,4 @@
-import { i18n } from 'i18n';
+import { i18n, i18nPluralSame } from 'i18n';
 import { type VNode, h } from 'snabbdom';
 import type TournamentController from '../../ctrl';
 import type { ArrangementPlayer } from '../../interfaces';
@@ -74,7 +74,7 @@ function playerTr(ctrl: TournamentController, player: ArrangementPlayer, rank: n
         me: ctrl.opts.userId === player.id,
         kicked: !!player.kicked,
         first: rank === 1,
-        disabled: !ctrl.data.isStarted || !ctrl.data.isFinished,
+        disabled: !ctrl.data.isStarted && !ctrl.data.isFinished,
       },
       on: {
         click: () => {
@@ -101,7 +101,11 @@ function playerTr(ctrl: TournamentController, player: ArrangementPlayer, rank: n
           withRating: true,
         }),
       ]),
-      h('td.total', h('strong', player.kicked ? '-' : player.score)),
+      h(
+        'td.total',
+        { attrs: { title: i18nPluralSame('nbTournamentPoints', player.score) } },
+        h('strong', player.kicked ? '-' : player.score),
+      ),
     ],
   );
 }
