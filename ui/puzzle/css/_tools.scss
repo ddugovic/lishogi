@@ -30,34 +30,80 @@
 
   .tview2 > move {
     justify-content: space-between;
-  }
+    border-left: 3px solid theme.$c-primary;
 
-  move {
-    glyph {
-      vertical-align: middle;
+    &.good,
+    &.win {
+      border-left-color: theme.$c-good;
 
-      &::before {
-        opacity: 1;
+      &.active {
+        background: theme.$m-bg-box_good_mix_80;
+      }
+
+      &:hover {
+        background: theme.$c-good;
+        color: theme.$c-good-over;
+
+        move-notation::before {
+          background-color: theme.$c-good;
+          color: theme.$c-good-over;
+        }
       }
     }
 
-    &.fail glyph {
-      color: theme.$c-bad;
-    }
+    &.fail {
+      border-left-color: theme.$c-bad;
+      cursor: default;
 
-    &.good glyph,
-    &.win glyph {
-      color: theme.$c-good;
-    }
+      &.active {
+        background: theme.$m-bad_bg-box_mix_10;
+      }
 
-    &:hover glyph {
-      color: theme.$c-primary-over;
+      &:hover {
+        background: theme.$c-bad;
+        color: theme.$c-bad-over;
+
+        move-notation::before {
+          background-color: theme.$c-bad;
+          color: theme.$c-bad-over;
+        }
+      }
+    }
+  }
+
+  interrupt lines {
+    &:has(move.fail) {
+      border-color: theme.$c-bad;
+
+      line {
+        &::before {
+          border-color: theme.$c-bad;
+        }
+
+        move {
+          cursor: default;
+
+          &.active {
+            background: theme.$m-bad_bg-box_mix_30;
+            outline-color: theme.$m-bad_bg-box_mix_50;
+          }
+
+          &:hover {
+            &,
+            index,
+            move-notation::before {
+              background-color: theme.$c-bad;
+              color: theme.$c-bad-over;
+            }
+          }
+        }
+      }
     }
   }
 }
 
 .puzzle__feedback {
-  @extend %flex-column;
+  @extend %flex-column, %box-radius-bottom;
 
   flex: 1 0 8rem;
   background: theme.$c-bg-high;
@@ -80,39 +126,27 @@
     gap: 0.5rem;
   }
 
-  piece {
-    position: inherit;
-    display: block;
-    width: 100%;
-    height: 100%;
+  &.good,
+  &.win {
+    border-bottom: 3px solid theme.$c-good;
   }
 
-  .icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-    font-size: 40px;
-    line-height: 48px;
-    margin-right: 4px;
+  &.fail {
+    border-bottom: 3px solid theme.$c-bad;
   }
 
-  &.good .icon,
-  .win .icon {
-    color: theme.$c-good;
-  }
+  .instruction {
+    & > * {
+      display: block;
+    }
 
-  &.fail .icon {
-    color: theme.$c-bad;
-  }
+    strong {
+      font-size: 1.75em;
+    }
 
-  .instruction > * {
-    display: block;
-  }
-
-  .instruction strong {
-    font-size: 1.5em;
+    em {
+      text-align: center;
+    }
   }
 
   .view_solution {

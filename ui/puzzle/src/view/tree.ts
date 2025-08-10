@@ -1,6 +1,6 @@
 import { renderEval as normalizeEval } from 'ceval/util';
 import { defined } from 'common/common';
-import type { MaybeVNode, MaybeVNodes } from 'common/snabbdom';
+import type { MaybeVNodes } from 'common/snabbdom';
 import throttle from 'common/throttle';
 import { i18n } from 'i18n';
 import { notationsWithColor } from 'shogi/notation';
@@ -15,11 +15,6 @@ interface Ctx {
 interface RenderOpts {
   parentPath: string;
   isMainline: boolean;
-}
-
-interface Glyph {
-  name: string;
-  symbol: string;
 }
 
 const autoScroll = throttle(150, (ctrl: Controller, el) => {
@@ -77,7 +72,7 @@ function renderLines(ctx: Ctx, nodes: Tree.Node[], opts: RenderOpts): VNode {
   return h(
     'lines',
     {
-      class: { single: !!nodes[1] },
+      class: { single: !nodes[1] },
     },
     nodes.map(n =>
       h(
@@ -108,37 +103,22 @@ function renderMainlineMoveOf(ctx: Ctx, node: Tree.Node, opts: RenderOpts): VNod
   return h(
     'move',
     {
-      attrs: { p: path },
+      attrs: { p: path, title: puzzleTitle(node) },
       class: classes,
     },
     renderMove(node),
   );
 }
 
-function renderGlyph(glyph: Glyph): VNode {
-  return h(
-    'span.glyphs',
-    h('glyph', {
-      attrs: { title: glyph.name, 'data-icon': glyph.symbol },
-    }),
-  );
-}
-
-function puzzleGlyph(node: Tree.Node): MaybeVNode {
+function puzzleTitle(node: Tree.Node): string | false {
   switch (node.puzzle) {
     case 'good':
     case 'win':
-      return renderGlyph({
-        name: i18n('bestMove'),
-        symbol: 'K',
-      });
+      return i18n('bestMove');
     case 'fail':
-      return renderGlyph({
-        name: i18n('mistake'),
-        symbol: 'L',
-      });
+      return i18n('mistake');
     default:
-      return;
+      return false;
   }
 }
 
@@ -146,7 +126,6 @@ function renderMove(node: Tree.Node): MaybeVNodes {
   const ev = node.eval || node.ceval;
   return [
     renderNotation(node),
-    puzzleGlyph(node),
     ev &&
       (defined(ev.cp)
         ? renderEval(normalizeEval(ev.cp))
@@ -166,10 +145,10 @@ function renderVariationMoveOf(ctx: Ctx, node: Tree.Node, opts: RenderOpts): VNo
   return h(
     'move',
     {
-      attrs: { p: path },
+      attrs: { p: path, title: puzzleTitle(node) },
       class: classes,
     },
-    [renderIndex(node.ply, true), renderNotation(node), puzzleGlyph(node)],
+    [renderIndex(node.ply, true), renderNotation(node)],
   );
 }
 

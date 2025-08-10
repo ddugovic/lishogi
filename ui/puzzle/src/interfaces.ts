@@ -102,6 +102,7 @@ export interface Vm {
   mode: 'play' | 'view' | 'try';
   round?: PuzzleRound;
   next: Deferred<PuzzleData>;
+  result?: 'win' | 'fail';
   resultSent: boolean;
   lastFeedback: 'init' | 'fail' | 'win' | 'good';
   initialPath: Tree.Path;

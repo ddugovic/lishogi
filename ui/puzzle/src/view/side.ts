@@ -104,7 +104,7 @@ function gameInfos(ctrl: Controller, game: PuzzleGame, puzzle: Puzzle): VNode {
         h(
           'p',
           i18nVdom(
-            'puzzle:fromGameLink',
+            'fromGameLink',
             ctrl.vm.mode == 'play'
               ? h('span', gameName)
               : h(

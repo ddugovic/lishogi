@@ -45,10 +45,10 @@ const renderContinue = (ctrl: Controller) =>
 
 export default function (ctrl: Controller): VNode {
   const data = ctrl.getData();
-  return h('div.puzzle__feedback.after', [
+  return h(`div.puzzle__feedback.after.${ctrl.vm.result}`, [
     h(
       'div.complete',
-      ctrl.vm.lastFeedback == 'win' ? i18n('puzzle:puzzleSuccess') : i18n('puzzle:puzzleComplete'),
+      ctrl.vm.result == 'win' ? i18n('puzzle:puzzleSuccess') : i18n('puzzle:puzzleComplete'),
     ),
     data.user ? renderVote(ctrl) : renderContinue(ctrl),
     h('div.puzzle__more', [

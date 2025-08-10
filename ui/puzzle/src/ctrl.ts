@@ -278,6 +278,7 @@ export default function (opts: PuzzleOpts, redraw: Redraw): Controller {
   function sendResult(win: boolean): Promise<void> {
     if (vm.resultSent) return Promise.resolve();
     vm.resultSent = true;
+    vm.result = win ? 'win' : 'fail';
     session.complete(data.puzzle.id, win);
     return xhr
       .complete(data.puzzle.id, data.theme.key, win, data.replay)
