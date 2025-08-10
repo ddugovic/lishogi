@@ -1,5 +1,6 @@
 import notify from 'common/notification';
 import { once } from 'common/storage';
+import { i18nFormat } from 'i18n';
 import type { ChallengeData, ChallengeOpts, ChallengeUser, Ctrl } from './interfaces';
 
 const li = window.lishogi;
@@ -26,7 +27,9 @@ export default function (opts: ChallengeOpts, data: ChallengeData, redraw: () =>
         }
         const pushSubsribed =
           Number.parseInt(li.storage.get('push-subscribed2') || '0', 10) + 86400000 >= Date.now(); // 24h
-        !pushSubsribed && c.challenger && notify(`${showUser(c.challenger)} challenges you!`);
+        !pushSubsribed &&
+          c.challenger &&
+          notify(i18nFormat('challengeFromX', showUser(c.challenger)));
         opts.pulse();
       }
     });
