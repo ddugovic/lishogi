@@ -26,7 +26,7 @@ function startTicker() {
   function tick() {
     if (!document.hasFocus()) {
       F[1 - curFaviconIdx]();
-      tickerTimer = setTimeout(tick, 1000);
+      tickerTimer = setTimeout(tick, 1500);
     }
   }
   if (!tickerTimer) tickerTimer = setTimeout(tick, 200);
