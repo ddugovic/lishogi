@@ -130,7 +130,7 @@ function whatNext(ctrl: LearnCtrl) {
       makeStage(
         '/training',
         other.bullseye,
-        i18n('learn:puzzles'),
+        i18n('puzzles'),
         i18n('learn:exerciseYourTacticalSkills'),
       ),
       makeStage(
