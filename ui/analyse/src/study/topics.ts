@@ -1,6 +1,6 @@
 import { loadCssPath, loadVendorScript } from 'common/assets';
 import { type Prop, prop } from 'common/common';
-import * as modal from 'common/modal';
+import { modal } from 'common/modal';
 import { bind, bindSubmit, onInsert } from 'common/snabbdom';
 import { i18n } from 'i18n';
 import { type VNode, h } from 'snabbdom';
@@ -57,7 +57,7 @@ export function view(ctrl: StudyCtrl): VNode {
 let tagify: any | undefined;
 
 export function formView(ctrl: TopicsCtrl, userId?: string): VNode {
-  return modal.modal({
+  return modal({
     class: 'study__modal.study-topics',
     onClose() {
       ctrl.open(false);

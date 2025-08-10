@@ -1,10 +1,11 @@
 import { type Prop, prop } from 'common/common';
-import * as modal from 'common/modal';
+import { modal } from 'common/modal';
 import { type MaybeVNodes, bindNonPassive, bindSubmit } from 'common/snabbdom';
 import { i18n } from 'i18n';
 import { type VNode, h } from 'snabbdom';
 import { emptyRedButton } from '../util';
 import type { StudyData } from './interfaces';
+import { formButton } from './util';
 
 export interface StudyFormCtrl {
   open: Prop<boolean>;
@@ -101,7 +102,7 @@ export function view(ctrl: StudyFormCtrl): VNode {
     ['member', i18n('study:members')],
     ['everyone', i18n('study:everyone')],
   ];
-  return modal.modal({
+  return modal({
     class: 'study__modal.study-edit',
     onClose() {
       ctrl.open(false);
@@ -205,15 +206,7 @@ export function view(ctrl: StudyFormCtrl): VNode {
               }),
             ),
           ]),
-          h('div.form-actions', [
-            h(
-              'button.button',
-              {
-                attrs: { type: 'submit' },
-              },
-              isNew ? i18n('study:start') : i18n('save'),
-            ),
-          ]),
+          formButton(isNew ? i18n('study:start') : i18n('save')),
         ],
       ),
       h('div.destructive', [

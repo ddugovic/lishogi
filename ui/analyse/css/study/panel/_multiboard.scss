@@ -62,10 +62,6 @@
       background: theme.$m-bg-box_alpha_neg50;
       overflow: hidden;
 
-      &:nth-child(even) {
-        background: theme.$c-bg-zebra2;
-      }
-
       &:hover {
         background: theme.$m-link_alpha_neg60;
         color: theme.$c-font-clear;

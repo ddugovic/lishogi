@@ -3,7 +3,7 @@
 @use 'pkg:common/theme';
 
 %study-list {
-  @extend %box-neat;
+  @extend %box-neat-bottom;
 
   max-height: 18em;
   background: theme.$c-bg-box;
@@ -36,6 +36,7 @@
     font-size: 0.9em;
     opacity: 0.15;
     padding: 0.4em;
+    margin-right: 0.25rem;
 
     @include mixins.transition;
   }

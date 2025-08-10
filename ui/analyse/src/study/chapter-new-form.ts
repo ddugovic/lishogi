@@ -1,6 +1,6 @@
 import { loadLishogiScript } from 'common/assets';
 import { type Prop, defined, prop } from 'common/common';
-import * as modal from 'common/modal';
+import { modal } from 'common/modal';
 import { bind, bindSubmit, onInsert } from 'common/snabbdom';
 import { spinnerHtml } from 'common/spinner';
 import { type StoredProp, storedProp } from 'common/storage';
@@ -13,6 +13,7 @@ import type AnalyseCtrl from '../ctrl';
 import { option } from '../util';
 import type { StudyChapterMeta } from './interfaces';
 import { importNotation } from './study-xhr';
+import { formButton } from './util';
 
 export const modeChoices: [string, string][] = [
   ['normal', i18n('study:normalAnalysis')],
@@ -119,7 +120,7 @@ export function view(ctrl: StudyChapterNewFormCtrl): VNode {
         : 'normal';
   let isDefaultName = true;
 
-  return modal.modal({
+  return modal({
     class: 'study__modal.chapter-new',
     onClose() {
       ctrl.close();
@@ -334,7 +335,7 @@ export function view(ctrl: StudyChapterNewFormCtrl): VNode {
               modeChoices.map(c => option(c[0], mode, c[1])),
             ),
           ]),
-          modal.button(i18n('study:createChapter')),
+          formButton(i18n('study:createChapter')),
         ],
       ),
     ],

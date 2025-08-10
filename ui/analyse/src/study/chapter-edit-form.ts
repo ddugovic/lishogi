@@ -1,5 +1,5 @@
 import { type Prop, defined, prop } from 'common/common';
-import * as modal from 'common/modal';
+import { modal } from 'common/modal';
 import { bind, bindSubmit, onInsert } from 'common/snabbdom';
 import spinner from 'common/spinner';
 import { i18n } from 'i18n';
@@ -8,6 +8,7 @@ import { type VNode, h } from 'snabbdom';
 import { emptyRedButton, option } from '../util';
 import * as chapterForm from './chapter-new-form';
 import type { StudyChapterConfig, StudyChapterMeta } from './interfaces';
+import { formButton } from './util';
 
 interface StudyChapterEditFormCtrl {
   current: Prop<StudyChapterMeta | StudyChapterConfig | null>;
@@ -80,7 +81,7 @@ export function ctrl(
 export function view(ctrl: StudyChapterEditFormCtrl): VNode | undefined {
   const data = ctrl.current();
   return data
-    ? modal.modal({
+    ? modal({
         class: `study__modal.edit-${data.id}`, // full redraw when changing chapter
         onClose() {
           ctrl.current(null);
@@ -243,6 +244,6 @@ function viewLoaded(data: StudyChapterConfig): VNode[] {
         ].map(v => option(v[0], data.description ? '1' : '', v[1])),
       ),
     ]),
-    modal.button(i18n('study:saveChapter')),
+    formButton(i18n('study:saveChapter')),
   ];
 }

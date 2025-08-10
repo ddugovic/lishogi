@@ -2,19 +2,16 @@
 @use 'pkg:common/theme';
 @use 'list';
 
-$span-width: 1.7em;
+$span-width: 2em;
 
 .study__chapters {
   @extend %study-list;
 
-  max-height: 18em;
-
   h3 {
-    @extend %break-word;
+    @extend %break-word, %base-font;
 
     flex: 1 1 100%;
     font-size: 1em;
-    line-height: 1;
     margin: 0.5em 0;
     align-self: center;
   }

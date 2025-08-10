@@ -3,10 +3,13 @@
 @use 'pkg:common/theme';
 
 .ceval {
+  @extend %box-radius-top;
+
   background: theme.$c-bg-zebra;
   position: relative;
   display: flex;
   align-items: stretch;
+  overflow: hidden;
 
   &.enabled {
     padding-top: 2px;
