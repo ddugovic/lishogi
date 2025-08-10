@@ -406,8 +406,10 @@ const MAX_NUM_MOVES = 16;
 
 function renderPv(threat: boolean, multiPv: number, pv?: Tree.PvData, pos?: Position): VNode {
   const data: any = {};
-  const children: VNode[] = [renderPvWrapToggle()];
+  const children: VNode[] = [];
   if (pv) {
+    // maybe some js move overflow detection?
+    children.push(renderPvWrapToggle(pv.moves.length <= 3));
     if (!threat) {
       data.attrs = { 'data-usi': pv.moves[0] };
     }
@@ -421,8 +423,11 @@ function renderPv(threat: boolean, multiPv: number, pv?: Tree.PvData, pos?: Posi
   return h('div.pv.pv--nowrap', data, children);
 }
 
-function renderPvWrapToggle(): VNode {
+function renderPvWrapToggle(hide: boolean): VNode {
   return h('span.pv-wrap-toggle', {
+    class: {
+      none: hide,
+    },
     hook: {
       insert: (vnode: VNode) => {
         const el = vnode.elm as HTMLElement;
