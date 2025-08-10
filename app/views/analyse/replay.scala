@@ -179,11 +179,11 @@ object replay {
                         ),
                       ),
                       div(cls := "game-other")(
-                        Game.gifVariants.contains(pov.game.variant) option a(
+                        a(
                           dataIcon := "$",
-                          cls      := "button text",
-                          target   := "_blank",
-                          href     := cdnUrl(routes.Export.gif(pov.gameId, pov.color.name).url),
+                          cls := s"button text${!Game.gifVariants.contains(pov.game.variant) ?? " disabled"}",
+                          target := "_blank",
+                          href   := cdnUrl(routes.Export.gif(pov.gameId, pov.color.name).url),
                         )("GIF"),
                         a(
                           dataIcon := "=",
