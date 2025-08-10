@@ -2,7 +2,7 @@ import { loadLishogiScript } from 'common/assets';
 import { type Prop, defined, prop } from 'common/common';
 import * as modal from 'common/modal';
 import { bind, bindSubmit, onInsert } from 'common/snabbdom';
-import spinner from 'common/spinner';
+import { spinnerHtml } from 'common/spinner';
 import { type StoredProp, storedProp } from 'common/storage';
 import { i18n, i18nFormat } from 'i18n';
 import { i18nVariant } from 'i18n/variant';
@@ -126,7 +126,7 @@ export function view(ctrl: StudyChapterNewFormCtrl): VNode {
       ctrl.redraw();
     },
     content: [
-      activeTab === 'edit' ? null : h('h2', [i18n('study:newChapter')]),
+      h('h2', i18n('study:newChapter')),
       h(
         'form.form3',
         {
@@ -184,40 +184,39 @@ export function view(ctrl: StudyChapterNewFormCtrl): VNode {
             makeTab('notation', 'KIF/CSA', 'KIF/CSA'),
           ]),
           activeTab === 'edit'
-            ? h(
-                'div.board-editor-wrap',
-                {
-                  hook: {
-                    insert(vnode) {
-                      Promise.all([
-                        loadLishogiScript('lishogi.editor'),
-                        window.lishogi.xhr.json('GET', '/editor.json', {
-                          url: { sfen: ctrl.root.node.sfen },
-                        }),
-                      ]).then(([_, data]) => {
-                        data.embed = true;
-                        data.options = {
-                          orientation: currentChapter.setup.orientation,
-                          onChange: (sfen: string, variant: VariantKey, orientation: Color) => {
-                            ctrl.vm.editorSfen(sfen);
-                            ctrl.vm.editorVariant(variant);
-                            ctrl.vm.editorOrientation(orientation);
-                          },
-                        };
-                        ctrl.vm.editor = window.lishogi.modules.editor?.({
-                          element: vnode.elm as HTMLElement,
-                          ...data,
-                        });
-                        ctrl.vm.editorSfen(ctrl.vm.editor.getSfen());
+            ? h('div.board-editor-wrap', {
+                hook: {
+                  insert(vnode) {
+                    const container = document.createElement('div');
+                    container.innerHTML = spinnerHtml;
+                    (vnode.elm as HTMLElement).appendChild(container);
+                    Promise.all([
+                      loadLishogiScript('editor'),
+                      window.lishogi.xhr.json('GET', '/editor.json', {
+                        url: { sfen: ctrl.root.node.sfen },
+                      }),
+                    ]).then(([_, data]) => {
+                      data.embed = true;
+                      data.options = {
+                        orientation: currentChapter.setup.orientation,
+                        onChange: (sfen: string, variant: VariantKey, orientation: Color) => {
+                          ctrl.vm.editorSfen(sfen);
+                          ctrl.vm.editorVariant(variant);
+                          ctrl.vm.editorOrientation(orientation);
+                        },
+                      };
+                      ctrl.vm.editor = window.lishogi.modules.editor?.({
+                        element: container,
+                        ...data,
                       });
-                    },
-                    destroy: _ => {
-                      ctrl.vm.editor = null;
-                    },
+                      ctrl.vm.editorSfen(ctrl.vm.editor.getSfen());
+                    });
+                  },
+                  destroy: _ => {
+                    ctrl.vm.editor = null;
                   },
                 },
-                [spinner()],
-              )
+              })
             : null,
           activeTab === 'game'
             ? h('div.form-group', [
