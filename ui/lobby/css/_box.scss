@@ -15,6 +15,8 @@
       padding: 0.3em 0.5em;
 
       .more {
+        @include mixins.transition;
+
         color: theme.$c-font-dim;
       }
 
@@ -28,8 +30,6 @@
       }
 
       &:hover .more {
-        @include mixins.transition;
-
         color: theme.$c-link;
       }
     }
@@ -103,4 +103,27 @@
       border-bottom: theme.$border;
     }
   }
+
+  // maybe some colors could look nice
+  // &__leaderboard h2:before {
+  //   color: theme.$c-red;
+  // }
+  // &__winners h2:before {
+  //   color: theme.$c-brag;
+  // }
+  // &__tournaments h2:before {
+  //   color: theme.$c-brag;
+  // }
+  // &__blog h2:before {
+  //   color: theme.$c-secondary;
+  // }
+  // &__studies h2:before {
+  //   color: theme.$c-primary;
+  // }
+  // &__forum h2:before {
+  //   color: theme.$c-secondary;
+  // }
+  // &__description h2:before {
+  //   color: theme.$c-font;
+  // }
 }

@@ -21,11 +21,15 @@
 
   .checkable {
     padding: 4.3px 0;
+    margin-right: 2rem;
 
     label,
     input {
       vertical-align: middle;
       cursor: pointer;
+    }
+
+    input {
       margin-right: 0.5rem;
     }
   }

@@ -215,8 +215,12 @@ export default class LobbyController {
       this.socket.send(`${act}Seek`, seek.id);
   };
 
-  seeksNow: () => void = throttle(100, () => xhr.seeks().then(this.setSeeks));
-  seeksEventually: () => void = throttle(7000, () => xhr.seeks().then(this.setSeeks));
+  seeksNow: () => void = throttle(200, () =>
+    setTimeout(() => xhr.seeks().then(this.setSeeks), 100),
+  );
+  seeksEventually: () => void = throttle(7000, () =>
+    setTimeout(() => xhr.seeks().then(this.setSeeks), 200),
+  );
 
   setSeeks = (seeks: Seek[]): void => {
     this.reloadSeeks = false;
