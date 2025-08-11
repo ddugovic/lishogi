@@ -63,7 +63,7 @@ const feedback = {
         h('div.no-square', h(`piece.king.${ctrl.color}`)),
         h('div.instruction', [
           h(
-            'strong',
+            'strong.inlined',
             i18nVdom(
               'xWasPlayed',
               h(
@@ -156,7 +156,7 @@ const feedback = {
               i18nVdom(
                 'bestWasX',
                 h(
-                  'strong',
+                  'strong.inlined',
                   renderIndexAndMove(
                     {
                       variant: ctrl.variant,

@@ -103,7 +103,7 @@ export default function (ctrl: AnalyseCtrl, fctrl: ForecastCtrl): VNode {
                   hook: bind('click', _ => fctrl.removeIndex(i), ctrl.redraw),
                   attrs: { 'data-icon': 'L', type: 'button' },
                 }),
-                h('moves-notation', renderNodesHtml(nodes)),
+                h('moves-notation.inlined', renderNodesHtml(nodes)),
               ],
             );
           }),

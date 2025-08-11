@@ -86,7 +86,7 @@ function view(opts: Opts, coords: Coords): VNode {
       },
     },
     [
-      h('p.title', nodeFullName(node)),
+      h('p.title.inlined', nodeFullName(node)),
       onMainline
         ? null
         : action('S', i18n('promoteVariation'), () => ctrl.promote(opts.path, false)),

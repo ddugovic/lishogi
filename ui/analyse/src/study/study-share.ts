@@ -32,7 +32,7 @@ function fromPly(ctrl: StudyShareCtrl): VNode {
   return h(
     'div.ply-wrap',
     ctrl.onMainline()
-      ? h('label.ply', [
+      ? h('label.ply.inlined', [
           h('input', {
             attrs: { type: 'checkbox', checked: ctrl.withPly() },
             hook: bind(

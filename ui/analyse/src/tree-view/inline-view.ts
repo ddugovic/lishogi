@@ -143,7 +143,7 @@ export default function (ctrl: AnalyseCtrl): VNode {
     offset: ctrl.plyOffset(),
   };
   return h(
-    'div.tview2.tview2-inline',
+    'div.tview2.tview2-inline.inlined',
     {
       hook: mainHook(ctrl),
     },
