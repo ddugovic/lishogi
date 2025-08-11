@@ -85,7 +85,7 @@ final class Round(
       }
     }
 
-  private def otherPovs(game: GameModel)(implicit ctx: Context) =
+  private def otherPovs(game: GameModel)(implicit ctx: Context): Fu[List[Pov]] =
     ctx.me ?? { user =>
       env.round.proxyRepo.urgentGames(user) map {
         _ filter { pov =>
@@ -94,7 +94,7 @@ final class Round(
       }
     }
 
-  private def getNext(currentGame: GameModel)(povs: List[Pov]) =
+  private def getNext(currentGame: GameModel)(povs: List[Pov]): Option[Pov] =
     povs find { pov =>
       pov.isMyTurn && (pov.game.hasClock || !currentGame.hasClock)
     }
@@ -117,11 +117,11 @@ final class Round(
       OptionFuResult(env.round.proxyRepo game gameId) { currentGame =>
         otherPovs(currentGame) map getNext(currentGame) map {
           _ orElse Pov(currentGame, me)
+        } flatMap { next =>
+          next ?? { p => env.round.proxyRepo.povWithVersion(p.fullId) }
         } flatMap {
-          case Some(next) =>
-            env.round.version(next.game) flatMap { version =>
-              renderPlayer(next, version)
-            }
+          case Some((pov, socketVersion)) =>
+            renderPlayer(pov, socketVersion)
           case None =>
             fuccess(Redirect(currentGame.simulId match {
               case Some(simulId) => routes.Simul.show(simulId)
