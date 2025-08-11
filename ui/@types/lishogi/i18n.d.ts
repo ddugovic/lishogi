@@ -1822,7 +1822,6 @@ declare global {
     | 'preferences:yorozuyaNotation'
     | 'preferences:yourPreferencesHaveBeenSaved'
     | 'preferences:smallMoves'
-    | 'puzzle:puzzles'
     | 'puzzle:puzzleThemes'
     | 'puzzle:recommended'
     | 'puzzle:phases'
