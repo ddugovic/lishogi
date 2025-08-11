@@ -6,7 +6,7 @@ import { ids } from 'game/status';
 import { i18n } from 'i18n';
 import { colorName } from 'shogi/color-name';
 import { opposite } from 'shogiground/util';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type TournamentController from '../../ctrl';
 import type { Arrangement, ArrangementUser } from '../../interfaces';
 import xhr from '../../xhr';
@@ -22,23 +22,22 @@ export function arrangementModal(ctrl: TournamentController): MaybeVNode {
   const a = ctrl.arrangement;
   if (!a) return;
 
-  const maybeLoad = throttle(15000, () => {
-    if (document.visibilityState === 'visible') {
-      loadOnlineStatus(ctrl);
-    }
-  });
+  const throttleLoadOnlineStatus = throttle(15000, () => loadOnlineStatus(ctrl));
+  const maybeLoadOnlineStatus = () => {
+    if (document.visibilityState === 'visible') throttleLoadOnlineStatus();
+  };
 
   return modal({
     class: 'arrangement__modal',
     onInsert(el) {
       preloadUserTips(el);
 
-      document.addEventListener('visibilitychange', maybeLoad);
-      interval = setInterval(maybeLoad, 35000);
+      document.addEventListener('visibilitychange', maybeLoadOnlineStatus);
+      interval = setInterval(maybeLoadOnlineStatus, 35000);
       loadOnlineStatus(ctrl);
     },
     onClose() {
-      document.removeEventListener('visibilitychange', maybeLoad);
+      document.removeEventListener('visibilitychange', maybeLoadOnlineStatus);
       clearInterval(interval);
 
       showCalendar = false;
@@ -63,8 +62,8 @@ function loadOnlineStatus(ctrl: TournamentController): void {
         },
       })
       .then((res: { id: string; online?: boolean }[]) => {
-        if (userId1) onlineCache.set(userId1, !!res.find(p => p.id == userId1)?.online);
-        if (userId2) onlineCache.set(userId2, !!res.find(p => p.id == userId2)?.online);
+        if (userId1) onlineCache.set(userId1, !!res.find(p => p.id === userId1)?.online);
+        if (userId2) onlineCache.set(userId2, !!res.find(p => p.id === userId2)?.online);
         ctrl.redraw();
       })
       .catch(() => {
