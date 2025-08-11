@@ -1,7 +1,7 @@
 import { numberFormat } from 'common/number';
 import { bind } from 'common/snabbdom';
 import spinner from 'common/spinner';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type {
   ModerationCtrl,
   ModerationData,

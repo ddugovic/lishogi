@@ -9,7 +9,7 @@ export default function boot(
   opts: LobbyOpts,
   start: (opts: LobbyOpts) => LobbyController,
 ): LobbyController {
-  let ctrl: LobbyController | undefined = undefined;
+  let ctrl: LobbyController | undefined;
   const nbRoundSpread = spreadNumber('#nb_games_in_play > strong', 8);
   const nbUserSpread = spreadNumber('#nb_connected_players > strong', 10);
   const getParameterByName = <T extends string>(name: string): T | undefined => {

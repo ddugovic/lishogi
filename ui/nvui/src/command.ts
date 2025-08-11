@@ -1,5 +1,5 @@
 import type { Hands, Pieces } from 'shogiground/types';
-import { type Style, renderPieceKeys, renderPiecesOn } from './shogi';
+import { renderPieceKeys, renderPiecesOn, type Style } from './shogi';
 
 export const commands = {
   piece: {

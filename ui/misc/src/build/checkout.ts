@@ -34,7 +34,7 @@ window.lishogi.ready.then(() => {
     const raw = prompt($(this).attr('title'));
     let amount: number;
     try {
-      amount = Number.parseFloat(raw!.replace(',', '.').replace(/[^0-9\.]/gim, ''));
+      amount = Number.parseFloat(raw!.replace(',', '.').replace(/[^0-9.]/gim, ''));
     } catch (_e) {
       return false;
     }

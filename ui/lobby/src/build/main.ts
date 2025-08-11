@@ -1,8 +1,8 @@
 import { Shogiground } from 'shogiground';
 import { attributesModule, classModule, init } from 'snabbdom';
 import boot from '../boot';
-import makeCtrl from '../ctrl';
 import type LobbyController from '../ctrl';
+import makeCtrl from '../ctrl';
 import type { LobbyOpts } from '../interfaces';
 import view from '../view/main';
 

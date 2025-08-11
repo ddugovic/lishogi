@@ -1,7 +1,7 @@
 import { i18n } from 'i18n';
 import { Notation } from 'shogi/notation';
-import { type VNode, h } from 'snabbdom';
-import { type Close, bind, header } from './util';
+import { h, type VNode } from 'snabbdom';
+import { bind, type Close, header } from './util';
 
 export interface NotationData {
   current: Notation;

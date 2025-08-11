@@ -1,4 +1,4 @@
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 
 export default function (): VNode {
   return h(

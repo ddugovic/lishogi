@@ -1,4 +1,4 @@
-import { type Attrs, type Hooks, type VNode, h } from 'snabbdom';
+import { type Attrs, type Hooks, h, type VNode } from 'snabbdom';
 import { useJp } from './common';
 
 export type MaybeVNode = VNode | string | null | undefined;

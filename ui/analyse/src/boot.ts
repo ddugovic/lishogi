@@ -3,7 +3,7 @@ import type AnalyseCtrl from './ctrl';
 import type { AnalyseOpts } from './interfaces';
 
 export function replay(opts: AnalyseOpts, start: (opts: AnalyseOpts) => AnalyseCtrl): AnalyseCtrl {
-  let ctrl: AnalyseCtrl | undefined = undefined;
+  let ctrl: AnalyseCtrl | undefined;
 
   const data = opts.data;
 
@@ -31,7 +31,7 @@ export function replay(opts: AnalyseOpts, start: (opts: AnalyseOpts) => AnalyseC
 }
 
 export function study(opts: AnalyseOpts, start: (opts: AnalyseOpts) => AnalyseCtrl): AnalyseCtrl {
-  let ctrl: AnalyseCtrl | undefined = undefined;
+  let ctrl: AnalyseCtrl | undefined;
 
   opts.initialPly = 'url';
   opts.socketSend = wsConnect(`/study/${opts.study.id}/socket/v5`, opts.socketVersion, {
@@ -47,7 +47,7 @@ export function analysis(
   opts: AnalyseOpts,
   start: (opts: AnalyseOpts) => AnalyseCtrl,
 ): AnalyseCtrl {
-  let ctrl: AnalyseCtrl | undefined = undefined;
+  let ctrl: AnalyseCtrl | undefined;
 
   opts.initialPly = 'url';
   opts.$side = $('.analyse__side').clone();
@@ -66,7 +66,7 @@ export function practice(
   opts: AnalyseOpts,
   start: (opts: AnalyseOpts) => AnalyseCtrl,
 ): AnalyseCtrl {
-  let ctrl: AnalyseCtrl | undefined = undefined;
+  let ctrl: AnalyseCtrl | undefined;
   opts.socketSend = wsConnect('/analysis/socket/v4', false, {
     receive: (t: string, d: any) => {
       ctrl?.socket.receive(t, d);

@@ -1,4 +1,4 @@
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type { Config, Run } from '../interfaces';
 import { getNow } from '../util';
 

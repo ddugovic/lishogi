@@ -1,6 +1,6 @@
 import { dataIcon } from 'common/snabbdom';
 import { notationsWithColor } from 'shogi/notation';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 
 export const emptyRedButton = 'button.button.button-red.button-empty';
 

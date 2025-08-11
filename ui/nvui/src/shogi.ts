@@ -10,8 +10,8 @@ import { parseBoardSfen, parseSfen, pieceToForsyth, roleToForsyth } from 'shogio
 import type { Piece, Role, SquareName } from 'shogiops/types';
 import { isDrop, makeUsi, parseUsi } from 'shogiops/util';
 import { dimensions, handRoles } from 'shogiops/variant/util';
-import { type VNode, h } from 'snabbdom';
-import { type Setting, makeSetting } from './setting';
+import { h, type VNode } from 'snabbdom';
+import { makeSetting, type Setting } from './setting';
 
 export type Style = 'usi' | 'literate' | 'nato' | 'anna' | 'japanese';
 

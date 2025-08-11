@@ -4,7 +4,7 @@ import { Shogiground } from 'shogiground';
 import { usiToSquareNames } from 'shogiops/compat';
 import { forsythToRole } from 'shogiops/sfen';
 import { handRoles } from 'shogiops/variant/util';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type LobbyController from '../ctrl';
 
 function timer(secondsLeft: number) {

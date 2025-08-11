@@ -1,5 +1,5 @@
-import { type MaybeVNodes, bind } from 'common/snabbdom';
-import { type VNode, h } from 'snabbdom';
+import { bind, type MaybeVNodes } from 'common/snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type TournamentController from './ctrl';
 
 export function searchOr(ctrl: TournamentController, nodes: MaybeVNodes): MaybeVNodes {

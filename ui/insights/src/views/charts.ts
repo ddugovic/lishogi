@@ -7,7 +7,7 @@ import Chart, {
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import type { Options } from 'chartjs-plugin-datalabels/types/options';
 import { i18n } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import { fixed } from '../util';
 import { bg, fontClear, fontDimmer } from './colors';
 

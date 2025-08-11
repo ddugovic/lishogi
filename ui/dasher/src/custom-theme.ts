@@ -3,8 +3,8 @@ import spinner from 'common/spinner';
 import { camelToKebab } from 'common/string';
 import { debounce } from 'common/timings';
 import { i18n } from 'i18n';
-import { type VNode, h } from 'snabbdom';
-import { type Open, header, urlInput, validateUrl } from './util';
+import { h, type VNode } from 'snabbdom';
+import { header, type Open, urlInput, validateUrl } from './util';
 
 export interface CustomThemeData {
   boardColor: string;

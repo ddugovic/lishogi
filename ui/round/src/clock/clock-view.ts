@@ -1,7 +1,7 @@
 import * as game from 'game';
 import type { Player } from 'game/interfaces';
 import { ids } from 'game/status';
-import { type Hooks, type VNode, h } from 'snabbdom';
+import { type Hooks, h, type VNode } from 'snabbdom';
 import type RoundController from '../ctrl';
 import type { Position } from '../interfaces';
 import { bind, justIcon } from '../util';

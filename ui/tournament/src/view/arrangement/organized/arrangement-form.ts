@@ -1,10 +1,10 @@
 import { flatpickr } from 'common/assets';
-import { type MaybeVNode, type MaybeVNodes, bind } from 'common/snabbdom';
+import { bind, type MaybeVNode, type MaybeVNodes } from 'common/snabbdom';
 import { i18n, i18nPluralSame } from 'i18n';
 import { colorName } from 'shogi/color-name';
 import { colors } from 'shogiground/constants';
 import { opposite } from 'shogiground/util';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type TournamentController from '../../../ctrl';
 import type { NewArrangement } from '../../../interfaces';
 import header from '../../header';

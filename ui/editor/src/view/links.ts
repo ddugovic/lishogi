@@ -1,7 +1,7 @@
 import { setup } from 'common/links';
 import { modal } from 'common/modal';
 import { i18n } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type EditorCtrl from '../ctrl';
 import type { EditorState } from '../interfaces';
 

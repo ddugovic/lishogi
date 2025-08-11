@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { type Project, getPackageFromPath } from '@build/helpers/workspace-packages';
+import { getPackageFromPath, type Project } from '@build/helpers/workspace-packages';
 import autoprefixer from 'autoprefixer';
 import cssnano from 'cssnano';
 import postcss from 'postcss';

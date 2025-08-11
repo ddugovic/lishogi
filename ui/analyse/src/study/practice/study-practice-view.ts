@@ -1,7 +1,7 @@
 import { richHTML } from 'common/rich-text';
-import { type MaybeVNodes, bind, bindNonPassive } from 'common/snabbdom';
+import { bind, bindNonPassive, type MaybeVNodes } from 'common/snabbdom';
 import spinner from 'common/spinner';
-import { type VNode, h, thunk } from 'snabbdom';
+import { h, thunk, type VNode } from 'snabbdom';
 import { boolSetting } from '../../bool-setting';
 import { option, plural } from '../../util';
 import { view as descView } from '../description';

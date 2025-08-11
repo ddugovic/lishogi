@@ -3,7 +3,7 @@ import { richHTML } from 'common/rich-text';
 import { bind, dataIcon } from 'common/snabbdom';
 import { i18n, i18nFormatCapitalized } from 'i18n';
 import { colorName } from 'shogi/color-name';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import { iconTag } from '../../util';
 import type GamebookPlayCtrl from './gamebook-play-ctrl';
 import type { Feedback, State } from './gamebook-play-ctrl';

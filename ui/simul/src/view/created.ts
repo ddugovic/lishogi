@@ -1,6 +1,6 @@
 import { modal } from 'common/modal';
 import { getPerfIcon } from 'common/perf-icons';
-import { type MaybeVNodes, bind, proverb } from 'common/snabbdom';
+import { bind, type MaybeVNodes, proverb } from 'common/snabbdom';
 import { i18n, i18nFormat, i18nVdomPlural } from 'i18n';
 import { i18nVariant } from 'i18n/variant';
 import { h } from 'snabbdom';

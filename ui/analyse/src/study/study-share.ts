@@ -1,7 +1,7 @@
 import { type Prop, prop } from 'common/common';
 import { bind } from 'common/snabbdom';
 import { i18n, i18nVdom } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import { renderIndexAndMove } from '../move-view';
 import { baseUrl } from '../util';
 import type { StudyChapterMeta, StudyData } from './interfaces';

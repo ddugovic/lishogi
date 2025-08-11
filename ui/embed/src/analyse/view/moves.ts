@@ -7,7 +7,7 @@ import { i18nFormatCapitalized } from 'i18n';
 import { colorName } from 'shogi/color-name';
 import { notationsWithColor } from 'shogi/notation';
 import { isHandicap } from 'shogiops/handicaps';
-import { type Classes, type VNode, h } from 'snabbdom';
+import { type Classes, h, type VNode } from 'snabbdom';
 import { path as treePath } from 'tree';
 import type { AnalyseCtrl } from '../ctrl';
 import { renderInlineCommentsOf, renderMainlineCommentsOf } from './comment';

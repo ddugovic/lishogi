@@ -1,7 +1,7 @@
 import spinner from 'common/spinner';
 import { i18n, i18nPluralSame } from 'i18n';
 import { i18nVariant } from 'i18n/variant';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type {
   Challenge,
   ChallengeData,

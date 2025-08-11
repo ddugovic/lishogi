@@ -1,7 +1,7 @@
-import { type MaybeVNode, type MaybeVNodes, bind, dataIcon } from 'common/snabbdom';
+import { bind, dataIcon, type MaybeVNode, type MaybeVNodes } from 'common/snabbdom';
 import { i18n, i18nPluralSame } from 'i18n';
 import { opposite } from 'shogiground/util';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type AnalyseCtrl from '../ctrl';
 import { iconTag } from '../util';
 import { view as chapterEditFormView } from './chapter-edit-form';

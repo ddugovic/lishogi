@@ -1,7 +1,7 @@
 import { loadCssPath } from 'common/assets';
 import { modal } from 'common/modal';
 import spinner from 'common/spinner';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import * as control from './control';
 import type AnalyseCtrl from './ctrl';
 

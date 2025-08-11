@@ -1,5 +1,5 @@
 import { initOneWithState } from 'common/mini-board';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type { AnalyseCtrl } from '../ctrl';
 import { renderFooter } from './footer';
 import { renderJumps } from './jumps';

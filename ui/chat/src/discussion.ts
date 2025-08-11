@@ -1,7 +1,7 @@
 import * as enhance from 'common/rich-text';
 import { i18n, i18nFormat, i18nFormatCapitalized } from 'i18n';
 import { colorName } from 'shogi/color-name';
-import { type VNode, type VNodeData, h, thunk } from 'snabbdom';
+import { h, thunk, type VNode, type VNodeData } from 'snabbdom';
 import type { ChatCtrl, Line } from './interfaces';
 import { lineAction as modLineAction } from './moderation';
 import { presetView } from './preset';

@@ -7,9 +7,9 @@ import type { Position } from 'shogiops/variant/position';
 import { unpromote } from 'shogiops/variant/util';
 import type { KeyboardMove, KeyboardMoveHandler } from '../ctrl';
 import {
-  KKlastDestR,
   allCandidates,
   allRolesR,
+  KKlastDestR,
   regexMatchAllSquares,
   toMoveOrDrop,
   toRole,

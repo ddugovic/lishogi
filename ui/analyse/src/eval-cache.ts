@@ -1,4 +1,4 @@
-import { type Prop, defined, prop } from 'common/common';
+import { defined, type Prop, prop } from 'common/common';
 import throttle from 'common/throttle';
 
 export interface EvalCache {

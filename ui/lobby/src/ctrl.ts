@@ -18,7 +18,7 @@ import type {
 import * as seekRepo from './seek-repo';
 import SetupCtrl from './setup/ctrl';
 import LobbySocket from './socket';
-import { type Stores, make as makeStores } from './store';
+import { make as makeStores, type Stores } from './store';
 import { action } from './util';
 import variantConfirm from './variant';
 import * as xhr from './xhr';

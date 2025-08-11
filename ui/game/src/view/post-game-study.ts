@@ -2,7 +2,7 @@ import { modal } from 'common/modal';
 import { onInsert } from 'common/snabbdom';
 import { debounce } from 'common/timings';
 import { i18n } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 
 export function studyModal(gameId: string, orientation: Color, onClose: () => void): VNode {
   return modal({

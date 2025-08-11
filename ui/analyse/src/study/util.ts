@@ -1,4 +1,4 @@
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 
 export function formButton(name: string): VNode {
   return h(

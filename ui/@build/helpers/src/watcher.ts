@@ -1,4 +1,4 @@
-import { type FSWatcher, type WatchEventType, existsSync, watch as fswatch } from 'node:fs';
+import { existsSync, type FSWatcher, watch as fswatch, type WatchEventType } from 'node:fs';
 import path from 'node:path';
 
 export function watchers(

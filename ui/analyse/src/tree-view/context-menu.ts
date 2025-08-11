@@ -1,6 +1,6 @@
 import { bind, onInsert } from 'common/snabbdom';
 import { i18n } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type AnalyseCtrl from '../ctrl';
 import patch from '../patch';
 import * as studyView from '../study/study-view';

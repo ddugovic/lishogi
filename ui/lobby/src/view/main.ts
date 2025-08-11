@@ -1,6 +1,6 @@
-import { type MaybeVNode, type MaybeVNodes, dataIcon } from 'common/snabbdom';
+import { dataIcon, type MaybeVNode, type MaybeVNodes } from 'common/snabbdom';
 import spinner from 'common/spinner';
-import { type VNode, type VNodeData, h } from 'snabbdom';
+import { h, type VNode, type VNodeData } from 'snabbdom';
 import type LobbyController from '../ctrl';
 import { setupModal } from '../setup/view';
 import renderPlaying from './playing';

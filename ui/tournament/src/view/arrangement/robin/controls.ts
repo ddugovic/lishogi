@@ -1,6 +1,6 @@
 import type { MaybeVNode } from 'common/snabbdom';
 import { i18n } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type TournamentController from '../../../ctrl';
 import * as buttons from '../../button';
 

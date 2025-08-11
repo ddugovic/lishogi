@@ -2,18 +2,16 @@ import { useJp } from 'common/common';
 import { initOneWithState, update } from 'common/mini-board';
 import { modal } from 'common/modal';
 import { getPerfIcon } from 'common/perf-icons';
-import { type MaybeVNodes, bind, dataIcon } from 'common/snabbdom';
+import { bind, dataIcon, type MaybeVNodes } from 'common/snabbdom';
 import spinner from 'common/spinner';
 import { i18n } from 'i18n';
 import { i18nPerf } from 'i18n/perf';
 import { colorName } from 'shogi/color-name';
 import { sfenColor } from 'shogi/common';
 import { findHandicaps } from 'shogiops/handicaps';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type SetupCtrl from './ctrl';
 import {
-  Position,
-  TimeMode,
   aiLevelChoices,
   byoChoices,
   colorChoices,
@@ -25,12 +23,14 @@ import {
   maxRatingChoices,
   minRatingChoices,
   modeChoicesTranslated,
+  Position,
   periodChoices,
   positionChoicesTranslated,
   radioGroup,
   select,
   selectNvui,
   slider,
+  TimeMode,
   timeChoices,
   timeModeChoicesTranslated,
   variantChoicesTranslated,

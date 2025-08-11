@@ -1,5 +1,5 @@
 import { loadLishogiScript } from 'common/assets';
-import { type Prop, defined, prop } from 'common/common';
+import { defined, type Prop, prop } from 'common/common';
 import { modal } from 'common/modal';
 import { bind, bindSubmit, onInsert } from 'common/snabbdom';
 import { spinnerHtml } from 'common/spinner';
@@ -8,7 +8,7 @@ import { i18n, i18nFormat } from 'i18n';
 import { i18nVariant } from 'i18n/variant';
 import { colorName } from 'shogi/color-name';
 import { RULES } from 'shogiops/constants';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type AnalyseCtrl from '../ctrl';
 import { option } from '../util';
 import type { StudyChapterMeta } from './interfaces';

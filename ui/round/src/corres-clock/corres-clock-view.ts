@@ -1,6 +1,6 @@
 import * as status from 'game/status';
 import { i18n, i18nPluralSame } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type { Millis } from '../clock/clock-ctrl';
 import type { Position } from '../interfaces';
 import { moretime } from '../view/button';

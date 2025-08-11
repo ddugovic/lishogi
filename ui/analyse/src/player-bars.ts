@@ -4,7 +4,7 @@ import { i18n, i18nFormat } from 'i18n';
 import { colorName } from 'shogi/color-name';
 import { engineNameFromCode } from 'shogi/engine-name';
 import { COLORS } from 'shogiops/constants';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import { ops as treeOps } from 'tree';
 import { renderClockOf } from './clocks';
 import type AnalyseCtrl from './ctrl';

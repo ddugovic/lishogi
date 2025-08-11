@@ -1,7 +1,7 @@
 import { isMoreThanText } from 'common/rich-text';
 import { bind } from 'common/snabbdom';
 import { i18n, i18nFormat } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type MsgCtrl from '../ctrl';
 import type { Convo, Daily, Msg } from '../interfaces';
 import { msgEnhance } from './enhance';

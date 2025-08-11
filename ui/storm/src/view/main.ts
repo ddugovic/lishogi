@@ -4,7 +4,7 @@ import { makeSgOpts } from 'puz/run';
 import renderClock from 'puz/view/clock';
 import { makeConfig as makeSgConfig } from 'puz/view/shogiground';
 import { playModifiers, renderCombo } from 'puz/view/util';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import config from '../config';
 import type StormCtrl from '../ctrl';
 import renderEnd from './end';

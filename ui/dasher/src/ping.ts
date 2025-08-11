@@ -1,6 +1,6 @@
 import { defined } from 'common/common';
 import { i18n } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 
 interface PingData {
   ping: number | undefined;

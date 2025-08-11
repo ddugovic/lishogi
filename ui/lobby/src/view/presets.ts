@@ -3,7 +3,7 @@ import { bind } from 'common/snabbdom';
 import { i18n, i18nFormat, i18nPluralSame } from 'i18n';
 import { i18nPerf } from 'i18n/perf';
 import { engineName } from 'shogi/engine-name';
-import { type Hooks, type VNode, type VNodes, h } from 'snabbdom';
+import { type Hooks, h, type VNode, type VNodes } from 'snabbdom';
 import type LobbyController from '../ctrl';
 import type { Hook, Preset, PresetOpts, Seek } from '../interfaces';
 

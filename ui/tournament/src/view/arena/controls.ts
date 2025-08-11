@@ -1,4 +1,4 @@
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type TournamentController from '../../ctrl';
 import type { PageData } from '../../interfaces';
 import * as pagination from '../../pagination';

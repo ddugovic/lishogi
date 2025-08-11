@@ -1,4 +1,4 @@
-import { type VNode, attributesModule, classModule, init } from 'snabbdom';
+import { attributesModule, classModule, init, type VNode } from 'snabbdom';
 import makeCtrl from '../ctrl';
 import type { ChallengeData, ChallengeOpts, Ctrl } from '../interfaces';
 import { loaded, loading } from '../view';

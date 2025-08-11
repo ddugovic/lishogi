@@ -1,7 +1,7 @@
-import { type MaybeVNode, bind } from 'common/snabbdom';
+import { bind, type MaybeVNode } from 'common/snabbdom';
 import { i18n, i18nFormatCapitalized } from 'i18n';
 import { colorName } from 'shogi/color-name';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type { Controller } from '../interfaces';
 import afterView from './after';
 

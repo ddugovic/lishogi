@@ -1,5 +1,5 @@
 import { loadChushogiPieceSprite, loadKyotoshogiPieceSprite } from 'common/assets';
-import { type Prop, defined, prop } from 'common/common';
+import { defined, type Prop, prop } from 'common/common';
 import { analysis, editor } from 'common/links';
 import { Shogiground } from 'shogiground';
 import type { Api as SgApi } from 'shogiground/api';

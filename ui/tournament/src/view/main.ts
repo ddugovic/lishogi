@@ -1,7 +1,7 @@
 import { makeChat } from 'chat';
 import { type MaybeVNodes, onInsert } from 'common/snabbdom';
 import { i18n } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type TournamentController from '../ctrl';
 import { joinWithTeamSelector } from './arena/battle';
 import { teamInfoModal } from './arena/team-info';

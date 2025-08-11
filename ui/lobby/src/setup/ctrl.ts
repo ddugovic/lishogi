@@ -8,19 +8,19 @@ import { parseSfen } from 'shogiops/sfen';
 import type LobbyController from '../ctrl';
 import { type FormStore, makeStore } from '../form';
 import {
-  Mode,
-  Position,
-  TimeMode,
   aiLevelChoices,
   byoChoices,
   dayChoices,
   dayExtraChoices,
   incChoices,
+  Mode,
   maxRatingChoices,
   minRatingChoices,
   modeChoices,
+  Position,
   periodChoices,
   positionChoices,
+  TimeMode,
   timeChoices,
   timeModeChoices,
 } from './util';

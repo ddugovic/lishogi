@@ -5,7 +5,7 @@ import { makeNotationLine } from 'shogi/notation';
 import { COLORS } from 'shogiops/constants';
 import { initialSfen } from 'shogiops/sfen';
 import { allRoles } from 'shogiops/variant/util';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type InsightCtrl from '../../ctrl';
 import type { InsightFilter, MovesResult, WinRate } from '../../types';
 import { toPercentage } from '../../util';

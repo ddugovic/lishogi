@@ -1,6 +1,6 @@
 import { idleTimer } from 'common/timings';
 import type { Applicant, SimulData, SimulOpts } from './interfaces';
-import { type SimulSocket, makeSocket } from './socket';
+import { makeSocket, type SimulSocket } from './socket';
 import xhr from './xhr';
 
 export default class SimulCtrl {

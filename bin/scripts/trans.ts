@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { execSync } from 'node:child_process';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readdir, readFile, writeFile } from 'node:fs/promises';
 import * as path from 'node:path';
 import { parseStringPromise } from 'xml2js';
 

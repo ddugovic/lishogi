@@ -1,8 +1,8 @@
 import { type Prop, prop } from 'common/common';
 import { modal } from 'common/modal';
-import { type MaybeVNodes, bindNonPassive, bindSubmit } from 'common/snabbdom';
+import { bindNonPassive, bindSubmit, type MaybeVNodes } from 'common/snabbdom';
 import { i18n } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import { emptyRedButton } from '../util';
 import type { StudyData } from './interfaces';
 import { formButton } from './util';

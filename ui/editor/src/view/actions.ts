@@ -3,7 +3,7 @@ import { colorName } from 'shogi/color-name';
 import { initialSfen } from 'shogiops/sfen';
 import { opposite } from 'shogiops/util';
 import { handRoles } from 'shogiops/variant/util';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type EditorCtrl from '../ctrl';
 import type { EditorState } from '../interfaces';
 
@@ -40,7 +40,7 @@ function clearBoard(ctrl: EditorCtrl, state: EditorState): VNode {
     {
       attrs: { 'data-icon': 'q' },
       class: {
-        disabled: /^[0-9\/]+$/.test(state.sfen.split(' ')[0]) && state.sfen.split(' ')[2] === '-',
+        disabled: /^[0-9/]+$/.test(state.sfen.split(' ')[0]) && state.sfen.split(' ')[2] === '-',
       },
       on: {
         click() {

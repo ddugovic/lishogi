@@ -4,7 +4,7 @@ import eachDayOfInterval from 'date-fns/eachDayOfInterval';
 import format from 'date-fns/format';
 import getHours from 'date-fns/getHours';
 import getMinutes from 'date-fns/getMinutes';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type { Ctrl, Lanes, Tournament } from './interfaces';
 
 function tournamentClass(tour: Tournament, day: Date) {

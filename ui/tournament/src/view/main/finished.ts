@@ -3,7 +3,7 @@ import type { MaybeVNode, MaybeVNodes } from 'common/snabbdom';
 import { once } from 'common/storage';
 import { i18n, i18nFormatCapitalized } from 'i18n';
 import { colorName } from 'shogi/color-name';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type TournamentController from '../../ctrl';
 import type { TournamentDataFull } from '../../interfaces';
 import * as pagination from '../../pagination';

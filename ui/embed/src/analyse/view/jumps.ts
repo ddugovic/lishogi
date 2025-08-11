@@ -1,6 +1,6 @@
 import { bindMobileMousedown } from 'common/mobile';
 import { onInsert } from 'common/snabbdom';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type { AnalyseCtrl } from '../ctrl';
 
 export function renderJumps(ctrl: AnalyseCtrl): VNode {

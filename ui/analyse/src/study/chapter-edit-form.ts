@@ -1,10 +1,10 @@
-import { type Prop, defined, prop } from 'common/common';
+import { defined, type Prop, prop } from 'common/common';
 import { modal } from 'common/modal';
 import { bind, bindSubmit, onInsert } from 'common/snabbdom';
 import spinner from 'common/spinner';
 import { i18n } from 'i18n';
 import { colorName } from 'shogi/color-name';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import { emptyRedButton, option } from '../util';
 import * as chapterForm from './chapter-new-form';
 import type { StudyChapterConfig, StudyChapterMeta } from './interfaces';

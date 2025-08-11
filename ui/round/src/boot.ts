@@ -15,8 +15,8 @@ export function boot(
   const element = document.querySelector('.round__app') as HTMLElement;
   const data: RoundData = opts.data;
 
-  let ctrl: RoundController | undefined = undefined;
-  let chat: ChatCtrl | undefined = undefined;
+  let ctrl: RoundController | undefined;
+  let chat: ChatCtrl | undefined;
   if (data.tournament) $('body').data('tournament-id', data.tournament.id);
 
   function startTournamentClock() {

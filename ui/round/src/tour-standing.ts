@@ -2,7 +2,7 @@ import type { ChatPlugin } from 'chat/interfaces';
 import { loadCssPath } from 'common/assets';
 import type { Team, TourPlayer } from 'game/interfaces';
 import { i18n } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import { onInsert } from './util';
 
 export interface TourStandingCtrl extends ChatPlugin {

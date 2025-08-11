@@ -8,7 +8,7 @@ import {
   loadKyotoshogiPieceSprite,
   loadLishogiScript,
 } from 'common/assets';
-import { type Prop, defined, prop, requestIdleCallbackWithFallback } from 'common/common';
+import { defined, type Prop, prop, requestIdleCallbackWithFallback } from 'common/common';
 import { analysis } from 'common/links';
 import { getPerfIcon } from 'common/perf-icons';
 import { type StoredBooleanProp, storedProp } from 'common/storage';
@@ -39,7 +39,7 @@ import { makeSquareName, makeUsi, opposite, parseSquareName, squareDist } from '
 import type { Chushogi } from 'shogiops/variant/chushogi';
 import type { Position, PositionError } from 'shogiops/variant/position';
 import { promotableOnDrop, promote } from 'shogiops/variant/util';
-import { type TreeWrapper, build as makeTree, ops as treeOps, path as treePath } from 'tree';
+import { build as makeTree, type TreeWrapper, ops as treeOps, path as treePath } from 'tree';
 import { Ctrl as ActionMenuCtrl } from './action-menu';
 import { compute as computeAutoShapes } from './auto-shape';
 import { Autoplay, type AutoplayDelay } from './autoplay';
@@ -51,9 +51,9 @@ import { makeConfig } from './ground';
 import type { AnalyseData, AnalyseOpts, NvuiPlugin, ServerEvalData } from './interfaces';
 import * as keyboard from './keyboard';
 import { nextGlyphSymbol } from './node-finder';
-import { type PracticeCtrl, make as makePractice } from './practice/practice-ctrl';
-import { type RetroCtrl, make as makeRetro } from './retrospect/retro-ctrl';
-import { type Socket, make as makeSocket } from './socket';
+import { make as makePractice, type PracticeCtrl } from './practice/practice-ctrl';
+import { make as makeRetro, type RetroCtrl } from './retrospect/retro-ctrl';
+import { make as makeSocket, type Socket } from './socket';
 import * as speech from './speech';
 import type GamebookPlayCtrl from './study/gamebook/gamebook-play-ctrl';
 import type { StudyCtrl } from './study/interfaces';
@@ -228,7 +228,7 @@ export default class AnalyseCtrl {
     this.ongoing = !this.synthetic && game.playable(data);
 
     if (this.data.game.variant.key === 'chushogi') loadChushogiPieceSprite();
-    else if (this.data.game.variant.key == 'kyotoshogi') loadKyotoshogiPieceSprite();
+    else if (this.data.game.variant.key === 'kyotoshogi') loadKyotoshogiPieceSprite();
 
     const prevTree = merge && this.tree.root;
     this.tree = makeTree(treeOps.reconstruct(this.data.treeParts));

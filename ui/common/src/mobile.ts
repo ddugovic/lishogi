@@ -81,7 +81,7 @@ export function isCol1(): boolean {
   return isCol1Cache;
 }
 
-let hoverable: boolean | undefined = undefined;
+let hoverable: boolean | undefined;
 export function isHoverable(): boolean {
   if (hoverable === undefined)
     hoverable =

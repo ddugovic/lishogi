@@ -1,5 +1,5 @@
 import * as winningChances from 'ceval/winning-chances';
-import { type Prop, isEmpty, prop } from 'common/common';
+import { isEmpty, type Prop, prop } from 'common/common';
 import { opposite } from 'shogiground/util';
 import { path as treePath } from 'tree';
 import type AnalyseCtrl from '../ctrl';

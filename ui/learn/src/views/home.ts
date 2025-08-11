@@ -1,5 +1,5 @@
 import { i18n, i18nFormat } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import { categories } from '../categories';
 import type LearnCtrl from '../ctrl';
 import type { Stage } from '../interfaces';

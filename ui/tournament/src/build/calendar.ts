@@ -1,4 +1,4 @@
-import { type VNode, attributesModule, classModule, init } from 'snabbdom';
+import { attributesModule, classModule, init, type VNode } from 'snabbdom';
 import type { Ctrl } from '../calendar/interfaces';
 import view from '../calendar/view';
 

@@ -1,7 +1,7 @@
 import { bind } from 'common/snabbdom';
 import throttle from 'common/throttle';
 import { allGlyphs } from 'shogi/glyphs';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type AnalyseCtrl from '../ctrl';
 
 export interface GlyphCtrl {

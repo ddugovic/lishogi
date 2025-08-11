@@ -6,11 +6,11 @@ import { commands } from 'nvui/command';
 import { Notify } from 'nvui/notify';
 import { renderSetting } from 'nvui/setting';
 import {
-  type Style,
   renderBoard,
   renderHand,
   renderMove,
   renderPieces,
+  type Style,
   styleSetting,
   supportedVariant,
   validUsi,
@@ -18,7 +18,7 @@ import {
 import { engineNameFromCode } from 'shogi/engine-name';
 import { Shogiground } from 'shogiground';
 import { opposite } from 'shogiground/util';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import { renderClock } from '../clock/clock-view';
 import renderCorresClock from '../corres-clock/corres-clock-view';
 import type RoundController from '../ctrl';

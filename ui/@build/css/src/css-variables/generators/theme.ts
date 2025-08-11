@@ -1,7 +1,7 @@
 import { writeFile } from 'node:fs/promises';
 import * as path from 'node:path';
 import { prefix, signature, themes } from '../constants.js';
-import { type ThemeRecord, defaultTheme } from '../types.js';
+import { defaultTheme, type ThemeRecord } from '../types.js';
 
 export async function generateThemeVariables(
   rootDir: string,

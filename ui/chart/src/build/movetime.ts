@@ -3,9 +3,9 @@ import { cssVar } from 'common/styles';
 import { plyOffset } from 'game/game';
 import { i18nPluralSame } from 'i18n';
 import {
-  type MovePoint,
   axisOpts,
   goteColor,
+  type MovePoint,
   maybeChart,
   plyLine,
   primaryColor,

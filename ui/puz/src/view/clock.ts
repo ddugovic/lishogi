@@ -1,5 +1,5 @@
 import { defined } from 'common/common';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type { Run, TimeMod } from '../interfaces';
 import { getNow } from '../util';
 

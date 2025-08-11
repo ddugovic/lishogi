@@ -1,6 +1,6 @@
 import { defined } from 'common/common';
 import type { MaybeVNode } from 'common/snabbdom';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type AnalyseCtrl from './ctrl';
 
 export function renderClockOf(ctrl: AnalyseCtrl, color: Color): MaybeVNode {

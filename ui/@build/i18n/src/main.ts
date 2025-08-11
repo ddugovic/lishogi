@@ -2,7 +2,7 @@ import type { WatchEventType } from 'node:fs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { workspaceBuildConductor } from '@build/helpers/workspace-builder';
-import { type Project, getPackageFromPath } from '@build/helpers/workspace-packages';
+import { getPackageFromPath, type Project } from '@build/helpers/workspace-packages';
 import { defaultLang, otherLangs } from './constants.js';
 import { extractI18nKeysFromPackage } from './parser/extractor.js';
 import { quantity } from './quantity.js';

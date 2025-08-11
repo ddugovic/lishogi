@@ -4,7 +4,7 @@ import type { MaybeVNodes } from 'common/snabbdom';
 import throttle from 'common/throttle';
 import { i18n } from 'i18n';
 import { notationsWithColor } from 'shogi/notation';
-import { type Classes, type VNode, h } from 'snabbdom';
+import { type Classes, h, type VNode } from 'snabbdom';
 import { path as treePath } from 'tree';
 import type { Controller } from '../interfaces';
 

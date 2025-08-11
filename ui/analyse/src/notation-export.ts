@@ -27,7 +27,7 @@ function makeKifNodes(node: Tree.Node, pos: Position, offset: number): string[] 
 
   const mainline = treeOps.mainlineNodeList(node);
   const padding = mainline.length.toString().length;
-  let lastDest: Square | undefined = undefined;
+  let lastDest: Square | undefined;
   const timesSoFar: number[] = [0, 0];
 
   const moveNumberSuf = pos.rules === 'chushogi' ? '手目' : '';
@@ -201,7 +201,7 @@ function processCsaTags(tags: string[][]): string[] {
       case 'site':
         return `$SITE:${tagWithValue[1]}`;
       case 'timecontrol':
-        return `$TIME_LIMIT:${tagWithValue[1].replace(/[^\d+\|]/g, '')}`;
+        return `$TIME_LIMIT:${tagWithValue[1].replace(/[^\d+|]/g, '')}`;
       case 'opening':
         return `$OPENING:${tagWithValue[1]}`;
       case 'sente':

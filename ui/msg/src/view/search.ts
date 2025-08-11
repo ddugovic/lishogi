@@ -1,7 +1,7 @@
 import { hookMobileMousedown } from 'common/mobile';
 import throttle from 'common/throttle';
 import { i18n } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type MsgCtrl from '../ctrl';
 import type { SearchResult, User } from '../interfaces';
 import renderContacts from './contact';

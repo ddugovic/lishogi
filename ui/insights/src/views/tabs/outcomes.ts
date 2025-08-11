@@ -1,5 +1,5 @@
 import { i18n, i18nPluralSame } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type InsightCtrl from '../../ctrl';
 import type { CounterObj, OutcomeResult, StatusId } from '../../types';
 import { toPercentage } from '../../util';

@@ -1,4 +1,4 @@
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 
 export type Close = () => void;
 export type Open = (sub: string) => void;

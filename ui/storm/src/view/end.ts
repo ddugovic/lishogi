@@ -4,7 +4,7 @@ import { onInsert } from 'common/snabbdom';
 import { i18n, i18nFormat } from 'i18n';
 import { getNow } from 'puz/util';
 import { toColor } from 'shogiops/util';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type StormCtrl from '../ctrl';
 
 const renderEnd = (ctrl: StormCtrl): VNode[] => [...renderSummary(ctrl), renderHistory(ctrl)];

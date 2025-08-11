@@ -6,7 +6,7 @@ import throttle from 'common/throttle';
 import { playable } from 'game/game';
 import { i18n, i18nFormat } from 'i18n';
 import { usiToNotation } from 'shogi/notation';
-import { type Hooks, type VNode, h } from 'snabbdom';
+import { type Hooks, h, type VNode } from 'snabbdom';
 import { path as treePath } from 'tree';
 import type AnalyseCtrl from '../ctrl';
 import { authorText as commentAuthorText } from '../study/study-comments';

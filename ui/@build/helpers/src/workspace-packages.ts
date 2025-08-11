@@ -1,7 +1,7 @@
 import { findWorkspaceDir } from '@pnpm/find-workspace-dir';
 import {
-  type Project as OriginalProject,
   findWorkspacePackages,
+  type Project as OriginalProject,
 } from '@pnpm/workspace.find-packages';
 
 export type Project = OriginalProject & {

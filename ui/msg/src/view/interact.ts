@@ -1,7 +1,7 @@
 import { hasTouchEvents } from 'common/mobile';
 import { bindSubmit } from 'common/snabbdom';
 import throttle from 'common/throttle';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type MsgCtrl from '../ctrl';
 import type { User } from '../interfaces';
 

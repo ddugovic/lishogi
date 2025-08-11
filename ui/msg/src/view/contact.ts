@@ -1,5 +1,5 @@
 import { hookMobileMousedown } from 'common/mobile';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type MsgCtrl from '../ctrl';
 import type { Contact, LastMsg } from '../interfaces';
 import { userIcon, userName } from './util';

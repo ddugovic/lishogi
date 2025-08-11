@@ -1,8 +1,8 @@
-import { type MaybeVNodes, bind, dataIcon } from 'common/snabbdom';
+import { bind, dataIcon, type MaybeVNodes } from 'common/snabbdom';
 import spinner from 'common/spinner';
 import { i18n, i18nFormat, i18nPluralSame } from 'i18n';
 import { makeNotationLine, notationsWithColor } from 'shogi/notation';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type AnalyseCtrl from '../ctrl';
 import type { ForecastCtrl, ForecastStep } from './interfaces';
 

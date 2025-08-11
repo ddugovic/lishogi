@@ -5,7 +5,7 @@ import { anim } from 'shogiground/anim';
 import type { Api as SgApi } from 'shogiground/api';
 import { userDrop, userMove } from 'shogiground/board';
 import type { Role, Square } from 'shogiops/types';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 
 export type KeyboardMoveHandler = (
   variant: VariantKey,

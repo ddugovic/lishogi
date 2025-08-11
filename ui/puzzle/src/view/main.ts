@@ -3,7 +3,7 @@ import { bindMobileMousedown } from 'common/mobile';
 import { bindNonPassive, onInsert } from 'common/snabbdom';
 import stepwiseScroll from 'common/wheel';
 import { render as renderKeyboardMove } from 'keyboard-move';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import * as control from '../control';
 import type { Controller } from '../interfaces';
 import feedbackView from './feedback';

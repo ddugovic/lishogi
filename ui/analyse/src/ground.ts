@@ -15,7 +15,7 @@ import {
   promotableOnDrop,
   promote as shogiPromote,
 } from 'shogiops/variant/util';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type AnalyseCtrl from './ctrl';
 
 export function renderBoard(ctrl: AnalyseCtrl): VNode {

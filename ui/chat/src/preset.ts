@@ -1,6 +1,6 @@
 import { useJp } from 'common/common';
 import { bind } from 'common/snabbdom';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 
 export interface PresetCtrl {
   group(): string | undefined;

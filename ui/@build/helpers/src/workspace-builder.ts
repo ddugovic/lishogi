@@ -2,7 +2,7 @@ import type { FSWatcher, WatchEventType } from 'node:fs';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import { watchers } from './watcher.js';
-import { type Project, getPackages, getRootDir } from './workspace-packages.js';
+import { getPackages, getRootDir, type Project } from './workspace-packages.js';
 
 interface WorkspaceBuilder {
   all: () => Promise<void>;

@@ -1,11 +1,11 @@
 import { notEmpty } from 'common/common';
 import { editor, encodeSfen, setup } from 'common/links';
 import { modal } from 'common/modal';
-import { type MaybeVNodes, bind, bindNonPassive, dataIcon } from 'common/snabbdom';
+import { bind, bindNonPassive, dataIcon, type MaybeVNodes } from 'common/snabbdom';
 import { imported } from 'game/game';
 import { cont as contRoute } from 'game/router';
 import { i18n } from 'i18n';
-import { type Hooks, type VNode, h } from 'snabbdom';
+import { type Hooks, h, type VNode } from 'snabbdom';
 import type { AutoplayDelay } from './autoplay';
 import { type BoolSetting, boolSetting } from './bool-setting';
 import type AnalyseCtrl from './ctrl';

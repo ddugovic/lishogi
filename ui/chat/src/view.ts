@@ -1,7 +1,7 @@
 import { loadLishogiScript } from 'common/assets';
 import { bind } from 'common/snabbdom';
 import { i18n } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import discussionView from './discussion';
 import type { ChatCtrl, Tab } from './interfaces';
 import { moderationView } from './moderation';

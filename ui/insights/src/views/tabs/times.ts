@@ -1,6 +1,6 @@
 import { i18n } from 'i18n';
 import { allRoles } from 'shogiops/variant/util';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type InsightCtrl from '../../ctrl';
 import type { InsightFilter, TimesResult } from '../../types';
 import { fixed } from '../../util';

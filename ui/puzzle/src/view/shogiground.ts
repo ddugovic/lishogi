@@ -4,7 +4,7 @@ import type { Config as SgConfig } from 'shogiground/config';
 import type { Piece, Role } from 'shogiops/types';
 import { parseSquareName } from 'shogiops/util';
 import { pieceCanPromote, pieceForcePromote, promote } from 'shogiops/variant/util';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type { Controller } from '../interfaces';
 
 export function renderBoard(ctrl: Controller): VNode {

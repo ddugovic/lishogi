@@ -1,5 +1,5 @@
 import spinner from 'common/spinner';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import { view as backgroundView } from './background';
 import { view as customBackgroundView } from './custom-background';
 import { view as customThemeView } from './custom-theme';

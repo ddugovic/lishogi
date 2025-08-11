@@ -1,10 +1,10 @@
 import { bind } from 'common/snabbdom';
 import { i18n } from 'i18n';
 import { colorName } from 'shogi/color-name';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type InsightCtrl from '../../ctrl';
 import type { CustomResult, InsightCustom } from '../../types';
-import { type MyChartDataset, barChart } from '../charts';
+import { barChart, type MyChartDataset } from '../charts';
 import { accent, accuracy, bright, green, primary, red, total } from '../colors';
 import { translateStatusName } from '../util';
 

@@ -1,6 +1,6 @@
-import { type MaybeVNodes, dataIcon } from 'common/snabbdom';
+import { dataIcon, type MaybeVNodes } from 'common/snabbdom';
 import { i18n } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type TournamentController from '../../ctrl';
 import type { ArenaPlayer, PageData } from '../../interfaces';
 import { preloadUserTips, player as renderPlayer } from '../util';

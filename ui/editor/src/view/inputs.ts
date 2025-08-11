@@ -2,7 +2,7 @@ import { i18n } from 'i18n';
 import { makeCsaHeader, parseCsaHeader } from 'shogiops/notation/csa';
 import { makeKifHeader, parseKifHeader } from 'shogiops/notation/kif';
 import { makeSfen, parseSfen } from 'shogiops/sfen';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type EditorCtrl from '../ctrl';
 
 export function inputs(ctrl: EditorCtrl, sfen: string): VNode | undefined {

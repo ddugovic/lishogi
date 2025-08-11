@@ -4,7 +4,7 @@ import { escapeHtml } from './string';
 
 // from https://github.com/bryanwoods/autolink-js/blob/master/autolink.js
 export const linkRegex: RegExp =
-  /(^|[\s\n]|<[A-Za-z]*\/?>)((?:(?:https?|ftp):\/\/|lishogi\.org)[\-A-Z0-9+\u0026\u2019@#\/%?=()~_|!:,.;]*[\-A-Z0-9+\u0026@#\/%=~()_|])/gi;
+  /(^|[\s\n]|<[A-Za-z]*\/?>)((?:(?:https?|ftp):\/\/|lishogi\.org)[-A-Z0-9+\u0026\u2019@#/%?=()~_|!:,.;]*[-A-Z0-9+\u0026@#/%=~()_|])/gi;
 export const newLineRegex: RegExp = /\n/g;
 
 // looks like it has a @mention or #gameid or a url.tld
@@ -58,9 +58,8 @@ export function richHTML(text: string, newLines = true): Hooks {
   return innerHTML(text, t => enrichText(t, newLines));
 }
 
-const linkPattern =
-  /\b\b(?:https?:\/\/)?(lishogi\.org\/[-–—\w+&'@#\/%?=()~|!:,.;]+[\w+&@#\/%=~|])/gi;
-const movePattern = /\b(\d+)\s*(\.)\s*(([1-9][a-i])[1-9][a-i](\+|=)?)[!\?]{0,5}/gi;
+const linkPattern = /\b\b(?:https?:\/\/)?(lishogi\.org\/[-–—\w+&'@#/%?=()~|!:,.;]+[\w+&@#/%=~|])/gi;
+const movePattern = /\b(\d+)\s*(\.)\s*(([1-9][a-i])[1-9][a-i](\+|=)?)[!?]{0,5}/gi;
 function moveReplacer(match: string, turn: number) {
   if (turn < 1 || turn > 200) return match;
   const ply = turn - 1;

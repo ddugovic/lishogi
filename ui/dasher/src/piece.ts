@@ -1,8 +1,8 @@
 import { assetUrl, loadCss } from 'common/assets';
 import { i18n } from 'i18n';
 import { i18nVariant } from 'i18n/variant';
-import { type VNode, h } from 'snabbdom';
-import { type Close, bind, header } from './util';
+import { h, type VNode } from 'snabbdom';
+import { bind, type Close, header } from './util';
 
 type PieceSetKey = string;
 type PieceSet = {

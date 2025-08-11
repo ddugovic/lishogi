@@ -1,4 +1,4 @@
-import { type MaybeVNodes, bind } from 'common/snabbdom';
+import { bind, type MaybeVNodes } from 'common/snabbdom';
 import { i18n, i18nPluralSame } from 'i18n';
 import { h } from 'snabbdom';
 import type LobbyController from '../ctrl';

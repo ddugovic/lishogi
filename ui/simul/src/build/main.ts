@@ -1,4 +1,4 @@
-import { type VNode, attributesModule, classModule, init } from 'snabbdom';
+import { attributesModule, classModule, init, type VNode } from 'snabbdom';
 import { boot } from '../boot';
 import SimulCtrl from '../ctrl';
 import type { SimulOpts } from '../interfaces';

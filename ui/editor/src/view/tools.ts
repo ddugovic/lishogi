@@ -7,7 +7,7 @@ import { RULES } from 'shogiops/constants';
 import { findHandicaps, isHandicap } from 'shogiops/handicaps';
 import type { Handicap, Role, Rules } from 'shogiops/types';
 import { defaultPosition } from 'shogiops/variant/variant';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type EditorCtrl from '../ctrl';
 import type { EditorState } from '../interfaces';
 

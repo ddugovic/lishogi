@@ -1,8 +1,8 @@
 import { numberFormat } from 'common/number';
-import { type MaybeVNode, dataIcon, onInsert } from 'common/snabbdom';
+import { dataIcon, type MaybeVNode, onInsert } from 'common/snabbdom';
 import { i18n, i18nVdom, i18nVdomPlural } from 'i18n';
 import { engineNameFromCode } from 'shogi/engine-name';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type {
   Controller,
   Puzzle,

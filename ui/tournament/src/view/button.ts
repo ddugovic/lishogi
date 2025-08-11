@@ -1,4 +1,4 @@
-import { type MaybeVNode, bind } from 'common/snabbdom';
+import { bind, type MaybeVNode } from 'common/snabbdom';
 import { i18n } from 'i18n';
 import { h } from 'snabbdom';
 import type TournamentController from '../ctrl';

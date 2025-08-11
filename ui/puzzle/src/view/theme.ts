@@ -1,6 +1,6 @@
-import { type MaybeVNode, bind, dataIcon } from 'common/snabbdom';
+import { bind, dataIcon, type MaybeVNode } from 'common/snabbdom';
 import { i18n } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type { Controller, RoundThemes, ThemeKey } from '../interfaces';
 
 // const studyUrl = 'https://lishogi.org/study/viiWlKjv'; // change

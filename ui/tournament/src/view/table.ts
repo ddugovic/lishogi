@@ -1,6 +1,6 @@
 import { bind } from 'common/snabbdom';
 import { opposite } from 'shogiground/util';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type TournamentController from '../ctrl';
 import type {
   Duel,

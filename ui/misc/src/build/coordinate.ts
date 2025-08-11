@@ -154,7 +154,7 @@ function main(opts: CoordinatesOpts): void {
   };
 
   const tick = () => {
-    const spent = Math.min(duration, new Date().getTime() - startAt.getTime());
+    const spent = Math.min(duration, Date.now() - startAt.getTime());
     const left = ((duration - spent) / 1000).toFixed(1);
     if (+left < 10) {
       $timer.addClass('hurry');

@@ -1,8 +1,8 @@
-import { type MaybeVNodes, bind } from 'common/snabbdom';
+import { bind, type MaybeVNodes } from 'common/snabbdom';
 import { i18n, i18nFormatCapitalized, i18nVdom } from 'i18n';
 import { colorName } from 'shogi/color-name';
 import type { Outcome } from 'shogiops/types';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type AnalyseCtrl from '../ctrl';
 import type { Comment, PracticeCtrl, Verdict } from './practice-ctrl';
 

@@ -1,6 +1,6 @@
 import { type Prop, prop } from 'common/common';
 import throttle from 'common/throttle';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type AnalyseCtrl from '../ctrl';
 import { currentComments } from './study-comments';
 

@@ -7,7 +7,7 @@ export function boot(
   start: (opts: TournamentOpts) => TournamentController,
 ): TournamentController {
   $('body').data('tournament-id', opts.data.id);
-  let ctrl: TournamentController | undefined = undefined;
+  let ctrl: TournamentController | undefined;
 
   opts.socketSend = wsConnect(`/tournament/${opts.data.id}/socket/v4`, opts.data.socketVersion!, {
     receive: (t: string, d: any) => ctrl?.socket.receive(t, d),

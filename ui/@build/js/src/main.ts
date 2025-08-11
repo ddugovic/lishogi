@@ -3,7 +3,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { glob } from '@build/helpers/glob';
 import { workspaceBuildConductor } from '@build/helpers/workspace-builder';
-import { type Project, getPackageFromPath } from '@build/helpers/workspace-packages';
+import { getPackageFromPath, type Project } from '@build/helpers/workspace-packages';
 import type { BuildContext } from 'esbuild';
 import { createBuildContexts } from './build-context.js';
 

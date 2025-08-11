@@ -1,9 +1,9 @@
 import { loadCssPath } from 'common/assets';
 import { requestIdleCallbackWithFallback } from 'common/common';
-import { type MaybeVNodes, bind } from 'common/snabbdom';
+import { bind, type MaybeVNodes } from 'common/snabbdom';
 import throttle from 'common/throttle';
 import { i18n } from 'i18n';
-import { type Hooks, type VNode, h } from 'snabbdom';
+import { type Hooks, h, type VNode } from 'snabbdom';
 import * as control from '../../control';
 import type AnalyseCtrl from '../../ctrl';
 import { iconTag } from '../../util';

@@ -1,9 +1,8 @@
 import { initOneWithState } from 'common/mini-board';
 import { numberFormat } from 'common/number';
-import { bind, proverb } from 'common/snabbdom';
-import { type MaybeVNode, type MaybeVNodes, dataIcon } from 'common/snabbdom';
+import { bind, dataIcon, type MaybeVNode, type MaybeVNodes, proverb } from 'common/snabbdom';
 import { i18n } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type TournamentController from '../ctrl';
 import type { Arrangement, BasePlayer, Featured } from '../interfaces';
 

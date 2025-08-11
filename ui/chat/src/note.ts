@@ -1,7 +1,7 @@
 import spinner from 'common/spinner';
 import { debounce } from 'common/timings';
 import { i18n } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type { NoteCtrl, NoteOpts } from './interfaces';
 import * as xhr from './xhr';
 

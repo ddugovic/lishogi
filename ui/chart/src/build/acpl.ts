@@ -48,8 +48,7 @@ function main(
       let cp: number | undefined = node.eval && 0;
       if (node.eval?.mate)
         cp = node.eval.mate > 0 ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY;
-      else if (node.eval?.mate) cp = isSente ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY;
-      if (node.eval?.cp) cp = node.eval.cp;
+      else if (node.eval?.cp) cp = node.eval.cp;
       const offset = plyOffset(data as any);
 
       const winchance = winningChances.povChances('sente', { cp: cp });

@@ -2,7 +2,7 @@ import * as cevalView from 'ceval/view';
 import { makeChat } from 'chat';
 import { defined } from 'common/common';
 import { bindMobileMousedown, hasTouchEvents } from 'common/mobile';
-import { type MaybeVNode, bind, bindNonPassive, dataIcon, onInsert } from 'common/snabbdom';
+import { bind, bindNonPassive, dataIcon, type MaybeVNode, onInsert } from 'common/snabbdom';
 import spinner from 'common/spinner';
 import stepwiseScroll from 'common/wheel';
 import { playable } from 'game/game';
@@ -13,7 +13,7 @@ import statusView from 'game/view/status';
 import { i18n, i18nFormatCapitalized, i18nPluralSame } from 'i18n';
 import { colorName } from 'shogi/color-name';
 import { parseSfen } from 'shogiops/sfen';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import { path as treePath } from 'tree';
 import { render as acplView } from './acpl';
 import { view as actionMenu, continueWithModal } from './action-menu';
@@ -254,14 +254,16 @@ function dataAct(e: Event): string | null {
 
 function repeater(ctrl: AnalyseCtrl, action: 'prev' | 'next', e: Event) {
   const repeat = () => {
-    control[action](ctrl);
+    if (action === 'prev') control.prev(ctrl);
+    else control.next(ctrl);
     ctrl.redraw();
     delay = Math.max(100, delay - delay / 15);
     timeout = setTimeout(repeat, delay);
   };
   let delay = 350;
   let timeout = setTimeout(repeat, 500);
-  control[action](ctrl);
+  if (action === 'prev') control.prev(ctrl);
+  else control.next(ctrl);
   const eventName = e.type == 'touchstart' ? 'touchend' : 'mouseup';
   document.addEventListener(eventName, () => clearTimeout(timeout), {
     once: true,

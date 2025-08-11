@@ -1,6 +1,6 @@
 import { i18n } from 'i18n';
-import { type VNode, h } from 'snabbdom';
-import { type Open, bind, header } from './util';
+import { h, type VNode } from 'snabbdom';
+import { bind, header, type Open } from './util';
 
 type ThemeKey = string;
 type Theme = {

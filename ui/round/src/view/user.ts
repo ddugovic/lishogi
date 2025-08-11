@@ -3,7 +3,7 @@ import { i18n, i18nFormat } from 'i18n';
 import { colorName } from 'shogi/color-name';
 import { engineNameFromCode } from 'shogi/engine-name';
 import { isHandicap } from 'shogiops/handicaps';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type RoundController from '../ctrl';
 import type { Position } from '../interfaces';
 

@@ -1,7 +1,7 @@
 import { initOneWithState } from 'common/mini-board';
 import * as status from 'game/status';
 import { i18n, i18nFormat, i18nVdom } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type SimulCtrl from '../ctrl';
 import type { Pairing } from '../interfaces';
 

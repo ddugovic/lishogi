@@ -9,7 +9,7 @@ import { i18n, i18nFormatCapitalized } from 'i18n';
 import { colorName } from 'shogi/color-name';
 import { notationsWithColor } from 'shogi/notation';
 import { isHandicap } from 'shogiops/handicaps';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type RoundController from '../ctrl';
 import type { RoundData } from '../interfaces';
 import * as round from '../round';
@@ -22,7 +22,7 @@ const moveTag = 'm2';
 const autoScroll = throttle(100, (movesEl: HTMLElement, ctrl: RoundController) =>
   window.requestAnimationFrame(() => {
     if (ctrl.data.steps.length < minNumberOfMovesToScroll) return;
-    let st: number | undefined = undefined;
+    let st: number | undefined;
     if (ctrl.ply < 1) st = 0;
     else if (ctrl.ply == round.lastPly(ctrl.data)) st = scrollMax;
     else {

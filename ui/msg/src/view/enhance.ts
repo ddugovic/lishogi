@@ -6,7 +6,7 @@ const imgurRegex = /https?:\/\/(?:i\.)?imgur\.com\/(?!gallery\b)(\w{7})(?:\.jpe?
 const giphyRegex =
   /https:\/\/(?:media\.giphy\.com\/media\/|giphy\.com\/gifs\/(?:\w+-)*)(\w+)(?:\/giphy\.gif)?/;
 const teamMessageRegex =
-  /You received this because you are subscribed to messages of the team <a(?:[^>]+)>(?:[^\/]+)(.+)<\/a>\.$/;
+  /You received this because you are subscribed to messages of the team <a(?:[^>]+)>(?:[^/]+)(.+)<\/a>\.$/;
 
 const img = (src: string): string => `<img src="${src}"/>`;
 

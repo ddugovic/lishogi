@@ -1,4 +1,4 @@
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type { User } from '../interfaces';
 
 export function userIcon(user: User, cls: string): VNode {

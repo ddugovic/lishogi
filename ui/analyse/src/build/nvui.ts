@@ -1,16 +1,16 @@
 import { type Prop, prop } from 'common/common';
-import { type MaybeVNodes, bind } from 'common/snabbdom';
+import { bind, type MaybeVNodes } from 'common/snabbdom';
 import type { Player } from 'game/interfaces';
 import { i18n } from 'i18n';
 import { commands } from 'nvui/command';
 import { Notify } from 'nvui/notify';
 import { renderSetting } from 'nvui/setting';
 import {
-  type Style,
   renderBoard,
   renderHand,
   renderMove,
   renderPieces,
+  type Style,
   styleSetting,
   supportedVariant,
   validUsi,
@@ -18,7 +18,7 @@ import {
 import { engineNameFromCode } from 'shogi/engine-name';
 import { Shogiground } from 'shogiground';
 import { opposite } from 'shogiground/util';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type AnalyseController from '../ctrl';
 import { makeConfig as makeSgConfig } from '../ground';
 import type { AnalyseData } from '../interfaces';

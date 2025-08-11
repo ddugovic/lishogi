@@ -10,10 +10,10 @@ import type {
   Points,
   Standing,
   TeamInfo,
-  TourPlayer,
   TournamentDataBase,
   TournamentDataFull,
   TournamentOpts,
+  TourPlayer,
 } from './interfaces';
 import { myPage, players } from './pagination';
 import makeSocket, { type TournamentSocket } from './socket';

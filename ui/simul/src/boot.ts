@@ -5,7 +5,7 @@ import type { SimulOpts } from './interfaces';
 export function boot(opts: SimulOpts, start: (opts: SimulOpts) => SimulCtrl): SimulCtrl {
   $('body').data('simul-id', opts.data.id);
 
-  let ctrl: SimulCtrl | undefined = undefined;
+  let ctrl: SimulCtrl | undefined;
   opts.socketSend = wsConnect(`/simul/${opts.data.id}/socket/v4`, opts.socketVersion, {
     receive: (t: string, d: any) => {
       ctrl?.socket.receive(t, d);

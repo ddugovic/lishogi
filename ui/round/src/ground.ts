@@ -14,7 +14,7 @@ import {
   promotableOnDrop,
   promote,
 } from 'shogiops/variant/util';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type RoundController from './ctrl';
 import type { RoundData } from './interfaces';
 import { firstPly, plyStep } from './round';

@@ -1,7 +1,7 @@
 import { bind } from 'common/snabbdom';
 import { ids } from 'game/status';
 import { i18n, i18nVdom } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type TournamentController from '../../ctrl';
 import type { Arrangement } from '../../interfaces';
 import { playerName } from '../util';

@@ -3,11 +3,11 @@ import { type Prop, prop } from 'common/common';
 import { hasTouchEvents } from 'common/mobile';
 import { bind, dataIcon } from 'common/snabbdom';
 import { i18n } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type AnalyseCtrl from '../ctrl';
 import { iconTag, scrollTo } from '../util';
 import { ctrl as chapterEditForm } from './chapter-edit-form';
-import { type StudyChapterNewFormCtrl, ctrl as chapterNewForm } from './chapter-new-form';
+import { ctrl as chapterNewForm, type StudyChapterNewFormCtrl } from './chapter-new-form';
 import type {
   LocalPaths,
   StudyChapterConfig,

@@ -1,4 +1,4 @@
-import { type VNode, attributesModule, classModule, init } from 'snabbdom';
+import { attributesModule, classModule, init, type VNode } from 'snabbdom';
 
 const sInit: (oldVnode: VNode | Element, vnode: VNode) => VNode = init([
   classModule,

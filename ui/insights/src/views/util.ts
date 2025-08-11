@@ -1,7 +1,7 @@
 import { capitalize } from 'common/string';
 import { i18n, i18nFormat } from 'i18n';
 import type { Role } from 'shogiops/types';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import { type StatusId, type StatusKey, StatusObject, type WinRate } from '../types';
 import { toPercentage } from '../util';
 

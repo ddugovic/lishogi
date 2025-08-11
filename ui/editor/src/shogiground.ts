@@ -4,7 +4,7 @@ import type { Config as SgConfig } from 'shogiground/config';
 import type { BoardElements, HandElements } from 'shogiground/types';
 import { forsythToRole, roleToForsyth } from 'shogiops/sfen';
 import { handRoles, promote, unpromote } from 'shogiops/variant/util';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type EditorCtrl from './ctrl';
 
 export function renderBoard(ctrl: EditorCtrl): VNode {

@@ -1,5 +1,5 @@
 import { i18n } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type LearnCtrl from '../ctrl';
 import { samuraiHelmet, stages } from '../svg';
 

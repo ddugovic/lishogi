@@ -1,5 +1,5 @@
 import { i18n } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type { OpponentResult } from '../../types';
 import { fixed } from '../../util';
 import { section, winrateTable } from '../util';

@@ -1,5 +1,5 @@
 import { i18n, i18nFormat } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type { Notification, Renderers } from './interfaces';
 
 // function generic(n: Notification, url: string | undefined, icon: string, content: VNode[]): VNode {

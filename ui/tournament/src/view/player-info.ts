@@ -1,10 +1,10 @@
 import { defined } from 'common/common';
 import { modal } from 'common/modal';
-import { type MaybeVNode, bind } from 'common/snabbdom';
+import { bind, type MaybeVNode } from 'common/snabbdom';
 import spinner from 'common/spinner';
 import { ids } from 'game/status';
 import { i18n } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type TournamentController from '../ctrl';
 import type { TourPlayer } from '../interfaces';
 import { teamName } from './arena/battle';

@@ -170,7 +170,7 @@ const onScroll = () =>
   tablesort.extend(
     'number',
     (item: any) => {
-      return item.match(/^[-+]?(\d)*-?([,\.]){0,1}-?(\d)+([E,e][\-+][\d]+)?%?$/); // Number
+      return item.match(/^[-+]?(\d)*-?([,.]){0,1}-?(\d)+([E,e][-+][\d]+)?%?$/); // Number
     },
     (a: any, b: any) => compareNumber(cleanNumber(b), cleanNumber(a)),
   );

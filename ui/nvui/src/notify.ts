@@ -1,5 +1,5 @@
 import { requestIdleCallbackWithFallback } from 'common/common';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 
 type Notification = {
   text: string;

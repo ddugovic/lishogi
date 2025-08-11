@@ -55,7 +55,7 @@ import type {
 import * as keyboard from './keyboard';
 import MoveOn from './move-on';
 import * as round from './round';
-import { type RoundSocket, make as makeSocket } from './socket';
+import { make as makeSocket, type RoundSocket } from './socket';
 import * as sound from './sound';
 import * as speech from './speech';
 import * as title from './title';

@@ -3,7 +3,7 @@ import { bind } from 'common/snabbdom';
 import { i18n, i18nPluralSame } from 'i18n';
 import { i18nPerf } from 'i18n/perf';
 import { i18nVariant } from 'i18n/variant';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type LobbyController from '../../ctrl';
 import * as hookRepo from '../../hook-repo';
 import type { Hook, Seek } from '../../interfaces';

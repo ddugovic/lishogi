@@ -4,7 +4,7 @@ import { i18n, i18nFormatCapitalized, i18nVdom } from 'i18n';
 import { colorName } from 'shogi/color-name';
 import { isHandicap } from 'shogiops/handicaps';
 import { opposite } from 'shogiops/util';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type AnalyseCtrl from '../ctrl';
 import { renderIndexAndMove } from '../move-view';
 import type { Feedback, RetroCtrl } from './retro-ctrl';

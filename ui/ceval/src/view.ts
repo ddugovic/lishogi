@@ -9,7 +9,7 @@ import type { MoveOrDrop } from 'shogiops/types';
 import { makeUsi, opposite, parseUsi } from 'shogiops/util';
 import type { Position } from 'shogiops/variant/position';
 import { handRoles } from 'shogiops/variant/util';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type { CevalCtrl, Eval, NodeEvals, ParentCtrl } from './types';
 import { renderEval, unsupportedVariants } from './util';
 import * as winningChances from './winning-chances';

@@ -1,7 +1,7 @@
 import { debounce } from 'common/timings';
 import { i18n } from 'i18n';
-import { type VNode, h } from 'snabbdom';
-import { type Close, bind, header } from './util';
+import { h, type VNode } from 'snabbdom';
+import { bind, type Close, header } from './util';
 
 type SoundKey = string;
 

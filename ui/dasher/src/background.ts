@@ -1,9 +1,9 @@
 import { loadCssPath } from 'common/assets';
 import { debounce } from 'common/timings';
 import { i18n } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import { type CustomBackgroundData, colors, cssVariableName } from './custom-background';
-import { type Close, type Open, bind, header, validateUrl } from './util';
+import { bind, type Close, header, type Open, validateUrl } from './util';
 
 type Key = 'light' | 'dark' | 'transp' | 'custom';
 

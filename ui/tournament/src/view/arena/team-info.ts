@@ -1,8 +1,8 @@
 import { modal } from 'common/modal';
-import { type MaybeVNode, dataIcon } from 'common/snabbdom';
+import { dataIcon, type MaybeVNode } from 'common/snabbdom';
 import spinner from 'common/spinner';
 import { i18n } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type TournamentController from '../../ctrl';
 import { numberRow, player as renderPlayer } from '../util';
 import { teamName } from './battle';

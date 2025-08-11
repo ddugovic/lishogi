@@ -43,7 +43,7 @@ function toYouTubeEmbedUrl(url: string | undefined): Parsed | undefined {
 }
 
 function toTwitterEmbedUrl(url: string | undefined): Parsed | undefined {
-  const m = url?.match(/(?:https?:\/\/)?(?:www\.)?(?:twitter\.com|x\.com)\/([^\/]+\/status\/\d+)/i);
+  const m = url?.match(/(?:https?:\/\/)?(?:www\.)?(?:twitter\.com|x\.com)\/([^/]+\/status\/\d+)/i);
   return m
     ? {
         type: 'twitter',

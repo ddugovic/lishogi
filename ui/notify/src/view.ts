@@ -1,8 +1,7 @@
 import spinner from 'common/spinner';
 import { i18n } from 'i18n';
-import { type VNode, h } from 'snabbdom';
-import type { Ctrl, NotifyData } from './interfaces';
-import type { Notification } from './interfaces';
+import { h, type VNode } from 'snabbdom';
+import type { Ctrl, Notification, NotifyData } from './interfaces';
 import { renderers } from './renderers';
 
 export default function (ctrl: Ctrl): VNode {

@@ -3,7 +3,7 @@ import { initAll } from 'common/mini-board';
 import { richHTML } from 'common/rich-text';
 import { onInsert } from 'common/snabbdom';
 import { i18n } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type SimulCtrl from '../ctrl';
 import created from './created';
 import pairings from './pairings';

@@ -1,7 +1,7 @@
 import { type Prop, prop } from 'common/common';
 import { bind, dataIcon, onInsert } from 'common/snabbdom';
 import { i18n } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import { iconTag, scrollTo, titleNameToId } from '../util';
 import type {
   StudyCtrl,

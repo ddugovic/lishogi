@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { basename, extname, join } from 'node:path';
 import type { CategorizedPieceSets, Ext, PieceSet, PieceSetVariant } from './types.js';
 

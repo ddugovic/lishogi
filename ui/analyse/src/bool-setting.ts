@@ -1,5 +1,5 @@
 import { bind } from 'common/snabbdom';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 
 export interface BoolSetting {
   name: string;

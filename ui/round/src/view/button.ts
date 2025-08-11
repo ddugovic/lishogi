@@ -5,7 +5,7 @@ import { game as gameRoute } from 'game/router';
 import * as status from 'game/status';
 import { studyModal } from 'game/view/post-game-study';
 import { i18n, i18nPluralSame, i18nVdomPlural } from 'i18n';
-import { type Hooks, type VNode, h } from 'snabbdom';
+import { type Hooks, h, type VNode } from 'snabbdom';
 import type RoundController from '../ctrl';
 import type { RoundData } from '../interfaces';
 import * as util from '../util';

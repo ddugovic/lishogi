@@ -1,7 +1,7 @@
 import { hasTouchEvents } from 'common/mobile';
 import stepwiseScroll from 'common/wheel';
 import { render as keyboardMove } from 'keyboard-move';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type RoundController from '../ctrl';
 import * as shogiground from '../ground';
 import * as keyboard from '../keyboard';

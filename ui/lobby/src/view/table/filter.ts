@@ -1,6 +1,6 @@
 import { bind } from 'common/snabbdom';
 import { i18n } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type LobbyController from '../../ctrl';
 
 function initialize(ctrl: LobbyController, el: HTMLElement) {

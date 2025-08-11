@@ -2,9 +2,9 @@ import type { MouchEvent } from 'shogiground/types';
 import { eventPosition } from 'shogiground/util';
 import type { Piece, Role } from 'shogiops/types';
 import { allRoles, promote } from 'shogiops/variant/util';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type EditorCtrl from '../ctrl';
-import { type Selected, type SpecialSelected, isSpecialSelected } from '../interfaces';
+import { isSpecialSelected, type Selected, type SpecialSelected } from '../interfaces';
 
 export function sparePieces(ctrl: EditorCtrl, color: Color, position: 'top' | 'bottom'): VNode {
   const baseRoles: (Role | 'skip' | SpecialSelected)[] = [];
@@ -113,8 +113,8 @@ function selectedToClass(s: Selected): string {
   return typeof s === 'string' ? s : s.join(' ');
 }
 
-let initSpareEvent: Selected | undefined = undefined;
-let prevSelected: Selected | undefined = undefined;
+let initSpareEvent: Selected | undefined;
+let prevSelected: Selected | undefined;
 function selectSPStart(ctrl: EditorCtrl, s: Selected): (e: MouchEvent) => void {
   return (e: MouchEvent): void => {
     initSpareEvent = s;

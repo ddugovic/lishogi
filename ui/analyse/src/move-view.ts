@@ -3,7 +3,7 @@ import * as cevalView from 'ceval/view';
 import { defined } from 'common/common';
 import type { MaybeVNode, MaybeVNodes } from 'common/snabbdom';
 import { notationsWithColor } from 'shogi/notation';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import { renderTime } from './clocks';
 
 interface Ctx {

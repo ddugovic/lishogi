@@ -3,7 +3,7 @@ import throttle from 'common/throttle';
 import { i18n, i18nFormatCapitalized } from 'i18n';
 import { colorName } from 'shogi/color-name';
 import { isHandicap } from 'shogiops/handicaps';
-import { type VNode, h, thunk } from 'snabbdom';
+import { h, thunk, type VNode } from 'snabbdom';
 import type AnalyseCtrl from '../ctrl';
 import { tagToKif } from '../notation-export';
 import { option } from '../util';

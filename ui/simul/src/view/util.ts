@@ -1,5 +1,5 @@
 import { i18nVdom } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type SimulCtrl from '../ctrl';
 import type { Player } from '../interfaces';
 

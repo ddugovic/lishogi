@@ -1,5 +1,5 @@
 import { loadChushogiPieceSprite, loadKyotoshogiPieceSprite } from 'common/assets';
-import { type MaybeVNodes, bind } from 'common/snabbdom';
+import { bind, type MaybeVNodes } from 'common/snabbdom';
 import spinner from 'common/spinner';
 import { i18n } from 'i18n';
 import { Shogiground } from 'shogiground';
@@ -7,7 +7,7 @@ import { opposite } from 'shogiground/util';
 import { usiToSquareNames } from 'shogiops/compat';
 import { forsythToRole, roleToForsyth } from 'shogiops/sfen';
 import { handRoles } from 'shogiops/variant/util';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type { ChapterPreview, ChapterPreviewPlayer, Position, StudyCtrl } from './interfaces';
 import { multiBoard as xhrLoad } from './study-xhr';
 

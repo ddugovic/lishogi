@@ -1,8 +1,8 @@
 import { Shogiground } from 'shogiground';
 import { attributesModule, classModule, eventListenersModule, init } from 'snabbdom';
 import { boot } from '../boot';
-import makeCtrl from '../ctrl';
 import type TournamentController from '../ctrl';
+import makeCtrl from '../ctrl';
 import type { TournamentOpts } from '../interfaces';
 import view from '../view/main';
 

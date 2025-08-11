@@ -1,6 +1,6 @@
-import { type MaybeVNode, bind, onInsert } from 'common/snabbdom';
+import { bind, type MaybeVNode, onInsert } from 'common/snabbdom';
 import { i18nPluralSame } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import type TournamentController from '../../ctrl';
 import type { RankedTeam, TeamBattle } from '../../interfaces';
 import { playerName } from '../util';

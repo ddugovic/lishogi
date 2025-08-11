@@ -3,7 +3,7 @@ import { modal } from 'common/modal';
 import { bind, onInsert } from 'common/snabbdom';
 import { storedSet } from 'common/storage';
 import { i18n } from 'i18n';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import { titleNameToId } from '../util';
 import type { StudyInviteFormCtrl, StudyMemberMap } from './interfaces';
 

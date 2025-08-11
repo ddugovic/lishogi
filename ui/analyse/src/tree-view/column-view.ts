@@ -2,7 +2,7 @@ import { isEmpty } from 'common/common';
 import { enrichText, innerHTML } from 'common/rich-text';
 import type { MaybeVNodes } from 'common/snabbdom';
 import { notationsWithColor, usiToNotation } from 'shogi/notation';
-import { type VNode, h } from 'snabbdom';
+import { h, type VNode } from 'snabbdom';
 import { ops as treeOps, path as treePath } from 'tree';
 import type AnalyseCtrl from '../ctrl';
 import type { Conceal, ConcealOf } from '../interfaces';

@@ -37,7 +37,7 @@ function createBuildContext(
 
 function moduleName(input: string): string {
   return input
-    .split(/[\.-]/)
+    .split(/[.-]/)
     .map((part, index) => (index === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1)))
     .join('');
 }
