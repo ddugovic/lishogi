@@ -121,19 +121,20 @@ final class PerfsUpdater(
       case None              => Glicko.Result.Draw
     }
 
-  private def updateRatings(sente: Rating, gote: Rating, result: Glicko.Result): Unit = {
-    val results = new RatingPeriodResults()
-    result match {
-      case Glicko.Result.Draw => results.addDraw(sente, gote)
-      case Glicko.Result.Win  => results.addResult(sente, gote)
-      case Glicko.Result.Loss => results.addResult(gote, sente)
+  private def updateRatings(sente: Rating, gote: Rating, result: Glicko.Result): Unit =
+    if (result != Glicko.Result.Draw) {
+      val results = new RatingPeriodResults()
+      result match {
+        case Glicko.Result.Win  => results.addResult(sente, gote)
+        case Glicko.Result.Loss => results.addResult(gote, sente)
+        case _                  =>
+      }
+      try {
+        Glicko.system.updateRatings(results, true)
+      } catch {
+        case e: Exception => logger.error("update ratings", e)
+      }
     }
-    try {
-      Glicko.system.updateRatings(results, true)
-    } catch {
-      case e: Exception => logger.error("update ratings", e)
-    }
-  }
 
   private def mkPerfs(ratings: Ratings, users: (User, User), game: Game): Perfs =
     users match {

@@ -113,6 +113,8 @@ object faq {
           whichRatingSystemUsedByLishogi.txt(),
           p(
             ratingSystemUsedByLishogi(),
+            br,
+            ratingSystemUsedByLishogiDraw(),
           ),
         ),
         question(
