@@ -28,9 +28,13 @@
     margin: 2em 0;
     grid-gap: 1rem;
 
+    a:hover {
+      background-color: theme.$c-bg-zebra;
+    }
+
     .vstext {
       flex-flow: column;
-      border-bottom: 3px solid transparent;
+      border-top: 3px solid transparent;
 
       &.win {
         border-color: theme.$c-good;
