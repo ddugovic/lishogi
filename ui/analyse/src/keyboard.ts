@@ -124,6 +124,15 @@ export function bind(ctrl: AnalyseCtrl): void {
     keyToMousedown('d', '.study__buttons .comments');
     keyToMousedown('g', '.study__buttons .glyphs');
   }
+  if (!ctrl.synthetic) {
+    kbd.bind(
+      't',
+      preventing(() => {
+        ctrl.studyModal(true);
+        ctrl.redraw();
+      }),
+    );
+  }
 }
 
 export function view(ctrl: AnalyseCtrl): VNode {
