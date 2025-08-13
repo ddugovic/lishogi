@@ -40,10 +40,6 @@
       color: theme.$c-interesting;
     }
 
-    move-notation::before {
-      color: theme.$c-font;
-    }
-
     @media (hover: none) {
       user-select: none;
     }
@@ -76,6 +72,18 @@
     move-notation::before {
       color: theme.$c-font-clear;
     }
+
+    &.blunder {
+      background: theme.$m-bad_bg-box_mix_30;
+    }
+
+    &.mistake {
+      background: theme.$m-mistake_bg-box_mix_30;
+    }
+
+    &.inaccuracy {
+      background: theme.$m-inaccuracy_bg-box_mix_30;
+    }
   }
 
   &-inline move.active,
@@ -96,14 +104,30 @@
     color: theme.$c-font;
   }
 
-  move:not(.empty):hover {
-    &,
-    index,
-    eval,
-    movetime,
-    move-notation::before {
-      background: theme.$c-primary;
-      color: theme.$c-primary-over;
+  @mixin move-hover($bg, $fg) {
+    &:not(.empty):hover {
+      &,
+      index,
+      eval,
+      movetime,
+      move-notation::before {
+        background: $bg;
+        color: $fg;
+      }
+    }
+  }
+
+  move {
+    @include move-hover(theme.$c-primary, theme.$c-primary-over);
+
+    &.blunder {
+      @include move-hover(theme.$c-bad, theme.$c-bad-over);
+    }
+    &.mistake {
+      @include move-hover(theme.$c-mistake, black);
+    }
+    &.inaccuracy {
+      @include move-hover(theme.$c-inaccuracy, white);
     }
   }
 
@@ -120,6 +144,7 @@
   move index {
     font-size: 90%;
     color: theme.$c-font-dim;
+    margin-right: 2px;
   }
 
   move.context-menu {
@@ -187,6 +212,7 @@
   &-column > move .glyphs {
     flex: 0 1 auto;
     margin-right: auto;
+    pointer-events: none; // click gets path from parent only 1 deep
 
     glyph {
       text-align: center;
@@ -307,7 +333,7 @@
   }
 
   &-column line {
-    margin: 2px 0 0 0;
+    margin: 2px 0;
 
     &:first-child {
       margin-top: 0;
