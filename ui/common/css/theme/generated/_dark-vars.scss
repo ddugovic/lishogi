@@ -59,7 +59,7 @@ html {
   --c-header-dropdown: #{$c-popup};
   --c-inaccuracy: #{hsl(202deg, 78%, 62%)};
   --c-inaccuracy-clear: #{hsl(202deg, 100%, 70%)};
-  --c-interesting: #{hsl(307deg, 80%, 70%)};
+  --c-interesting: #{hsl(307deg, 80%, 60%)};
   --c-last-dest: #{rgba(169, 199, 0, 0.41)};
   --c-link: #{$c-primary};
   --c-link-clear: #{$c-primary-clear};
@@ -131,6 +131,7 @@ html {
   --m-brag_bg-box_mix_20: #{color.mix($c-brag,$c-bg-box,20%)};
   --m-brag_bg-page_mix_60: #{color.mix($c-brag,$c-bg-page,60%)};
   --m-brag_darken_mix_85: #{color.mix($c-brag,$c-darken,85%)};
+  --m-brilliant_bg-box_mix_30: #{color.mix($c-brilliant,$c-bg-box,30%)};
   --m-clas_bg-box_mix_10: #{color.mix($c-clas,$c-bg-box,10%)};
   --m-clas_bg-box_mix_80: #{color.mix($c-clas,$c-bg-box,80%)};
   --m-clas_white_mix_86: #{color.mix($c-clas,white,86%)};
@@ -148,6 +149,7 @@ html {
   --m-font-clearer_primary_mix_25: #{color.mix($c-font-clearer,$c-primary,25%)};
   --m-font-dim_c-alpha_20: #{color.change($c-font-dim,$alpha:0.2)};
   --m-font-dim_c-alpha_5: #{color.change($c-font-dim,$alpha:0.05)};
+  --m-good-move_bg-box_mix_30: #{color.mix($c-good-move,$c-bg-box,30%)};
   --m-good_alpha_neg80: #{color.adjust($c-good,$alpha:-0.8)};
   --m-good_bg-box_mix_10: #{color.mix($c-good,$c-bg-box,10%)};
   --m-good_bg-high_mix_80: #{color.mix($c-good,$c-bg-high,80%)};
@@ -156,6 +158,7 @@ html {
   --m-good_font_mix_80: #{color.mix($c-good,$c-font,80%)};
   --m-good_lightness_4: #{color.adjust($c-good,$lightness:4%)};
   --m-inaccuracy_bg-box_mix_30: #{color.mix($c-inaccuracy,$c-bg-box,30%)};
+  --m-interesting_bg-box_mix_30: #{color.mix($c-interesting,$c-bg-box,30%)};
   --m-link_alpha_neg60: #{color.adjust($c-link,$alpha:-0.6)};
   --m-link_bg-box_mix_10: #{color.mix($c-link,$c-bg-box,10%)};
   --m-link_bg-box_mix_15: #{color.mix($c-link,$c-bg-box,15%)};

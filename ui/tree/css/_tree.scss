@@ -13,30 +13,56 @@
     padding: 7px 3px 7px 7px;
   }
 
+  @mixin move-hover($bg, $fg) {
+    &:not(.empty):hover {
+      &,
+      index,
+      eval,
+      movetime,
+      move-notation::before {
+        background: $bg;
+        color: $fg;
+      }
+    }
+  }
+
   move {
     @extend %move;
+    @include move-hover(theme.$c-primary, theme.$c-primary-over);
 
     &.inaccuracy {
+      @include move-hover(theme.$c-inaccuracy, white);
+
       color: theme.$c-inaccuracy;
     }
 
     &.mistake {
+      @include move-hover(theme.$c-mistake, black);
+
       color: theme.$c-mistake;
     }
 
     &.blunder {
+      @include move-hover(theme.$c-bad, theme.$c-bad-over);
+
       color: theme.$c-blunder;
     }
 
     &.good-move {
+      @include move-hover(theme.$c-good-move, black);
+
       color: theme.$c-good-move;
     }
 
     &.brilliant {
+      @include move-hover(theme.$c-brilliant, black);
+
       color: theme.$c-brilliant;
     }
 
     &.interesting {
+      @include move-hover(theme.$c-interesting, black);
+
       color: theme.$c-interesting;
     }
 
@@ -84,6 +110,18 @@
     &.inaccuracy {
       background: theme.$m-inaccuracy_bg-box_mix_30;
     }
+
+    &.good-move {
+      background: theme.$m-good-move_bg-box_mix_30;
+    }
+
+    &.brilliant {
+      background: theme.$m-brilliant_bg-box_mix_30;
+    }
+
+    &.interesting {
+      background: theme.$m-interesting_bg-box_mix_30;
+    }
   }
 
   &-inline move.active,
@@ -102,33 +140,6 @@
   move.nongame {
     font-style: italic;
     color: theme.$c-font;
-  }
-
-  @mixin move-hover($bg, $fg) {
-    &:not(.empty):hover {
-      &,
-      index,
-      eval,
-      movetime,
-      move-notation::before {
-        background: $bg;
-        color: $fg;
-      }
-    }
-  }
-
-  move {
-    @include move-hover(theme.$c-primary, theme.$c-primary-over);
-
-    &.blunder {
-      @include move-hover(theme.$c-bad, theme.$c-bad-over);
-    }
-    &.mistake {
-      @include move-hover(theme.$c-mistake, black);
-    }
-    &.inaccuracy {
-      @include move-hover(theme.$c-inaccuracy, white);
-    }
   }
 
   interrupt move:hover,

@@ -38,6 +38,7 @@ html {
   --m-brag_bg-box_mix_20: color-mix(in srgb, var(--c-brag) 20%, var(--c-bg-box) 80%);
   --m-brag_bg-page_mix_60: color-mix(in srgb, var(--c-brag) 60%, var(--c-bg-page) 40%);
   --m-brag_darken_mix_85: color-mix(in srgb, var(--c-brag) 85%, var(--c-darken) 15%);
+  --m-brilliant_bg-box_mix_30: color-mix(in srgb, var(--c-brilliant) 30%, var(--c-bg-box) 70%);
   --m-clas_bg-box_mix_10: color-mix(in srgb, var(--c-clas) 10%, var(--c-bg-box) 90%);
   --m-clas_bg-box_mix_80: color-mix(in srgb, var(--c-clas) 80%, var(--c-bg-box) 20%);
   --m-clas_white_mix_86: color-mix(in srgb, var(--c-clas) 86%, white 14%);
@@ -55,6 +56,7 @@ html {
   --m-font-clearer_primary_mix_25: color-mix(in srgb, var(--c-font-clearer) 25%, var(--c-primary) 75%);
   --m-font-dim_c-alpha_20: oklch(from var(--c-font-dim) l c h / 0.2);
   --m-font-dim_c-alpha_5: oklch(from var(--c-font-dim) l c h / 0.05);
+  --m-good-move_bg-box_mix_30: color-mix(in srgb, var(--c-good-move) 30%, var(--c-bg-box) 70%);
   --m-good_alpha_neg80: oklch(from var(--c-good) l c h / 0.2);
   --m-good_bg-box_mix_10: color-mix(in srgb, var(--c-good) 10%, var(--c-bg-box) 90%);
   --m-good_bg-high_mix_80: color-mix(in srgb, var(--c-good) 80%, var(--c-bg-high) 20%);
@@ -63,6 +65,7 @@ html {
   --m-good_font_mix_80: color-mix(in srgb, var(--c-good) 80%, var(--c-font) 20%);
   --m-good_lightness_4: oklch(from var(--c-good) calc(l + 0.04) c h);
   --m-inaccuracy_bg-box_mix_30: color-mix(in srgb, var(--c-inaccuracy) 30%, var(--c-bg-box) 70%);
+  --m-interesting_bg-box_mix_30: color-mix(in srgb, var(--c-interesting) 30%, var(--c-bg-box) 70%);
   --m-link_alpha_neg60: oklch(from var(--c-link) l c h / 0.4);
   --m-link_bg-box_mix_10: color-mix(in srgb, var(--c-link) 10%, var(--c-bg-box) 90%);
   --m-link_bg-box_mix_15: color-mix(in srgb, var(--c-link) 15%, var(--c-bg-box) 85%);
