@@ -53,6 +53,7 @@ export function ctrl(
       window.lishogi.xhr
         .text('POST', '/pref/bg', { formData: { bg: c } })
         .catch(() => announceFail(false));
+      if (c === 'transp') data.image = this.getImage();
       applyBackground(data, list);
       if (c === 'custom') {
         loadCssPath('common.custom');
@@ -131,9 +132,11 @@ function applyBackground(data: BackgroundData, list: Background[]) {
   const key = data.current;
 
   if (key !== 'custom')
-    colors.map(cssVariableName).forEach(cssVar => {
-      document.documentElement.style.removeProperty(cssVar);
-    });
+    colors
+      .map(c => cssVariableName(c))
+      .forEach(cssVar => {
+        document.documentElement.style.removeProperty(cssVar);
+      });
 
   document.documentElement.classList.remove(
     ...list.map(b => b.key).filter(b => b !== 'custom'),
