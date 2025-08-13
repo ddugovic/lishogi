@@ -55,7 +55,7 @@ html.light {
   --c-secondary-clear: #{c-blacker($c-secondary, 17%)};
   --c-secondary-dim: #{c-whiter($c-secondary, 17%)};
   --c-secondary-dimmer: #{c-whiter($c-secondary, 40%)};
-  --c-sente: #{$c-font};
+  --c-sente: #{$c-font-dim};
   --c-sente2: #{$c-font-clear};
   --c-shade: #{c-whiter($c-font, 75%)};
   --c-warn: #{$c-brag};
@@ -113,6 +113,7 @@ html.light {
   --m-good_bg-box_mix_10: #{color.mix($c-good,$c-bg-box,10%)};
   --m-good_bg-high_mix_80: #{color.mix($c-good,$c-bg-high,80%)};
   --m-good_font_mix_80: #{color.mix($c-good,$c-font,80%)};
+  --m-inaccuracy_bg-box_mix_30: #{color.mix($c-inaccuracy,$c-bg-box,30%)};
   --m-link_alpha_neg60: #{color.adjust($c-link,$alpha:-0.6)};
   --m-link_bg-box_mix_10: #{color.mix($c-link,$c-bg-box,10%)};
   --m-link_bg-box_mix_15: #{color.mix($c-link,$c-bg-box,15%)};
@@ -120,6 +121,7 @@ html.light {
   --m-link_bg-box_mix_80: #{color.mix($c-link,$c-bg-box,80%)};
   --m-link_bg-page_mix_20: #{color.mix($c-link,$c-bg-page,20%)};
   --m-link_font_mix_35: #{color.mix($c-link,$c-font,35%)};
+  --m-mistake_bg-box_mix_30: #{color.mix($c-mistake,$c-bg-box,30%)};
   --m-primary_alpha_neg75: #{color.adjust($c-primary,$alpha:-0.75)};
   --m-primary_alpha_neg80: #{color.adjust($c-primary,$alpha:-0.8)};
   --m-primary_bg-box_mix_10: #{color.mix($c-primary,$c-bg-box,10%)};

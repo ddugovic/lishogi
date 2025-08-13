@@ -62,6 +62,7 @@ html {
   --m-good_darken_mix_85: color-mix(in srgb, var(--c-good) 85%, var(--c-darken) 15%);
   --m-good_font_mix_80: color-mix(in srgb, var(--c-good) 80%, var(--c-font) 20%);
   --m-good_lightness_4: oklch(from var(--c-good) calc(l + 0.04) c h);
+  --m-inaccuracy_bg-box_mix_30: color-mix(in srgb, var(--c-inaccuracy) 30%, var(--c-bg-box) 70%);
   --m-link_alpha_neg60: oklch(from var(--c-link) l c h / 0.4);
   --m-link_bg-box_mix_10: color-mix(in srgb, var(--c-link) 10%, var(--c-bg-box) 90%);
   --m-link_bg-box_mix_15: color-mix(in srgb, var(--c-link) 15%, var(--c-bg-box) 85%);
@@ -69,6 +70,7 @@ html {
   --m-link_bg-box_mix_80: color-mix(in srgb, var(--c-link) 80%, var(--c-bg-box) 20%);
   --m-link_bg-page_mix_20: color-mix(in srgb, var(--c-link) 20%, var(--c-bg-page) 80%);
   --m-link_font_mix_35: color-mix(in srgb, var(--c-link) 35%, var(--c-font) 65%);
+  --m-mistake_bg-box_mix_30: color-mix(in srgb, var(--c-mistake) 30%, var(--c-bg-box) 70%);
   --m-primary_alpha_neg75: oklch(from var(--c-primary) l c h / 0.25);
   --m-primary_alpha_neg80: oklch(from var(--c-primary) l c h / 0.2);
   --m-primary_bg-box_mix_10: color-mix(in srgb, var(--c-primary) 10%, var(--c-bg-box) 90%);

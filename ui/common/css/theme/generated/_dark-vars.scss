@@ -27,7 +27,7 @@ html {
   --c-bg-zebra: #{hsl($c-site-hue, 3%, 18%)};
   --c-bg-zebra2: #{hsl($c-site-hue, 3%, 23%)};
   --c-blunder: #{hsl(0deg, 69%, 60%)};
-  --c-blunder-clear: #{hsl(0deg, 100%, 60%)};
+  --c-blunder-clear: #{hsl(0deg, 100%, 62%)};
   --c-body-gradient: #{hsl($c-site-hue, 5%, 15%)};
   --c-border: #{hsl(0deg, 0%, 25%)};
   --c-border-page: #{hsl(0deg, 0%, 22%)};
@@ -58,7 +58,7 @@ html {
   --c-gote2: #{$c-font-clearer};
   --c-header-dropdown: #{$c-popup};
   --c-inaccuracy: #{hsl(202deg, 78%, 62%)};
-  --c-inaccuracy-clear: #{hsl(202deg, 100%, 62%)};
+  --c-inaccuracy-clear: #{hsl(202deg, 100%, 70%)};
   --c-interesting: #{hsl(307deg, 80%, 70%)};
   --c-last-dest: #{rgba(169, 199, 0, 0.41)};
   --c-link: #{$c-primary};
@@ -67,7 +67,7 @@ html {
   --c-link-hover: #{c-whiter(color.adjust($c-primary, $saturation: 100%), 25%)};
   --c-link-over: #{$c-primary-over};
   --c-mistake: #{hsl(41deg, 100%, 45%)};
-  --c-mistake-clear: #{hsl(41deg, 100%, 45%)};
+  --c-mistake-clear: #{hsl(41deg, 100%, 55%)};
   --c-page-input: #{$c-bg-box};
   --c-page-mask: #{hsla(0deg, 0%, 0%, 0.6)};
   --c-popup: #{$c-font-clear};
@@ -155,6 +155,7 @@ html {
   --m-good_darken_mix_85: #{color.mix($c-good,$c-darken,85%)};
   --m-good_font_mix_80: #{color.mix($c-good,$c-font,80%)};
   --m-good_lightness_4: #{color.adjust($c-good,$lightness:4%)};
+  --m-inaccuracy_bg-box_mix_30: #{color.mix($c-inaccuracy,$c-bg-box,30%)};
   --m-link_alpha_neg60: #{color.adjust($c-link,$alpha:-0.6)};
   --m-link_bg-box_mix_10: #{color.mix($c-link,$c-bg-box,10%)};
   --m-link_bg-box_mix_15: #{color.mix($c-link,$c-bg-box,15%)};
@@ -162,6 +163,7 @@ html {
   --m-link_bg-box_mix_80: #{color.mix($c-link,$c-bg-box,80%)};
   --m-link_bg-page_mix_20: #{color.mix($c-link,$c-bg-page,20%)};
   --m-link_font_mix_35: #{color.mix($c-link,$c-font,35%)};
+  --m-mistake_bg-box_mix_30: #{color.mix($c-mistake,$c-bg-box,30%)};
   --m-primary_alpha_neg75: #{color.adjust($c-primary,$alpha:-0.75)};
   --m-primary_alpha_neg80: #{color.adjust($c-primary,$alpha:-0.8)};
   --m-primary_bg-box_mix_10: #{color.mix($c-primary,$c-bg-box,10%)};
