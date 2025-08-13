@@ -102,7 +102,7 @@ function playerInfo(ctrl: TournamentController): VNode {
             const href = ((e.target as HTMLElement).parentNode as HTMLElement).getAttribute(
               'data-href',
             );
-            if (href) window.open(href, '_blank');
+            if (href) window.location.href = href;
           }),
         },
         poa.map((p: any, i: number) => {
