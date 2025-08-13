@@ -1,6 +1,7 @@
 import { modal } from 'common/modal';
 import { getPerfIcon } from 'common/perf-icons';
 import { bind, type MaybeVNodes, proverb } from 'common/snabbdom';
+import { ddloader } from 'common/spinner';
 import { i18n, i18nFormat, i18nVdomPlural } from 'i18n';
 import { i18nVariant } from 'i18n/variant';
 import { h } from 'snabbdom';
@@ -211,7 +212,7 @@ export default function (ctrl: SimulCtrl): MaybeVNodes {
 
 const joinButton = (ctrl: SimulCtrl) =>
   ctrl.loader === 'join'
-    ? h('i.ddloader')
+    ? ddloader()
     : h(
         `a.button.text${ctrl.teamBlock() ? '.disabled' : ''}`,
         {
@@ -238,7 +239,7 @@ const joinButton = (ctrl: SimulCtrl) =>
 
 const withdrawButton = (ctrl: SimulCtrl) =>
   ctrl.loader === 'withdraw'
-    ? h('i.ddloader')
+    ? ddloader()
     : h(
         'a.button',
         {

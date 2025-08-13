@@ -29,3 +29,9 @@ export const spinnerHtml: string = `<div class="spinner"><svg viewBox="-2.5 -2.5
   <path d="M 20 0 L 33 4 L 40 50 L 0 50 L 7 4 Z"
     style="fill:none;stroke-width:2.5;stroke-opacity:1;" />
 </svg></div>`;
+
+export function ddloader(): VNode {
+  return h('i.ddloader');
+}
+
+export const ddloaderHtml: string = `<i class="ddloader"></i>`;
