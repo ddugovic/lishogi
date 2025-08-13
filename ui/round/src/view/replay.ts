@@ -106,8 +106,12 @@ function renderMoves(ctrl: RoundController): MaybeVNodes {
 
 export function analysisButton(ctrl: RoundController): VNode {
   const forecastCount = ctrl.data.forecastCount;
-  const disabled = !game.userAnalysable(ctrl.data);
-  const isForecast = !ctrl.data.player.spectator && game.conditionallyPremovable(ctrl.data);
+  const disabled =
+    !game.userAnalysable(ctrl.data) || (game.hasAi(ctrl.data) && !status.finished(ctrl.data));
+  const isForecast =
+    !ctrl.data.player.spectator &&
+    game.conditionallyPremovable(ctrl.data) &&
+    !game.hasAi(ctrl.data);
 
   return h(
     'a.fbt.analysis',
