@@ -1,6 +1,9 @@
 import * as winningChances from 'ceval/winning-chances';
 import type { ChartConfiguration, ChartDataset, PointStyle } from 'chart.js';
+import { defined } from 'common/common';
+import { cssVar } from 'common/styles';
 import { plyOffset } from 'game/game';
+import { mated } from 'game/status';
 import { i18n } from 'i18n';
 import {
   accentColor,
@@ -15,6 +18,8 @@ import {
 } from '../common';
 import division from '../division';
 import type { AcplChart, AnalyseData, Player } from '../interface';
+
+const blursEnabled = true;
 
 function main(
   el: HTMLCanvasElement,
@@ -42,13 +47,17 @@ function main(
     const pointSizes: number[] = [];
     const winChances: { x: number; y: number }[] = [];
     const blurs = [toBlurArray(d.player), toBlurArray(d.opponent)];
+    const pointRadius = mainline.length > 50 ? 4 : 5;
     if (d.player.color === 'sente') blurs.reverse();
-    mainline.slice(1).map(node => {
+
+    mainline.slice(1).map((node, index) => {
       const isSente = (node.ply & 1) === 1;
       let cp: number | undefined = node.eval && 0;
       if (node.eval?.mate)
         cp = node.eval.mate > 0 ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY;
-      else if (node.eval?.cp) cp = node.eval.cp;
+      else if (index === mainline.length - 2 && mated(d as any))
+        cp = isSente ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY;
+      else if (defined(node.eval?.cp)) cp = node.eval.cp;
       const offset = plyOffset(data as any);
 
       const winchance = winningChances.povChances('sente', { cp: cp });
@@ -60,17 +69,19 @@ function main(
       let annotation = '';
       if (advice) annotation = ` [${i18n(advice)}]`;
       const isBlur =
+        blursEnabled &&
         blurs[isSente ? 1 : 0][Math.floor((node.ply - (d.game.startedAtStep || 0) - 1) / 2)] ===
-        '1';
+          '1';
       if (isBlur) annotation = ' [blur]';
       moveLabels.push(label + annotation);
       pointStyles.push(isBlur ? 'rect' : 'circle');
-      pointSizes.push(isBlur ? 5 : 0);
+      pointSizes.push(isBlur ? pointRadius : 0);
       pointBackgroundColors.push(
         isBlur ? (isSente ? blurBackgroundColorBlack : blurBackgroundColorWhite) : accentColor(),
       );
       adviceHoverColors.push(glyphColor ?? accentColor());
     });
+
     return {
       acpl: {
         label: i18n('advantage'),
@@ -82,7 +93,8 @@ function main(
           below: goteColor(),
         },
         pointRadius: d.player.blurs || d.opponent.blurs ? pointSizes : 0,
-        pointHoverRadius: 5,
+        pointHoverRadius: pointRadius,
+        pointHoverBorderWidth: 0,
         pointHitRadius: 100,
         borderColor: accentColor(),
         pointBackgroundColor: pointBackgroundColors,
@@ -174,22 +186,24 @@ function main(
 
 type Advice = 'blunder' | 'mistake' | 'inaccuracy';
 const glyphProperties = (node: Tree.Node): { advice?: Advice; color?: string } => {
-  if (node.glyphs?.some(g => g.id === 4)) return { advice: 'blunder', color: '#db3031' };
-  else if (node.glyphs?.some(g => g.id === 2)) return { advice: 'mistake', color: '#e69d00' };
-  else if (node.glyphs?.some(g => g.id === 6)) return { advice: 'inaccuracy', color: '#4da3d5' };
+  if (node.glyphs?.some(g => g.id === 4))
+    return { advice: 'blunder', color: cssVar('--c-blunder-clear') };
+  else if (node.glyphs?.some(g => g.id === 2))
+    return { advice: 'mistake', color: cssVar('--c-mistake-clear') };
+  else if (node.glyphs?.some(g => g.id === 6))
+    return { advice: 'inaccuracy', color: cssVar('--c-inaccuracy-clear') };
   else return { advice: undefined, color: undefined };
 };
 
 const toBlurArray = (player: Player) => player.blurs?.bits?.split('') ?? [];
 
 function christmasTree(chart: AcplChart, mainline: Tree.Node[], hoverColors: string[]) {
-  $('div.advice-summary').on('mouseenter', 'div.symbol', function (this: HTMLElement) {
+  $('div.advice-summary').on('mouseenter', 'tr.symbol', function (this: HTMLElement) {
     const symbol = this.getAttribute('data-symbol');
-    const playerColorBit = this.getAttribute('data-color') === 'white' ? 1 : 0;
+    const playerColorBit = this.getAttribute('data-color') === 'sente' ? 1 : 0;
     const acplDataset = chart.data.datasets[0];
     if (symbol === '??' || symbol === '?!' || symbol === '?') {
       acplDataset.pointHoverBackgroundColor = hoverColors;
-      acplDataset.pointBorderColor = hoverColors;
       const points = mainline
         .filter(
           node =>
@@ -201,10 +215,9 @@ function christmasTree(chart: AcplChart, mainline: Tree.Node[], hoverColors: str
       chart.update('none');
     }
   });
-  $('div.advice-summary').on('mouseleave', 'div.symbol', function (this: HTMLElement) {
+  $('div.advice-summary').on('mouseleave', 'tr.symbol', function (this: HTMLElement) {
     chart.setActiveElements([]);
     chart.data.datasets[0].pointHoverBackgroundColor = accentColor();
-    chart.data.datasets[0].pointBorderColor = accentColor();
     chart.update('none');
   });
 }

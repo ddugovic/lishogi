@@ -106,7 +106,6 @@ function doRender(ctrl: AnalyseCtrl): VNode {
     },
     [
       playerTable(ctrl, 'sente'),
-      h('div.hidden', '-'),
       ctrl.study
         ? null
         : h(

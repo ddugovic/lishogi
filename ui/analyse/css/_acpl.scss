@@ -14,8 +14,8 @@
   min-height: var(--panel-height); // from round-underboard
   justify-content: center;
 
-  .hidden {
-    visibility: hidden;
+  thead tr {
+    height: 1.75rem;
   }
 
   td {

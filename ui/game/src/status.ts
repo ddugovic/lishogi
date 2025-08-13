@@ -58,3 +58,7 @@ export function aborted(data: GameData): boolean {
 export function playing(data: GameData): boolean {
   return started(data) && !finished(data) && !aborted(data);
 }
+
+export function mated(data: GameData): boolean {
+  return data.game.status.id === ids.mate || data.game.status.id == ids.stalemate;
+}

@@ -42,7 +42,7 @@ export default function (element: HTMLElement, ctrl: AnalyseCtrl): void {
     li.pubsub.on('analysis.server.progress', (d: AnalyseData) => {
       if (!advChart) startAdvantageChart();
       else advChart.updateData(d, ctrl.mainline);
-      if (d.analysis && !d.analysis.partial) $('#acpl-chart-loader').remove();
+      if (d.analysis && !d.analysis.partial) $('#acpl-chart-container-loader').remove();
     });
   }
 
@@ -61,7 +61,7 @@ export default function (element: HTMLElement, ctrl: AnalyseCtrl): void {
     else if (loading && !$('#acpl-chart-container-loader').length) $panel.append(chartLoader());
     loadLishogiScript('chart').then(() => {
       loadLishogiScript('chart.acpl').then(() => {
-        li.modules.chartAcpl!(
+        advChart = li.modules.chartAcpl!(
           $('#acpl-chart')[0] as HTMLCanvasElement,
           data,
           ctrl.mainline,

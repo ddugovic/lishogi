@@ -138,6 +138,7 @@ $col2-panel-height: 240px;
   height: var(--panel-height);
   overflow: hidden;
   cursor: pointer;
+  padding: 1rem 0;
 }
 
 #acpl-chart-container-loader {
@@ -170,8 +171,8 @@ $col2-panel-height: 240px;
   }
 
   .spinner {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     display: inline-block;
     padding-right: 4px;
     margin-top: 3px;
