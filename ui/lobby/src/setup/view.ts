@@ -4,7 +4,7 @@ import { modal } from 'common/modal';
 import { getPerfIcon } from 'common/perf-icons';
 import { bind, dataIcon, type MaybeVNodes } from 'common/snabbdom';
 import spinner from 'common/spinner';
-import { i18n } from 'i18n';
+import { i18n, i18nFormat } from 'i18n';
 import { i18nPerf } from 'i18n/perf';
 import { colorName } from 'shogi/color-name';
 import { sfenColor } from 'shogi/common';
@@ -53,7 +53,9 @@ function innerModal(ctrl: SetupCtrl): MaybeVNodes {
       ctrl.key === 'ai'
         ? i18n('playWithTheMachine')
         : ctrl.key === 'friend'
-          ? `${i18n('playWithAFriend')}${ctrl.data.user ? ` - ${ctrl.data.user}` : ''}`
+          ? ctrl.data.user
+            ? i18nFormat('gameAgainstX', ctrl.data.user)
+            : i18n('playWithAFriend')
           : i18n('createAGame'),
     ),
     variant(ctrl),
