@@ -110,7 +110,9 @@ function title(ctrl: TournamentController) {
           ),
         ]
       : [d.fullName]
-    ).concat(d.private ? [' ', h('span', { attrs: dataIcon('a') })] : []),
+    ).concat(
+      d.private ? [' ', h('span', { attrs: { 'data-icon': 'a', title: i18n('isPrivate') } })] : [],
+    ),
   );
 }
 
