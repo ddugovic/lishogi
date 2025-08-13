@@ -95,6 +95,11 @@
     padding: 1em 0;
     justify-content: space-between;
 
+    &.one_time_active {
+      background: theme.$c-brag;
+      color: theme.$c-brag-over;
+    }
+
     > i {
       margin: 0 0.4em;
 
@@ -150,7 +155,12 @@
 
     group {
       margin-bottom: 2em;
-      overflow: visible;
+      gap: 1px;
+      background: theme.$c-border;
+
+      label {
+        border: none;
+      }
     }
 
     group input:checked + label,
@@ -177,7 +187,8 @@
 
     group .lifetime-check input + label {
       background: theme.$c-brag !important;
-      opacity: 0.8;
+      color: theme.$c-brag-over;
+      opacity: 1;
       cursor: default;
     }
 
@@ -192,13 +203,8 @@
       font-weight: normal;
     }
 
-    .service .button:first-child {
-      margin-right: 1em;
-    }
-
-    .service .spinner {
-      width: 53px;
-      height: 53px;
+    .service .ddloader {
+      margin: auto;
     }
 
     .confirm-policy input {

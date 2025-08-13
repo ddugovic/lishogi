@@ -1,4 +1,4 @@
-import { spinnerHtml } from 'common/spinner';
+import { ddloaderHtml } from 'common/spinner';
 
 window.lishogi.ready.then(() => {
   const $checkout = $('div.plan_checkout');
@@ -66,7 +66,8 @@ window.lishogi.ready.then(() => {
     const $form = $checkout.find(`form.paypal_checkout.${getFreq()}`);
     $form.find('input.amount').val(amount);
     $form.trigger('submit');
-    $checkout.find('.service').html(spinnerHtml);
+    $('.service button').hide();
+    $checkout.find('.service').html(ddloaderHtml);
   });
 
   $('.confirm-policy input').on('change', () => {
