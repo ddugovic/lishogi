@@ -56,7 +56,7 @@ function renderChildrenOf(ctx: Ctx, node: Tree.Node, opts: RenderOpts): MaybeVNo
       renderIndex(main.ply, false),
       renderMoveOf(ctx, main, passOpts),
       h(
-        'interrupt',
+        'interrupt.inlined',
         renderLines(ctx, cs.slice(1), {
           parentPath: opts.parentPath,
           isMainline: true,

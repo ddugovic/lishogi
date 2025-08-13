@@ -63,7 +63,7 @@ function renderChildrenOf(ctx: Ctx, node: Tree.Node, opts: Opts): MaybeVNodes | 
       .concat(main.forceVariation ? [h('move', '')] : [renderMoveOf(ctx, main, passOpts)])
       .concat([
         h(
-          'interrupt',
+          'interrupt.inlined',
           commentTags.concat(
             renderLines(ctx, main.forceVariation ? cs : cs.slice(1), {
               parentPath: opts.parentPath,
@@ -204,7 +204,7 @@ function renderMainlineCommentsOf(
 ): MaybeVNodes {
   if (!ctx.ctrl.showComments || isEmpty(node.comments)) return [];
 
-  const colorClass = withColor ? (node.ply % 2 ? '.sente ' : '.gote ') : '';
+  const colorClass = withColor ? (node.ply % 2 ? '.sente' : '.gote') : '';
   const withAuthor = node.comments!.some(c => c.by !== node.comments![0].by);
 
   return node.comments!.map(comment => {

@@ -66,7 +66,7 @@ export function view(root: AnalyseCtrl, concealOf?: ConcealOf): MaybeVNode {
   if (!state.displayed) return;
   const isMainline = concealOf && root.onMainline;
   return h(
-    'div.analyse__fork',
+    'div.analyse__fork.inlined',
     {
       hook: onInsert(el => {
         el.addEventListener('click', e => {
