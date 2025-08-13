@@ -126,7 +126,7 @@ function gameInfos(ctrl: Controller, game: PuzzleGame, puzzle: Puzzle): VNode {
               p.ai
                 ? engineNameFromCode(p.aiCode, p.ai)
                 : p.userId === 'anon'
-                  ? 'Anonymous'
+                  ? h('span.anon', i18n('anonymousUser'))
                   : p.userId
                     ? h(
                         'a.user-link.ulpt',

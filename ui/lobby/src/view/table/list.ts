@@ -40,7 +40,7 @@ function renderHookOrSeek(hs: Hook | Seek) {
             },
             username,
           )
-        : 'Anonymous',
+        : h('span.anon', i18n('anonymousUser')),
       (hs.rating ? hs.rating : '-') + ((isHook(hs) ? hs.prov : hs.provisional) ? '?' : ''),
       isHook(hs) ? hs.clock : hs.days ? i18nPluralSame('nbDays', hs.days) : '∞',
       h(

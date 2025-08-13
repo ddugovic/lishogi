@@ -3,6 +3,7 @@ import type { ChatCtrl, ChatOpts } from 'chat/interfaces';
 import { wsConnect } from 'common/ws';
 import type { TourPlayer } from 'game/interfaces';
 import { finished } from 'game/status';
+import { i18n } from 'i18n';
 import type RoundController from './ctrl';
 import type { RoundData, RoundOpts } from './interfaces';
 import { type TourStandingCtrl, tourStandingCtrl } from './tour-standing';
@@ -59,7 +60,7 @@ export function boot(
           $(`.tv-channels .${o.channel} .champion`).html(
             o.player
               ? [o.player.title, o.player.name, o.player.rating].filter(x => x).join('&nbsp')
-              : 'Anonymous',
+              : i18n('anonymousUser'),
           );
       },
       endData() {

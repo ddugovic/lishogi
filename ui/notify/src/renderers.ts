@@ -245,7 +245,7 @@ function drawTime(n: Notification) {
 }
 
 function userFullName(u?: LightUser) {
-  if (!u) return 'Anonymous';
+  if (!u) return i18n('anonymousUser');
   return u.title ? `${u.title} ${u.name}` : u.name;
 }
 

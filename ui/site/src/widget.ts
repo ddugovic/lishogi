@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 import { wsSend } from 'common/ws';
-import { i18nVdomPlural } from 'i18n';
+import { i18n, i18nVdomPlural } from 'i18n';
 
 const widget = (name: string, prototype: any): any => {
   // biome-ignore lint/suspicious/noShadowRestrictedNames: Stupid widgets will be removed anyway
@@ -39,6 +39,7 @@ interface WatchersData {
 
 export function initWidgets(): void {
   let watchersData: WatchersData;
+  const anonHtml = `<span class="anon">${i18n('anonymousUser')}</span>`;
   widget('watchers', {
     _create: function () {
       this.list = this.element.find('.list');
@@ -54,10 +55,11 @@ export function initWidgets(): void {
         const tags = data.users.map(u =>
           u
             ? `<a class="user-link ulpt" href="/@/${(u.includes(' ') ? u.split(' ')[1] : u).toLowerCase()}">${u}</a>`
-            : 'Anonymous',
+            : anonHtml,
         );
-        if (data.anons === 1) tags.push('Anonymous');
-        else if (data.anons) tags.push(`Anonymous (${data.anons})`);
+        if (data.anons === 1) tags.push(anonHtml);
+        else if (data.anons)
+          tags.push(`<span class="anon">${i18n('anonymousUser')} (${data.anons})</span>`);
         this.list.html(tags.join(', '));
       } else if (!this.number.length) this.list.html(`${data.nb} players in the chat`);
       this.element.removeClass('none');

@@ -37,7 +37,7 @@ function renderPlayer(ctrl: AnalyseCtrl, color: Color): VNode {
     p.name ||
       (p.ai && engineNameFromCode(p.aiCode, p.ai)) ||
       (ctrl.study && findTag(ctrl.study.data.chapter.tags, color)) ||
-      'Anonymous',
+      h('span.anon', i18n('anonymousUser')),
   );
 }
 
