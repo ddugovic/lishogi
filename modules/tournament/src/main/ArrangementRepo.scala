@@ -42,8 +42,6 @@ final class ArrangementRepo(val coll: Coll)(implicit
     Arrangement.BSONFields.status $exists false,
   )
 
-  private val recentSort = $doc(Arrangement.BSONFields.scheduledAt -> -1)
-
   def byId(id: Arrangement.ID): Fu[Option[Arrangement]] = coll.byId[Arrangement](id)
 
   def byGame(tourId: Tournament.ID, gameId: Game.ID): Fu[Option[Arrangement]] =
@@ -143,7 +141,7 @@ final class ArrangementRepo(val coll: Coll)(implicit
         selectTourUser(tourId, userId) ++ selectWithGame,
         $doc(Arrangement.BSONFields.gameId -> true).some,
       )
-      .sort(recentSort)
+      .sort($doc(Arrangement.BSONFields.startedAt -> -1))
       .cursor[Bdoc]()
       .list(nb)
       .dmap {
