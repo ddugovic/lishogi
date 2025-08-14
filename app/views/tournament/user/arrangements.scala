@@ -19,7 +19,7 @@ object arrangements {
     )
     val curOrder = orders.find(_._1 == order).getOrElse(orders.head)
 
-    val title = trans.tourArrangements.myArrangedGames.txt()
+    val title = trans.tourArrangements.yourUpcomingGames.txt()
 
     views.html.base.layout(
       title = title,

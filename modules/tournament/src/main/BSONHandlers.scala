@@ -293,7 +293,7 @@ object BSONHandlers {
         Arrangement.BSONFields.plies         -> o.plies,
         Arrangement.BSONFields.scheduledAt   -> o.scheduledAt,
         Arrangement.BSONFields.lockedScheduledAt -> w.boolO(o.lockedScheduledAt),
-        Arrangement.BSONFields.updatedAt -> o.gameId.isEmpty ?? DateTime.now.some, // updated at
+        Arrangement.BSONFields.updatedAt         -> !o.finished ?? DateTime.now.some, // updated at
       )
   }
 

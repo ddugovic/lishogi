@@ -71,6 +71,7 @@ final class ArrangementRepo(val coll: Coll)(implicit
           Arrangement.BSONFields.u2ScheduledAt,
           Arrangement.BSONFields.lockedScheduledAt,
           Arrangement.BSONFields.lastNotified,
+          Arrangement.BSONFields.updatedAt,
         ),
         multi = true,
       )
@@ -120,6 +121,7 @@ final class ArrangementRepo(val coll: Coll)(implicit
           ) ++ $unset(
             Arrangement.BSONFields.lastNotified,
             Arrangement.BSONFields.lockedScheduledAt,
+            Arrangement.BSONFields.updatedAt,
           ),
         )
         .void
@@ -195,7 +197,7 @@ final class ArrangementRepo(val coll: Coll)(implicit
     new lila.db.paginator.Adapter[Arrangement](
       collection = coll,
       selector = selectUser(user.id) ++ selectWithoutGame ++
-        $doc(Arrangement.BSONFields.scheduledAt $gt DateTime.now.minusHours(24)),
+        $doc(Arrangement.BSONFields.scheduledAt $gt DateTime.now.minusHours(48)),
       projection = none,
       sort = $sort asc Arrangement.BSONFields.scheduledAt,
       readPreference = ReadPreference.secondaryPreferred,
@@ -204,7 +206,7 @@ final class ArrangementRepo(val coll: Coll)(implicit
   private[tournament] def updatedAdapter(user: User) =
     new lila.db.paginator.Adapter[Arrangement](
       collection = coll,
-      selector = selectUser(user.id),
+      selector = selectUser(user.id) ++ $doc(Arrangement.BSONFields.updatedAt $exists true),
       projection = none,
       sort = $sort desc Arrangement.BSONFields.updatedAt,
       readPreference = ReadPreference.secondaryPreferred,
