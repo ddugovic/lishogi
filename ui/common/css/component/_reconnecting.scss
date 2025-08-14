@@ -29,6 +29,7 @@ $recon-height: 2.5rem;
   border-top-right-radius: 3px;
   z-index: z.get('reconnecting');
   opacity: 0;
+  pointer-events: none;
 
   &::before {
     font-size: 1.3em;
