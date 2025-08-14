@@ -24,12 +24,8 @@ export function importNotation(studyId: string, data: Record<string, any>): Prom
   );
 }
 
-export function multiBoard(
-  studyId: string,
-  page: number,
-  playing: boolean,
-): Promise<Paginator<ChapterPreview>> {
+export function multiBoard(studyId: string, page: number): Promise<Paginator<ChapterPreview>> {
   return window.lishogi.xhr.json('GET', `/study/${studyId}/multi-board`, {
-    url: { page: page.toString(), playing },
+    url: { page: page.toString() },
   });
 }

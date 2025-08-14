@@ -15,7 +15,6 @@ export class MultiBoardCtrl {
   loading = false;
   page = 1;
   pager?: Paginator<ChapterPreview>;
-  playing = false;
 
   constructor(
     readonly studyId: string,
@@ -36,7 +35,7 @@ export class MultiBoardCtrl {
       this.loading = true;
       this.redraw();
     }
-    xhrLoad(this.studyId, this.page, this.playing).then(p => {
+    xhrLoad(this.studyId, this.page).then(p => {
       this.pager = p;
       if (p.nbPages < this.page) {
         if (!p.nbPages) this.page = 1;
@@ -57,11 +56,6 @@ export class MultiBoardCtrl {
   prevPage = (): void => this.setPage(this.page - 1);
   lastPage = (): void => {
     if (this.pager) this.setPage(this.pager.nbPages);
-  };
-
-  setPlaying = (v: boolean): void => {
-    this.playing = v;
-    this.reload();
   };
 }
 
@@ -86,21 +80,9 @@ function renderPager(pager: Paginator<ChapterPreview>, study: StudyCtrl): MaybeV
   if (pager.currentPageResults.some(p => p.variant.key === 'kyotoshogi'))
     loadKyotoshogiPieceSprite();
   return [
-    h('div.top', [renderPagerNav(pager, ctrl), renderPlayingToggle(ctrl)]),
+    h('div.top', renderPagerNav(pager, ctrl)),
     h('div.now-playing', pager.currentPageResults.map(makePreview(study))),
   ];
-}
-
-function renderPlayingToggle(ctrl: MultiBoardCtrl): VNode {
-  return h('label.playing', [
-    h('input', {
-      attrs: { type: 'checkbox' },
-      hook: bind('change', e => {
-        ctrl.setPlaying((e.target as HTMLInputElement).checked);
-      }),
-    }),
-    i18n('study:playing'),
-  ]);
 }
 
 function renderPagerNav(pager: Paginator<ChapterPreview>, ctrl: MultiBoardCtrl): VNode {
