@@ -212,7 +212,7 @@ function myTimeInput(ctrl: TournamentController, a: Arrangement, user: Arrangeme
             title: user.scheduledAt
               ? i18n('tourArrangements:suggestDifferentTime')
               : i18n('tourArrangements:suggestedTime'),
-            disabled: !ctrl.data.isStarted,
+            disabled: !!ctrl.data.isFinished || !!a.gameId,
             placeholder: i18n('tourArrangements:suggestTime'),
           },
           hook: {
