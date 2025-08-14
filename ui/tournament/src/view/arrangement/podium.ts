@@ -19,6 +19,7 @@ function podiumStats(p: ArrangementPlayer, games: Arrangement[]): VNode {
   const userId = p.id;
   const gamesOfPlayer = games.filter(a => arrangementHasUser(a, userId));
   return h('table.stats', [
+    h('tr', [h('th', i18n('points')), h('td', p.score || 0)]),
     h('tr', [h('th', i18n('gamesPlayed')), h('td', gamesOfPlayer.length)]),
     ...(gamesOfPlayer.length
       ? [
