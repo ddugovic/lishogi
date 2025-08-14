@@ -33,7 +33,7 @@ function playerTitle(player: TourPlayer) {
 function getScore(ctrl: TournamentController, p: any): number | undefined {
   if (ctrl.isOrganized() || ctrl.isRobin()) {
     const points =
-      ctrl.data.standing.arrangements.find(a => a.id === p.id)?.points ||
+      ctrl.data.standing.arrangements.find(a => a.gameId === p.id)?.points ||
       ctrl.defaultArrangementPoints;
     return p.status === ids.draw
       ? points.d
