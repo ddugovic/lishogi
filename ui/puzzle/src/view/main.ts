@@ -112,7 +112,7 @@ export default function (ctrl: Controller): VNode {
         // we need the wrapping div here
         // so the siblings are only updated when ceval is added
         h(
-          'div.ceval-wrap',
+          `div.ceval-wrap.${ctrl.vm.lastFeedback}`,
           {
             class: { active: showCeval },
           },

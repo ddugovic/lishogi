@@ -12,6 +12,22 @@
 
   .ceval-wrap {
     flex: 0 0 40px;
+
+    &.fail:not(.active) .ceval {
+      border-top: 3px solid theme.$c-bad;
+
+      @include breakpoint.breakpoint(local.$mq-col2) {
+        border-top: none;
+      }
+    }
+
+    &.good:not(.active) .ceval {
+      border-top: 3px solid theme.$c-good;
+
+      @include breakpoint.breakpoint(local.$mq-col2) {
+        border-top: none;
+      }
+    }
   }
 
   .ceval {
@@ -126,13 +142,15 @@
     gap: 0.5rem;
   }
 
-  &.good,
-  &.win {
-    border-bottom: 3px solid theme.$c-good;
-  }
+  @include breakpoint.breakpoint(local.$mq-col2) {
+    &.good,
+    &.win {
+      border-bottom: 3px solid theme.$c-good;
+    }
 
-  &.fail {
-    border-bottom: 3px solid theme.$c-bad;
+    &.fail {
+      border-bottom: 3px solid theme.$c-bad;
+    }
   }
 
   .instruction {
