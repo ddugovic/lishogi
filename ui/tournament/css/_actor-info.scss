@@ -1,10 +1,16 @@
+@use 'pkg:breakpoint-sass' as breakpoint;
+@use 'pkg:common/abstract/media-queries';
 @use 'pkg:common/abstract/extends';
 @use 'pkg:common/abstract/mixins';
 @use 'pkg:common/theme';
 
 #modal-wrap.actor-info-modal {
-  width: 30em;
+  width: 26em;
   padding: 0;
+
+  @include breakpoint.breakpoint(media-queries.$mq-xx-small) {
+    width: 30em;
+  }
 
   .tour__actor-info {
     position: relative;

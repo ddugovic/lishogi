@@ -59,6 +59,15 @@
       padding-left: 1rem;
       font-size: 4em;
     }
+
+    @include breakpoint.breakpoint(media-queries.$mq-not-small) {
+      thead th:nth-child(2),
+      thead th:nth-child(3),
+      td.icon,
+      td.date {
+        display: none;
+      }
+    }
   }
 
   .notours {

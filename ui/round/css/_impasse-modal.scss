@@ -1,7 +1,13 @@
+@use 'pkg:breakpoint-sass' as breakpoint;
+@use 'pkg:common/abstract/media-queries';
 @use 'pkg:common/theme';
 
 #modal-wrap.impasse-help {
-  width: 30em;
+  width: 26em;
+
+  @include breakpoint.breakpoint(media-queries.$mq-xx-small) {
+    width: 30em;
+  }
 
   h4 {
     font-size: 1.75rem;

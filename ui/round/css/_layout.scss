@@ -4,15 +4,18 @@
 @use 'pkg:common/abstract/uniboard';
 @use 'pkg:common/abstract/variables';
 @use 'local';
+@use 'sass:string';
 
 #main-wrap {
   --main-max-width: auto;
 
   @include breakpoint.breakpoint(local.$mq-col1) {
-    $vertical-total: 100vh - #{variables.$site-header-outer-height} -
-      #{local.$col1-player-clock-height * 2} - #{uniboard.$hands-gap} - 2vmin;
-    $vertical-total-no-hands: 100vh - #{variables.$site-header-outer-height} -
-      #{local.$col1-player-clock-height * 2} - 1vmin;
+    $vertical-total: string.unquote(
+      '100vh - #{variables.$site-header-outer-height} - #{local.$col1-player-clock-height * 2} - #{uniboard.$hands-gap} - 2vmin'
+    );
+    $vertical-total-no-hands: string.unquote(
+      '100vh - #{variables.$site-header-outer-height} - #{local.$col1-player-clock-height * 2} - 1vmin'
+    );
 
     --main-max-width: calc((#{$vertical-total}) / 12 * 9);
 

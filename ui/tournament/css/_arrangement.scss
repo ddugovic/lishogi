@@ -4,8 +4,12 @@
 @use 'pkg:common/theme';
 
 #modal-wrap.arrangement__modal {
-  width: 30em;
+  width: 26em;
   padding: 0;
+
+  @include breakpoint.breakpoint(media-queries.$mq-xx-small) {
+    width: 30em;
+  }
 
   .arr-modal {
     .arr-header {

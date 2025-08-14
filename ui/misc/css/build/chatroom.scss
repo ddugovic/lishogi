@@ -16,12 +16,19 @@ main.chat-room {
     display: flex;
     align-items: center;
     height: 3rem;
-    margin: 0 3rem;
     padding: 0 1.5rem;
     background: theme.$c-bg-zebra2;
 
     .title {
       margin-right: 0.5rem;
+    }
+
+    span {
+      white-space: nowrap;
+    }
+
+    @include breakpoint.breakpoint(uniboard.$mq-col2-uniboard) {
+      margin: 0 3rem;
     }
   }
 
