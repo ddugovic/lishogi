@@ -181,6 +181,7 @@ function movetime(
       layout: {
         padding: 10,
       },
+      clip: false,
       plugins: {
         legend: {
           display: false,

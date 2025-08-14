@@ -119,6 +119,7 @@ function main(
       datasets: [acpl, plyLineChart, ...divisionLines],
     },
     options: {
+      clip: false,
       interaction: {
         mode: 'nearest',
         axis: 'x',

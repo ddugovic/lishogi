@@ -76,7 +76,7 @@ export function plyLine(ply: number, mainline = true): ChartDataset<'line'> {
       { x: ply, y: chartYMin },
       { x: ply, y: chartYMax },
     ],
-    borderColor: accentColor(),
+    borderColor: !ply ? 'transparent' : accentColor(),
     pointRadius: 0,
     pointHoverRadius: 0,
     borderWidth: 1,
