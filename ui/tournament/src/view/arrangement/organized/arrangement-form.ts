@@ -323,7 +323,7 @@ const arrangementForm = (ctrl: TournamentController, state: NewArrangement): May
           h('h3', i18n('tourArrangements:existingGamesBetweenPlayers')),
           gamesBetweenUsers.length
             ? renderGames(ctrl, gamesBetweenUsers)
-            : h('span', i18n('noGameFound')),
+            : h('div.no-game', i18n('noGameFound')),
         ])
       : null,
   ]);
