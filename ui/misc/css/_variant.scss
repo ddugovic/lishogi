@@ -18,10 +18,12 @@
   padding: 1em 0;
 
   a.variant {
-    @extend %flex-center;
-
+    display: flex;
+    align-items: center;
     color: theme.$c-font;
-    height: 6em;
+    min-height: 6em;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 
     @include mixins.transition;
 

@@ -46,7 +46,7 @@ object variant {
             href     := routes.Prismic.variant(v.key),
             dataIcon := variantIcon(v),
           )(
-            span(
+            div(
               h2(variantName(v)),
               h3(cls := "headline")(variantDescription(v)),
             ),
