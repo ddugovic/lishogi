@@ -126,7 +126,7 @@ declare global {
     publish: () => void;
     changeSet: (s: string) => void;
     set: () => string;
-    loadStandard: (name: string) => void;
+    loadStandard: (name: string, soundSet?: string) => void;
   }
 
   interface LishogiSpeech {

@@ -34,7 +34,9 @@ export function createSound(): typeof window.lishogi.sound {
   function loadStandard(name: Name, soundSet?: string) {
     if (!enabled()) return;
     const path = capitalize(name);
-    loadOggOrMp3(name, `${state.baseUrl}/${soundSet || state.soundSet}/${path}`);
+    if (!state.sounds.get(path)) {
+      loadOggOrMp3(name, `${state.baseUrl}/${soundSet || state.soundSet}/${path}`);
+    }
   }
 
   function preloadGameSounds(clock = false) {
