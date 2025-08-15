@@ -48,6 +48,11 @@
     justify-content: space-between;
     border-left: 3px solid theme.$c-primary;
 
+    &.current,
+    &.hist {
+      border-left-color: transparent;
+    }
+
     &.good,
     &.win {
       border-left-color: theme.$c-good;
@@ -160,6 +165,7 @@
 
     strong {
       font-size: 1.75em;
+      text-align: center;
     }
 
     em {
