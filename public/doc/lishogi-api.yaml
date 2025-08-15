@@ -1373,7 +1373,7 @@ paths:
                   description: Clock periods for byoyomi
                   example: 1
                   enum: [0, 1, 2, 3, 4, 5]
-               startDate:
+                startDate:
                   type: integer
                   description: Timestamp to start the tournament at a given date and time.
                 variant:
