@@ -1,0 +1,89 @@
+@use 'sass:meta';
+@use 'pkg:common/abstract/extends';
+
+@mixin holiday-title($content, $args...) {
+  .site-beta {
+    display: none;
+  }
+
+  .site-title {
+    position: relative;
+    padding-right: 2.5rem;
+
+    &::after {
+      @extend %data-icon;
+
+      content: $content;
+      position: absolute;
+      right: -0.5rem;
+      will-change: transform;
+
+      @each $prop, $val in meta.keywords($args) {
+        #{$prop}: #{$val};
+      }
+    }
+  }
+}
+
+// halloween
+body[data-date='30-10'],
+body[data-date='31-10'] {
+  @include holiday-title(
+    '~',
+    $animation: ghost-float 6s linear infinite,
+    $transform: translateX(0) translateY(6px) rotate(0deg)
+  );
+}
+
+@keyframes ghost-float {
+  0% {
+    transform: translateX(0) translateY(6px) rotate(0deg);
+  }
+  20% {
+    transform: translateX(-1px) translateY(0px) rotate(-8deg);
+  }
+  50% {
+    transform: translateX(0) translateY(-6px) rotate(3deg);
+  }
+  80% {
+    transform: translateX(2px) translateY(0px) rotate(6deg);
+  }
+  100% {
+    transform: translateX(0) translateY(6px) rotate(0deg);
+  }
+}
+
+// christmas
+body[data-date='24-12'],
+body[data-date='25-12'] {
+  @include holiday-title(
+    '¿',
+    $animation: snowman-wiggle 3s linear infinite,
+    $top: -5px,
+    $transform-origin: bottom center
+  );
+}
+
+@keyframes snowman-wiggle {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(12deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  75% {
+    transform: rotate(-10deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+// new year
+body[data-date='31-12'],
+body[data-date='01-01'] {
+  @include holiday-title('<');
+}
