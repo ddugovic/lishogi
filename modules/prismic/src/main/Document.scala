@@ -5,42 +5,21 @@ import play.api.libs.json._
 
 import lila.prismic.Fragment.DocumentLink
 
-case class LinkedDocument(
-    id: String,
-    uid: Option[String],
-    slug: Option[String],
-    typ: String,
-    tags: Seq[String],
-)
-
-private[prismic] object LinkedDocument {
-
-  implicit val reader: Reads[LinkedDocument] = (
-    (__ \ "id").read[String] and
-      (__ \ "uid").readNullable[String] and
-      (__ \ "slug").readNullable[String] and
-      (__ \ "type").read[String] and
-      (__ \ "tags").read[Seq[String]]
-  )(LinkedDocument.apply _)
-}
-
 case class Document(
     id: String,
     uid: Option[String],
     typ: String,
     href: String,
     tags: Seq[String],
-    slugs: Seq[String],
-    linkedDocuments: List[LinkedDocument],
+    lang: String,
+    alternateLanguages: Seq[Document.AlternateLanguage],
     fragments: Map[String, Fragment],
 ) extends WithFragments {
-
-  def slug: String = slugs.headOption.getOrElse("-")
 
   def isTagged(requiredTags: Seq[String]) = requiredTags.forall(tag => tags.contains(tag))
 
   def asDocumentLink: DocumentLink =
-    Fragment.DocumentLink(id, uid, typ, tags, slug, isBroken = false)
+    Fragment.DocumentLink(id, uid, typ, tags, lang, isBroken = false)
 }
 
 private[prismic] object Document {
@@ -70,15 +49,13 @@ private[prismic] object Document {
       .flatMap(_.reads(jsvalue \ "value" get).asOpt)
   }
 
-  private def decode(slugs: Seq[String]) = slugs.map(java.net.URLDecoder.decode(_, "UTF-8"))
-
   implicit def reader: Reads[Document] = (
     (__ \ "id").read[String] and
       (__ \ "uid").readNullable[String] and
       (__ \ "href").read[String] and
       (__ \ "tags").read[Seq[String]] and
-      (__ \ "slugs").read[Seq[String]].map(decode) and
-      (__ \ "linked_documents").readNullable[List[LinkedDocument]].map(_.getOrElse(Nil)) and
+      (__ \ "lang").read[String] and
+      (__ \ "alternate_languages").readNullable[Seq[AlternateLanguage]].map(_.getOrElse(Nil)) and
       (__ \ "type").read[String].flatMap[(String, Map[String, Fragment])] { typ =>
         (__ \ "data" \ typ)
           .read[JsObject]
@@ -102,8 +79,27 @@ private[prismic] object Document {
           }
           .map(data => (typ, data))
       }
-  )((id, uid, href, tags, slugs, linkedDocuments, typAndData) =>
-    Document(id, uid, typAndData._1, href, tags, slugs, linkedDocuments, typAndData._2),
+  )((id, uid, href, tags, lang, alternateLanguages, typAndData) =>
+    Document(
+      id,
+      uid,
+      typAndData._1,
+      href,
+      tags,
+      lang,
+      alternateLanguages,
+      typAndData._2,
+    ),
   )
 
+  case class AlternateLanguage(id: String, uid: Option[String], typ: String, lang: String)
+
+  object AlternateLanguage {
+    implicit val reader: Reads[AlternateLanguage] = (
+      (__ \ "id").read[String] and
+        (__ \ "uid").readNullable[String] and
+        (__ \ "type").read[String] and
+        (__ \ "lang").read[String]
+    )(AlternateLanguage.apply _)
+  }
 }

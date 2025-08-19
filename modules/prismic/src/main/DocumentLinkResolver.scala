@@ -8,7 +8,7 @@ trait DocumentLinkResolver {
       document.uid,
       document.typ,
       document.tags,
-      document.slug,
+      document.lang,
       isBroken = false,
     ),
   )

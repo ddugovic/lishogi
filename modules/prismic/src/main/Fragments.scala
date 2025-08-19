@@ -75,12 +75,12 @@ object Fragment {
       uid: Option[String],
       typ: String,
       tags: Seq[String],
-      slug: String,
+      lang: String,
       isBroken: Boolean,
   ) extends Link {
     override def getUrl(linkResolver: DocumentLinkResolver) = linkResolver(this)
     def asHtml(linkResolver: DocumentLinkResolver): String =
-      s"""<a href="${linkResolver(this)}">$slug</a>"""
+      s"""<a href="${linkResolver(this)}">${uid.getOrElse(id)}</a>"""
   }
 
   object DocumentLink {
@@ -92,7 +92,7 @@ object Fragment {
             (__ \ "uid").readNullable[String] and
             (__ \ "type").read[String] and
             (__ \ "tags").readNullable[Seq[String]].map(_.getOrElse(Nil)) and
-            (__ \ "slug").read[String] tupled,
+            (__ \ "lang").readNullable[String].map(_.getOrElse("en-us")) tupled,
         ) and
           (__ \ "isBroken").readNullable[Boolean].map(_.getOrElse(false))
       ).tupled.map(link =>
