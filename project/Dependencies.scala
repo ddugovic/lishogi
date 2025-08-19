@@ -5,12 +5,10 @@ object Dependencies {
 
   object Resolvers {
 
-    val sonatype  = Resolver.sonatypeOssRepos("releases")
-    val sonatypeS = Resolver.sonatypeOssRepos("snapshots")
     val lilaMaven =
       "lila-maven" at "https://raw.githubusercontent.com/lichess-org/lila-maven/master"
 
-    val commons = Seq(lilaMaven) ++ sonatype ++ sonatypeS
+    val commons = Seq(lilaMaven)
   }
 
   val shogi     = "io.github.wandererxii" %% "scalashogi"           % "12.2.1"
