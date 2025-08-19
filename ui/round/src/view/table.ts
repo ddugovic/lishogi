@@ -1,3 +1,4 @@
+import { icons as fontIcons } from 'common/icons';
 import type { MaybeVNodes } from 'common/snabbdom';
 import * as game from 'game';
 import * as status from 'game/status';
@@ -58,11 +59,11 @@ export const renderTablePlay = (ctrl: RoundController): MaybeVNodes => {
       ? []
       : [
           game.abortable(d)
-            ? button.standard(ctrl, undefined, 'L', i18n('abortGame'), 'abort')
+            ? button.standard(ctrl, undefined, fontIcons.cancel, i18n('abortGame'), 'abort')
             : button.standard(
                 ctrl,
                 game.takebackable,
-                'i',
+                fontIcons.back,
                 i18n('proposeATakeback'),
                 'takeback-yes',
                 ctrl.takebackYes,
@@ -71,8 +72,13 @@ export const renderTablePlay = (ctrl: RoundController): MaybeVNodes => {
           ctrl.showDrawButton()
             ? ctrl.drawConfirm
               ? button.drawConfirm(ctrl)
-              : button.standard(ctrl, ctrl.canOfferDraw, '', i18n('offerDraw'), 'draw-yes', () =>
-                  ctrl.offerDraw(true),
+              : button.standard(
+                  ctrl,
+                  ctrl.canOfferDraw,
+                  fontIcons.half,
+                  i18n('offerDraw'),
+                  'draw-yes',
+                  () => ctrl.offerDraw(true),
                 )
             : null,
           pausable
@@ -81,7 +87,7 @@ export const renderTablePlay = (ctrl: RoundController): MaybeVNodes => {
               : button.standard(
                   ctrl,
                   ctrl.canOfferPause,
-                  'Z',
+                  fontIcons.pause,
                   i18n('offerAdjournment'),
                   'pause-yes',
                   () => ctrl.offerPause(true),
@@ -89,8 +95,13 @@ export const renderTablePlay = (ctrl: RoundController): MaybeVNodes => {
             : null,
           ctrl.resignConfirm
             ? button.resignConfirm(ctrl)
-            : button.standard(ctrl, game.resignable, 'b', i18n('resign'), 'resign-confirm', () =>
-                ctrl.resign(true),
+            : button.standard(
+                ctrl,
+                game.resignable,
+                fontIcons.surrender,
+                i18n('resign'),
+                'resign-confirm',
+                () => ctrl.resign(true),
               ),
           replay.analysisButton(ctrl),
         ];

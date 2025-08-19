@@ -8,13 +8,6 @@ export function notifyApp(): typeof window.lishogi.notifyApp {
   const $toggle = $('#notify-toggle');
   const isVisible = () => $('#notify-app').is(':visible');
   const permissionChanged = () => {
-    $toggle
-      .find('span')
-      .attr(
-        'data-icon',
-        'Notification' in window && Notification.permission == 'granted' ? '\ue00f' : '\xbf',
-      );
-
     if (instance) instance.redraw();
   };
 

@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { isCol1 } from 'common/mobile';
 import type { MaybeVNodes } from 'common/snabbdom';
 import throttle from 'common/throttle';
@@ -187,7 +188,7 @@ function renderButtons(ctrl: RoundController) {
 
 function initMessage(d: RoundData) {
   return game.playable(d) && d.game.plies === 0 && !d.player.spectator
-    ? h('div.message', util.justIcon(''), [
+    ? h('div.message', util.justIcon(icons.infoCircle), [
         h('div', [
           i18nFormatCapitalized(
             'youPlayAsX',

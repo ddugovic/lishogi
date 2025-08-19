@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import * as game from 'game';
 import type { Player } from 'game/interfaces';
 import { ids } from 'game/status';
@@ -145,7 +146,7 @@ function showBerserk(ctrl: RoundController, color: Color): boolean {
 }
 
 function renderBerserk(ctrl: RoundController, color: Color, position: Position) {
-  return showBerserk(ctrl, color) ? h(`div.berserked.${position}`, justIcon('`')) : null;
+  return showBerserk(ctrl, color) ? h(`div.berserked.${position}`, justIcon(icons.bodyCut)) : null;
 }
 
 function goBerserk(ctrl: RoundController) {

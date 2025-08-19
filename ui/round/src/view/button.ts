@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import type { MaybeVNode, MaybeVNodes } from 'common/snabbdom';
 import spinner from 'common/spinner';
 import * as game from 'game';
@@ -303,7 +304,7 @@ export function impasse(ctrl: RoundController): MaybeVNode {
         ctrl.redraw();
       }),
     },
-    [h('span', ctrl.nvui ? [i18n('impasse')] : util.justIcon('&'))],
+    [h('span', ctrl.nvui ? [i18n('impasse')] : util.justIcon(icons.bookAlt))],
   );
 }
 
@@ -358,7 +359,7 @@ export function resignConfirm(ctrl: RoundController): VNode {
 }
 
 export function drawConfirm(ctrl: RoundController): VNode {
-  return actConfirm(ctrl.offerDraw, 'offerDraw', i18n('offerDraw'), '', 'draw-yes');
+  return actConfirm(ctrl.offerDraw, 'offerDraw', i18n('offerDraw'), icons.half, 'draw-yes');
 }
 
 export function pauseConfirm(ctrl: RoundController): VNode {
@@ -542,7 +543,7 @@ export function backToTournament(ctrl: RoundController): VNode | undefined {
                   action: `/tournament/${d.tournament.id}/withdraw`,
                 },
               },
-              [h('button.text.fbt.weak', util.justIcon('Z'), i18n('pause'))],
+              [h('button.text.fbt.weak', util.justIcon(icons.pause), i18n('pause'))],
             )
           : undefined,
         analysisButton(ctrl),
