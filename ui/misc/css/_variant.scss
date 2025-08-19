@@ -3,6 +3,13 @@
 @use 'pkg:common/theme';
 
 .variant {
+  h1::before {
+    background: theme.$c-brag;
+    color: theme.$c-brag-over;
+    padding: 0.5rem;
+    border-radius: 50%;
+  }
+
   .headline {
     font-size: 1.2em;
     font-style: italic;
