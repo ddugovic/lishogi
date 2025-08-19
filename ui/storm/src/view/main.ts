@@ -34,6 +34,7 @@ const shogigroundBoard = (ctrl: StormCtrl): VNode =>
             ctrl.pref,
             ctrl.userMove,
             ctrl.userDrop,
+            ctrl.shogiground.state,
           ),
         );
       },

@@ -8,7 +8,7 @@ import view from '../view/main';
 const patch = init([classModule, attributesModule]);
 
 function main(opts: StormOpts): void {
-  const element = document.querySelector('.storm storm-app')!;
+  const element = document.querySelector('.storm.storm-app')!;
 
   const ctrl = new StormCtrl(opts, redraw);
 
