@@ -5,6 +5,7 @@ import scala.util._
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
+import io.mola.galimatias.URL
 import org.joda.time._
 
 trait HtmlSerializer {
@@ -281,7 +282,27 @@ object Fragment {
     case class View(url: String, width: Int, height: Int, alt: Option[String]) {
       def ratio = width / height
       def asHtml: String =
-        s"""<img alt="${alt.getOrElse("")}" src="${url}" width="${width}" height="${height}" />"""
+        s"""<img alt="${alt.getOrElse("")}" src="${highQualityUrl(url).getOrElse(
+            url,
+          )}" width="${width}" height="${height}" />"""
+      private def highQualityUrl(url: String): Option[String] =
+        Try {
+          val parsedUrl = URL.parse(url)
+          val currentQuery = Option(parsedUrl.query())
+            .map(
+              _.split("&").toList
+                .filterNot(param =>
+                  param.startsWith("auto=") ||
+                    param.startsWith("q="),
+                )
+                .filter(_.nonEmpty),
+            )
+            .getOrElse(Nil)
+
+          val newQuery = (currentQuery :+ "q=100").mkString("&")
+
+          parsedUrl.withQuery(newQuery).toString
+        }.toOption
     }
 
     implicit val viewReader: Reads[View] =
