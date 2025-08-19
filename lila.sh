@@ -18,8 +18,6 @@ if [ ! -f "conf/application.conf" ]; then
   cp conf/application.conf.default conf/application.conf
 fi
 
-java_env="-Dreactivemongo.api.bson.document.strict=false"
-
 cat << "BANNER"
   _______   _ _     _                 _                  
      |     | (_)___| |__   ___   __ _(_)  ___  _ __ __ _ 
@@ -41,6 +39,5 @@ elif [ "$major_version" -gt 17 ]; then
   echo "Warning: production uses Java version 17."
 fi
 
-command="sbt $java_env $@"
-echo $command
+command="sbt $@"
 $command
