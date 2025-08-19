@@ -13,6 +13,9 @@ final class BlogApi(
 
   private def collection = config.collection
 
+  def toFullPost(doc: Document): Option[FullPost] =
+    FullPost.fromDocument(collection)(doc)
+
   def recent(
       api: Api,
       page: Int,
@@ -34,23 +37,20 @@ final class BlogApi(
       .set("lang", "*")
       .query(Predicate.at("document.id", id))
       .ref(api.master.ref)
-      .submit() map (_.results.flatMap(doc => FullPost.fromDocument(collection)(doc)).headOption)
+      .submit() map (_.results.flatMap(doc => toFullPost(doc)).headOption)
 
-  def one(prismic: BlogApi.Context, id: String): Fu[Option[FullPost]] =
-    one(prismic.api, id)
-
-  def latest(prismic: BlogApi.Context, lang: BlogLang): Fu[Option[FullPost]] =
-    prismic.api.search
+  def latest(api: Api, lang: BlogLang): Fu[Option[FullPost]] =
+    api.search
       .set("lang", lang.code)
-      .ref(prismic.api.master.ref)
+      .ref(api.master.ref)
       .orderings(s"[my.$collection.date desc]")
       .pageSize(1)
-      .submit() map (_.results.flatMap(doc => FullPost.fromDocument(collection)(doc)).headOption)
+      .submit() map (_.results.flatMap(doc => toFullPost(doc)).headOption)
 
-  def byYear(prismic: BlogApi.Context, year: Int, lang: BlogLang): Fu[List[MiniPost]] =
-    prismic.api.search
+  def byYear(api: Api, year: Int, lang: BlogLang): Fu[List[MiniPost]] =
+    api.search
       .set("lang", lang.code)
-      .ref(prismic.api.master.ref)
+      .ref(api.master.ref)
       .query(
         Predicate.at("document.type", collection),
         Predicate.year(s"my.$collection.date", year),
@@ -77,6 +77,14 @@ final class BlogApi(
       val docs = res.??(_.currentPageResults).toList
       (docs.nonEmpty ?? all(page + 1)) map (docs ::: _)
     }
+
+  def allByUid(uid: String)(implicit prismic: BlogApi.Context): Fu[List[Document]] =
+    prismic.api.search
+      .set("lang", BlogLang.All.code)
+      .query(Predicate.at(s"document.type", collection), Predicate.at(s"my.$collection.uid", uid))
+      .ref(prismic.api.master.ref)
+      .submit()
+      .map(_.results)
 
 }
 

@@ -23,14 +23,17 @@ object show {
         )
         .some,
       csp = defaultCsp.withTwitter.some,
-      withHrefLangs = post.allLangIds.map { ids =>
-        lila.i18n.LangList
-          .Custom(
-            Map(
-              "en" -> routes.Blog.show(ids.en).url,
-              "ja" -> routes.Blog.show(ids.ja).url,
-            ),
-          )
+      withHrefLangs = {
+        val langMap =
+          post.doc.alternateLanguages.foldLeft(
+            Map[String, String](post.lang.language -> routes.Blog.show(post.id).url),
+          ) { case (acc, cur) =>
+            acc.updated(
+              lila.blog.BlogLang.fromLangCode(cur.lang).language,
+              routes.Blog.show(cur.id).url,
+            )
+          }
+        (langMap.size > 1) option lila.i18n.LangList.Custom(langMap)
       },
     )(
       main(cls := "page-menu page-small")(
@@ -47,17 +50,18 @@ object show {
               .map(lila.blog.BlogTransform.markdown.apply)
               .map(raw),
           ),
-          ctx.noKid option
+          post.doc.uid.ifTrue(ctx.noKid) map { uid =>
             div(cls := "footer")(
               a(
-                href     := routes.Blog.discuss(post.doc.id),
+                href     := routes.Blog.discuss(uid, post.doc.id),
                 cls      := "button text discuss",
                 dataIcon := "d",
               )(
                 trans.discussBlogForum(),
               ),
               views.html.base.bits.connectLinks,
-            ),
+            )
+          },
         ),
       ),
     )

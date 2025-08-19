@@ -45,8 +45,8 @@ final class TopicRepo(val coll: Coll, filter: Filter = Safe)(implicit
   def byTree(categSlug: String, slug: String): Fu[Option[Topic]] =
     coll.one[Topic]($doc("categId" -> categSlug, "slug" -> slug) ++ trollFilter)
 
-  def existsByTree(categSlug: String, slug: String): Fu[Boolean] =
-    coll.exists($doc("categId" -> categSlug, "slug" -> slug))
+  def byTree(categSlug: String, slugs: List[String]): Fu[List[Topic]] =
+    coll.list[Topic]($doc("categId" -> categSlug, "slug" $in slugs))
 
   def stickyByCateg(categ: Categ): Fu[List[Topic]] =
     coll.list[Topic](byCategQuery(categ) ++ stickyQuery)

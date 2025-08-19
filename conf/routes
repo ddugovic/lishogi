@@ -63,10 +63,10 @@ GET   /dasher                          controllers.Dasher.get
 GET   /blog                            controllers.Blog.index(page: Int ?= 1)
 GET   /blog/all                        controllers.Blog.all
 GET   /blog/:year                      controllers.Blog.year(year: Int)
-GET   /blog/discuss/:id                controllers.Blog.discuss(id: String)
+GET   /blog/discuss/:uid/:id           controllers.Blog.discuss(uid: String, id: String)
 GET   /blog/post/latest                controllers.Blog.latest
+GET   /blog/post/uid/:uid              controllers.Blog.showUid(uid: String)
 GET   /blog/post/:id                   controllers.Blog.show(id: String)
-GET   /blog/:id/:slug                  controllers.Blog.showBc(id: String, slug: String)
 GET   /blog.atom                       controllers.Blog.atom
 GET   /blog.txt                        controllers.Blog.sitemapTxt
 

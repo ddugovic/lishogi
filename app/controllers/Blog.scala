@@ -25,10 +25,21 @@ final class Blog(
       }
     }
 
+  def showUid(uid: String) =
+    WithPrismic { implicit ctx => implicit prismic =>
+      blogApi.allByUid(uid) flatMap { docs =>
+        val lang = BlogLang.fromLang(ctx.lang)
+        docs
+          .find(d => BlogLang.fromLangCode(d.lang) == lang)
+          .orElse(docs.headOption)
+          .fold(notFound) { d => fuccess(Redirect(routes.Blog.show(d.id))) }
+      }
+    }
+
   def show(id: String) =
     WithPrismic { implicit ctx => implicit prismic =>
       pageHit
-      blogApi.one(prismic, id) flatMap {
+      blogApi.one(prismic.api, id) flatMap {
         case Some(post)
             if (post.isJapanese && ctx.isAnon && ctx.req.session.get("lang").isEmpty) => {
           val langCtx = ctx withLang lila.i18n.I18nLangPicker.byStr("ja-JP").getOrElse(ctx.lang)
@@ -39,18 +50,9 @@ final class Blog(
       }
     }
 
-  def showBc(id: String, slug: String) =
-    WithPrismic { implicit ctx => implicit prismic =>
-      blogApi.one(prismic, id) flatMap {
-        case Some(post) if post.doc.slugs.contains(slug) =>
-          fuccess(MovedPermanently(routes.Blog.show(post.id).url))
-        case _ => notFound
-      }
-    }
-
   def latest =
     WithPrismic { implicit ctx => implicit prismic =>
-      blogApi.latest(prismic, BlogLang.fromLang(ctx.lang)) flatMap {
+      blogApi.latest(prismic.api, BlogLang.fromLang(ctx.lang)) flatMap {
         case Some(post) =>
           fuccess(Redirect(routes.Blog.show(post.id)))
         case _ => notFound
@@ -105,7 +107,7 @@ final class Blog(
 
   def all =
     WithPrismic { implicit ctx => implicit prismic =>
-      blogApi.byYear(prismic, lila.blog.thisYear, BlogLang.fromLang(ctx.lang)) map { posts =>
+      blogApi.byYear(prismic.api, lila.blog.thisYear, BlogLang.fromLang(ctx.lang)) map { posts =>
         Ok(views.html.blog.index.byYear(lila.blog.thisYear, posts))
       }
     }
@@ -113,32 +115,38 @@ final class Blog(
   def year(year: Int) =
     WithPrismic { implicit ctx => implicit prismic =>
       if (lila.blog.allYears contains year)
-        blogApi.byYear(prismic, year, BlogLang.fromLang(ctx.lang)) map { posts =>
+        blogApi.byYear(prismic.api, year, BlogLang.fromLang(ctx.lang)) map { posts =>
           Ok(views.html.blog.index.byYear(year, posts))
         }
       else notFound
     }
 
-  def discuss(id: String) =
+  def discuss(uid: String, id: String) =
     WithPrismic { _ => implicit prismic =>
       val categSlug = "general-shogi-discussion"
-      val topicSlug = s"blog-$id"
-      val redirect  = Redirect(routes.ForumTopic.show(categSlug, topicSlug))
-      env.forum.topicRepo.existsByTree(categSlug, topicSlug) flatMap {
-        case true => fuccess(redirect)
+      val uidSlug   = s"blog-$uid"
+      val idSlug    = s"blog-$id" // bc
+      env.forum.topicRepo.byTree(categSlug, List(uidSlug, idSlug)) map { topics =>
+        topics.find(_.slug == idSlug).orElse(topics.headOption)
+      } flatMap {
+        case Some(topic) =>
+          fuccess(
+            Redirect(routes.ForumTopic.show(topic.categId, topic.slug)),
+          )
         case _ =>
-          blogApi.one(prismic.api, id) flatMap {
-            _ ?? { post =>
+          blogApi.allByUid(uid) flatMap { docs =>
+            val posts = docs.exists(_.id == id) ?? docs.flatMap(blogApi.toFullPost)
+            posts.find(_.isEnglish).orElse(posts.headOption) ?? { post =>
               env.forum.categRepo.bySlug(categSlug) flatMap {
                 _ ?? { categ =>
                   env.forum.topicApi.makeBlogDiscuss(
                     categ = categ,
-                    slug = topicSlug,
+                    slug = uidSlug,
                     name = post.title,
-                    url = s"${env.net.baseUrl}${routes.Blog.show(post.id)}",
+                    url = s"${env.net.baseUrl}${routes.Blog.showUid(uid)}",
                   )
                 }
-              } inject redirect
+              } inject Redirect(routes.ForumTopic.show(categSlug, uidSlug))
             }
           }
       }

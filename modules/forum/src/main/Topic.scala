@@ -63,7 +63,9 @@ object Topic {
   def nameToId(name: String) =
     (lila.common.String slugify name) pipe { slug =>
       // if most chars are not latin, go for random slug
-      if (slug.sizeIs > (name.size / 2)) slug else ThreadLocalRandom nextString 8
+      val s = if (slug.sizeIs > (name.size / 2)) slug else ThreadLocalRandom nextString 8
+      // prevent possible collision with blog topics
+      if (s.startsWith("blog")) s"n-$s" else s
     }
 
   val idSize = 8
