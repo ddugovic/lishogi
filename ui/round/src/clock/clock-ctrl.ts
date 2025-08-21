@@ -14,6 +14,12 @@ interface ClockOpts {
 }
 
 type TenthsPref = 0 | 1 | 2;
+const ByoyomiPref = {
+  Tick: 0,
+  English: 1,
+  Japanese: 2,
+};
+type ByoyomiPref = (typeof ByoyomiPref)[keyof typeof ByoyomiPref];
 
 export interface ClockData {
   running: boolean;
@@ -49,6 +55,8 @@ interface EmergSound {
   lowtime(): void;
   nextPeriod(): void;
   tick(): void;
+  byoyomiCount(count: number): void;
+  byoyomiStyle: ByoyomiPref;
   byoTicks?: number;
   next?: number;
   delay: Millis;
@@ -63,6 +71,8 @@ export class ClockController {
     lowtime: () => window.lishogi.sound.play('lowTime'),
     nextPeriod: () => window.lishogi.sound.play('period'),
     tick: () => window.lishogi.sound.play('tick'),
+    byoyomiCount: count => window.lishogi.sound.play(`countDown${count}`),
+    byoyomiStyle: ByoyomiPref.Tick,
     delay: 20000,
     playable: {
       sente: true,
@@ -116,6 +126,17 @@ export class ClockController {
 
     this.emergMs = 1000 * Math.min(60, Math.max(10, cdata.initial * 0.125));
     this.byoEmergeS = cdata.clockCountdown ?? 3;
+    this.emergSound.byoyomiStyle = d.pref.byoyomiStyle ?? ByoyomiPref.Tick;
+
+    for (let i = 10; i >= 0; i--) {
+      const key = `countDown${i}`;
+      const jpStyle = this.emergSound.byoyomiStyle === ByoyomiPref.Japanese;
+      if (jpStyle && i === 0) {
+        // Zero is not used in japanese count-up
+        continue;
+      }
+      window.lishogi.sound.loadStandard(key, jpStyle ? 'jp' : undefined);
+    }
 
     this.setClock(d, cdata.sente, cdata.gote, cdata.sPeriods, cdata.gPeriods);
   }
@@ -228,7 +249,21 @@ export class ClockController {
         this.isUsingByo(color)
       ) {
         this.emergSound.byoTicks = Math.floor(millis / 1000);
-        this.emergSound.tick();
+        if (this.emergSound.byoyomiStyle === ByoyomiPref.Japanese) {
+          // Japanese byo-yomi is counted from 1 to 9
+          const jpByoCount = this.byoEmergeS - this.emergSound.byoTicks - 1;
+          if (jpByoCount === 0) {
+            // Don't count zero if using japanese byo-yomi count
+            return;
+          }
+          this.emergSound.byoyomiCount(jpByoCount);
+        } else if (this.emergSound.byoyomiStyle === ByoyomiPref.English) {
+          // Add 1 to make the zeroth second to be counted as 1 (seconds left)
+          const enByoCount = this.emergSound.byoTicks + 1;
+          this.emergSound.byoyomiCount(enByoCount);
+        } else {
+          this.emergSound.tick();
+        }
       }
     }
   };
