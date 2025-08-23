@@ -58,6 +58,9 @@ function main(opts: CoordinatesOpts): void {
           movable: {
             free: false,
           },
+          highlight: {
+            hovered: true,
+          },
           orientation: color,
         },
         {

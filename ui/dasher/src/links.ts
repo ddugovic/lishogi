@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { i18n } from 'i18n';
 import { h, type VNode } from 'snabbdom';
 import type { DasherCtrl, Mode } from './dasher';
@@ -12,17 +13,17 @@ export default function (ctrl: DasherCtrl): VNode {
       ? h('div.links', [
           h(
             'a.user-link.online.text.is-green',
-            linkCfg(`/@/${d.user.name}`, d.user.patron ? '' : ''),
+            linkCfg(`/@/${d.user.name}`, d.user.patron ? icons.patron : icons.circleFull),
             i18n('profile'),
           ),
 
-          d.inbox ? h('a.text', linkCfg('/inbox', 'e'), i18n('inbox')) : null,
+          d.inbox ? h('a.text', linkCfg('/inbox', icons.mail), i18n('inbox')) : null,
 
           h(
             'a.text',
             linkCfg(
               '/account/preferences/game-display',
-              '%',
+              icons.gear,
               ctrl.opts.playing ? { target: '_blank' } : undefined,
             ),
             i18n('preferences:preferences'),
@@ -32,15 +33,17 @@ export default function (ctrl: DasherCtrl): VNode {
             'a.text',
             linkCfg(
               `/insights/${d.user.name}`,
-              '7',
+              icons.target,
               ctrl.opts.playing ? { target: '_blank' } : undefined,
             ),
             i18n('insights:insights'),
           ),
 
-          !d.coach ? null : h('a.text', linkCfg('/coach/edit', ':'), i18n('coachManager')),
+          !d.coach ? null : h('a.text', linkCfg('/coach/edit', icons.coach), i18n('coachManager')),
 
-          !d.streamer ? null : h('a.text', linkCfg('/streamer/edit', ''), i18n('streamerManager')),
+          !d.streamer
+            ? null
+            : h('a.text', linkCfg('/streamer/edit', icons.mic), i18n('streamerManager')),
 
           h(
             'form.logout',
@@ -53,7 +56,7 @@ export default function (ctrl: DasherCtrl): VNode {
                 {
                   attrs: {
                     type: 'submit',
-                    'data-icon': 'w',
+                    'data-icon': icons.shutdown,
                   },
                 },
                 i18n('logOut'),
@@ -82,7 +85,7 @@ export default function (ctrl: DasherCtrl): VNode {
           'a.text',
           {
             attrs: {
-              'data-icon': 'K',
+              'data-icon': icons.correct,
               title: 'Keyboard: z',
             },
             hook: bind('click', () => window.lishogi.pubsub.emit('zen')),
@@ -113,6 +116,6 @@ function linkCfg(href: string, icon: string, more: any = undefined): any {
 function modeCfg(ctrl: DasherCtrl, m: Mode): any {
   return {
     hook: bind('click', () => ctrl.setMode(m)),
-    attrs: { 'data-icon': 'H' },
+    attrs: { 'data-icon': icons.right },
   };
 }

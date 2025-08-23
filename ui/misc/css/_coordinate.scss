@@ -52,6 +52,18 @@ $mq-col3: uniboard.$mq-col3-uniboard;
     grid-area: board;
   }
 
+  &.play &__board {
+    sg-squares sq.hover {
+      background: theme.$c-selected-hover;
+    }
+  }
+
+  &.wrong.play &__board {
+    sg-squares sq.hover {
+      background: theme.$c-bad;
+    }
+  }
+
   &__table {
     @extend %flex-center;
 
@@ -82,7 +94,7 @@ $mq-col3: uniboard.$mq-col3-uniboard;
     margin: variables.$block-gap;
   }
 
-  .hurry {
+  &.play .hurry {
     color: theme.$c-bad !important;
   }
 
