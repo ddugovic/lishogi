@@ -27,7 +27,7 @@ export async function createBuilder(
   const compiler = await sass.initAsyncCompiler();
 
   const postCssPlugins: postcss.AcceptedPlugin[] = !isProd
-    ? []
+    ? [autoprefixer({ remove: false })]
     : [
         autoprefixer({ remove: false }),
         cssnano({
