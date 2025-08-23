@@ -235,7 +235,10 @@ export default function (opts: PuzzleOpts, redraw: Redraw): Controller {
       if (p == 'good' || p == 'win') return -1;
       return 0;
     });
-    if (recursive) node.children.forEach(child => reorderChildren(path + child.id, true));
+    if (recursive)
+      node.children.forEach(child => {
+        reorderChildren(path + child.id, true);
+      });
   }
 
   function revertUserMove(): void {

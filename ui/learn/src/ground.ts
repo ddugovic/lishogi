@@ -126,7 +126,7 @@ export function createDrawable(level: Level, usiCList: UsiWithColor[] = []): Par
   const squares = level.squareHighlights?.(level, usiCList);
 
   if (level.obstacles)
-    level.obstacles.map(o => {
+    level.obstacles.forEach(o => {
       if (!dests.includes(o)) obastacles.push({ key: o, className: 'star' });
     });
 

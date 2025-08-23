@@ -179,7 +179,9 @@ export function renderBoard(pieces: Pieces, pov: Color, variant: VariantKey, sty
   board.push([' ', ...reversedFiles, ' ']);
   if (pov === 'gote') {
     board.reverse();
-    board.forEach(r => r.reverse());
+    board.forEach(r => {
+      r.reverse();
+    });
   }
   return board.map(line => line.join(' ')).join('\n');
 }

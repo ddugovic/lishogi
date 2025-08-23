@@ -25,7 +25,9 @@ async function main() {
     await rm(baseDestDir, { recursive: true, force: true });
     await Promise.all(variants.map(v => mkdir(path.join(baseDestDir, v), { recursive: true })));
 
-    variants.forEach(v => build(v));
+    variants.forEach(v => {
+      build(v);
+    });
 
     process.exit(0);
   } catch (err) {

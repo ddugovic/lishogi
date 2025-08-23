@@ -50,7 +50,7 @@ function main(
     const pointRadius = mainline.length > 50 ? 4 : 5;
     if (d.player.color === 'sente') blurs.reverse();
 
-    mainline.slice(1).map((node, index) => {
+    mainline.slice(1).forEach((node, index) => {
       const isSente = (node.ply & 1) === 1;
       let cp: number | undefined = node.eval && 0;
       if (node.eval?.mate)

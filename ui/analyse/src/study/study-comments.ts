@@ -38,7 +38,7 @@ export function currentComments(ctrl: AnalyseCtrl, includingMine: boolean): VNod
     comments.map((comment: Tree.Comment) => {
       const by: any = comment.by;
       const isMine = by.id && ctrl.opts.userId === by.id;
-      if (!includingMine && isMine) return;
+      if (!includingMine && isMine) return undefined;
       const canDelete = isMine || study.members.isOwner();
       return h(`div.study__comment.${comment.id}`, [
         canDelete && study.vm.mode.write

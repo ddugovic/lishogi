@@ -21,7 +21,9 @@ self.addEventListener('push', event => {
 
 async function handleNotificationClick(event: NotificationEvent): Promise<WindowClient | null> {
   const notifications = await self.registration.getNotifications();
-  notifications.forEach(notification => notification.close());
+  notifications.forEach(notification => {
+    notification.close();
+  });
 
   const windowClients = (await self.clients.matchAll({
     type: 'window',

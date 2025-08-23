@@ -48,7 +48,9 @@ export default function renderMsgs(ctrl: MsgCtrl, convo: Convo): VNode {
 function contentMsgs(ctrl: MsgCtrl, msgs: Msg[]): VNode[] {
   const dailies = groupMsgs(msgs);
   const nodes: VNode[] = [];
-  dailies.forEach(daily => nodes.push(...renderDaily(ctrl, daily)));
+  dailies.forEach(daily => {
+    nodes.push(...renderDaily(ctrl, daily));
+  });
   return nodes;
 }
 
@@ -120,9 +122,9 @@ const renderText = (msg: Msg) =>
             const el = vnode.elm as HTMLElement;
             el.innerHTML = msgEnhance(msg.text);
             el.classList.add('expand-text');
-            el.querySelectorAll('img').forEach(c =>
-              c.addEventListener('load', scroller.auto, { once: true }),
-            );
+            el.querySelectorAll('img').forEach(c => {
+              c.addEventListener('load', scroller.auto, { once: true });
+            });
           },
         },
       })

@@ -208,7 +208,7 @@ function renderMainlineCommentsOf(
   const withAuthor = node.comments!.some(c => c.by !== node.comments![0].by);
 
   return node.comments!.map(comment => {
-    if (comment.by === 'lishogi' && !ctx.showComputer) return;
+    if (comment.by === 'lishogi' && !ctx.showComputer) return undefined;
     let sel = `comment${colorClass}`;
     if (comment.text.startsWith('i18n{inaccuracy;}')) sel += '.inaccuracy';
     else if (comment.text.startsWith('i18n{mistake;}')) sel += '.mistake';

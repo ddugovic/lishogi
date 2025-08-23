@@ -95,7 +95,9 @@ function robinArrowControls(ctrl: TournamentController) {
 }
 
 function cleanupRobinArrowControls() {
-  listeners.forEach(unbind => unbind());
+  listeners.forEach(unbind => {
+    unbind();
+  });
   listeners = [];
 }
 

@@ -121,7 +121,9 @@ export function updateAll(root: Tree.Node, f: (node: Tree.Node) => void): void {
   // applies f recursively to all nodes
   function update(node: Tree.Node) {
     f(node);
-    node.children.forEach(update);
+    node.children.forEach(c => {
+      update(c);
+    });
   }
   update(root);
 }

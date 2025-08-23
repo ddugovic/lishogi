@@ -145,26 +145,26 @@ const setupHooks = (ctrl: ChatCtrl, chatEl: HTMLInputElement) => {
   const mouchEvents = ['touchstart', 'mousedown'];
 
   if (mouchListener)
-    mouchEvents.forEach(event =>
-      document.body.removeEventListener(event, mouchListener, { capture: true }),
-    );
+    mouchEvents.forEach(event => {
+      document.body.removeEventListener(event, mouchListener, { capture: true });
+    });
 
   mouchListener = (e: MouseEvent) => {
     if (!e.shiftKey && e.buttons !== 2 && e.button !== 2) chatEl.blur();
   };
 
   chatEl.onfocus = () =>
-    mouchEvents.forEach(event =>
+    mouchEvents.forEach(event => {
       document.body.addEventListener(event, mouchListener, {
         passive: true,
         capture: true,
-      }),
-    );
+      });
+    });
 
   chatEl.onblur = () =>
-    mouchEvents.forEach(event =>
-      document.body.removeEventListener(event, mouchListener, { capture: true }),
-    );
+    mouchEvents.forEach(event => {
+      document.body.removeEventListener(event, mouchListener, { capture: true });
+    });
 };
 
 function sameLines(l1: Line, l2: Line) {

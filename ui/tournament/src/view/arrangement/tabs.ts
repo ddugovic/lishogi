@@ -61,6 +61,8 @@ function tabs(ctrl: TournamentController, usedTabs: Tab[], asControls = false): 
                 disabled: !isIn(ctrl) || !!ctrl.data.isFinished,
               },
             );
+          default:
+            return null;
         }
       }),
       !isIn(ctrl) && asControls ? h('div.right', joinWithdraw(ctrl)) : undefined,

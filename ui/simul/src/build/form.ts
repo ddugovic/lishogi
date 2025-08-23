@@ -25,6 +25,8 @@ window.lishogi.ready.then(() => {
     if (moreThanOne) posInput.value = '';
   };
 
-  checkboxes.forEach(cb => cb.addEventListener('change', updateTextInputState));
+  checkboxes.forEach(cb => {
+    cb.addEventListener('change', updateTextInputState);
+  });
   updateTextInputState();
 });

@@ -281,9 +281,9 @@ export default class SetupCtrl {
   close(): void {
     this.save();
     this.isOpen = false;
-    document
-      .querySelectorAll('.lobby__start button.active')
-      .forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.lobby__start button.active').forEach(el => {
+      el.classList.remove('active');
+    });
     this.redraw();
   }
 

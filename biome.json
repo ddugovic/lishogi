@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.1.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
   "files": {
     "ignoreUnknown": true,
     "includes": ["**/ui/**/src/**/*.ts", "**/bin/scripts/**/*.ts"]
@@ -30,14 +30,17 @@
         "noDoubleEquals": "off",
         "noGlobalIsNan": "off",
         "noPrototypeBuiltins": "off",
-        "noDocumentCookie": "off"
+        "noDocumentCookie": "off",
+        "noUselessEscapeInString": "off",
+        "noTsIgnore": "off"
       },
       "complexity": {
         "noForEach": "off"
       },
       "correctness": {
         "noUnusedImports": "error",
-        "noUnusedVariables": "error"
+        "noUnusedVariables": "error",
+        "useParseIntRadix": "off"
       },
       "performance": {
         "noAccumulatingSpread": "off",

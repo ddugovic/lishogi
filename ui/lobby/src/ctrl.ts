@@ -263,7 +263,9 @@ export default class LobbyController {
       .filter(id => !this.alreadyWatching.includes(id));
     if (newIds.length) {
       setTimeout(() => this.socket.send('startWatching', newIds.join(' ')), 2000);
-      newIds.forEach(id => this.alreadyWatching.push(id));
+      newIds.forEach(id => {
+        this.alreadyWatching.push(id);
+      });
     }
   }
 

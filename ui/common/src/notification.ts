@@ -7,7 +7,9 @@ function listenToFocus() {
   if (!listening) {
     listening = true;
     window.addEventListener('focus', () => {
-      notifications.forEach(n => n.close());
+      notifications.forEach(n => {
+        n.close();
+      });
       notifications = [];
     });
   }

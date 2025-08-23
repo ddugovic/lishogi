@@ -268,11 +268,11 @@ function configureSrc(url: string) {
   return parsed.href;
 }
 
-// YouTube,  Twitter, studies, games
+// YouTube, Twitter, studies, games
 function main() {
   const as: Candidate[] = Array.from(document.querySelectorAll('.expand-text a'))
     .map((el: HTMLAnchorElement) => {
-      if (el.classList.contains('parsed')) return;
+      if (el.classList.contains('parsed')) return false;
       else el.classList.add('parsed');
 
       const parsed = parseLink(el);

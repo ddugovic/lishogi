@@ -139,10 +139,14 @@ export default function (opts: ChatOpts, redraw: Redraw): ChatCtrl {
     ['chat.permissions', onPermissions],
     ['palantir.toggle', palantir.enabled],
   ];
-  subs.forEach(([eventName, callback]) => li.pubsub.on(eventName, callback));
+  subs.forEach(([eventName, callback]) => {
+    li.pubsub.on(eventName, callback);
+  });
 
   const destroy = () => {
-    subs.forEach(([eventName, callback]) => li.pubsub.off(eventName, callback));
+    subs.forEach(([eventName, callback]) => {
+      li.pubsub.off(eventName, callback);
+    });
   };
 
   const emitEnabled = () => li.pubsub.emit('chat.enabled', vm.enabled);

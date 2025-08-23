@@ -16,14 +16,18 @@ export function idleTimer(delay: number, onIdle: () => void, onWakeUp: () => voi
 
   const startListening = () => {
     if (!listening) {
-      events.forEach(e => document.addEventListener(e, onActivity));
+      events.forEach(e => {
+        document.addEventListener(e, onActivity);
+      });
       listening = true;
     }
   };
 
   const stopListening = () => {
     if (listening) {
-      events.forEach(e => document.removeEventListener(e, onActivity));
+      events.forEach(e => {
+        document.removeEventListener(e, onActivity);
+      });
       listening = false;
     }
   };

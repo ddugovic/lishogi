@@ -17,7 +17,9 @@ export function createGraph(rootDir: string): Graph {
 
     if (graph.index[path]) {
       const paths = graph.index[path].importedBy;
-      paths.forEach(p => recImports(p, set));
+      paths.forEach(p => {
+        recImports(p, set);
+      });
     }
 
     return set;

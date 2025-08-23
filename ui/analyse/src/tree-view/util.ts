@@ -129,7 +129,7 @@ export function renderInlineCommentsOf(
   if (!ctx.ctrl.showComments || isEmpty(node.comments)) return [];
   return node
     .comments!.map(comment => {
-      if (comment.by === 'lishogi' && !ctx.showComputer) return;
+      if (comment.by === 'lishogi' && !ctx.showComputer) return undefined;
       const by = node.comments![1]
         ? `<span class="by">${commentAuthorText(comment.by)}</span>`
         : '';

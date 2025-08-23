@@ -33,7 +33,9 @@ export async function workspaceBuildConductor(
     signals.forEach(sig => {
       process.on(sig, async () => {
         await builder.stop();
-        fswatchers.forEach(fsw => fsw.close());
+        fswatchers.forEach(fsw => {
+          fsw.close();
+        });
         process.exit(0);
       });
     });

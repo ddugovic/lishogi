@@ -141,7 +141,9 @@ export default class LearnCtrl {
   }
 
   private clearTimetouts(): void {
-    this.timeouts.forEach(t => clearTimeout(t));
+    this.timeouts.forEach(t => {
+      clearTimeout(t);
+    });
     this.timeouts.length = 0;
   }
 

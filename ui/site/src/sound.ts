@@ -41,9 +41,17 @@ export function createSound(): typeof window.lishogi.sound {
 
   function preloadGameSounds(clock = false) {
     if (state.soundSet !== 'music') {
-      ['move', 'capture', 'check', 'genericNotify'].forEach(s => loadStandard(s));
+      ['move', 'capture', 'check', 'genericNotify'].forEach(s => {
+        loadStandard(s);
+      });
       if (clock) {
-        setTimeout(() => ['tick', 'lowTime', 'period'].forEach(s => loadStandard(s)), 1000 * 5);
+        setTimeout(
+          () =>
+            ['tick', 'lowTime', 'period'].forEach(s => {
+              loadStandard(s);
+            }),
+          1000 * 5,
+        );
       }
     }
   }

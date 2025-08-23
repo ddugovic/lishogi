@@ -124,7 +124,9 @@ function main(opts: PalantirOpts): Palantir | undefined {
       peer = undefined;
     }
     if (myStream) {
-      myStream.getTracks().forEach((t: any) => t.stop());
+      myStream.getTracks().forEach((t: any) => {
+        t.stop();
+      });
       myStream = undefined;
     }
     setState('off');

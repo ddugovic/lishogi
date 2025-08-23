@@ -57,13 +57,16 @@ function tablesHover(vnode: VNode) {
       const cellIndex = Array.from(tr.children).indexOf(td);
 
       requestAnimationFrame(() => {
-        wrapEl
-          .querySelectorAll('td.hovered, th.hovered')
-          .forEach(td => td.classList.remove('hovered'));
+        wrapEl.querySelectorAll('td.hovered, th.hovered').forEach(td => {
+          td.classList.remove('hovered');
+        });
 
         allTables.forEach(table => {
           const row = table.querySelectorAll('tr')[rowIndex];
-          if (row) row.querySelectorAll('td').forEach(td => td.classList.add('hovered'));
+          if (row)
+            row.querySelectorAll('td').forEach(td => {
+              td.classList.add('hovered');
+            });
         });
 
         // Only do column highlight for arrangement table
@@ -78,9 +81,9 @@ function tablesHover(vnode: VNode) {
 
     table.addEventListener('mouseleave', () => {
       requestAnimationFrame(() => {
-        wrapEl
-          .querySelectorAll('td.hovered, th.hovered')
-          .forEach(td => td.classList.remove('hovered'));
+        wrapEl.querySelectorAll('td.hovered, th.hovered').forEach(td => {
+          td.classList.remove('hovered');
+        });
       });
     });
   });

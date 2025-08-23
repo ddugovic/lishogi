@@ -12,7 +12,9 @@ export async function generateScssCssMap(
 
   const themeKeys = new Set();
   Object.values(themes).forEach(theme => {
-    Object.keys(theme).forEach(k => themeKeys.add(k));
+    Object.keys(theme).forEach(k => {
+      themeKeys.add(k);
+    });
   });
 
   for (const k of Array.from(themeKeys).sort()) {

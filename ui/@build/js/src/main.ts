@@ -66,7 +66,9 @@ function findImpactedPackages(pkg: Project, pkgs: Project[]): Project[] {
       const revDeps = pkgs.filter(p =>
         Object.keys(p.manifest.dependencies || {}).includes(currentPkg.manifest.name),
       );
-      revDeps.forEach(dep => traverseRevDeps(dep, visited));
+      revDeps.forEach(dep => {
+        traverseRevDeps(dep, visited);
+      });
     }
     return visited;
   };

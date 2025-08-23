@@ -11,7 +11,9 @@ export const initAll = (): void => {
   const minis = Array.from(
     document.getElementsByClassName('parse-sfen') as HTMLCollectionOf<HTMLElement>,
   );
-  minis.forEach(innerInit);
+  minis.forEach(n => {
+    innerInit(n);
+  });
 
   const liveMinis = minis.map(m => m.dataset.live).filter(m => m !== undefined);
   if (liveMinis.length) startWatching(liveMinis);

@@ -74,7 +74,7 @@ $c-study: theme.$c-primary;
 
         @supports (mask: url('') no-repeat center/contain) {
           & {
-            background-color: currentColor;
+            background-color: $c-study;
             mask-image: var(--icon, url('../icons/bookshelf.svg'));
             mask-repeat: no-repeat;
             mask-position: center;

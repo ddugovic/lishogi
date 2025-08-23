@@ -271,7 +271,9 @@ export class StrongSocket implements IStrongSocket {
 
     this.pingNow();
 
-    this.resendWhenOpen.forEach(([t, d, o]) => this.send(t, d, o));
+    this.resendWhenOpen.forEach(([t, d, o]) => {
+      this.send(t, d, o);
+    });
     this.resendWhenOpen = [];
 
     this.ackable.resend();
@@ -313,8 +315,8 @@ export class StrongSocket implements IStrongSocket {
     if (!url || !this.baseUrls.includes(url)) {
       url = this.baseUrls[Math.floor(Math.random() * this.baseUrls.length)];
       this.storage.set(url);
-    } else if (this.tryOtherUrl) {
-      const i = this.baseUrls.findIndex(u => u === url);
+    } else if (this.tryOtherUrl && this.baseUrls.length > 1) {
+      const i = this.baseUrls.indexOf(url);
       url = this.baseUrls[(i + 1) % this.baseUrls.length];
       this.storage.set(url);
     }

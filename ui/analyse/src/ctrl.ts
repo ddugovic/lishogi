@@ -715,7 +715,9 @@ export default class AnalyseCtrl {
           (prev.sfen.split(' ')[0].match(captureRegex) || []).length >
           (node.sfen.split(' ')[0].match(captureRegex) || []).length;
       }
-      node.children.forEach(c => update(c, node));
+      node.children.forEach(c => {
+        update(c, node);
+      });
     }
     update(this.tree.root);
   };

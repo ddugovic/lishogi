@@ -23,7 +23,9 @@ export default class CurrentPuzzle {
 
   position = (): Shogi => {
     const pos = parseSfen('standard', this.puzzle.sfen, false).unwrap() as Shogi;
-    this.line.slice(0, this.moveIndex).forEach(usi => pos.play(parseUsi(usi)!));
+    this.line.slice(0, this.moveIndex).forEach(usi => {
+      pos.play(parseUsi(usi)!);
+    });
     return pos;
   };
 
