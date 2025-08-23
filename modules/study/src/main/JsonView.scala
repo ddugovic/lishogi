@@ -78,16 +78,18 @@ final class JsonView(
       .add("description", c.description) pipe addChapterMode(c)
 
   def pagerData(s: Study.WithChaptersAndLiked) =
-    Json.obj(
-      "id"        -> s.study.id.value,
-      "name"      -> s.study.name.value,
-      "liked"     -> s.liked,
-      "likes"     -> s.study.likes.value,
-      "updatedAt" -> s.study.updatedAt,
-      "owner"     -> lightUserApi.sync(s.study.ownerId),
-      "chapters"  -> s.chapters.take(4),
-      "members"   -> s.study.members.members.values.take(4),
-    ).add("icon" -> s.icon)
+    Json
+      .obj(
+        "id"        -> s.study.id.value,
+        "name"      -> s.study.name.value,
+        "liked"     -> s.liked,
+        "likes"     -> s.study.likes.value,
+        "updatedAt" -> s.study.updatedAt,
+        "owner"     -> lightUserApi.sync(s.study.ownerId),
+        "chapters"  -> s.chapters.take(4),
+        "members"   -> s.study.members.members.values.take(4),
+      )
+      .add("icon" -> s.study.icon)
 
   def embed(study: Study, currentChapter: Chapter, chapters: List[Chapter.IdName]) =
     Json.obj(

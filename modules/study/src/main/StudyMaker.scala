@@ -92,7 +92,7 @@ final private class StudyMaker(
       ownerId = user.id,
       from = Study.From.Game(pov.gameId),
       id = data.id,
-      icon = "book-pile".some
+      icon = "book-pile".some,
     )
     createPovChapters(pov, study.id, user.id).map { chapters =>
       Study.WithActualChapters(chapters.headOption.fold(study)(study withChapter _), chapters)
