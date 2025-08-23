@@ -14,7 +14,7 @@ export default function boot(
   const nbUserSpread = spreadNumber('#nb_connected_players > strong', 10);
   const getParameterByName = <T extends string>(name: string): T | undefined => {
     const match = RegExp(`[?&]${name}=([^&]*)`).exec(location.search);
-    return match ? (decodeURIComponent(match[1].replace(/\+/g, ' ')) as T) : undefined;
+    return match ? (decodeURIComponent(match[1]) as T) : undefined;
   };
 
   opts.socketSend = wsConnect('/lobby/socket/v4', false, {
@@ -52,8 +52,6 @@ export default function boot(
     },
   }).send;
 
-  opts.variant = getParameterByName<VariantKey>('variant');
-  opts.sfen = getParameterByName<Sfen>('sfen');
   opts.hookLike = getParameterByName('hook_like');
   opts.blindMode = $('body').hasClass('blind-mode');
 
@@ -86,7 +84,7 @@ export default function boot(
           .slice(1)
           .split('&')
           .map(p => p.split('='))
-          .reduce((obj, [key, value]) => ({ ...obj, [key]: value }), {})
+          .reduce((obj, [key, value]) => ({ ...obj, [key]: decodeURIComponent(value) }), {})
       : {};
 
     if (setupData.sfen) {

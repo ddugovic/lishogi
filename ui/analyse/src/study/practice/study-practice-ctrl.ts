@@ -1,4 +1,5 @@
 import { prop } from 'common/common';
+import { encodeSfen } from 'common/links';
 import { storedProp } from 'common/storage';
 import type AnalyseCtrl from '../../ctrl';
 import { readOnlyProp } from '../../util';
@@ -30,9 +31,7 @@ export default function (
     success(null);
     const chapter = studyData.chapter;
     history.replaceState(null, chapter.name, `${data.url}/${chapter.id}`);
-    analysisUrl(
-      `/analysis/standard/${root.node.sfen.replace(/ /g, '_')}?color=${root.bottomColor()}`,
-    );
+    analysisUrl(`/analysis/standard/${encodeSfen(root.node.sfen)}?color=${root.bottomColor()}`);
   }
   onLoad();
 

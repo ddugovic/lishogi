@@ -46,9 +46,7 @@ export type RatingsRecord = Record<Perf, { rating: number; clueless?: boolean } 
 export interface LobbyOpts extends Untyped {
   socketSend: Socket.Send;
   blindMode: boolean;
-  variant?: VariantKey;
   friendUser?: string;
-  sfen?: string;
   hookLike?: string;
 }
 
