@@ -126,7 +126,9 @@ object replay {
                         action := routes.Analyse.requestAnalysis(gameId),
                       )(
                         submitButton(cls := "button text")(
-                          span(cls := "is3 text", dataIcon := "")(trans.requestAComputerAnalysis()),
+                          span(cls := "is3 text", dataIcon := Icons.barChart)(
+                            trans.requestAComputerAnalysis(),
+                          ),
                         ),
                       ),
                   ),
@@ -149,12 +151,12 @@ object replay {
                     div(cls := "downloads")(
                       div(cls := "game-notation")(
                         a(
-                          dataIcon := "x",
+                          dataIcon := Icons.download,
                           cls      := "button text",
                           href     := s"${routes.Game.exportOne(game.id)}",
                         )(trans.kif()),
                         a(
-                          dataIcon := "x",
+                          dataIcon := Icons.download,
                           cls      := s"button text${!(pov.game.variant.standard) ?? " disabled"}",
                           href     := s"${routes.Game.exportOne(game.id)}?csa=1",
                         )(trans.csa()),
@@ -180,13 +182,13 @@ object replay {
                       ),
                       div(cls := "game-other")(
                         a(
-                          dataIcon := "$",
+                          dataIcon := Icons.share,
                           cls := s"button text${!Game.gifVariants.contains(pov.game.variant) ?? " disabled"}",
                           target := "_blank",
                           href   := cdnUrl(routes.Export.gif(pov.gameId, pov.color.name).url),
                         )("GIF"),
                         a(
-                          dataIcon := "=",
+                          dataIcon := Icons.screenFull,
                           cls      := "button text embed-howto",
                           target   := "_blank",
                           title    := trans.embedInYourWebsite.txt(),
@@ -194,7 +196,7 @@ object replay {
                           "HTML",
                         ),
                         (game.isKifImport || game.isCsaImport) option a(
-                          dataIcon := "x",
+                          dataIcon := Icons.download,
                           cls      := "button text",
                           href := s"${routes.Game.exportOne(game.id)}?imported=1${game.isCsaImport ?? "&csa=1"}",
                         )(trans.downloadImported()),

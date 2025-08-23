@@ -1,4 +1,5 @@
 import { loadLishogiScript } from 'common/assets';
+import { icons } from 'common/icons';
 import { bind } from 'common/snabbdom';
 import { i18n } from 'i18n';
 import { h, type VNode } from 'snabbdom';
@@ -31,7 +32,7 @@ function renderPalantir(ctrl: ChatCtrl) {
     ? p.instance.render(h)
     : h('div.mchat__tab.palantir.palantir-slot', {
         attrs: {
-          'data-icon': '',
+          'data-icon': icons.call,
           title: 'Voice chat',
         },
         hook: bind('click', () => {

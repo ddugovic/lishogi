@@ -1,4 +1,5 @@
 import { clockShow, clockToPerf } from 'common/clock';
+import { icons } from 'common/icons';
 import { bind } from 'common/snabbdom';
 import { i18n, i18nFormat, i18nPluralSame } from 'i18n';
 import { i18nPerf } from 'i18n/perf';
@@ -71,7 +72,7 @@ function presetButton(p: Preset, ctrl: LobbyController): VNode {
       h('div.perf', perfName),
       isReady
         ? h('i.check-mark', {
-            attrs: { 'data-icon': 'E', title: 'Ready to play' },
+            attrs: { 'data-icon': icons.correct, title: 'Ready to play' },
           })
         : null,
     ],

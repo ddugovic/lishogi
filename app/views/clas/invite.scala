@@ -38,7 +38,7 @@ object invite {
                   trans.decline(),
                   nameValue = ("v" -> false.toString).some,
                   klass = "button-red button-fat",
-                  icon = "L".some,
+                  icon = Icons.cancel.some,
                 )
               else p,
               form3.submit(

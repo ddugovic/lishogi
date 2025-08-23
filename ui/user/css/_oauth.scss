@@ -48,16 +48,6 @@
     li {
       margin: 0.7em 0;
     }
-
-    .danger {
-      &::before {
-        @extend %data-icon;
-
-        margin-right: 0.2em;
-        content: '';
-        color: theme.$c-bad;
-      }
-    }
   }
 
   .form-actions {

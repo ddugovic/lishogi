@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { bind } from 'common/snabbdom';
 import { i18n, i18nFormat } from 'i18n';
 import { h, type VNode } from 'snabbdom';
@@ -12,7 +13,7 @@ export default function renderActions(ctrl: MsgCtrl, convo: Convo): VNode[] {
     h(`a.${cls}.play`, {
       key: 'play',
       attrs: {
-        'data-icon': 'U',
+        'data-icon': icons.challenge,
         href: `/?user=${convo.user.name}#friend`,
         title: i18n('challengeToPlay'),
       },
@@ -24,7 +25,7 @@ export default function renderActions(ctrl: MsgCtrl, convo: Convo): VNode[] {
       h(`button.${cls}.text.hover-text`, {
         key: 'unblock',
         attrs: {
-          'data-icon': 'k',
+          'data-icon': icons.forbidden,
           title: i18n('blocked'),
           type: 'button',
           'data-hover-text': i18n('unblock'),
@@ -37,7 +38,7 @@ export default function renderActions(ctrl: MsgCtrl, convo: Convo): VNode[] {
       h(`button.${cls}.bad`, {
         key: 'block',
         attrs: {
-          'data-icon': 'k',
+          'data-icon': icons.forbidden,
           type: 'button',
           title: i18n('block'),
         },
@@ -48,7 +49,7 @@ export default function renderActions(ctrl: MsgCtrl, convo: Convo): VNode[] {
     h(`button.${cls}.bad`, {
       key: 'delete',
       attrs: {
-        'data-icon': 'q',
+        'data-icon': icons.trashBin,
         type: 'button',
         title: i18n('delete'),
       },
@@ -60,7 +61,7 @@ export default function renderActions(ctrl: MsgCtrl, convo: Convo): VNode[] {
       h(`button.${cls}.bad`, {
         key: 'report',
         attrs: {
-          'data-icon': '!',
+          'data-icon': icons.warning,
           title: i18nFormat('reportXToModerators', convo.user.name),
         },
         hook: bind('click', withConfirm(ctrl.report)),

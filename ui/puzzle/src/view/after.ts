@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { bind, dataIcon } from 'common/snabbdom';
 import { i18n } from 'i18n';
 import { h, type VNode } from 'snabbdom';
@@ -40,7 +41,7 @@ const renderContinue = (ctrl: Controller) =>
     {
       hook: bind('click', ctrl.nextPuzzle),
     },
-    [h('i', { attrs: dataIcon('G') }), i18n('puzzle:continueTraining')],
+    [h('i', { attrs: dataIcon(icons.play) }), i18n('puzzle:continueTraining')],
   );
 
 export default function (ctrl: Controller): VNode {
@@ -54,7 +55,7 @@ export default function (ctrl: Controller): VNode {
     h('div.puzzle__more', [
       h('a', {
         attrs: {
-          'data-icon': '',
+          'data-icon': icons.bullseye,
           href: `/analysis/${ctrl.vm.node.sfen.replace(/ /g, '_')}?color=${ctrl.vm.pov}#practice`,
           title: i18n('playWithTheMachine'),
         },

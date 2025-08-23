@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { i18n } from 'i18n';
 import { h, type VNode } from 'snabbdom';
 import { bind, header, type Open } from './util';
@@ -108,7 +109,7 @@ function customThemeView(ctrl: ThemeCtrl): VNode {
         ctrl.set('custom');
         ctrl.open('customTheme');
       }),
-      attrs: { 'data-icon': 'H' },
+      attrs: { 'data-icon': icons.right },
       class: { active: ctrl.data.current === 'custom' },
     },
     i18n('customTheme'),

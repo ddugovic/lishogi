@@ -1,4 +1,5 @@
 @use 'pkg:common/abstract/extends';
+@use 'pkg:common/abstract/icons';
 @use 'pkg:common/theme';
 
 .hooks__list {
@@ -59,11 +60,11 @@
     &.sortable .is::before {
       opacity: 0;
       margin-right: 3px;
-      content: 'R';
+      content: icons.$down;
     }
 
     &.sortable.reverse .is::before {
-      content: 'S';
+      content: icons.$up;
     }
 
     &.sort .is::before {

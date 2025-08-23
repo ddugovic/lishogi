@@ -56,7 +56,7 @@ final private class GameJson(
   private def perfJson(game: Game) = {
     val perfType = lila.rating.PerfType orDefault PerfPicker.key(game)
     Json.obj(
-      "icon" -> perfType.iconChar.toString,
+      "icon" -> perfType.icon,
       "name" -> perfType.trans(defaultLang),
     )
   }

@@ -53,7 +53,7 @@ object show {
           div(cls := "simul__meta")(
             div(cls := "game-infos")(
               div(cls := "header")(
-                iconTag("f"),
+                iconTag(Icons.people),
                 div(
                   span(cls := "clock")(sim.clock.config.show),
                   div(cls := "setup")(
@@ -63,12 +63,14 @@ object show {
                     (isGranted(_.ManageSimul) || ctx.userId
                       .has(sim.hostId)) && sim.isCreated option frag(
                       " - ",
-                      a(href := routes.Simul.edit(sim.id), title := trans.edit.txt())(iconTag("%")),
+                      a(href := routes.Simul.edit(sim.id), title := trans.edit.txt())(
+                        iconTag(Icons.gear),
+                      ),
                     ),
                   ),
                 ),
               ),
-              ~sim.proMode option div(cls := "text", dataIcon := "8")(
+              ~sim.proMode option div(cls := "text", dataIcon := Icons.crown)(
                 trans.proMode(),
               ),
               trans.simulHostExtraTime(),

@@ -44,6 +44,7 @@ final private class StudyMaker(
       from = Study.From.Game(pgs.gameId),
       members = Option(members).filter(_.nonEmpty),
       postGameStudy = pgs.some,
+      icon = "spell-book".some,
     )
     val pov = Pov(game, orientation)
     createPovChapters(pov, study.id, ownerId).map { chapters =>
@@ -91,6 +92,7 @@ final private class StudyMaker(
       ownerId = user.id,
       from = Study.From.Game(pov.gameId),
       id = data.id,
+      icon = "book-pile".some
     )
     createPovChapters(pov, study.id, user.id).map { chapters =>
       Study.WithActualChapters(chapters.headOption.fold(study)(study withChapter _), chapters)

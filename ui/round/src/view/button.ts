@@ -56,7 +56,7 @@ function studyButton(ctrl: RoundController): VNode | null {
               'button.post-game-study-decline',
               {
                 attrs: {
-                  'data-icon': 'L',
+                  'data-icon': icons.cancel,
                   title: i18n('decline'),
                 },
                 hook: util.bind('click', () => {
@@ -147,7 +147,7 @@ function rematchButtons(ctrl: RoundController): MaybeVNodes {
           'button.rematch-decline',
           {
             attrs: {
-              'data-icon': 'L',
+              'data-icon': icons.cancel,
               title: i18n('decline'),
             },
             hook: util.bind('click', () => {
@@ -219,7 +219,7 @@ export function resume(ctrl: RoundController): MaybeVNode {
           'button.resume-decline',
           {
             attrs: {
-              'data-icon': 'L',
+              'data-icon': icons.cancel,
               title: i18n('decline'),
             },
             hook: util.bind('click', () => {
@@ -304,7 +304,7 @@ export function impasse(ctrl: RoundController): MaybeVNode {
         ctrl.redraw();
       }),
     },
-    [h('span', ctrl.nvui ? [i18n('impasse')] : util.justIcon(icons.bookAlt))],
+    [h('span', ctrl.nvui ? [i18n('impasse')] : util.justIcon(icons.book))],
   );
 }
 
@@ -348,18 +348,18 @@ function actConfirm(
       hook: util.bind('click', () => f(true)),
     }),
     h('button.fbt.no', {
-      attrs: { title: i18n('cancel'), 'data-icon': 'L' },
+      attrs: { title: i18n('cancel'), 'data-icon': icons.cancel },
       hook: util.bind('click', () => f(false)),
     }),
   ]);
 }
 
 export function resignConfirm(ctrl: RoundController): VNode {
-  return actConfirm(ctrl.resign, 'resign', i18n('resign'), 'b');
+  return actConfirm(ctrl.resign, 'resign', i18n('resign'), icons.surrender);
 }
 
 export function drawConfirm(ctrl: RoundController): VNode {
-  return actConfirm(ctrl.offerDraw, 'offerDraw', i18n('offerDraw'), icons.half, 'draw-yes');
+  return actConfirm(ctrl.offerDraw, 'offerDraw', i18n('offerDraw'), icons.draw, 'draw-yes');
 }
 
 export function pauseConfirm(ctrl: RoundController): VNode {
@@ -367,7 +367,7 @@ export function pauseConfirm(ctrl: RoundController): VNode {
     ctrl.offerPause,
     'offerAdjournment',
     i18n('offerAdjournment'),
-    'Z',
+    icons.pause,
     'pause-yes',
   );
 }
@@ -461,7 +461,7 @@ function acceptButton(ctrl: RoundController, klass: string, action: () => void) 
       )
     : h('a.accept', {
         attrs: {
-          'data-icon': 'E',
+          'data-icon': icons.correct,
           title: text,
         },
         hook: util.bind('click', action),
@@ -483,7 +483,7 @@ function declineButton(
       )
     : h('a.decline', {
         attrs: {
-          'data-icon': 'L',
+          'data-icon': icons.cancel,
           title: text,
         },
         hook: util.bind('click', action),
@@ -527,7 +527,7 @@ export function backToTournament(ctrl: RoundController): VNode | undefined {
               glowing: d.tournament.format === 'arena',
             },
             attrs: {
-              'data-icon': 'G',
+              'data-icon': icons.play,
               href: `/tournament/${d.tournament.id}`,
             },
             hook: util.bind('click', ctrl.setRedirecting),
@@ -558,7 +558,7 @@ export function moretime(ctrl: RoundController): MaybeVNode {
           title: ctrl.data.clock
             ? i18nPluralSame('giveNbSeconds', ctrl.data.clock.moretime)
             : i18n('preferences:giveMoreTime'),
-          'data-icon': 'O',
+          'data-icon': icons.createNew,
         },
         hook: util.bind('click', ctrl.socket.moreTime),
       })
@@ -623,7 +623,7 @@ export function watcherFollowUp(ctrl: RoundController): VNode | null {
           'a.fbt.text',
           {
             attrs: {
-              'data-icon': 'v',
+              'data-icon': icons.view,
               href: `/${d.game.rematch}/${d.opponent.color}`,
             },
           },

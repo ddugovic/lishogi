@@ -28,15 +28,11 @@ case class TrophyKind(
 )
 
 object TrophyKind {
-  val marathonWinner     = "marathonWinner"
-  val marathonTopTen     = "marathonTopTen"
-  val marathonTopFifty   = "marathonTopFifty"
-  val marathonTopHundred = "marathonTopHundred"
-  val moderator          = "moderator"
-  val developer          = "developer"
-  val verified           = "verified"
-  val zugMiracle         = "zugMiracle"
-  val bougyoku           = "bougyoku"
+  val marathonWinner = "marathonWinner"
+  val marathonTopTen = "marathonTopTen"
+  val moderator      = "moderator"
+  val developer      = "developer"
+  val verified       = "verified"
 
   object Unknown
       extends TrophyKind(

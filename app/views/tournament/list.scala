@@ -31,19 +31,19 @@ object list {
           pager.currentPageResults.map { t =>
             tr(cls := "paginated")(
               td(cls := "icon")(
-                tournamentIcon(t),
+                tournamentIconTag(t),
               ),
               header(t),
               td(cls := "date")(momentFromNow(t.startsAt)),
               td(cls := "players")(
                 span(
                   t.winnerId.isDefined option frag(
-                    i(cls := "text winner", dataIcon := "g"),
+                    i(cls := "text winner", dataIcon := Icons.trophy),
                     userIdLink(t.winnerId, withOnline = false),
                   ),
                 ),
                 span(
-                  i(cls := "text nb-players", dataIcon := "r"),
+                  i(cls := "text nb-players", dataIcon := Icons.person),
                   trans.nbPlayers.pluralSameTxt(t.nbPlayers),
                 ),
               ),

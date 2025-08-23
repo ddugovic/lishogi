@@ -75,7 +75,7 @@ object gamify {
         views.html.mod.menu("gamify"),
         div(id := "mod-gamify", cls := "page-menu__content box")(
           h1(
-            a(href := routes.Mod.gamify, dataIcon := "I"),
+            a(href := routes.Mod.gamify, dataIcon := Icons.left),
             title,
           ),
           div(cls := "period")(

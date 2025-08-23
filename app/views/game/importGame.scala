@@ -45,7 +45,7 @@ object importGame {
                 help = Some(analyseHelp),
                 disabled = ctx.isAnon,
               ),
-              form3.action(form3.submit(trans.importGame(), "/".some)),
+              form3.action(form3.submit(trans.importGame(), icon = Icons.uploadCloud.some)),
             ),
           ),
           form("notation").value.filterNot(_.isEmpty) flatMap { notation =>

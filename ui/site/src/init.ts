@@ -1,4 +1,5 @@
 import { assetUrl, lishogiScriptPath, loadCssPath, loadLishogiScript } from 'common/assets';
+import { icons } from 'common/icons';
 import { initAll as initMiniBoards, update as updateMiniBoard } from 'common/mini-board';
 import { wsConnect, wsConnected } from 'common/ws';
 import { i18n } from 'i18n';
@@ -78,7 +79,7 @@ export function init(): void {
         navigator.clipboard
           .writeText(textToCopy)
           .then(() => {
-            $(this).attr('data-icon', 'E');
+            $(this).attr('data-icon', icons.correct);
           })
           .catch(err => {
             console.error('Failed to copy text: ', err);
@@ -266,7 +267,19 @@ export function init(): void {
     const url = `/tournament/${data.id}`;
     $('body')
       .append(
-        `<div id="announce"><a data-icon="g" class="text" href="${url}">${data.name}</a><div class="actions"><a class="withdraw text" href="${url}/withdraw" data-icon="Z">Pause</a><a class="text" href="${url}" data-icon="G">Resume</a></div></div>`,
+        `<div id="announce">
+          <a data-icon="${icons.trophy}" class="text" href="${url}">
+            ${data.name}
+          </a>
+          <div class="actions">
+            <a class="withdraw text" href="${url}/withdraw" data-icon="${icons.pause}">
+              Pause
+            </a>
+            <a class="text" href="${url}" data-icon="${icons.play}">
+              Resume
+            </a>
+          </div>
+        </div>`,
       )
       .find('#announce .withdraw')
       .on('click', function (this: HTMLAnchorElement) {

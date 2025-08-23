@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { hasTouchEvents } from 'common/mobile';
 import { bindSubmit } from 'common/snabbdom';
 import throttle from 'common/throttle';
@@ -24,7 +25,7 @@ export default function renderInteract(ctrl: MsgCtrl, user: User): VNode {
         class: { connected },
         attrs: {
           type: 'submit',
-          'data-icon': 'G',
+          'data-icon': icons.play,
           disabled: !connected,
         },
       }),

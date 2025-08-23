@@ -1,3 +1,4 @@
+@use '../abstract/icons';
 @use '../theme/generated/theme';
 
 .color-icon {
@@ -18,11 +19,10 @@
   }
 
   &.random::before {
-    content: 'l';
+    content: icons.$random-color;
   }
 
   .inlined &::before {
-    font-size: 0.9em;
     vertical-align: middle;
     position: relative;
     top: -1px;

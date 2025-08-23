@@ -25,7 +25,7 @@ object features {
     ) {
       main(cls := "box box-pad features")(
         table(
-          header(h1(dataIcon := "")("Website")),
+          header(h1(dataIcon := Icons.desktop)("Website")),
           tbody(
             tr(check)(
               a(href := routes.Tournament.homeDefault(1))(trans.tournaments()),
@@ -87,7 +87,7 @@ object features {
               strong(trans.patron.noAdsNoSubs()),
             ),
           ),
-          // header(h1(dataIcon := "")("Mobile")),
+          // header(h1(dataIcon := Icons.mobile)("Mobile")),
           // tbody(
           //  tr(check)(
           //    "Online and offline games, with 8 variants"
@@ -149,13 +149,13 @@ object features {
         th(name),
         th(trans.patron.freeAccount()),
         th(
-          span(dataIcon := patronIconChar, cls := "is text header")(trans.patron.lishogiPatron()),
+          span(dataIcon := Icons.patron, cls := "is text header")(trans.patron.lishogiPatron()),
         ),
       ),
     )
 
   private def check(implicit lang: Lang) =
-    span(dataIcon := "E", cls := "is is-green text check")(trans.yes())
+    span(dataIcon := Icons.correct, cls := "is is-green text check")(trans.yes())
 
   private def all(content: Frag) = frag(td(content), td(content))
 

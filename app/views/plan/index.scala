@@ -44,7 +44,7 @@ object index {
         div(cls := "page-menu__content box")(
           patron.ifTrue(ctx.me.??(_.isPatron)).map { p =>
             div(cls := "banner one_time_active")(
-              iconTag(patronIconChar),
+              iconTag(Icons.patron),
               div(
                 h1(thankYou()),
                 if (p.isLifetime) youHaveLifetime()
@@ -57,15 +57,15 @@ object index {
                     )
                   },
               ),
-              iconTag(patronIconChar),
+              iconTag(Icons.patron),
             )
           } getOrElse div(cls := "banner moto")(
-            iconTag(patronIconChar),
+            iconTag(Icons.patron),
             div(
               h1(freeShogi()),
               p(noAdsNoSubs()),
             ),
-            iconTag(patronIconChar),
+            iconTag(Icons.patron),
           ),
           div(cls := "box__pad")(
             div(cls := "wrapper")(

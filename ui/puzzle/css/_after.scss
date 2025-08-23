@@ -1,5 +1,6 @@
 @use 'pkg:breakpoint-sass' as breakpoint;
 @use 'pkg:common/abstract/extends';
+@use 'pkg:common/abstract/icons';
 @use 'pkg:common/abstract/mixins';
 @use 'pkg:common/theme';
 @use 'local';
@@ -116,7 +117,7 @@
     &::before {
       @extend %data-icon;
 
-      content: 'h';
+      content: icons.$thumbs-up;
       font-size: 5em;
     }
 

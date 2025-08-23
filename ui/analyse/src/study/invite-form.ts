@@ -1,4 +1,5 @@
 import { type Prop, prop } from 'common/common';
+import { icons } from 'common/icons';
 import { modal } from 'common/modal';
 import { bind, onInsert } from 'common/snabbdom';
 import { storedSet } from 'common/storage';
@@ -74,7 +75,11 @@ export function view(ctrl: StudyInviteFormCtrl): VNode {
     },
     content: [
       h('h2', i18n('study:inviteToTheStudy')),
-      h('p.info', { attrs: { 'data-icon': '' } }, i18n('study:pleaseOnlyInvitePeopleYouKnow')),
+      h(
+        'p.info',
+        { attrs: { 'data-icon': icons.infoCircle } },
+        i18n('study:pleaseOnlyInvitePeopleYouKnow'),
+      ),
       h('div.input-wrapper', [
         // because typeahead messes up with snabbdom
         h('input', {

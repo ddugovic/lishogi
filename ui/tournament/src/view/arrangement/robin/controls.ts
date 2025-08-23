@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import type { MaybeVNode } from 'common/snabbdom';
 import { i18n } from 'i18n';
 import { h, type VNode } from 'snabbdom';
@@ -19,10 +20,10 @@ export function robinControls(ctrl: TournamentController): VNode {
     },
     [
       h('div.pager', [
-        controlButton(i18n('study:first'), 'W', 'first'),
-        controlButton(i18n('study:previous'), 'Y', 'prev'),
-        controlButton(i18n('study:next'), 'X', 'next'),
-        controlButton(i18n('study:last'), 'V', 'last'),
+        controlButton(i18n('study:first'), icons.first, 'first'),
+        controlButton(i18n('study:previous'), icons.prev, 'prev'),
+        controlButton(i18n('study:next'), icons.next, 'next'),
+        controlButton(i18n('study:last'), icons.last, 'last'),
       ]),
       h('div.right', buttons.joinWithdraw(ctrl)),
     ],

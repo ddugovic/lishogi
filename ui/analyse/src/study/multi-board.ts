@@ -1,4 +1,5 @@
 import { loadChushogiPieceSprite, loadKyotoshogiPieceSprite } from 'common/assets';
+import { icons } from 'common/icons';
 import { bind, type MaybeVNodes } from 'common/snabbdom';
 import spinner from 'common/spinner';
 import { i18n } from 'i18n';
@@ -90,11 +91,11 @@ function renderPagerNav(pager: Paginator<ChapterPreview>, ctrl: MultiBoardCtrl):
   const from = Math.min(pager.nbResults, (page - 1) * pager.maxPerPage + 1);
   const to = Math.min(pager.nbResults, page * pager.maxPerPage);
   return h('div.pager', [
-    pagerButton(i18n('study:first'), 'W', () => ctrl.setPage(1), page > 1, ctrl),
-    pagerButton(i18n('study:previous'), 'Y', ctrl.prevPage, page > 1, ctrl),
+    pagerButton(i18n('study:first'), icons.first, () => ctrl.setPage(1), page > 1, ctrl),
+    pagerButton(i18n('study:previous'), icons.prev, ctrl.prevPage, page > 1, ctrl),
     h('span.page', `${from}-${to} / ${pager.nbResults}`),
-    pagerButton(i18n('next'), 'X', ctrl.nextPage, page < pager.nbPages, ctrl),
-    pagerButton(i18n('study:last'), 'V', ctrl.lastPage, page < pager.nbPages, ctrl),
+    pagerButton(i18n('next'), icons.next, ctrl.nextPage, page < pager.nbPages, ctrl),
+    pagerButton(i18n('study:last'), icons.last, ctrl.lastPage, page < pager.nbPages, ctrl),
   ]);
 }
 

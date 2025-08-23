@@ -27,7 +27,7 @@ object index {
             a(
               cls      := "atom",
               href     := langHrefJP(routes.Blog.atom),
-              dataIcon := "3",
+              dataIcon := Icons.broadcast,
             ),
           ),
           div(cls := "blog-cards list infinitescroll")(

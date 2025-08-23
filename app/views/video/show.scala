@@ -40,7 +40,7 @@ object show {
         h1(cls := "box__pad")(
           a(
             cls      := "is4 text",
-            dataIcon := "i",
+            dataIcon := Icons.back,
             href     := s"${routes.Video.index}?${control.queryString}",
           ),
           video.title,
@@ -56,7 +56,7 @@ object show {
           video.tags.map { tag =>
             a(
               cls      := "tag",
-              dataIcon := "o",
+              dataIcon := Icons.tag,
               href     := s"${routes.Video.index}?tags=${tag.replace(" ", "+")}",
             )(
               tag.capitalize,

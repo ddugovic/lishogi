@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { hookMobileMousedown } from 'common/mobile';
 import { h, type VNode } from 'snabbdom';
 import type MsgCtrl from '../ctrl';
@@ -18,7 +19,7 @@ export default function renderConvo(ctrl: MsgCtrl, convo: Convo): VNode {
       h('div.msg-app__convo__head', [
         h('div.msg-app__convo__head__left', [
           h('span.msg-app__convo__head__back', {
-            attrs: { 'data-icon': 'I' },
+            attrs: { 'data-icon': icons.left },
             hook: hookMobileMousedown(ctrl.showSide),
           }),
           h(
@@ -44,7 +45,7 @@ export default function renderConvo(ctrl: MsgCtrl, convo: Convo): VNode {
           ? h(
               'div.msg-app__convo__reply__block.text',
               {
-                attrs: { 'data-icon': 'k' },
+                attrs: { 'data-icon': icons.forbidden },
               },
               'This conversation is blocked.',
             )
@@ -53,7 +54,7 @@ export default function renderConvo(ctrl: MsgCtrl, convo: Convo): VNode {
             : h(
                 'div.msg-app__convo__reply__block.text',
                 {
-                  attrs: { 'data-icon': 'k' },
+                  attrs: { 'data-icon': icons.forbidden },
                 },
                 `${user.name} doesn't accept new messages.`,
               ),

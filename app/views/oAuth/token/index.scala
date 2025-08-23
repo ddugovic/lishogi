@@ -17,7 +17,11 @@ object index {
         div(cls := "box__top")(
           h1(title),
           st.form(cls := "box-top__actions", action := routes.OAuthToken.create)(
-            submitButton(cls := "button frameless", st.title := "New access token", dataIcon := "O"),
+            submitButton(
+              cls      := "button frameless",
+              st.title := "New access token",
+              dataIcon := Icons.createNew,
+            ),
           ),
         ),
         standardFlash(cls := "box__pad"),
@@ -45,7 +49,7 @@ object index {
         ),
         tokens.headOption.filter(_.isBrandNew).map { token =>
           div(cls := "box__pad brand")(
-            iconTag("E")(cls := "is-green"),
+            iconTag(Icons.correct)(cls := "is-green"),
             div(
               p(
                 "Make sure to copy your new personal access token now.",

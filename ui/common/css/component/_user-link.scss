@@ -1,4 +1,5 @@
 @use '../abstract/extends';
+@use '../abstract/icons';
 @use '../theme/generated/theme';
 
 .user-link {
@@ -8,7 +9,7 @@
 
   &.online .line {
     &::before {
-      content: '';
+      content: icons.$circle-full;
     }
 
     color: theme.$c-good;
@@ -37,15 +38,15 @@
     }
 
     &::before {
-      content: '';
+      content: icons.$circle-outline;
     }
 
     &.patron::before {
-      content: '' !important;
+      content: icons.$patron !important;
     }
 
     &.moderator::before {
-      content: '';
+      content: icons.$agent;
     }
   }
 

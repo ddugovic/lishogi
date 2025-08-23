@@ -80,10 +80,11 @@
     align-items: center;
 
     .swords {
+      color: theme.$c-font-dim;
       width: 2.5em;
       text-align: center;
-      font-size: 2em;
-      opacity: 0.7;
+      font-size: 2.25em;
+      margin-bottom: 0.25em;
     }
 
     .player {

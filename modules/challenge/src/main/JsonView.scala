@@ -82,7 +82,7 @@ final class JsonView(
         }),
         "color" -> c.colorChoice.toString.toLowerCase,
         "perf" -> Json.obj(
-          "icon" -> iconChar(c).toString,
+          "icon" -> icon(c),
           "name" -> c.perfType.key,
         ),
       )
@@ -101,8 +101,8 @@ final class JsonView(
       .add("rematchOf" -> c.rematchOf)
       .add("initialSfen" -> c.initialSfen)
 
-  private def iconChar(c: Challenge) =
-    if (c.initialSfen.isDefined) '*'
-    else c.perfType.iconChar
+  private def icon(c: Challenge) =
+    if (c.initialSfen.isDefined) lila.common.Icons.position
+    else c.perfType.icon
 
 }

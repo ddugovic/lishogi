@@ -17,7 +17,7 @@ object authorize {
       ),
     ) {
       main(cls := "oauth box box-pad")(
-        h1(dataIcon := "a", cls := "text")("Authorize third party"),
+        h1(dataIcon := Icons.lock, cls := "text")("Authorize third party"),
         postForm(
           p(
             strong(code(prompt.redirectUri.clientOrigin)),

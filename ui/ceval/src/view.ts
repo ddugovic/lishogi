@@ -1,4 +1,5 @@
 import { defined, notNull, requestIdleCallbackWithFallback } from 'common/common';
+import { icons } from 'common/icons';
 import stepwiseScroll from 'common/wheel';
 import { i18n, i18nFormat } from 'i18n';
 import { makeNotationLineWithPosition, notationsWithColor } from 'shogi/notation';
@@ -47,7 +48,7 @@ function localEvalInfo(ctrl: ParentCtrl, evs: NodeEvals): Array<VNode | string |
       h('a.deeper', {
         attrs: {
           title: i18n('goDeeper'),
-          'data-icon': 'O',
+          'data-icon': icons.createNew,
         },
         hook: {
           insert: vnode =>
@@ -78,7 +79,7 @@ function threatButton(ctrl: ParentCtrl): VNode | null {
       hidden: !!ctrl.getNode().check,
     },
     attrs: {
-      'data-icon': '7',
+      'data-icon': icons.target,
       title: `${i18n('showThreat')} (x)`,
     },
     hook: {
@@ -424,7 +425,7 @@ function renderPv(threat: boolean, multiPv: number, pv?: Tree.PvData, pos?: Posi
 }
 
 function renderPvWrapToggle(hide: boolean): VNode {
-  return h('span.pv-wrap-toggle', {
+  return h('span.pv-wrap-toggle.data-icon', {
     class: {
       none: hide,
     },

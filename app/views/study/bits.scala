@@ -30,7 +30,7 @@ object bits {
     postForm(cls := "new-study", action := routes.Study.create)(
       submitButton(
         cls      := "button button-green",
-        dataIcon := "O",
+        dataIcon := Icons.createNew,
         title    := trans.study.createStudy.txt(),
       ),
     )
@@ -60,15 +60,21 @@ object bits {
   def widget(s: lila.study.Study.WithChaptersAndLiked, tag: Tag = h2)(implicit ctx: Context) =
     frag(
       a(cls := "overlay", href := routes.Study.show(s.study.id.value), title := s.study.name.value),
-      div(cls := "top", dataIcon := "4")(
+      div(
+        cls := "top",
+      )(
+        div(
+          cls   := "study__icon",
+          style := s.study.icon.map(i => s"--icon:url(${assetUrl(s"icons/$i.svg")})"),
+        ),
         div(
           tag(cls := "study-name")(s.study.name.value),
           span(
             !s.study.isPublic option frag(
-              iconTag("a")(cls := "private", ariaTitle(trans.study.`private`.txt())),
+              iconTag(Icons.lock)(cls := "private", ariaTitle(trans.study.`private`.txt())),
               " ",
             ),
-            iconTag(if (s.liked) "" else ""),
+            iconTag(if (s.liked) Icons.heartFull else Icons.heartOutline),
             " ",
             s.study.likes.value,
             " - ",
@@ -81,14 +87,17 @@ object bits {
       div(cls := "body")(
         ol(cls := "chapters")(
           s.chapters.map { name =>
-            li(cls := "text", dataIcon := "K")(name.value)
+            li(cls := "text", dataIcon := Icons.circleOutline)(name.value)
           },
         ),
         ol(cls := "members")(
           s.study.members.members.values
             .take(4)
             .map { m =>
-              li(cls := "text", dataIcon := (if (m.canContribute) "" else "v"))(usernameOrId(m.id))
+              li(
+                cls      := "text",
+                dataIcon := (if (m.canContribute) Icons.person else Icons.view),
+              )(usernameOrId(m.id))
             }
             .toList,
         ),
@@ -112,7 +121,7 @@ object bits {
             ),
           ),
           td(momentFromNow(s.createdAt)),
-          td(dataIcon := "", cls := "text")(s.likes.value),
+          td(dataIcon := Icons.heartFull, cls := "text")(s.likes.value),
         )
       },
     )

@@ -55,7 +55,7 @@ object show {
               a(
                 href     := routes.Blog.discuss(uid, post.doc.id),
                 cls      := "button text discuss",
-                dataIcon := "d",
+                dataIcon := Icons.talkAlt,
               )(
                 trans.discussBlogForum(),
               ),

@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { modal } from 'common/modal';
 import { dataIcon, type MaybeVNode } from 'common/snabbdom';
 import spinner from 'common/spinner';
@@ -97,7 +98,7 @@ function teamInfo(ctrl: TournamentController): VNode | undefined {
                 ),
                 h('td.total', [
                   p.fire && !ctrl.data.isFinished
-                    ? h('strong.is-gold', { attrs: dataIcon('Q') }, `${p.score}`)
+                    ? h('strong.is-gold', { attrs: dataIcon(icons.streak) }, `${p.score}`)
                     : h('strong', `${p.score}`),
                 ]),
               ],

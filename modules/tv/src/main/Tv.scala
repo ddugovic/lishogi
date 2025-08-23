@@ -1,5 +1,6 @@
 package lila.tv
 
+import lila.common.Icons
 import lila.common.LightUser
 import lila.game.Game
 import lila.game.GameRepo
@@ -79,43 +80,43 @@ object Tv {
     case object Standard
         extends Channel(
           key = V.Standard.key,
-          icon = "C",
+          icon = Icons.standard,
           filters = Seq(variant(V.Standard), someHuman),
         )
     case object Minishogi
         extends Channel(
           key = V.Minishogi.key,
-          icon = P.Minishogi.iconChar.toString,
+          icon = P.Minishogi.icon,
           filters = Seq(variant(V.Minishogi), someHuman),
         )
     case object Chushogi
         extends Channel(
           key = V.Chushogi.key,
-          icon = P.Chushogi.iconChar.toString,
+          icon = P.Chushogi.icon,
           filters = Seq(variant(V.Chushogi), someHuman),
         )
     case object Annanshogi
         extends Channel(
           key = V.Annanshogi.key,
-          icon = P.Annanshogi.iconChar.toString,
+          icon = P.Annanshogi.icon,
           filters = Seq(variant(V.Annanshogi), someHuman),
         )
     case object Kyotoshogi
         extends Channel(
           key = V.Kyotoshogi.key,
-          icon = P.Kyotoshogi.iconChar.toString,
+          icon = P.Kyotoshogi.icon,
           filters = Seq(variant(V.Kyotoshogi), someHuman),
         )
     case object Checkshogi
         extends Channel(
           key = V.Checkshogi.key,
-          icon = P.Checkshogi.iconChar.toString,
+          icon = P.Checkshogi.icon,
           filters = Seq(variant(V.Checkshogi), someHuman),
         )
     case object Computer
         extends Channel(
           key = "computer",
-          icon = "n",
+          icon = Icons.cogs,
           filters = Seq(someComputer),
         )
 

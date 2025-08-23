@@ -1,6 +1,7 @@
 // Generated with ui/@build/css/src/css-variables/generators/theme.ts
 
 @use 'sass:color';
+@use '../../abstract/icons';
 @use '../util' as *;
 @use '../dark' as *;
 
@@ -90,9 +91,9 @@ html {
   --c-shade: #{c-light($c-font, 30%)};
   --c-warn: #{$c-brag};
   --c-warn-over: #{$c-brag-over};
-  --gote-symbol: '☗';
+  --gote-symbol: #{icons.$shogi-full};
   --metal-shadow: #{none};
-  --sente-symbol: '☖';
+  --sente-symbol: #{icons.$shogi-outline};
   --text-shadow: #{none};
   --m-accent_alpha_neg40: #{color.adjust($c-accent,$alpha:-0.4)};
   --m-accent_alpha_neg50: #{color.adjust($c-accent,$alpha:-0.5)};

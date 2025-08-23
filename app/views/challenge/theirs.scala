@@ -58,7 +58,7 @@ object theirs {
                     cls    := "accept",
                     action := routes.Challenge.accept(c.id, color.map(_.name)),
                   )(
-                    submitButton(cls := "text button button-fat", dataIcon := "G")(
+                    submitButton(cls := "text button button-fat", dataIcon := Icons.play)(
                       trans.joinTheGame(),
                     ),
                   ),

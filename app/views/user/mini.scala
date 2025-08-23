@@ -45,20 +45,20 @@ object mini {
         frag(
           (myId != u.id && u.enabled) option div(cls := "upt__actions btn-rack")(
             a(
-              dataIcon := "1",
+              dataIcon := Icons.television,
               cls      := "btn-rack__btn",
               title    := trans.watchGames.txt(),
               href     := routes.User.tv(u.username),
             ),
             !blocked option frag(
               a(
-                dataIcon := "c",
+                dataIcon := Icons.talk,
                 cls      := "btn-rack__btn",
                 title    := trans.chat.txt(),
                 href     := routes.Msg.convo(u.username),
               ),
               a(
-                dataIcon := "U",
+                dataIcon := Icons.challenge,
                 cls      := "btn-rack__btn",
                 title    := trans.challengeToPlay.txt(),
                 href     := s"${routes.Lobby.home}?user=${u.username}#friend",
@@ -88,7 +88,7 @@ object mini {
         frag(
           gameSfen(pov, ctx.me),
           div(cls := "upt__game-legend")(
-            i(dataIcon := pov.game.perfType.map(_.iconChar.toString), cls := "text")(
+            i(dataIcon := pov.game.perfType.map(_.icon), cls := "text")(
               pov.game.clock.map(_.config.show),
             ),
             playerText(pov.opponent, withRating = true),

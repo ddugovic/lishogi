@@ -1,4 +1,5 @@
 import { defined } from 'common/common';
+import { icons } from 'common/icons';
 import { bind, dataIcon } from 'common/snabbdom';
 import * as game from 'game';
 import { i18n } from 'i18n';
@@ -112,7 +113,7 @@ function doRender(ctrl: AnalyseCtrl): VNode {
             'a.button.text',
             {
               class: { active: !!ctrl.retro },
-              attrs: dataIcon('G'),
+              attrs: dataIcon(icons.play),
               hook: bind('click', ctrl.toggleRetro, ctrl.redraw),
             },
             i18n('learnFromYourMistakes'),

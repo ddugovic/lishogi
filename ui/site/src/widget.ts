@@ -87,7 +87,7 @@ export function initWidgets(): void {
           : '';
         const url = `/@/${user.name}`;
         const tvButton = user.playing
-          ? `<a data-icon="1" class="tv ulpt" data-pt-pos="nw" href="${url}/tv" data-href="${url}"></a>`
+          ? `<a data-icon="${icons.television}" class="tv ulpt" data-pt-pos="nw" href="${url}/tv" data-href="${url}"></a>`
           : '';
         return `<div><a class="user-link ulpt" data-pt-pos="nw" href="${url}">${icon}${titleTag}${user.name}</a>${tvButton}</div>`;
       };

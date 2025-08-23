@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { bind, type MaybeVNodes } from 'common/snabbdom';
 import { h, type VNode } from 'snabbdom';
 import type TournamentController from './ctrl';
@@ -10,7 +11,7 @@ function button(ctrl: TournamentController): VNode {
   return h('button.fbt', {
     class: { active: ctrl.searching },
     attrs: {
-      'data-icon': ctrl.searching ? 'L' : 'y',
+      'data-icon': ctrl.searching ? icons.cancel : icons.search,
       title: 'Search tournament players',
     },
     hook: bind('mousedown', ctrl.toggleSearch, ctrl.redraw),

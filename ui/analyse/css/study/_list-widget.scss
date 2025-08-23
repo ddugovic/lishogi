@@ -1,5 +1,6 @@
 @use 'pkg:breakpoint-sass' as breakpoint;
 @use 'pkg:common/abstract/extends';
+@use 'pkg:common/abstract/icons';
 @use 'pkg:common/abstract/media-queries';
 @use 'pkg:common/abstract/mixins';
 @use 'pkg:common/abstract/variables';
@@ -56,6 +57,31 @@ $c-study: theme.$c-primary;
 
     .top {
       @extend %flex-center-nowrap, %break-word, %roboto;
+
+      gap: 1rem;
+
+      .study__icon {
+        color: $c-study;
+        height: 4rem;
+        width: 4rem;
+
+        &::before {
+          @extend %data-icon;
+
+          content: icons.$study;
+          font-size: 3.5rem;
+        }
+
+        @supports (mask: url('') no-repeat center/contain) {
+          & {
+            background-color: currentColor;
+            mask-image: var(--icon, url('../icons/bookshelf.svg'));
+            mask-repeat: no-repeat;
+            mask-position: center;
+            mask-size: contain;
+          }
+        }
+      }
 
       .study-name {
         @extend %nowrap-ellipsis;

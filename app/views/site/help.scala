@@ -95,7 +95,7 @@ object help {
                 title    := "Copy code",
                 cls      := "copy button",
                 dataRel  := "tv-embed-src",
-                dataIcon := "\"",
+                dataIcon := Icons.link,
               ),
             ),
             parameters,
@@ -121,7 +121,7 @@ object help {
                 title    := "Copy code",
                 cls      := "copy button",
                 dataRel  := "puzzle-embed-src",
-                dataIcon := "\"",
+                dataIcon := Icons.link,
               ),
             ),
             parameters,
@@ -188,7 +188,7 @@ object help {
       moreJs = moreJs,
     ) {
       val sep                  = div(cls := "sep")
-      val external             = frag(" ", i(dataIcon := "0"))
+      val external             = frag(" ", i(dataIcon := Icons.external))
       def activeCls(c: String) = cls := active.activeO(c)
       main(cls := "page-menu")(
         st.nav(cls := "page-menu__menu subnav")(

@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { reverse } from 'common/string';
 import Peer from 'peerjs';
 import type { VNode } from 'snabbdom';
@@ -194,7 +195,7 @@ function main(opts: PalantirOpts): Palantir | undefined {
             `div.mchat__tab.palantir.data-count.palantir-${state}`,
             {
               attrs: {
-                'data-icon': '',
+                'data-icon': icons.call,
                 title: `Voice chat: ${state}`,
                 'data-count': state == 'on' ? connections.length + 1 : 0,
               },

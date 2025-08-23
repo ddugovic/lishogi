@@ -34,7 +34,11 @@ object theme {
                     val url =
                       if (pt.theme == PuzzleTheme.mix) routes.Puzzle.home
                       else routes.Puzzle.show(pt.theme.key.value)
-                    a(cls := "puzzle-themes__link", href := (pt.count > 0).option(langHref(url)))(
+                    a(
+                      cls                := "puzzle-themes__link",
+                      href               := (pt.count > 0).option(langHref(url)),
+                      attr("data-theme") := pt.theme.key.value,
+                    )(
                       span(
                         h3(
                           pt.theme.name(),

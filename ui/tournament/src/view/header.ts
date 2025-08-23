@@ -1,4 +1,5 @@
 import { assetUrl } from 'common/assets';
+import { icons } from 'common/icons';
 import { dataIcon, type MaybeVNode } from 'common/snabbdom';
 import { i18n } from 'i18n';
 import { h, type VNode } from 'snabbdom';
@@ -74,7 +75,7 @@ function image(d: TournamentDataFull): VNode | undefined {
       attrs: { src: assetUrl(`images/${s.iconImg}`) },
     });
   return h('i.img', {
-    attrs: dataIcon(s?.iconFont || 'g'),
+    attrs: dataIcon(s?.iconFont || icons.trophy),
   });
 }
 
@@ -111,7 +112,9 @@ function title(ctrl: TournamentController) {
         ]
       : [d.fullName]
     ).concat(
-      d.private ? [' ', h('span', { attrs: { 'data-icon': 'a', title: i18n('isPrivate') } })] : [],
+      d.private
+        ? [' ', h('span', { attrs: { 'data-icon': icons.lock, title: i18n('isPrivate') } })]
+        : [],
     ),
   );
 }

@@ -32,7 +32,7 @@ object signup {
           auth.bits
             .formFields(form("username"), form("password"), form("email").some, register = true),
           input(id := "signup-fp-input", name := "fp", tpe := "hidden"),
-          div(cls := "form-group text", dataIcon := "")(
+          div(cls := "form-group text", dataIcon := Icons.infoCircle)(
             trans.computersAreNotAllowedToPlay(),
             br,
             small(

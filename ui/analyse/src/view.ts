@@ -1,6 +1,7 @@
 import * as cevalView from 'ceval/view';
 import { makeChat } from 'chat';
 import { defined } from 'common/common';
+import { icons } from 'common/icons';
 import { bindMobileMousedown, hasTouchEvents } from 'common/mobile';
 import { bind, bindNonPassive, dataIcon, type MaybeVNode, onInsert } from 'common/snabbdom';
 import spinner from 'common/spinner';
@@ -143,7 +144,7 @@ function inputs(ctrl: AnalyseCtrl): VNode | undefined {
         h(
           'button.button.button-thin.action.text',
           {
-            attrs: dataIcon('G'),
+            attrs: dataIcon(icons.play),
             hook: bind(
               'click',
               _ => {
@@ -182,7 +183,7 @@ function inputs(ctrl: AnalyseCtrl): VNode | undefined {
             h(
               'button.button.button-thin.action.text',
               {
-                attrs: dataIcon('G'),
+                attrs: dataIcon(icons.play),
                 hook: bind(
                   'click',
                   _ => {
@@ -224,7 +225,7 @@ function inputs(ctrl: AnalyseCtrl): VNode | undefined {
         h(
           'div.form-help.text',
           {
-            attrs: { 'data-icon': '' },
+            attrs: { 'data-icon': icons.infoCircle },
           },
           [
             i18n('shareMainlineUrl'),
@@ -304,14 +305,14 @@ function controls(ctrl: AnalyseCtrl) {
                     title: i18n('analysis'),
                     target: '_blank',
                     href: ctrl.studyPractice.analysisUrl(),
-                    'data-icon': 'A',
+                    'data-icon': icons.microscope,
                   },
                 })
               : h('button.fbt', {
                   attrs: {
                     title: i18n('practiceWithComputer'),
                     'data-act': 'practice',
-                    'data-icon': '',
+                    'data-icon': icons.bullseye,
                     hidden: !!ctrl.retro,
                     disabled:
                       menuIsOpen ||
@@ -323,10 +324,10 @@ function controls(ctrl: AnalyseCtrl) {
                 }),
           ),
       h('div.jumps', [
-        !ctrl.embed ? jumpButton('W', 'first', canJumpPrev) : undefined,
-        jumpButton('Y', 'prev', canJumpPrev),
-        jumpButton('X', 'next', canJumpNext),
-        !ctrl.embed ? jumpButton('V', 'last', canJumpNext) : undefined,
+        !ctrl.embed ? jumpButton(icons.first, 'first', canJumpPrev) : undefined,
+        jumpButton(icons.prev, 'prev', canJumpPrev),
+        jumpButton(icons.next, 'next', canJumpNext),
+        !ctrl.embed ? jumpButton(icons.last, 'last', canJumpNext) : undefined,
       ]),
       ctrl.studyPractice
         ? h('div.noop')
@@ -335,7 +336,7 @@ function controls(ctrl: AnalyseCtrl) {
             attrs: {
               title: i18n('menu'),
               'data-act': 'menu',
-              'data-icon': '[',
+              'data-icon': icons.menu,
             },
           }),
     ],
@@ -485,7 +486,7 @@ export default function (ctrl: AnalyseCtrl): VNode {
                               {
                                 attrs: {
                                   href: router.game(ctrl.data, ctrl.data.player.color),
-                                  'data-icon': 'i',
+                                  'data-icon': icons.back,
                                 },
                               },
                               i18n('backToGame'),

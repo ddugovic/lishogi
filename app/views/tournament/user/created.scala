@@ -50,13 +50,13 @@ object created {
               },
               pager.currentPageResults.map { t =>
                 tr(cls := "paginated")(
-                  td(cls := "icon")(tournamentIcon(t)),
+                  td(cls := "icon")(tournamentIconTag(t)),
                   views.html.tournament.list.header(t),
                   td(momentFromNow(t.startsAt)),
                   td(cls := "winner")(
                     t.winnerId.isDefined option userIdLink(t.winnerId, withOnline = false),
                   ),
-                  td(cls := "text", dataIcon := "r")(t.nbPlayers.localize),
+                  td(cls := "text", dataIcon := Icons.person)(t.nbPlayers.localize),
                 )
               },
             ),

@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { bind, dataIcon, type MaybeVNode } from 'common/snabbdom';
 import { i18n } from 'i18n';
 import { h, type VNode } from 'snabbdom';
@@ -83,7 +84,7 @@ const editor = (ctrl: Controller): VNode => {
                         h(
                           'div.puzzle__themes__lock',
                           h('i', {
-                            attrs: dataIcon('a'),
+                            attrs: dataIcon(icons.lock),
                           }),
                         ),
                       ]
@@ -143,7 +144,7 @@ const editor = (ctrl: Controller): VNode => {
           //  'a.puzzle__themes__study.text',
           //  {
           //    attrs: {
-          //      'data-icon': '',
+          //      'data-icon': icons.infoCircle,
           //      href: studyUrl,
           //      target: '_blank',
           //    },

@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { modal } from 'common/modal';
 import { getPerfIcon } from 'common/perf-icons';
 import { bind, type MaybeVNodes, proverb } from 'common/snabbdom';
@@ -41,7 +42,7 @@ export default function (ctrl: SimulCtrl): MaybeVNodes {
               'a.button.text',
               {
                 attrs: {
-                  'data-icon': 'G',
+                  'data-icon': icons.play,
                   href: `/login?referrer=${window.location.pathname}`,
                 },
               },
@@ -99,7 +100,7 @@ export default function (ctrl: SimulCtrl): MaybeVNodes {
                         ? [
                             h('a.button', {
                               attrs: {
-                                'data-icon': 'H',
+                                'data-icon': icons.right,
                                 title: i18n('accept'),
                               },
                               hook: bind('click', () =>
@@ -153,7 +154,7 @@ export default function (ctrl: SimulCtrl): MaybeVNodes {
                         ? [
                             h('a.button.button-red', {
                               attrs: {
-                                'data-icon': 'L',
+                                'data-icon': icons.cancel,
                                 title: i18n('decline'),
                               },
                               hook: bind('click', () =>
@@ -217,7 +218,7 @@ const joinButton = (ctrl: SimulCtrl) =>
         `a.button.text${ctrl.teamBlock() ? '.disabled' : ''}`,
         {
           attrs: {
-            'data-icon': 'G',
+            'data-icon': icons.play,
           },
           hook: ctrl.teamBlock()
             ? {}
@@ -259,7 +260,7 @@ const randomButton = (ctrl: SimulCtrl) =>
     'a.button.text.random-accept',
     {
       attrs: {
-        'data-icon': 'E',
+        'data-icon': icons.correct,
       },
       hook: bind('click', () => {
         const candidates = ctrl.candidates();
@@ -275,7 +276,7 @@ const hostButtons = (ctrl: SimulCtrl, accepted: Applicant[]) => [
     'button.button.button-red.text',
     {
       attrs: {
-        'data-icon': 'L',
+        'data-icon': icons.cancel,
       },
       hook: bind('click', () => {
         if (confirm(`${i18n('delete')} - ${ctrl.data.name}`)) xhr.abort(ctrl.data.id);
@@ -287,7 +288,7 @@ const hostButtons = (ctrl: SimulCtrl, accepted: Applicant[]) => [
     `button.button.button-green.text${accepted.length < 2 ? '.disabled' : ''}`,
     {
       attrs: {
-        'data-icon': 'G',
+        'data-icon': icons.play,
       },
       hook: bind('click', () => xhr.start(ctrl.data.id)),
     },

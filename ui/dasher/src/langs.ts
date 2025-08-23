@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { i18n } from 'i18n';
 import { h, type VNode } from 'snabbdom';
 import { type Close, header } from './util';
@@ -52,7 +53,7 @@ export function view(ctrl: LangsCtrl): VNode {
       {
         attrs: {
           href: 'https://crowdin.com/project/lishogi',
-          'data-icon': '',
+          'data-icon': icons.heartFull,
         },
       },
       'Help translate Lishogi',

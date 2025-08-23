@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { bind, onInsert } from 'common/snabbdom';
 import { i18n } from 'i18n';
 import { h, type VNode } from 'snabbdom';
@@ -89,18 +90,18 @@ function view(opts: Opts, coords: Coords): VNode {
       h('p.title.inlined', nodeFullName(node)),
       onMainline
         ? null
-        : action('S', i18n('promoteVariation'), () => ctrl.promote(opts.path, false)),
+        : action(icons.up, i18n('promoteVariation'), () => ctrl.promote(opts.path, false)),
       onMainline || cantChangeMainline
         ? null
-        : action('E', i18n('makeMainLine'), () => ctrl.promote(opts.path, true)),
+        : action(icons.correct, i18n('makeMainLine'), () => ctrl.promote(opts.path, true)),
       onMainline && cantChangeMainline
         ? null
-        : action('q', i18n('deleteFromHere'), () => ctrl.deleteNode(opts.path)),
+        : action(icons.trashBin, i18n('deleteFromHere'), () => ctrl.deleteNode(opts.path)),
     ]
       .concat(ctrl.study ? studyView.contextMenu(ctrl.study, opts.path, node) : [])
       .concat([
         onMainline && !cantChangeMainline
-          ? action('F', i18n('forceVariation'), () => ctrl.forceVariation(opts.path, true))
+          ? action(icons.exit, i18n('forceVariation'), () => ctrl.forceVariation(opts.path, true))
           : null,
       ]),
   );

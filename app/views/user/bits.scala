@@ -68,7 +68,9 @@ object bits {
 
   def claimTitle =
     div(cls := "claim-title")(
-      h2(dataIcon := "'", cls := "text")("Congratulations for breaking the 2500 rating threshold!"),
+      h2(dataIcon := Icons.toriGate, cls := "text")(
+        "Congratulations for breaking the 2500 rating threshold!",
+      ),
       p(
         "To ensure honest players aren't falsely accused of cheating, we request titled players ",
         "to identify themselves.",
@@ -80,7 +82,7 @@ object bits {
         ". You can also contact a moderator on lishogi.org.",
       ),
       postForm(action := routes.Pref.verifyTitle)(
-        button(cls := "button text", dataIcon := "E", name := "v", value := true)(
+        button(cls := "button text", dataIcon := Icons.correct, name := "v", value := true)(
           "Got it, thanks!",
         ),
         button(cls := "button", name := "v", value := false)("I don't have an official title"),

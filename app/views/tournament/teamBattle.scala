@@ -122,7 +122,7 @@ object teamBattle {
               tr(
                 td(index + 1),
                 td(
-                  (index < tour.teamBattle.??(_.nbLeaders)) option iconTag("8"),
+                  (index < tour.teamBattle.??(_.nbLeaders)) option iconTag(Icons.crown),
                   userIdLink(player.userId.some),
                 ),
                 td(player.score),

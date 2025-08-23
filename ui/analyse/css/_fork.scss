@@ -25,6 +25,10 @@
     &:nth-child(odd) {
       border-right: 1px solid theme.$c-bg-box;
     }
+
+    index {
+      padding-right: 0.5em;
+    }
   }
 
   move:hover,

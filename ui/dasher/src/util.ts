@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { h, type VNode } from 'snabbdom';
 
 export type Close = () => void;
@@ -24,7 +25,7 @@ export function header(name: string, close: Close): VNode {
   return h(
     'a.head.text',
     {
-      attrs: { 'data-icon': 'I' },
+      attrs: { 'data-icon': icons.left },
       hook: bind('click', close),
     },
     name,

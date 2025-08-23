@@ -1,5 +1,6 @@
 @use 'pkg:breakpoint-sass' as breakpoint;
 @use '../abstract/extends';
+@use '../abstract/icons';
 @use '../abstract/media-queries';
 @use '../abstract/variables';
 @use '../abstract/z-index' as z;
@@ -31,7 +32,7 @@
   &::after {
     @extend %data-icon;
 
-    content: '';
+    content: icons.$patron;
     font-size: 1.3em;
     color: theme.$c-brag;
     margin: 0 0 0.08ch 0.3ch;

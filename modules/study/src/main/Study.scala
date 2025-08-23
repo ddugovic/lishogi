@@ -16,8 +16,9 @@ case class Study(
     from: Study.From,
     postGameStudy: Option[Study.PostGameStudy],
     likes: Study.Likes,
-    description: Option[String] = None,
-    topics: Option[StudyTopics] = None,
+    description: Option[String] = none,
+    topics: Option[StudyTopics] = none,
+    icon: Option[String] = none,
     createdAt: DateTime,
     updatedAt: DateTime,
 ) {
@@ -165,6 +166,7 @@ object Study {
       chat: String,
       sticky: String,
       description: String,
+      icon: Option[String],
   ) {
     import Settings._
     def vis = Visibility.byKey.getOrElse(visibility, Visibility.Public)
@@ -198,10 +200,11 @@ object Study {
       name: Name,
       ownerId: User.ID,
       from: From,
-      id: Option[Study.Id] = None,
-      settings: Option[Settings] = None,
-      members: Option[List[StudyMember]] = None,
-      postGameStudy: Option[PostGameStudy] = None,
+      id: Option[Study.Id] = none,
+      settings: Option[Settings] = none,
+      members: Option[List[StudyMember]] = none,
+      postGameStudy: Option[PostGameStudy] = none,
+      icon: Option[String] = none,
   ) = {
     val membersMap = members.fold(
       Map(ownerId -> StudyMember(id = ownerId, role = StudyMember.Role.Write)),
@@ -217,6 +220,7 @@ object Study {
       from = from,
       postGameStudy = postGameStudy,
       likes = Likes(1),
+      icon = icon,
       createdAt = DateTime.now,
       updatedAt = DateTime.now,
     )

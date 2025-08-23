@@ -48,7 +48,7 @@ object home {
                     cls      := "tourname text",
                     title    := name,
                     href     := routes.Tournament.show(w.tourId),
-                    dataIcon := "g",
+                    dataIcon := Icons.trophy,
                   )(
                     name,
                   ),
@@ -96,7 +96,7 @@ object home {
       ctx.isAuth option a(
         href     := routes.Tournament.form,
         cls      := "button button-green text",
-        dataIcon := "O",
+        dataIcon := Icons.createNew,
       )(trans.createANewTournament()),
     )
 

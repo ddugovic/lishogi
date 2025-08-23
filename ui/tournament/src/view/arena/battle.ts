@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { bind, type MaybeVNode, onInsert } from 'common/snabbdom';
 import { i18nPluralSame } from 'i18n';
 import { h, type VNode } from 'snabbdom';
@@ -26,7 +27,7 @@ export function joinWithTeamSelector(ctrl: TournamentController): VNode {
         },
         [
           h('span.close', {
-            attrs: { 'data-icon': 'L' },
+            attrs: { 'data-icon': icons.cancel },
             hook: bind('click', onClose),
           }),
           h('div.team-picker', [

@@ -1,4 +1,5 @@
 import { useJp } from 'common/common';
+import { icons } from 'common/icons';
 import { initOneWithState, update } from 'common/mini-board';
 import { modal } from 'common/modal';
 import { getPerfIcon } from 'common/perf-icons';
@@ -72,7 +73,12 @@ function variant(ctrl: SetupCtrl): VNode {
   return h('div.setup-variant.section', [
     h('div.select', [
       h('a.info', {
-        attrs: { href: '/variant', target: '_blank', 'data-icon': '', title: i18n('variants') },
+        attrs: {
+          href: '/variant',
+          target: '_blank',
+          'data-icon': icons.infoCircle,
+          title: i18n('variants'),
+        },
       }),
       h('label', {}, `${i18n('variant')}:`),
       select(ctrl, 'variant', variantChoicesTranslated),
@@ -96,7 +102,12 @@ function positionInput(ctrl: SetupCtrl): VNode {
   return h('div.setup-position-input', [
     h('div.setup-handicap.select', [
       h('a.info', {
-        attrs: { href: handicapLink, target: '_blank', 'data-icon': '', title: i18n('variants') },
+        attrs: {
+          href: handicapLink,
+          target: '_blank',
+          'data-icon': icons.infoCircle,
+          title: i18n('variants'),
+        },
       }),
       h('label', { attrs: { for: 'ls-handicap' } }, `${i18n('handicap')}?:`),
       select(
@@ -111,7 +122,12 @@ function positionInput(ctrl: SetupCtrl): VNode {
     ]),
     h('div.setup-sfen', [
       h('a.info', {
-        attrs: { href: '/editor', target: '_blank', 'data-icon': 'm', title: i18n('boardEditor') },
+        attrs: {
+          href: '/editor',
+          target: '_blank',
+          'data-icon': icons.pencil,
+          title: i18n('boardEditor'),
+        },
       }),
       sfenInput(ctrl),
     ]),
@@ -184,7 +200,7 @@ function timeControlRt(ctrl: SetupCtrl): MaybeVNodes {
     ]),
     h(`div.setup-time-extra-toggle${ctrl.isExtraOpen ? '.open' : ''}`, {
       attrs: {
-        'data-icon': 'u',
+        'data-icon': icons.expand,
       },
       hook: bind('click', () => {
         ctrl.toggleExtra();

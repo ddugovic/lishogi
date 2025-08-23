@@ -37,7 +37,7 @@ object communication {
               cls  := "button button-empty mod-zone-toggle",
               href := routes.User.mod(u.username),
               titleOrText("Mod zone (Hotkey: m)"),
-              dataIcon := "",
+              dataIcon := Icons.agent,
             ),
             isGranted(_.ViewPrivateComms) option {
               if (priv)

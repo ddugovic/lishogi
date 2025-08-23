@@ -701,7 +701,7 @@ object JsonView {
   implicit private[tournament] def perfTypeWrites(implicit lang: Lang): OWrites[PerfType] =
     OWrites { pt =>
       Json.obj(
-        "icon" -> pt.iconChar.toString,
+        "icon" -> pt.icon,
         "name" -> pt.trans,
       )
     }

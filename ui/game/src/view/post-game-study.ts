@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { modal } from 'common/modal';
 import { onInsert } from 'common/snabbdom';
 import { debounce } from 'common/timings';
@@ -18,7 +19,12 @@ export function studyModal(gameId: string, orientation: Color, onClose: () => vo
           postGameStudyForm(gameId, orientation),
           h(
             'a.text',
-            { attrs: { 'data-icon': '', href: `/study/post-game-study/${gameId}/hot` } },
+            {
+              attrs: {
+                'data-icon': icons.infoCircle,
+                href: `/study/post-game-study/${gameId}/hot`,
+              },
+            },
             i18n('postGameStudiesOfGame'),
           ),
         ]),

@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { bind } from 'common/snabbdom';
 import { ids } from 'game/status';
 import { i18n, i18nFormat } from 'i18n';
@@ -26,7 +27,7 @@ function playerNameStanding(player: ArrangementPlayer) {
       player.withdraw
         ? h('i', {
             attrs: {
-              'data-icon': player.kicked ? 'L' : 'Z',
+              'data-icon': player.kicked ? icons.cancel : icons.pause,
             },
           })
         : undefined,
@@ -100,7 +101,11 @@ export function robinTable(ctrl: TournamentController, klass?: string): VNode {
     },
     [
       size === 0
-        ? h('div.no-players.text', { attrs: { 'data-icon': '' } }, i18n('noPlayersJoinedYet'))
+        ? h(
+            'div.no-players.text',
+            { attrs: { 'data-icon': icons.infoCircle } },
+            i18n('noPlayersJoinedYet'),
+          )
         : null,
       h(
         'div.r-table-wrap-players',

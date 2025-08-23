@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { bind, dataIcon } from 'common/snabbdom';
 import { i18n, i18nPluralSame } from 'i18n';
 import { i18nVariant } from 'i18n/variant';
@@ -28,7 +29,10 @@ export function filter(ctrl: InsightCtrl): VNode {
             ctrl.redraw,
           ),
         },
-        [i18n('filterGames'), h('i', { attrs: dataIcon(ctrl.filterToggle ? 'S' : 'R') })],
+        [
+          i18n('filterGames'),
+          h('i', { attrs: dataIcon(ctrl.filterToggle ? icons.up : icons.down) }),
+        ],
       ),
     ),
     h(

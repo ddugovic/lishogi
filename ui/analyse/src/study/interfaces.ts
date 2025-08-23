@@ -82,6 +82,7 @@ export interface StudyVm {
 export interface StudyData {
   id: string;
   name: string;
+  icon?: string;
   members: StudyMemberMap;
   position: Position;
   ownerId: string;

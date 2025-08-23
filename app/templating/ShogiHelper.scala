@@ -5,6 +5,7 @@ import play.api.i18n.Lang
 
 import lila.api.Context
 import lila.app.ui.ScalatagsTemplate._
+import lila.common.Icons
 import lila.i18n.I18nKey
 import lila.pref.Pref
 
@@ -60,12 +61,12 @@ trait ShogiHelper { self: I18nHelper =>
 
   def variantIcon(v: shogi.variant.Variant): String =
     v match {
-      case shogi.variant.Minishogi  => ","
-      case shogi.variant.Chushogi   => "("
-      case shogi.variant.Annanshogi => ""
-      case shogi.variant.Kyotoshogi => ""
-      case shogi.variant.Checkshogi => ">"
-      case _                        => "C"
+      case shogi.variant.Minishogi  => Icons.minishogi
+      case shogi.variant.Chushogi   => Icons.chushogi
+      case shogi.variant.Annanshogi => Icons.annanshogi
+      case shogi.variant.Kyotoshogi => Icons.kyotoshogi
+      case shogi.variant.Checkshogi => Icons.checkshogi
+      case _                        => Icons.standard
     }
 
 }

@@ -12,6 +12,7 @@ import shogi.{ Status => S }
 
 import lila.api.Context
 import lila.app.ui.ScalatagsTemplate._
+import lila.common.Icons
 import lila.game.Game
 import lila.game.Namer
 import lila.game.Player
@@ -130,7 +131,7 @@ trait GameHelper {
   def gameVsText(game: Game, withRatings: Boolean = false)(implicit lang: Lang): String =
     Namer.gameVsTextBlocking(game, withRatings)(lightUser, lang)
 
-  val berserkIconSpan = i(dataIcon := "`", cls := "berserk")
+  val berserkIconSpan = i(dataIcon := Icons.berserk, cls := "berserk")
 
   def playerLink(
       player: Player,

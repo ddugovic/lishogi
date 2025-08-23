@@ -22,7 +22,7 @@ object post {
           )(
             p.isTeam option span(
               cls      := "text",
-              dataIcon := "f",
+              dataIcon := Icons.people,
             ),
             span(cls := "post_topic")(shorten(p.topicName, 30)),
             span(cls := "post_text")(shorten(p.text, 70)),
@@ -62,11 +62,11 @@ object post {
           ),
           isGranted(_.IpBan) option span(cls := "mod postip")(post.ip),
           ctx.userId.fold(false)(post.shouldShowEditForm(_)) option
-            a(cls := "mod edit button button-empty text", dataIcon := "m")("Edit"),
+            a(cls := "mod edit button button-empty text", dataIcon := Icons.pencil)("Edit"),
           canModCateg option a(
             cls      := "mod delete button button-empty button-red",
             href     := routes.ForumPost.delete(categ.slug, post.id),
-            dataIcon := "q",
+            dataIcon := Icons.trashBin,
             title    := "Delete",
           ),
         ),

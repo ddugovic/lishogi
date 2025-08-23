@@ -56,7 +56,7 @@ object form {
       form3.hidden("text", text take 140),
       submitButton(
         cls      := "button button-empty button-red confirm",
-        dataIcon := "j",
+        dataIcon := Icons.error,
         title    := "Report spam or offensive language",
       ),
     )

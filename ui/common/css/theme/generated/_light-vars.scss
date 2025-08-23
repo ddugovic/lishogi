@@ -1,6 +1,7 @@
 // Generated with ui/@build/css/src/css-variables/generators/theme.ts
 
 @use 'sass:color';
+@use '../../abstract/icons';
 @use '../util' as *;
 @use '../dark' as *;
 @use '../light' as *;
@@ -59,9 +60,9 @@ html.light {
   --c-sente2: #{$c-font-clear};
   --c-shade: #{c-whiter($c-font, 75%)};
   --c-warn: #{$c-brag};
-  --gote-symbol: '☖';
+  --gote-symbol: #{icons.$shogi-outline};
   --metal-shadow: #{0 1px 0 white};
-  --sente-symbol: '☗';
+  --sente-symbol: #{icons.$shogi-full};
   --text-shadow: #{0 1px 0 $c-font-shadow};
   --m-accent_bg-box_mix_10: #{color.mix($c-accent,$c-bg-box,10%)};
   --m-accent_bg-box_mix_12: #{color.mix($c-accent,$c-bg-box,12%)};

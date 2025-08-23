@@ -15,7 +15,7 @@ object bits extends Context.ToLang {
   def create(implicit ctx: Context) =
     views.html.site.message(
       title = becomeStreamer.txt(),
-      icon = Some(""),
+      icon = Some(Icons.mic),
       moreCss = cssTag("misc.streamer.form").some,
     )(
       postForm(cls := "streamer-new", action := routes.Streamer.create)(
@@ -26,7 +26,7 @@ object bits extends Context.ToLang {
         br,
         br,
         p(style := "text-align: center")(
-          submitButton(cls := "button button-fat text", dataIcon := "")(hereWeGo()),
+          submitButton(cls := "button button-fat text", dataIcon := Icons.mic)(hereWeGo()),
         ),
       ),
     )
@@ -73,7 +73,7 @@ object bits extends Context.ToLang {
         href := s"${routes.Streamer.index()}?requests=1",
       )("Approval requests"),
       /*
-      a(dataIcon := "", cls := "text", href := "/blog/Wk5z0R8AACMf6ZwN/join-the-lishogi-streamer-community")(
+      a(dataIcon := Icons.infoCircle, cls := "text", href := "/blog/Wk5z0R8AACMf6ZwN/join-the-lishogi-streamer-community")(
         "Streamer community"
       ),
       a(href := "/about")(downloadKit())
@@ -97,14 +97,14 @@ object bits extends Context.ToLang {
         cls   := "stream highlight",
         title := s.status,
       )(
-        strong(cls := "text", dataIcon := "")(l titleName s),
+        strong(cls := "text", dataIcon := Icons.mic)(l titleName s),
         " ",
         s.status,
       )
     }
 
   def contextual(userId: User.ID)(implicit lang: Lang): Frag =
-    redirectLink(userId)(cls := "context-streamer text", dataIcon := "")(
+    redirectLink(userId)(cls := "context-streamer text", dataIcon := Icons.mic)(
       xIsStreaming(usernameOrId(userId)),
     )
 

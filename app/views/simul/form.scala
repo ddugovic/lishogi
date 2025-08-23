@@ -30,7 +30,7 @@ object form {
           formContent(form, teams),
           form3.actions(
             a(href := routes.Simul.home)(trans.cancel()),
-            form3.submit(trans.hostANewSimul(), icon = "g".some),
+            form3.submit(trans.hostANewSimul(), icon = Icons.trophy.some), // todo
           ),
         ),
       )
@@ -51,7 +51,7 @@ object form {
           formContent(form, teams),
           form3.actions(
             a(href := routes.Simul.show(simul.id))(trans.cancel()),
-            form3.submit(trans.save(), icon = "g".some),
+            form3.submit(trans.save(), icon = Icons.trophy.some),
           ),
         ),
       )

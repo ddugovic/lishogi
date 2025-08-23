@@ -1,4 +1,5 @@
 import { flatpickr } from 'common/assets';
+import { icons } from 'common/icons';
 import { modal } from 'common/modal';
 import type { MaybeVNode } from 'common/snabbdom';
 import throttle from 'common/throttle';
@@ -91,7 +92,7 @@ function header(ctrl: TournamentController, a: Arrangement): VNode {
           },
           h('i', {
             attrs: {
-              'data-icon': '%',
+              'data-icon': icons.gear,
             },
           }),
         )
@@ -170,7 +171,7 @@ function opponentTimeInput(
     }),
     h('button.fbt', {
       attrs: {
-        'data-icon': 'K',
+        'data-icon': icons.correct,
         disabled: !user.scheduledAt,
         title: i18n('tourArrangements:acceptSuggestedTime'),
       },
@@ -245,7 +246,7 @@ function myTimeInput(ctrl: TournamentController, a: Arrangement, user: Arrangeme
           'button.button.button-green.text',
           {
             attrs: {
-              'data-icon': 'K',
+              'data-icon': icons.correct,
             },
             on: {
               click: () => {

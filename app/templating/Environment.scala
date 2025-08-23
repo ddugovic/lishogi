@@ -38,6 +38,8 @@ object Environment
   def isProd         = env.isProd
   def isStage        = env.isStage
 
+  val Icons = lila.common.Icons
+
   lazy val insightsEndpoint = env.insightsEndpoint
   lazy val insightsSecret   = env.insightsSecret
 

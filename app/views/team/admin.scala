@@ -100,7 +100,7 @@ object admin {
                     momentFromNow(t.startsAt),
                     " ",
                     a(
-                      dataIcon     := "z",
+                      dataIcon     := Icons.forward,
                       cls          := "text copy-url-button",
                       data.copyurl := s"${netDomain}${routes.Tournament.show(t.id).url}",
                     ),

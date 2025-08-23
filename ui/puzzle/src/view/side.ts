@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { numberFormat } from 'common/number';
 import { dataIcon, type MaybeVNode, onInsert } from 'common/snabbdom';
 import { i18n, i18nVdom, i18nVdomPlural } from 'i18n';
@@ -25,7 +26,7 @@ function puzzleInfos(ctrl: Controller, puzzle: Puzzle): VNode {
   return h(
     'div.infos.puzzle',
     {
-      attrs: dataIcon('-'),
+      attrs: dataIcon(icons.puzzle),
     },
     [
       h('div', [
@@ -80,7 +81,7 @@ function sourceInfos(ctrl: Controller, game: PuzzleGame): VNode {
   return h(
     'div.infos',
     {
-      attrs: dataIcon('f'),
+      attrs: dataIcon(icons.people),
     },
     [
       h('div', [

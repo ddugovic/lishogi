@@ -79,7 +79,7 @@ final class ApiJsonView(lightUserApi: LightUserApi)(implicit
 
   private def perfJson(p: PerfType)(implicit lang: Lang) =
     Json.obj(
-      "icon"     -> p.iconChar.toString,
+      "icon"     -> p.icon,
       "key"      -> p.key,
       "name"     -> p.trans,
       "position" -> ~perfPositions.get(p),

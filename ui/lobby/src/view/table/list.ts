@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { getPerfIcon } from 'common/perf-icons';
 import { bind } from 'common/snabbdom';
 import { i18n, i18nPluralSame } from 'i18n';
@@ -69,7 +70,7 @@ function isNotMine(hs: Hook | Seek) {
 export function toggle(ctrl: LobbyController): VNode {
   return h('i.toggle', {
     key: 'set-mode-chart',
-    attrs: { title: i18n('graph'), 'data-icon': '9' },
+    attrs: { title: i18n('graph'), 'data-icon': icons.chartLine },
     hook: bind('mousedown', _ => ctrl.setMode('chart'), ctrl.redraw),
   });
 }

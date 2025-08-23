@@ -10,7 +10,7 @@ import lila.app.ui.ScalatagsTemplate._
 
 object login {
 
-  val twoFactorHelp = span(dataIcon := "")(
+  val twoFactorHelp = span(dataIcon := Icons.mobile)(
     "Open the two-factor authentication app on your device to view your authentication code and verify your identity.",
   )
 

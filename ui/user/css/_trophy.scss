@@ -74,50 +74,6 @@
   &:hover {
     opacity: 1;
   }
-
-  &.marathonWinner,
-  &.marathonTopTen,
-  &.marathonTopFifty,
-  &.marathonTopHundred {
-    filter: hue-rotate(190deg);
-    color: theme.$c-link-clear;
-  }
-
-  &.marathonTopTen {
-    font-size: 58px;
-    width: 55px;
-    height: 55px;
-    margin-top: 22px;
-  }
-
-  &.marathonTopFifty,
-  &.marathonTopHundred {
-    font-size: 50px;
-    height: 50px;
-    width: 50px;
-    margin-top: 30px;
-    animation: none;
-  }
-
-  &.marathonTopFifty {
-    text-shadow:
-      0 0 5px #ffae34,
-      0 0 6.25px #ec760c,
-      0 0 7.5px #cd4606;
-  }
-
-  &.marathonTopHundred {
-    text-shadow: none;
-    color: #cd4606 !important;
-  }
-
-  &.bongcloudWarrior {
-    filter: hue-rotate(70deg);
-  }
-
-  &.bougyoku {
-    color: #0b182b;
-  }
 }
 
 .packed .trophy {

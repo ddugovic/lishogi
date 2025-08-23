@@ -51,7 +51,7 @@ object tournaments {
             "soon"      -> tour.isNowOrSoon,
           ),
         )(
-          td(cls := "icon")(tournamentIcon(tour)),
+          td(cls := "icon")(tournamentIconTag(tour)),
           td(cls := "header")(
             a(href := routes.Tournament.show(tour.id))(
               span(cls := "name")(tour.trans),
@@ -74,7 +74,7 @@ object tournaments {
               renderStartsAt(tour),
             ),
           ),
-          td(cls := "text", dataIcon := "r")(tour.nbPlayers.localize),
+          td(cls := "text", dataIcon := Icons.person)(tour.nbPlayers.localize),
         )
       },
     )

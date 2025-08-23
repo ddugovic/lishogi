@@ -498,7 +498,7 @@ $c-bg-clas-over-dim: theme.$m-white_clas_mix_80;
       &::before {
         @extend %data-icon;
 
-        content: '5';
+        content: '5'; // todo
         font-size: 3em;
       }
     }

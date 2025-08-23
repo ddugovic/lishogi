@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { h, type VNode } from 'snabbdom';
 import { bind, type MaybeVNodes, onInsert } from './snabbdom';
 
@@ -25,7 +26,7 @@ export function modal(d: Modal): VNode {
         },
         [
           h('span.close', {
-            attrs: { 'data-icon': 'L' },
+            attrs: { 'data-icon': icons.cancel },
             hook: bind('click', d.onClose),
           }),
           h('div', d.content),

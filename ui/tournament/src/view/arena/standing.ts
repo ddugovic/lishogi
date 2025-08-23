@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { dataIcon, type MaybeVNodes } from 'common/snabbdom';
 import { i18n } from 'i18n';
 import { h, type VNode } from 'snabbdom';
@@ -40,7 +41,7 @@ function playerTr(ctrl: TournamentController, player: ArenaPlayer) {
         player.withdraw
           ? h('i', {
               attrs: {
-                'data-icon': 'Z',
+                'data-icon': icons.pause,
                 title: i18n('pause'),
               },
             })
@@ -57,7 +58,7 @@ function playerTr(ctrl: TournamentController, player: ArenaPlayer) {
       h('td.sheet', player.sheet.scores.map(scoreTag)),
       h('td.total', [
         player.sheet.fire && !ctrl.data.isFinished
-          ? h('strong.is-gold', { attrs: dataIcon('Q') }, player.sheet.total)
+          ? h('strong.is-gold', { attrs: dataIcon(icons.streak) }, player.sheet.total)
           : h('strong', player.sheet.total),
       ]),
     ],

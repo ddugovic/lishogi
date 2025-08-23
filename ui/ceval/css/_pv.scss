@@ -1,4 +1,5 @@
 @use 'pkg:common/abstract/extends';
+@use 'pkg:common/abstract/icons';
 @use 'pkg:common/theme';
 
 .pv_box {
@@ -66,12 +67,12 @@
       }
 
       &::before {
-        content: '▲';
+        content: icons.$up;
       }
     }
 
     &.pv--nowrap .pv-wrap-toggle::before {
-      content: '▼';
+      content: icons.$down;
     }
   }
 

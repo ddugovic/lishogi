@@ -89,7 +89,7 @@ final class StreamerApi(
                 url = "/streamer/edit",
                 title = "Listed on /streamer".some,
                 text = "Your streamer page is public".some,
-                icon = "",
+                icon = lila.common.Icons.mic,
               ),
             ),
           ) >>- cache.candidateIds.invalidateUnit()

@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { bind, dataIcon, type MaybeVNode, type MaybeVNodes } from 'common/snabbdom';
 import { i18n, i18nPluralSame } from 'i18n';
 import { opposite } from 'shogiground/util';
@@ -88,13 +89,13 @@ function buttons(root: AnalyseCtrl): VNode {
         ctrl,
         tab: 'tags',
         hint: i18n('study:tags'),
-        icon: iconTag('o'),
+        icon: iconTag(icons.tag),
       }),
       toolButton({
         ctrl,
         tab: 'comments',
         hint: i18n('study:commentThisPosition'),
-        icon: iconTag('c'),
+        icon: iconTag(icons.talk),
         onClick() {
           ctrl.commentForm.start(ctrl.vm.chapterId, root.path, root.node);
         },
@@ -105,7 +106,8 @@ function buttons(root: AnalyseCtrl): VNode {
             ctrl,
             tab: 'glyphs',
             hint: i18n('study:annotateWithGlyphs'),
-            icon: h('i.glyph-icon'),
+            // random data icon for proper positioning
+            icon: h('i.glyph-icon', { attrs: { 'data-icon': icons.warning } }),
             count: (root.node.glyphs || []).length,
           })
         : null,
@@ -113,20 +115,20 @@ function buttons(root: AnalyseCtrl): VNode {
         ctrl,
         tab: 'serverEval',
         hint: i18n('computerAnalysis'),
-        icon: iconTag(''),
+        icon: iconTag(icons.barChart),
         count: root.data.analysis && 'O',
       }),
       toolButton({
         ctrl,
         tab: 'multiBoard',
         hint: 'Multiboard',
-        icon: iconTag(''),
+        icon: iconTag(icons.table),
       }),
       toolButton({
         ctrl,
         tab: 'share',
         hint: i18n('study:shareAndExport'),
-        icon: iconTag('$'),
+        icon: iconTag(icons.share),
       }),
     ]),
     h('div.right', [gbOverrideButton(ctrl)]),
@@ -151,7 +153,7 @@ function postGameButtons(ctrl: StudyCtrl): MaybeVNode {
         attrs: {
           title: i18n('backToGame'),
           href: `/${ctrl.data.postGameStudy.gameId}${me?.playerId || ''}`,
-          ...dataIcon('i'),
+          ...dataIcon(icons.back),
         },
       },
       !me ? i18n('backToGame') : null,
@@ -181,7 +183,7 @@ function postGameButtons(ctrl: StudyCtrl): MaybeVNode {
               ctrl.rematch(!ctrl.data.postGameStudy?.rematches[myColor]);
             }),
           },
-          offering ? h('span', { attrs: dataIcon('L') }) : i18n('rematch'),
+          offering ? h('span', { attrs: dataIcon(icons.cancel) }) : i18n('rematch'),
         ),
         h(
           'a.button.button-empty',
@@ -204,7 +206,7 @@ function metadata(ctrl: StudyCtrl): VNode {
         {
           class: { liked: d.liked },
           attrs: {
-            'data-icon': d.liked ? '' : '',
+            'data-icon': d.liked ? icons.heartFull : icons.heartOutline,
             title: i18n('study:like'),
           },
           hook: bind('click', ctrl.toggleLike),
@@ -245,7 +247,7 @@ export function side(ctrl: StudyCtrl): VNode {
           {
             hook: bind('click', () => ctrl.form.open(!ctrl.form.open()), ctrl.redraw),
           },
-          [iconTag('[')],
+          [iconTag(icons.gear)],
         )
       : null,
   ]);
@@ -263,7 +265,7 @@ export function contextMenu(ctrl: StudyCtrl, path: Tree.Path, node: Tree.Node): 
         h(
           'a',
           {
-            attrs: dataIcon('c'),
+            attrs: dataIcon(icons.talk),
             hook: bind('click', () => {
               ctrl.vm.toolTab('comments');
               ctrl.commentForm.start(ctrl.currentChapter()!.id, path, node);

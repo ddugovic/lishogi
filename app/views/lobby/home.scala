@@ -133,7 +133,7 @@ object home {
              )),
           div(cls := "lobby__support")(
             a(href := langHref(routes.Plan.index))(
-              iconTag(patronIconChar),
+              iconTag(Icons.patron),
               span(cls := "lobby__support__text")(
                 if (ctx.me.exists(_.isPatron))
                   frag(

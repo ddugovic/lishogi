@@ -15,7 +15,7 @@ object mine {
 
     val cancelForm =
       postForm(action := routes.Challenge.cancel(c.id), cls := "cancel xhr")(
-        submitButton(cls := "button button-red text", dataIcon := "L")(trans.cancel()),
+        submitButton(cls := "button button-red text", dataIcon := Icons.cancel)(trans.cancel()),
       )
 
     views.html.base.layout(
@@ -60,7 +60,7 @@ object mine {
                           title    := "Copy URL",
                           cls      := "copy button",
                           dataRel  := "challenge-id",
-                          dataIcon := "\"",
+                          dataIcon := Icons.link,
                         ),
                       ),
                       p(trans.theFirstPersonToComeOnThisUrlWillPlayWithYou()),

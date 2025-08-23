@@ -1,5 +1,6 @@
 import { loadCssPath } from 'common/assets';
 import { requestIdleCallbackWithFallback } from 'common/common';
+import { icons } from 'common/icons';
 import { bind, type MaybeVNodes } from 'common/snabbdom';
 import throttle from 'common/throttle';
 import { i18n } from 'i18n';
@@ -44,7 +45,7 @@ export function render(ctrl: AnalyseCtrl): VNode {
             hook: commentHook,
             class: { done: isCommented },
           },
-          [iconTag('c'), h('p', i18n('study:initHelp'))],
+          [iconTag(icons.talk), h('p', i18n('study:initHelp'))],
         ),
         renderHint(ctrl),
       ];
@@ -55,10 +56,10 @@ export function render(ctrl: AnalyseCtrl): VNode {
           {
             hook: commentHook,
           },
-          [iconTag('c'), h('p', i18n('study:introGamebook'))],
+          [iconTag(icons.talk), h('p', i18n('study:introGamebook'))],
         ),
         h('div.legend.todo', { class: { done: !!ctrl.node.children[0] } }, [
-          iconTag('G'),
+          iconTag(icons.play),
           h('p', i18n('study:putFirstMove')),
         ]),
       ];
@@ -71,7 +72,7 @@ export function render(ctrl: AnalyseCtrl): VNode {
             hook: commentHook,
             class: { done: isCommented },
           },
-          [iconTag('c'), h('p', i18n('study:explainMove'))],
+          [iconTag(icons.talk), h('p', i18n('study:explainMove'))],
         ),
         renderHint(ctrl),
       ];
@@ -82,7 +83,7 @@ export function render(ctrl: AnalyseCtrl): VNode {
           {
             hook: commentHook,
           },
-          [iconTag('c'), h('p', i18n('study:reflectOnMove'))],
+          [iconTag(icons.talk), h('p', i18n('study:reflectOnMove'))],
         ),
         hasVariation
           ? null
@@ -91,7 +92,7 @@ export function render(ctrl: AnalyseCtrl): VNode {
               {
                 hook: bind('click', () => control.prev(ctrl), ctrl.redraw),
               },
-              [iconTag('G'), h('p', i18n('study:variationMoves'))],
+              [iconTag(icons.play), h('p', i18n('study:variationMoves'))],
             ),
         renderDeviation(ctrl),
       ];
@@ -103,7 +104,7 @@ export function render(ctrl: AnalyseCtrl): VNode {
           hook: commentHook,
           class: { done: isCommented },
         },
-        [iconTag('c'), h('p', i18n('study:explainWrongMove'))],
+        [iconTag(icons.talk), h('p', i18n('study:explainWrongMove'))],
       ),
       h('div.legend', [h('p', i18n('study:orPromote'))]),
     ];
@@ -123,7 +124,7 @@ function renderDeviation(ctrl: AnalyseCtrl): VNode {
   const field = 'deviation';
   return h('div.deviation', [
     h('div.legend.todo', { class: { done: nodeGamebookValue(ctrl.node, field).length > 2 } }, [
-      iconTag('c'),
+      iconTag(icons.talk),
       h('p', i18n('study:otherMove')),
     ]),
     h('textarea', {
@@ -136,7 +137,7 @@ function renderDeviation(ctrl: AnalyseCtrl): VNode {
 function renderHint(ctrl: AnalyseCtrl): VNode {
   const field = 'hint';
   return h('div.hint', [
-    h('div.legend', [iconTag(''), h('p', i18n('study:hintOnDemand'))]),
+    h('div.legend', [iconTag(icons.infoCircle), h('p', i18n('study:hintOnDemand'))]),
     h('textarea', {
       attrs: {
         placeholder: i18n('study:playerTip'),

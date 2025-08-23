@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import spinner from 'common/spinner';
 import { i18n, i18nPluralSame } from 'i18n';
 import { i18nVariant } from 'i18n/variant';
@@ -78,7 +79,7 @@ function challenge(ctrl: Ctrl, dir: ChallengeDirection) {
           ),
         ]),
         h('i', {
-          attrs: { 'data-icon': c.tourInfo ? 'g' : c.perf.icon },
+          attrs: { 'data-icon': c.tourInfo ? icons.trophy : c.perf.icon },
         }),
         h('div.buttons', (dir === 'in' ? inButtons : outButtons)(ctrl, c)),
       ],
@@ -100,7 +101,7 @@ function inButtons(ctrl: Ctrl, c: Challenge): VNode[] {
         h('button.button.accept', {
           attrs: {
             type: 'submit',
-            'data-icon': 'E',
+            'data-icon': icons.correct,
             title: i18n('accept'),
           },
           hook: onClick(ctrl.onRedirect),
@@ -110,7 +111,7 @@ function inButtons(ctrl: Ctrl, c: Challenge): VNode[] {
     h('button.button.decline', {
       attrs: {
         type: 'submit',
-        'data-icon': 'L',
+        'data-icon': icons.cancel,
         title: i18n('decline'),
       },
       hook: onClick(() => ctrl.decline(c.id)),
@@ -124,7 +125,7 @@ function outButtons(ctrl: Ctrl, c: Challenge) {
       h('span.waiting', i18n('waiting')),
       h('a.view', {
         attrs: {
-          'data-icon': 'v',
+          'data-icon': icons.view,
           href: `/${c.id}`,
           title: i18n('viewInFullSize'),
         },
@@ -132,7 +133,7 @@ function outButtons(ctrl: Ctrl, c: Challenge) {
     ]),
     h('button.button.decline', {
       attrs: {
-        'data-icon': 'L',
+        'data-icon': icons.cancel,
         title: i18n('cancel'),
       },
       hook: onClick(() => ctrl.cancel(c.id)),
@@ -185,7 +186,7 @@ function create(): VNode {
   return h('a.create', {
     attrs: {
       href: '/?any#friend',
-      'data-icon': 'O',
+      'data-icon': icons.createNew,
       title: 'Challenge someone',
     },
   });
@@ -196,7 +197,7 @@ function empty(): VNode {
     'div.empty.text',
     {
       attrs: {
-        'data-icon': '',
+        'data-icon': icons.infoCircle,
       },
     },
     i18n('noChallenges'),

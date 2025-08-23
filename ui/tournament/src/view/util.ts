@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { initOneWithState } from 'common/mini-board';
 import { numberFormat } from 'common/number';
 import { bind, dataIcon, type MaybeVNode, type MaybeVNodes, proverb } from 'common/snabbdom';
@@ -59,7 +60,11 @@ export function player(
       config.status ? h(`i.line${p.patron ? '.patron' : ''}`) : null,
       h(
         `span.name${config.defender ? '.defender.text' : config.leader ? '.leader.text' : ''}`,
-        config.defender ? { attrs: dataIcon('5') } : config.leader ? { attrs: dataIcon('8') } : {},
+        config.defender
+          ? { attrs: dataIcon(icons.shield) }
+          : config.leader
+            ? { attrs: dataIcon(icons.crown) }
+            : {},
         playerName(p),
       ),
       config.withRating ? h('span.rating', ` ${p.rating}${p.provisional ? '?' : ''}`) : null,
@@ -126,7 +131,7 @@ export function backControl(f: () => void): VNode {
         'button.fbt.is.text.' + 'back',
         {
           attrs: {
-            'data-icon': 'I',
+            'data-icon': icons.left,
             title: i18n('back'),
           },
         },

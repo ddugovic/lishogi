@@ -33,8 +33,8 @@ trait UserHelper { self: I18nHelper with StringHelper with NumberHelper with Dat
     PerfType.Checkshogi,
   )
 
-  def showPerfRating(rating: Int, name: String, nb: Int, provisional: Boolean, icon: Char)(implicit
-      lang: Lang,
+  def showPerfRating(rating: Int, name: String, nb: Int, provisional: Boolean, icon: String)(
+      implicit lang: Lang,
   ): Frag =
     span(
       title    := s"$name rating over ${nb.localize} games",
@@ -46,7 +46,7 @@ trait UserHelper { self: I18nHelper with StringHelper with NumberHelper with Dat
     )
 
   def showPerfRating(perfType: PerfType, perf: Perf)(implicit lang: Lang): Frag =
-    showPerfRating(perf.intRating, perfType.trans, perf.nb, perf.provisional, perfType.iconChar)
+    showPerfRating(perf.intRating, perfType.trans, perf.nb, perf.provisional, perfType.icon)
 
   def showPerfRating(u: User, perfType: PerfType)(implicit lang: Lang): Frag =
     showPerfRating(perfType, u perfs perfType)
@@ -289,9 +289,6 @@ trait UserHelper { self: I18nHelper with StringHelper with NumberHelper with Dat
     s"$name played $nbGames games since $createdAt.$currentRating"
   }
 
-  val patronIconChar = ""
-  val lineIconChar   = ""
-
   val lineIcon: Frag = i(cls := "line")
   def patronIcon(implicit lang: Lang): Frag =
     i(cls := "line patron", title := trans.patron.lishogiPatron.txt())
@@ -303,5 +300,4 @@ trait UserHelper { self: I18nHelper with StringHelper with NumberHelper with Dat
   )
   def lineIcon(user: LightUser)(implicit lang: Lang): Frag = lineIcon(user.isPatron)
   def lineIcon(user: User)(implicit lang: Lang): Frag      = lineIcon(user.isPatron)
-  def lineIconChar(user: User): Frag = if (user.isPatron) patronIconChar else lineIconChar
 }

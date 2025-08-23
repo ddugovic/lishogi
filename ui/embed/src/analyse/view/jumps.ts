@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { bindMobileMousedown } from 'common/mobile';
 import { onInsert } from 'common/snabbdom';
 import { h, type VNode } from 'snabbdom';
@@ -23,7 +24,7 @@ export function renderJumps(ctrl: AnalyseCtrl): VNode {
           );
         }),
       },
-      [jumpButton('Y', 'prev', canJumpPrev), jumpButton('X', 'next', canJumpNext)],
+      [jumpButton(icons.prev, 'prev', canJumpPrev), jumpButton(icons.next, 'next', canJumpNext)],
     ),
   );
 }

@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { getPerfIcon } from 'common/perf-icons';
 import { bind } from 'common/snabbdom';
 import { i18n, i18nPluralSame } from 'i18n';
@@ -147,7 +148,7 @@ function renderYAxis() {
 export function toggle(ctrl: LobbyController): VNode {
   return h('i.toggle', {
     key: 'set-mode-list',
-    attrs: { title: i18n('list'), 'data-icon': '?' },
+    attrs: { title: i18n('list'), 'data-icon': icons.list },
     hook: bind('mousedown', _ => ctrl.setMode('list'), ctrl.redraw),
   });
 }

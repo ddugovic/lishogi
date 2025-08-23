@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { richHTML } from 'common/rich-text';
 import { bind, bindNonPassive, type MaybeVNodes } from 'common/snabbdom';
 import spinner from 'common/spinner';
@@ -162,7 +163,8 @@ export function side(ctrl: StudyCtrl): VNode {
               [
                 h(`span.status.${completion}`, {
                   attrs: {
-                    'data-icon': (loading || active) && completion === 'ongoing' ? 'G' : 'E',
+                    'data-icon':
+                      (loading || active) && completion === 'ongoing' ? icons.play : icons.correct,
                   },
                 }),
                 h('h3', chapter.name),
@@ -175,7 +177,7 @@ export function side(ctrl: StudyCtrl): VNode {
     h('div.finally', [
       h('a.back', {
         attrs: {
-          'data-icon': 'I',
+          'data-icon': icons.left,
           href: '/practice',
           title: 'More practice',
         },

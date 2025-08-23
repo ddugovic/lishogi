@@ -183,7 +183,7 @@ object mod {
             name        := "email",
             placeholder := "Email address",
           ),
-          submitButton(cls := "button", dataIcon := "E"),
+          submitButton(cls := "button", dataIcon := Icons.correct),
         ),
         emails.previous.map { email =>
           s"Previously $email"
@@ -201,7 +201,7 @@ object mod {
         ),
       ),
       mzSection("preferences")(
-        strong(cls := "text inline", dataIcon := "%")("Notable preferences:"),
+        strong(cls := "text inline", dataIcon := Icons.gear)("Notable preferences:"),
         ul(
           (pref.keyboardMove != lila.pref.Pref.KeyboardMove.NO) option li("keyboard moves"),
         ),
@@ -217,7 +217,7 @@ object mod {
   def plan(charges: List[lila.plan.Charge])(implicit ctx: Context): Option[Frag] =
     charges.headOption.map { firstCharge =>
       mzSection("plan")(
-        strong(cls := "text", dataIcon := patronIconChar)(
+        strong(cls := "text", dataIcon := Icons.patron)(
           "Patron payments",
           isGranted(_.PayPal) option {
             firstCharge.payPal.flatMap(_.subId).map { subId =>
@@ -251,7 +251,7 @@ object mod {
   ) =
     mzSection("mod_log")(
       div(cls := "mod_log mod_log--history")(
-        strong(cls := "text", dataIcon := "!")(
+        strong(cls := "text", dataIcon := Icons.warning)(
           "Moderation history",
           history.isEmpty option ": nothing to show",
         ),
@@ -276,7 +276,7 @@ object mod {
         frag(
           div(cls := "mod_log mod_log--appeal")(
             st.a(href := routes.Appeal.show(a.id))(
-              strong(cls := "text", dataIcon := "!")(
+              strong(cls := "text", dataIcon := Icons.warning)(
                 "Appeal status: ",
                 a.status.toString,
               ),
@@ -292,7 +292,7 @@ object mod {
   def reportLog(u: User)(reports: lila.report.Report.ByAndAbout)(implicit lang: Lang) =
     mzSection("reports")(
       div(cls := "mz_reports mz_reports--out")(
-        strong(cls := "text", dataIcon := "!")(
+        strong(cls := "text", dataIcon := Icons.warning)(
           s"Reports sent by ${u.username}",
           reports.by.isEmpty option ": nothing to show.",
         ),
@@ -311,7 +311,7 @@ object mod {
         },
       ),
       div(cls := "mz_reports mz_reports--in")(
-        strong(cls := "text", dataIcon := "!")(
+        strong(cls := "text", dataIcon := Icons.warning)(
           s"Reports concerning ${u.username}",
           reports.about.isEmpty option ": nothing to show.",
         ),
@@ -341,7 +341,7 @@ object mod {
   ): Frag =
     mzSection("assessments")(
       pag.pag.sfAvgBlurs.map { blursYes =>
-        p(cls := "text", dataIcon := "j")(
+        p(cls := "text", dataIcon := Icons.error)(
           "ACPL in games with blurs is ",
           strong(blursYes._1),
           " [",
@@ -363,7 +363,7 @@ object mod {
         )
       },
       pag.pag.sfAvgLowVar.map { lowVar =>
-        p(cls := "text", dataIcon := "j")(
+        p(cls := "text", dataIcon := Icons.error)(
           "ACPL in games with consistent move times is ",
           strong(lowVar._1),
           " [",
@@ -385,7 +385,7 @@ object mod {
         )
       },
       pag.pag.sfAvgHold.map { holdYes =>
-        p(cls := "text", dataIcon := "j")(
+        p(cls := "text", dataIcon := Icons.error)(
           "ACPL in games with bot signature ",
           strong(holdYes._1),
           " [",
@@ -435,32 +435,38 @@ object mod {
                 td(
                   pag.pov(result).map { p =>
                     a(href := routes.Round.watcher(p.gameId, p.color.name))(
-                      p.game.isTournament option iconTag("g"),
+                      p.game.isTournament option iconTag(Icons.trophy),
                       p.game.perfType.map { pt =>
-                        iconTag(pt.iconChar)
+                        iconTag(pt.icon)
                       },
                       shortClockName(p.game.clock.map(_.config)),
                     )
                   },
                 ),
                 td(
-                  span(cls := s"sig sig_${Display.stockfishSig(result)}", dataIcon := "J"),
+                  span(
+                    cls      := s"sig sig_${Display.stockfishSig(result)}",
+                    dataIcon := Icons.circleFull,
+                  ),
                   s" ${result.sfAvg} ± ${result.sfSd}",
                 ),
                 td(
-                  span(cls := s"sig sig_${Display.moveTimeSig(result)}", dataIcon := "J"),
+                  span(
+                    cls      := s"sig sig_${Display.moveTimeSig(result)}",
+                    dataIcon := Icons.circleFull,
+                  ),
                   s" ${result.mtAvg / 10} ± ${result.mtSd / 10}",
                   (~result.mtStreak) ?? frag(br, "STREAK"),
                 ),
                 td(
-                  span(cls := s"sig sig_${Display.blurSig(result)}", dataIcon := "J"),
+                  span(cls := s"sig sig_${Display.blurSig(result)}", dataIcon := Icons.circleFull),
                   s" ${result.blurs}%",
                   result.blurStreak.filter(8.<=) map { s =>
                     frag(br, s"STREAK $s/12")
                   },
                 ),
                 td(
-                  span(cls := s"sig sig_${Display.holdSig(result)}", dataIcon := "J"),
+                  span(cls := s"sig sig_${Display.holdSig(result)}", dataIcon := Icons.circleFull),
                   if (result.hold) "Yes" else "No",
                 ),
                 td(
@@ -477,15 +483,15 @@ object mod {
   private val sortNumberTh    = th(attr("data-sort-method") := "number")
   private val dataSort        = attr("data-sort")
   private val dataTags        = attr("data-tags")
-  private val playban         = iconTag("p")
+  private val playban         = iconTag(Icons.clock)
   private val alt: Frag       = i("A")
-  private val shadowban: Frag = iconTag("c")
-  private val boosting: Frag  = iconTag("9")
-  private val engine: Frag    = iconTag("n")
-  private val closed: Frag    = iconTag("k")
-  private val clean: Frag     = iconTag("r")
-  private val reportban       = iconTag("!")
-  private val notesText       = iconTag("m")
+  private val shadowban: Frag = iconTag(Icons.talk)
+  private val boosting: Frag  = iconTag(Icons.chartLine)
+  private val engine: Frag    = iconTag(Icons.cogs)
+  private val closed: Frag    = iconTag(Icons.forbidden)
+  private val clean: Frag     = iconTag(Icons.person)
+  private val reportban       = iconTag(Icons.warning)
+  private val notesText       = iconTag(Icons.pencil)
   private def markTd(nb: Int, content: => Frag) =
     if (nb > 0) td(cls := "i", dataSort := nb)(content)
     else td

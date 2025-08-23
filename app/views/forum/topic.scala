@@ -24,11 +24,11 @@ object topic {
     ) {
       main(cls := "forum forum-topic topic-form box box-pad")(
         h1(
-          a(href := routes.ForumCateg.show(categ.slug), dataIcon := "I", cls := "text"),
+          a(href := routes.ForumCateg.show(categ.slug), dataIcon := Icons.left, cls := "text"),
           categ.translatedName,
         ),
         st.section(cls := "warning")(
-          h2(dataIcon := "!", cls := "text")(trans.important()),
+          h2(dataIcon := Icons.warning, cls := "text")(trans.important()),
           p(
             trans.yourQuestionMayHaveBeenAnswered(
               strong(a(href := routes.Main.faq)(trans.inTheFAQ())),
@@ -57,7 +57,7 @@ object topic {
               form3.submit(
                 frag("Create as a mod"),
                 nameValue = (form("post")("modIcon").name, "true").some,
-                icon = "".some,
+                icon = Icons.agent.some,
               ),
             form3.submit(trans.createTheTopic()),
           ),
@@ -101,7 +101,7 @@ object topic {
         h1(
           a(
             href     := routes.ForumCateg.show(categ.slug),
-            dataIcon := "I",
+            dataIcon := Icons.left,
             cls      := "text",
           ),
           topic.name,
@@ -141,14 +141,14 @@ object topic {
               )(
                 button(
                   cls            := "button button-empty text on",
-                  dataIcon       := "v",
+                  dataIcon       := Icons.view,
                   bits.dataUnsub := "off",
                 )(
                   trans.subscribe(),
                 ),
                 button(
                   cls            := "button button-empty text off",
-                  dataIcon       := "v",
+                  dataIcon       := Icons.view,
                   bits.dataUnsub := "on",
                 )(
                   trans.unsubscribe(),
@@ -191,7 +191,7 @@ object topic {
                 form3.submit(
                   frag("Reply as a mod"),
                   nameValue = (form("modIcon").name, "true").some,
-                  icon = "".some,
+                  icon = Icons.agent.some,
                 ),
               form3.submit(trans.reply()),
             ),

@@ -43,14 +43,14 @@ object bits {
           td(cls := "name")(
             a(
               cls      := s"text ${tour.format}",
-              dataIcon := tournamentIconChar(tour),
+              dataIcon := tournamentIcon(tour),
               href     := routes.Tournament.show(tour.id),
             )(
               tour.trans,
             ),
           ),
           td(momentFromNow(tour.startsAt)),
-          td(dataIcon := "r", cls := "text")(tour.nbPlayers),
+          td(dataIcon := Icons.person, cls := "text")(tour.nbPlayers),
         )
       },
     )

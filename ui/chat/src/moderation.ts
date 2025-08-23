@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { numberFormat } from 'common/number';
 import { bind } from 'common/snabbdom';
 import spinner from 'common/spinner';
@@ -62,7 +63,7 @@ export function moderationCtrl(opts: ModerationOpts): ModerationCtrl {
   };
 }
 
-export const lineAction = (): VNode => h('i.mod', { attrs: { 'data-icon': '' } });
+export const lineAction = (): VNode => h('i.mod', { attrs: { 'data-icon': icons.agent } });
 
 export function moderationView(ctrl?: ModerationCtrl): VNode[] | undefined {
   if (!ctrl) return;
@@ -112,7 +113,7 @@ export function moderationView(ctrl?: ModerationCtrl): VNode[] | undefined {
           return h(
             'a.text',
             {
-              attrs: { 'data-icon': 'p' },
+              attrs: { 'data-icon': icons.clock },
               hook: bind('click', () => ctrl.timeout(r, data.text)),
             },
             r.name,
@@ -124,7 +125,7 @@ export function moderationView(ctrl?: ModerationCtrl): VNode[] | undefined {
         h(
           'a.text',
           {
-            attrs: { 'data-icon': 'p' },
+            attrs: { 'data-icon': icons.clock },
             hook: bind('click', () => ctrl.timeout(ctrl.reasons[0], data.text)),
           },
           'Timeout 10 minutes',
@@ -165,12 +166,12 @@ export function moderationView(ctrl?: ModerationCtrl): VNode[] | undefined {
       h(
         'span.text',
         {
-          attrs: { 'data-icon': '' },
+          attrs: { 'data-icon': icons.agent },
         },
         [userLink(data.username)],
       ),
       h('a', {
-        attrs: { 'data-icon': 'L' },
+        attrs: { 'data-icon': icons.cancel },
         hook: bind('click', ctrl.close),
       }),
     ]),

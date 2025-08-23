@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { i18n, i18nFormat } from 'i18n';
 import { h, type VNode } from 'snabbdom';
 import { categories } from '../categories';
@@ -24,7 +25,7 @@ function makeStars(start: number) {
     stars.push(
       h('i', {
         attrs: {
-          'data-icon': 't',
+          'data-icon': icons.starFull,
         },
       }),
     );

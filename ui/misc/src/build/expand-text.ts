@@ -1,4 +1,5 @@
 import { loadScript } from 'common/assets';
+import { icons } from 'common/icons';
 import { camelToKebab } from 'common/string';
 import { isLight } from 'common/styles';
 
@@ -196,7 +197,7 @@ const expandGames = (games: Candidate[]): void => {
       group.forEach(game => {
         game.element.title = 'Click to expand';
         game.element.classList.add('text');
-        game.element.setAttribute('data-icon', '=');
+        game.element.setAttribute('data-icon', icons.screenFull);
 
         game.element.addEventListener('click', e => {
           if (e.button === 0) {

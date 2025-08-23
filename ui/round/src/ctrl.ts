@@ -1,5 +1,6 @@
 import { loadScript } from 'common/assets';
 import { requestIdleCallbackWithFallback } from 'common/common';
+import { icons } from 'common/icons';
 import notify from 'common/notification';
 import { wsIsReady, wsLastVersionTime, wsOnOpen } from 'common/ws';
 import * as game from 'game';
@@ -765,7 +766,9 @@ export default class RoundController {
     this.goneBerserk[color] = true;
     if (color !== this.data.player.color) li.sound.play('berserk');
     this.redraw();
-    $('<i class="berserk" data-icon="`">').appendTo($(`.game__meta .player.${color} .user-link`));
+    $(`<i class="berserk" data-icon="${icons.berserk}">`).appendTo(
+      $(`.game__meta .player.${color} .user-link`),
+    );
   };
 
   setLoading = (v: boolean, duration = 1500, f: (() => any) | undefined = undefined): void => {

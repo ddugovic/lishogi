@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import addDays from 'date-fns/addDays';
 import areIntervalsOverlapping from 'date-fns/areIntervalsOverlapping';
 import eachDayOfInterval from 'date-fns/eachDayOfInterval';
@@ -19,7 +20,7 @@ function tournamentClass(tour: Tournament, day: Date) {
 }
 
 function iconOf(tour: any, perfIcon: string): string {
-  return tour.schedule && tour.schedule.freq === 'shield' ? '5' : perfIcon;
+  return tour.schedule && tour.schedule.freq === 'shield' ? icons.shield : perfIcon;
 }
 
 function renderTournament(tour: Tournament, day: Date) {

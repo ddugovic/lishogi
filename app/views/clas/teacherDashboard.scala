@@ -26,7 +26,7 @@ object teacherDashboard {
     bits.layout(c.name, Left(c withStudents students.map(_.student)))(
       cls := s"clas-show dashboard dashboard-teacher dashboard-teacher-$active",
       div(cls := "clas-show__top")(
-        h1(dataIcon := "f", cls := "text")(c.name),
+        h1(dataIcon := Icons.people, cls := "text")(c.name),
         st.nav(cls := "dashboard-nav")(
           a(cls := active.active("overview"), href := routes.Clas.show(c.id.value))("Overview"),
           a(cls := active.active("wall"), href := routes.Clas.wall(c.id.value))("News"),
@@ -64,7 +64,7 @@ object teacherDashboard {
           a(
             href     := routes.Clas.studentForm(c.id.value),
             cls      := "button button-clas text",
-            dataIcon := "O",
+            dataIcon := Icons.createNew,
           )(trans.clas.addStudent()),
         ),
       ),
@@ -275,7 +275,7 @@ object teacherDashboard {
             sortNumberTh(trans.games()),
             sortNumberTh(trans.puzzles()),
             sortNumberTh(trans.clas.lastActiveDate()),
-            th(iconTag("5")(title := trans.clas.managed.txt())),
+            th(iconTag(Icons.shield)(title := trans.clas.managed.txt())),
           ),
         ),
         tbody(
@@ -292,7 +292,7 @@ object teacherDashboard {
               ),
               td(
                 dataSort := (if (student.managed) 1 else 0),
-                student.managed option iconTag("5")(title := trans.clas.managed.txt()),
+                student.managed option iconTag(Icons.shield)(title := trans.clas.managed.txt()),
               ),
             )
           },

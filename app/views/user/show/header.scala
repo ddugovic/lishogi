@@ -43,7 +43,7 @@ object header {
               href := routes.Plan.index,
               cls  := "trophy award patron icon3d",
               ariaTitle(s"Patron since ${showDate(u.plan.sinceDate)}"),
-            )(patronIconChar),
+            )(Icons.patron),
         ),
         u.disabled option span(cls := "closed")("CLOSED"),
       ),
@@ -77,13 +77,13 @@ object header {
               cls  := "btn-rack__btn",
               href := routes.Account.profile,
               titleOrText(trans.editProfile.txt()),
-              dataIcon := "%",
+              dataIcon := Icons.gear,
             ),
             a(
               cls  := "btn-rack__btn",
               href := routes.Relation.blocks(),
               titleOrText(trans.listBlockedPlayers.txt()),
-              dataIcon := "k",
+              dataIcon := Icons.forbidden,
             ),
           ),
           isGranted(_.UserSpy) option
@@ -91,13 +91,13 @@ object header {
               cls  := "btn-rack__btn mod-zone-toggle",
               href := routes.User.mod(u.username),
               titleOrText("Mod zone (Hotkey: m)"),
-              dataIcon := "",
+              dataIcon := Icons.agent,
             ),
           a(
             cls  := "btn-rack__btn",
             href := routes.User.tv(u.username),
             titleOrText(trans.watchGames.txt()),
-            dataIcon := "1",
+            dataIcon := Icons.television,
           ),
           (ctx.isAuth && !ctx.is(u)) option
             views.html.relation.actions(
@@ -111,14 +111,14 @@ object header {
               cls  := "btn-rack__btn",
               href := routes.Game.exportByUser(u.username),
               titleOrText(trans.exportGames.txt()),
-              dataIcon := "x",
+              dataIcon := Icons.download,
             )
           else
             (ctx.isAuth && ctx.noKid) option a(
               titleOrText(trans.reportXToModerators.txt(u.username)),
               cls      := "btn-rack__btn",
               href     := s"${routes.Report.form}?username=${u.username}",
-              dataIcon := "!",
+              dataIcon := Icons.warning,
             ),
         ),
       ),
@@ -167,7 +167,7 @@ object header {
                     submitButton(
                       cls      := "button-empty button-red confirm button text",
                       style    := "float:right",
-                      dataIcon := "q",
+                      dataIcon := Icons.trashBin,
                     )(trans.delete()),
                   ),
                 ),
@@ -192,7 +192,7 @@ object header {
               div(cls := "user-infos")(
                 !ctx.is(u) option frag(
                   u.lame option div(cls := "warning tos_warning")(
-                    span(dataIcon := "j", cls := "is4"),
+                    span(dataIcon := Icons.error, cls := "is4"),
                     trans.thisAccountViolatedTos(),
                   ),
                 ),
@@ -254,7 +254,11 @@ object header {
                 ),
               ),
               (info.insightsVisible || isGranted(_.SeeInsights)) option
-                a(cls := "insights", href := routes.Insights.user(u.username, ""), dataIcon := "7")(
+                a(
+                  cls      := "insights",
+                  href     := routes.Insights.user(u.username, ""),
+                  dataIcon := Icons.target,
+                )(
                   span(
                     strong(trans.insights.insights()),
                   ),

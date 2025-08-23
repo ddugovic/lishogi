@@ -1,5 +1,6 @@
 @use 'pkg:breakpoint-sass' as breakpoint;
 @use '../abstract/extends';
+@use '../abstract/icons';
 @use '../abstract/mixins';
 @use '../abstract/uniboard';
 @use '../abstract/variables';
@@ -27,7 +28,7 @@
     &::after {
       @extend %data-icon;
 
-      content: 'u';
+      content: icons.$expand;
       font-size: 70%;
       color: theme.$c-primary;
       margin-left: 0.4em;

@@ -30,8 +30,14 @@ interface PresetOpts {
 }
 
 const enGroups: PresetGroups = {
-  start: ['hi/Hello', 'gl/Good luck', 'hf/Have fun!', 'yoro/Yoroshiku onegaishimasu'].map(splitIt),
-  end: ['gg/Good game', 'wp/Well played', 'ty/Thank you', 'bye/Bye!', 'ari/Arigatou gozaimasu'].map(
+  start: [
+    'hi/Hello',
+    'gl/Good luck',
+    'hf/Have fun!',
+    'u2/You too!',
+    'yoro/Yoroshiku onegaishimasu',
+  ].map(splitIt),
+  end: ['gg/Good game', 'wp/Well played', 'ty/Thank you', 'ari/Arigatou gozaimasu', 'bye/Bye!'].map(
     splitIt,
   ),
 };

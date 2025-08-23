@@ -5,6 +5,7 @@ import play.api.data._
 
 import lila.api.Context
 import lila.app.ui.ScalatagsTemplate._
+import lila.common.Icons
 
 trait FormHelper { self: I18nHelper =>
 
@@ -163,7 +164,7 @@ trait FormHelper { self: I18nHelper =>
 
     def submit(
         content: Frag,
-        icon: Option[String] = Some("E"),
+        icon: Option[String] = Some(Icons.correct),
         nameValue: Option[(String, String)] = None,
         klass: String = "",
         confirm: Option[String] = None,

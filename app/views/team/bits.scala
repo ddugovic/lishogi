@@ -47,7 +47,7 @@ object bits {
     tr(cls := "paginated")(
       td(cls := "subject")(
         a(
-          dataIcon := "f",
+          dataIcon := Icons.people,
           cls := List(
             "team-name text" -> true,
             "mine"           -> myTeam(t.id),

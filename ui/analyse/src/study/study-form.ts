@@ -1,3 +1,4 @@
+import { assetUrl } from 'common/assets';
 import { type Prop, prop } from 'common/common';
 import { modal } from 'common/modal';
 import { bindNonPassive, bindSubmit, type MaybeVNodes } from 'common/snabbdom';
@@ -115,7 +116,16 @@ export function view(ctrl: StudyFormCtrl): VNode {
         {
           hook: bindSubmit(e => {
             const obj: FormData = {};
-            'name visibility computer cloneable chat sticky description'.split(' ').forEach(n => {
+            [
+              'name',
+              'visibility',
+              'computer',
+              'cloneable',
+              'chat',
+              'sticky',
+              'description',
+              'icon',
+            ].forEach(n => {
               const el = (e.target as HTMLElement).querySelector(`#study-${n}`) as HTMLInputElement;
               if (el) obj[n] = el.value;
             });
@@ -125,16 +135,27 @@ export function view(ctrl: StudyFormCtrl): VNode {
         [
           h('div.form-group', [
             h('label.form-label', { attrs: { for: 'study-name' } }, i18n('name')),
-            h('input#study-name.form-control', {
-              attrs: {
-                minlength: 3,
-                maxlength: 100,
-              },
-              hook: {
-                insert: vnode => updateName(vnode, false),
-                postpatch: (_, vnode) => updateName(vnode, true),
-              },
-            }),
+            h('div.icon-name', [
+              h(
+                'div.icon-select#icon-select',
+                {
+                  hook: {
+                    insert: () => {}, // todo
+                  },
+                },
+                data.icon ? h('img', { attrs: { src: assetUrl(`icon/${data.icon}.svg`) } }) : null,
+              ),
+              h('input#study-name.form-control', {
+                attrs: {
+                  minlength: 3,
+                  maxlength: 100,
+                },
+                hook: {
+                  insert: vnode => updateName(vnode, false),
+                  postpatch: (_, vnode) => updateName(vnode, true),
+                },
+              }),
+            ]),
           ]),
           h('div.form-split', [
             h(

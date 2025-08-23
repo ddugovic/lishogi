@@ -61,8 +61,8 @@ object captcha {
             a(title := trans.viewTheSolution.txt(), target := "_blank", href := s"${url}#last")(
               url,
             ),
-            div(cls := "result success text", dataIcon := "E")(trans.checkmate()),
-            div(cls := "result failure text", dataIcon := "k")(trans.notACheckmate()),
+            div(cls := "result success text", dataIcon := Icons.correct)(trans.checkmate()),
+            div(cls := "result failure text", dataIcon := Icons.forbidden)(trans.notACheckmate()),
             form3.hidden(form("move")),
           ),
         )

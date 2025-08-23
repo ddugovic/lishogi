@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { bind, dataIcon, type MaybeVNodes } from 'common/snabbdom';
 import spinner from 'common/spinner';
 import { i18n, i18nFormat, i18nPluralSame } from 'i18n';
@@ -17,7 +18,7 @@ function onMyTurn(fctrl: ForecastCtrl, cNodes: ForecastStep[]): VNode | undefine
   return h(
     'button.on-my-turn.button.text',
     {
-      attrs: dataIcon('E'),
+      attrs: dataIcon(icons.correct),
       hook: bind('click', _ => fctrl.playAndSave(firstNode)),
     },
     [
@@ -96,12 +97,12 @@ export default function (ctrl: AnalyseCtrl, fctrl: ForecastCtrl): VNode {
             return h(
               'div.entry.text',
               {
-                attrs: dataIcon('G'),
+                attrs: dataIcon(icons.play),
               },
               [
                 h('button.del', {
                   hook: bind('click', _ => fctrl.removeIndex(i), ctrl.redraw),
-                  attrs: { 'data-icon': 'L', type: 'button' },
+                  attrs: { 'data-icon': icons.cancel, type: 'button' },
                 }),
                 h('moves-notation.inlined', renderNodesHtml(nodes)),
               ],
@@ -112,7 +113,7 @@ export default function (ctrl: AnalyseCtrl, fctrl: ForecastCtrl): VNode {
           'button.add.text',
           {
             class: { enabled: isCandidate },
-            attrs: dataIcon(isCandidate ? 'O' : ''),
+            attrs: dataIcon(isCandidate ? icons.createNew : icons.infoCircle),
             hook: bind('click', _ => fctrl.addNodes(makeCnodes(ctrl, fctrl)), ctrl.redraw),
           },
           [

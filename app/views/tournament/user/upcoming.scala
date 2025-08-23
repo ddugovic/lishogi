@@ -32,10 +32,10 @@ object upcoming {
             tbody(
               pager.currentPageResults.map { t =>
                 tr(
-                  td(cls := "icon")(tournamentIcon(t)),
+                  td(cls := "icon")(tournamentIconTag(t)),
                   views.html.tournament.list.header(t),
                   td(momentFromNow(t.startsAt)),
-                  td(cls := "text", dataIcon := "r")(t.nbPlayers.localize),
+                  td(cls := "text", dataIcon := Icons.person)(t.nbPlayers.localize),
                 )
               },
             ),

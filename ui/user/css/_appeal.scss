@@ -1,4 +1,5 @@
 @use 'pkg:common/abstract/extends';
+@use 'pkg:common/abstract/icons';
 @use 'pkg:common/theme';
 
 .appeal {
@@ -16,7 +17,7 @@
     &::before {
       @extend %data-icon;
 
-      content: '';
+      content: icons.$info-circle;
       font-size: 2em;
       margin-right: 0.4em;
     }

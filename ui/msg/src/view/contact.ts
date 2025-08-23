@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { hookMobileMousedown } from 'common/mobile';
 import { h, type VNode } from 'snabbdom';
 import type MsgCtrl from '../ctrl';
@@ -32,7 +33,7 @@ export default function renderContact(ctrl: MsgCtrl, contact: Contact, active?: 
           ),
           isNew
             ? h('i.msg-app__side__contact__new', {
-                attrs: { 'data-icon': '' },
+                attrs: { 'data-icon': icons.bell },
               })
             : null,
         ]),

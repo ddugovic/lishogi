@@ -1,4 +1,5 @@
 @use '../abstract/extends';
+@use '../abstract/icons';
 @use '../abstract/z-index' as z;
 @use '../theme/generated/theme';
 
@@ -45,6 +46,6 @@ $recon-height: 2.5rem;
   }
 
   .online &::before {
-    content: 'J';
+    content: icons.$circle-full;
   }
 }

@@ -30,7 +30,7 @@ object leaderboard {
       lang: Lang,
   ) =
     section(
-      h2(cls := "text", dataIcon := perfType.iconChar)(s"$prefix${perfType.trans}"),
+      h2(cls := "text", dataIcon := perfType.icon)(s"$prefix${perfType.trans}"),
       ul(
         fws.yearly.map { w =>
           freqWinner(w)

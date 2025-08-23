@@ -1,5 +1,6 @@
 @use 'pkg:breakpoint-sass' as breakpoint;
 @use '../abstract/extends';
+@use '../abstract/icons';
 @use '../abstract/media-queries';
 @use '../abstract/mixins';
 @use '../abstract/variables';
@@ -76,7 +77,7 @@
 
         .line::before {
           color: theme.$c-good;
-          content: '';
+          content: icons.$circle-full;
         }
       }
 

@@ -21,9 +21,8 @@ object homepageSpotlight {
           spot.iconImg map { i =>
             img(cls := "img", src := staticUrl(s"images/$i"))
           } getOrElse {
-            spot.iconFont.fold[Frag](iconTag("g")(cls := "img")) {
-              case "\\" => img(cls := "img icon", src := staticUrl(s"images/icons/globe.svg"))
-              case i    => iconTag(i)(cls := "img")
+            spot.iconFont.fold[Frag](iconTag(Icons.trophy)(cls := "img")) { i =>
+              iconTag(i)(cls := "img")
             }
           },
           span(cls := "content")(
@@ -43,7 +42,7 @@ object homepageSpotlight {
         ),
       )
     } getOrElse a(href := routes.Tournament.show(tour.id), cls := s"little $tourClass")(
-      iconTag(tour.perfType.iconChar)(cls := "img"),
+      iconTag(tour.perfType.icon)(cls := "img"),
       span(cls := "content")(
         span(cls := "name")(tour.trans),
         span(cls := "more")(

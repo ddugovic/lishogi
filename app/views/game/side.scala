@@ -39,18 +39,22 @@ object side {
 
       val tourOrSimulLink = tour map { t =>
         a(
-          dataIcon := "g",
+          dataIcon := Icons.trophy,
           cls      := "text button button-empty",
           href     := routes.Tournament.show(t.tour.id).url,
         )(t.tour.trans)
       } orElse game.tournamentId.map { tourId =>
         a(
-          dataIcon := "g",
+          dataIcon := Icons.trophy,
           cls      := "text button button-empty",
           href     := routes.Tournament.show(tourId).url,
         )(tournamentIdToName(tourId))
       } orElse simul.map { sim =>
-        a(dataIcon := "r", cls := "text button button-empty", href := routes.Simul.show(sim.id))(
+        a(
+          dataIcon := Icons.person,
+          cls      := "text button button-empty",
+          href     := routes.Simul.show(sim.id),
+        )(
           sim.name,
         )
       }
@@ -77,7 +81,7 @@ object side {
                       bits.variantLink(game.variant),
                       game.isProMode option frag(
                         br,
-                        small(cls := "text", dataIcon := "8")(trans.proMode()),
+                        small(cls := "text", dataIcon := Icons.crown)(trans.proMode()),
                       ),
                     ),
                 ),
@@ -122,7 +126,9 @@ object side {
         },
         userTv.map { u =>
           st.section(cls := "game__tv")(
-            h2(cls := "top user-tv text", dataUserTv := u.id, dataIcon := "1")(u.titleUsername),
+            h2(cls := "top user-tv text", dataUserTv := u.id, dataIcon := Icons.television)(
+              u.titleUsername,
+            ),
           )
         },
         tour ?? { t =>
@@ -139,7 +145,7 @@ object side {
               backToGame.flatMap(game.fullIdOf) map { fullId =>
                 a(
                   cls      := s"button button-empty${tourOrSimulLink.isEmpty ?? " text"}",
-                  dataIcon := "i",
+                  dataIcon := Icons.back,
                   href     := routes.Round.player(fullId),
                   title    := trans.backToGame.txt(),
                 )(

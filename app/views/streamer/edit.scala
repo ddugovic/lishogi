@@ -54,7 +54,7 @@ object edit extends Context.ToLang {
             frag(
               (ctx.is(s.user) && s.streamer.listed.value) option div(
                 cls      := s"status is${granted ?? "-green"}",
-                dataIcon := (if (granted) "E" else ""),
+                dataIcon := (if (granted) Icons.correct else Icons.infoCircle),
               )(
                 if (granted)
                   frag(
@@ -98,7 +98,7 @@ object edit extends Context.ToLang {
               ),
               modData.map { case ((log, notes), same) =>
                 div(cls := "mod_log status")(
-                  strong(cls := "text", dataIcon := "!")(
+                  strong(cls := "text", dataIcon := Icons.warning)(
                     "Moderation history",
                     log.isEmpty option ": nothing to show.",
                   ),
@@ -116,7 +116,7 @@ object edit extends Context.ToLang {
                     },
                   ),
                   br,
-                  strong(cls := "text", dataIcon := "!")(
+                  strong(cls := "text", dataIcon := Icons.warning)(
                     "Moderator notes",
                     notes.isEmpty option ": nothing to show.",
                   ),
@@ -129,7 +129,7 @@ object edit extends Context.ToLang {
                     },
                   ),
                   br,
-                  strong(cls := "text", dataIcon := "!")(
+                  strong(cls := "text", dataIcon := Icons.warning)(
                     "Streamers with same Twitch or YouTube",
                     same.isEmpty option ": nothing to show.",
                   ),
@@ -198,7 +198,7 @@ object edit extends Context.ToLang {
                         name  := "approval.quick",
                         value := "approve",
                       ),
-                    form3.submit("Decline and next", icon = "L".some)(
+                    form3.submit("Decline and next", icon = Icons.cancel.some)(
                       cls   := "button-red",
                       name  := "approval.quick",
                       value := "decline",

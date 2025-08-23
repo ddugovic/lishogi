@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { i18n, i18nFormatCapitalized } from 'i18n';
 import { colorName } from 'shogi/color-name';
 import { initialSfen } from 'shogiops/sfen';
@@ -20,7 +21,7 @@ function initialPosition(ctrl: EditorCtrl, state: EditorState): VNode {
   return h(
     'span.action.text',
     {
-      attrs: { 'data-icon': 'W' },
+      attrs: { 'data-icon': icons.first },
       class: {
         disabled: state.sfen === initialSfen(ctrl.rules),
       },
@@ -38,7 +39,7 @@ function clearBoard(ctrl: EditorCtrl, state: EditorState): VNode {
   return h(
     'span.action.text',
     {
-      attrs: { 'data-icon': 'q' },
+      attrs: { 'data-icon': icons.trashBin },
       class: {
         disabled: /^[0-9/]+$/.test(state.sfen.split(' ')[0]) && state.sfen.split(' ')[2] === '-',
       },
@@ -58,7 +59,7 @@ function fillGotesHand(ctrl: EditorCtrl): VNode | null {
     : h(
         'span.action.text',
         {
-          attrs: { 'data-icon': 'S' },
+          attrs: { 'data-icon': icons.up },
           class: {
             disabled: !ctrl.canFillGoteHand(),
           },
@@ -77,7 +78,7 @@ function flipBoard(ctrl: EditorCtrl): VNode {
     'span.action.text',
     {
       class: { active: ctrl.shogiground.state.orientation === 'gote' },
-      attrs: { 'data-icon': 'B' },
+      attrs: { 'data-icon': icons.loop },
       on: {
         click() {
           ctrl.setOrientation(opposite(ctrl.shogiground.state.orientation));

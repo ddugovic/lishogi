@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { dataIcon, type MaybeVNode, type MaybeVNodes } from 'common/snabbdom';
 import spinner from 'common/spinner';
 import { h, type VNode, type VNodeData } from 'snabbdom';
@@ -21,7 +22,7 @@ export default function (ctrl: LobbyController): VNode {
       case 'real_time':
       case 'seeks':
         body = renderTable(ctrl);
-        data = { attrs: dataIcon('󰀀') };
+        data = { attrs: dataIcon(icons.logo) };
         break;
       case 'now_playing':
         body = renderPlaying(ctrl);

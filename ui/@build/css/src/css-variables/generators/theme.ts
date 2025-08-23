@@ -13,6 +13,7 @@ export async function generateThemeVariables(
     let output = `${signature} ${path.relative(rootDir, import.meta.filename)}
 
 @use 'sass:color';
+@use '../../abstract/icons';
 @use '../util' as *;
 @use '../${defaultTheme}' as *;
 ${theme !== defaultTheme ? `@use '../${theme}' as *;` : ''}

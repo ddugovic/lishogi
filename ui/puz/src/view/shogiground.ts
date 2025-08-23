@@ -12,6 +12,7 @@ import {
 } from 'shogiops/variant/util';
 import type { PuzPrefs, UserDrop, UserMove } from '../interfaces';
 
+// all puzzles are standard
 const variant: VariantKey = 'standard';
 
 export function makeConfig(

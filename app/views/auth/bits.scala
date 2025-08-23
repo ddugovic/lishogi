@@ -44,7 +44,10 @@ object bits {
       main(cls := "auth auth-signup box box-pad")(
         h1(
           ok.map { r =>
-            span(cls := (if (r) "is-green" else "is-red"), dataIcon := (if (r) "E" else "L"))
+            span(
+              cls      := (if (r) "is-green" else "is-red"),
+              dataIcon := (if (r) Icons.correct else Icons.cancel),
+            )
           },
           trans.passwordReset(),
         ),
@@ -61,7 +64,7 @@ object bits {
       title = trans.passwordReset.txt(),
     ) {
       main(cls := "page-small box box-pad")(
-        h1(cls := "is-green text", dataIcon := "E")(trans.checkYourEmail()),
+        h1(cls := "is-green text", dataIcon := Icons.correct)(trans.checkYourEmail()),
         p(trans.weHaveSentYouAnEmailTo(email)),
         p(trans.ifYouDoNotSeeTheEmailCheckOtherPlaces()),
       )
@@ -76,8 +79,8 @@ object bits {
     ) {
       main(cls := "page-small box box-pad")(
         (ok match {
-          case Some(true)  => h1(cls := "is-green text", dataIcon := "E")
-          case Some(false) => h1(cls := "is-red text", dataIcon := "L")
+          case Some(true)  => h1(cls := "is-green text", dataIcon := Icons.correct)
+          case Some(false) => h1(cls := "is-red text", dataIcon := Icons.cancel)
           case _           => h1
         })(
           userLink(u, withOnline = false),
@@ -110,7 +113,10 @@ object bits {
       main(cls := "auth auth-signup box box-pad")(
         h1(
           ok.map { r =>
-            span(cls := (if (r) "is-green" else "is-red"), dataIcon := (if (r) "E" else "L"))
+            span(
+              cls      := (if (r) "is-green" else "is-red"),
+              dataIcon := (if (r) Icons.correct else Icons.cancel),
+            )
           },
           trans.loginByEmail(),
         ),
@@ -130,7 +136,7 @@ object bits {
       title = trans.loginByEmail.txt(),
     ) {
       main(cls := "page-small box box-pad")(
-        h1(cls := "is-green text", dataIcon := "E")(trans.checkYourEmail()),
+        h1(cls := "is-green text", dataIcon := Icons.correct)(trans.checkYourEmail()),
         p("We've sent you an email with a link."),
         p(trans.ifYouDoNotSeeTheEmailCheckOtherPlaces()),
       )
@@ -174,7 +180,7 @@ body { margin-top: 45px; }
       title = "Tor exit node",
     ) {
       main(cls := "page-small box box-pad")(
-        h1(cls := "text", dataIcon := "2")("Ooops"),
+        h1(cls := "text", dataIcon := Icons.warning)("Ooops"),
         p("Sorry, you can't signup to Lishogi through Tor!"),
         p("You can play, train and use almost all Lishogi features as an anonymous user."),
       )

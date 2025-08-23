@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { setup } from 'common/links';
 import { modal } from 'common/modal';
 import { i18n } from 'i18n';
@@ -14,7 +15,7 @@ function analysis(ctrl: EditorCtrl, state: EditorState): VNode {
     'a.button.text',
     {
       attrs: {
-        'data-icon': 'A',
+        'data-icon': icons.microscope,
         rel: 'nofollow',
         href: ctrl.makeAnalysisUrl(state.sfen, ctrl.bottomColor()),
       },
@@ -28,7 +29,7 @@ function continueWith(ctrl: EditorCtrl, state: EditorState): VNode {
   return h(
     'span.button.text',
     {
-      attrs: { 'data-icon': 'U' },
+      attrs: { 'data-icon': icons.challenge },
       class: {
         disabled: !state.playableSfen,
       },
@@ -109,7 +110,7 @@ function study(ctrl: EditorCtrl, state: EditorState): VNode {
         {
           attrs: {
             type: 'submit',
-            'data-icon': '4',
+            'data-icon': icons.study,
           },
         },
         i18n('toStudy'),

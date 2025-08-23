@@ -1,4 +1,5 @@
 import * as cevalView from 'ceval/view';
+import { icons } from 'common/icons';
 import { bindMobileMousedown } from 'common/mobile';
 import { bindNonPassive, onInsert } from 'common/snabbdom';
 import stepwiseScroll from 'common/wheel';
@@ -56,10 +57,10 @@ function controls(ctrl: Controller): VNode {
     },
     [
       h('div.jumps', [
-        jumpButton('W', 'first', !node.ply),
-        jumpButton('Y', 'prev', !node.ply),
-        jumpButton('X', 'next', !nextNode),
-        jumpButton('V', 'last', !nextNode, goNext),
+        jumpButton(icons.first, 'first', !node.ply),
+        jumpButton(icons.prev, 'prev', !node.ply),
+        jumpButton(icons.next, 'next', !nextNode),
+        jumpButton(icons.last, 'last', !nextNode, goNext),
       ]),
     ],
   );

@@ -51,7 +51,7 @@ object index {
           if (videos.currentPageResults.isEmpty) "No videos for these tags:"
           else "That's all we got for these tags:",
           control.filter.tags.map { tag =>
-            a(cls := "tag", dataIcon := "o", href := s"${routes.Video.index}?tags=$tag")(
+            a(cls := "tag", dataIcon := Icons.tag, href := s"${routes.Video.index}?tags=$tag")(
               tag.capitalize,
             )
           },

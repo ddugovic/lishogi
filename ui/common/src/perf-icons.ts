@@ -1,3 +1,5 @@
+import { icons } from './icons';
+
 export function getPerfIcon(key: VariantKey | Perf): string;
 export function getPerfIcon(key: string | undefined): string | undefined;
 export function getPerfIcon(key: string | undefined): string | undefined {
@@ -5,16 +7,16 @@ export function getPerfIcon(key: string | undefined): string | undefined {
 }
 
 const perfIcons: Record<string, string> = {
-  blitz: ')',
-  ultrabullet: '{',
-  bullet: 'T',
-  classical: '+',
-  rapid: '#',
-  standard: 'C',
-  minishogi: ',',
-  chushogi: '(',
-  annanshogi: '',
-  kyotoshogi: '',
-  checkshogi: '>',
-  correspondence: ';',
+  standard: icons.standard,
+  blitz: icons.blitz,
+  ultrabullet: icons.ultraBullet,
+  bullet: icons.bullet,
+  classical: icons.classical,
+  rapid: icons.rapid,
+  correspondence: icons.correspondence,
+  minishogi: icons.minishogi,
+  chushogi: icons.chushogi,
+  annanshogi: icons.annanshogi,
+  kyotoshogi: icons.kyotoshogi,
+  checkshogi: icons.checkshogi,
 };

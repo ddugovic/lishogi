@@ -7,6 +7,7 @@ import scalatags.Text.all.Tag
 
 import lila.api.Context
 import lila.app.ui.ScalatagsTemplate._
+import lila.common.Icons
 
 trait TeamHelper { self: HasEnv =>
 
@@ -21,7 +22,7 @@ trait TeamHelper { self: HasEnv =>
   def teamLink(id: String, name: Frag, withIcon: Boolean): Tag =
     a(
       href     := routes.Team.show(id),
-      dataIcon := withIcon.option("f"),
+      dataIcon := withIcon.option(Icons.people),
       cls      := withIcon option "text",
     )(name)
 

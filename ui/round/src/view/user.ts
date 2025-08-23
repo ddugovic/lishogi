@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import type { Player } from 'game/interfaces';
 import { i18n, i18nFormat } from 'i18n';
 import { colorName } from 'shogi/color-name';
@@ -83,7 +84,7 @@ export function userHtml(ctrl: RoundController, player: Player, position: Positi
         player.engine
           ? h('span', {
               attrs: {
-                'data-icon': 'j',
+                'data-icon': icons.error,
                 title: i18n('thisAccountViolatedTos'),
               },
             })

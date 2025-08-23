@@ -75,7 +75,7 @@ export const renderTablePlay = (ctrl: RoundController): MaybeVNodes => {
               : button.standard(
                   ctrl,
                   ctrl.canOfferDraw,
-                  fontIcons.half,
+                  fontIcons.draw,
                   i18n('offerDraw'),
                   'draw-yes',
                   () => ctrl.offerDraw(true),

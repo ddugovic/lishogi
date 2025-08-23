@@ -43,13 +43,13 @@ object bots {
                     td(
                       p(
                         cls      := "text",
-                        dataIcon := "'",
+                        dataIcon := Icons.toriGate,
                         st.title := trans.tpTimeSpentPlaying.txt(showPeriod(playTime.totalPeriod)),
                       )(showPeriod(playTime.totalPeriod)),
                       playTime.nonEmptyTvPeriod.map { tvPeriod =>
                         p(
                           cls      := "text",
-                          dataIcon := "1",
+                          dataIcon := Icons.television,
                           st.title := trans.tpTimeSpentOnTV.txt(showPeriod(tvPeriod)),
                         )(showPeriod(tvPeriod))
                       },
@@ -59,7 +59,7 @@ object bots {
                   else {
                     td(
                       a(
-                        dataIcon := "U",
+                        dataIcon := Icons.challenge,
                         cls      := List("button button-empty text" -> true),
                         st.title := trans.challengeToPlay.txt(),
                         href     := s"${routes.Lobby.home}?user=${u.username}#friend",

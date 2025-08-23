@@ -43,9 +43,9 @@ object bits {
   )(implicit ctx: Context, prismic: lila.blog.BlogApi.Context) =
     div(cls := "meta-headline")(
       div(cls := "meta")(
-        span(cls := "text", dataIcon := "p")(semanticDate(post.date)),
-        span(cls := "text", dataIcon := "r")(richText(post.author)),
-        span(cls := "text", dataIcon := "t")(post.category),
+        span(cls := "text", dataIcon := Icons.clock)(semanticDate(post.date)),
+        span(cls := "text", dataIcon := Icons.person)(richText(post.author)),
+        span(cls := "text", dataIcon := Icons.starFull)(post.category),
       ),
       strong(cls := "headline")(
         post.doc.getHtml(s"${post.coll}.shortlede", prismic.linkResolver).map(raw),

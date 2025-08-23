@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { modal } from 'common/modal';
 import type { MaybeVNode } from 'common/snabbdom';
 import type { Player } from 'game/interfaces';
@@ -30,7 +31,7 @@ export function impasseModal(ctrl: RoundController): MaybeVNode {
           'h4',
           h(
             'a.text',
-            { attrs: { 'data-icon': '', href: '/page/impasse', target: '_blank' } },
+            { attrs: { 'data-icon': icons.infoCircle, href: '/page/impasse', target: '_blank' } },
             i18n('impasse'),
           ),
         ),
@@ -41,7 +42,7 @@ export function impasseModal(ctrl: RoundController): MaybeVNode {
               h('li', [
                 `${i18n('enteringKing')}: `,
                 h(`span${i.sente.king ? '.good' : ''}`, {
-                  attrs: { 'data-icon': i.sente.king ? 'K' : 'L' },
+                  attrs: { 'data-icon': i.sente.king ? icons.correct : icons.cancel },
                 }),
               ]),
               h('li', [
@@ -60,7 +61,7 @@ export function impasseModal(ctrl: RoundController): MaybeVNode {
               h('li', [
                 `${i18n('enteringKing')}: `,
                 h(`span${i.gote.king ? '.good' : ''}`, {
-                  attrs: { 'data-icon': i.gote.king ? 'K' : 'L' },
+                  attrs: { 'data-icon': i.gote.king ? icons.correct : icons.cancel },
                 }),
               ]),
               h('li', [

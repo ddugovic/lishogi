@@ -15,12 +15,12 @@ object otherTrophies {
         trophies =>
           div(cls := "stacked")(
             trophies.sorted.map { trophy =>
-              trophy.kind.icon.map { iconChar =>
+              trophy.kind.icon.map { icon =>
                 a(
                   awardCls(trophy),
                   href := trophy.kind.url.orElse(trophy.url),
                   ariaTitle(s"${trophy.kind.name}"),
-                )(raw(iconChar))
+                )(raw(icon))
               }
             },
           )
@@ -30,14 +30,14 @@ object otherTrophies {
           cls := "shield-trophy combo-trophy",
           ariaTitle(trans.tourname.xShield.txt(shield.categ.trans)),
           href := routes.Tournament.shields,
-        )(shield.categ.iconChar.toString)
+        )(shield.categ.icon)
       },
       info.revolutions.map { revol =>
         a(
           cls := "revol_trophy combo-trophy",
           ariaTitle(s"${revol.variant.name} Revolution"),
           href := routes.Tournament.show(revol.tourId),
-        )(revol.iconChar.toString)
+        )(revol.icon)
       },
       info.trophies.filter(_.kind.withCustomImage).map { t =>
         a(
@@ -50,12 +50,12 @@ object otherTrophies {
         )
       },
       info.trophies.filter(_.kind.klass.has("icon3d")).sorted.map { trophy =>
-        trophy.kind.icon.map { iconChar =>
+        trophy.kind.icon.map { icon =>
           a(
             awardCls(trophy),
             href := trophy.kind.url,
             ariaTitle(trophy.kind.name),
-          )(raw(iconChar))
+          )(raw(icon))
         }
       },
       info.isCoach option
@@ -63,7 +63,7 @@ object otherTrophies {
           href := routes.Coach.show(info.user.username),
           cls  := "trophy award icon3d coach",
           ariaTitle(trans.coach.lishogiCoach.txt()),
-        )(":"),
+        )(Icons.coach),
       (info.isStreamer && ctx.noKid) option {
         val streaming = isStreaming(info.user.id)
         views.html.streamer.bits.redirectLink(info.user.username, streaming.some)(
@@ -72,7 +72,7 @@ object otherTrophies {
             "streaming"                    -> streaming,
           ),
           ariaTitle(if (streaming) "Live now!" else "Lishogi Streamer"),
-        )("")
+        )(Icons.mic)
       },
     )
 

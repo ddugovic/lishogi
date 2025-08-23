@@ -19,14 +19,14 @@ object wall {
     teacherDashboard.layout(c, students.filter(_.student.isActive), "wall")(
       div(cls := "clas-wall__actions")(
         a(
-          dataIcon := "m",
+          dataIcon := Icons.pencil,
           href     := routes.Clas.wallEdit(c.id.value),
           cls      := "button button-clas text",
         )(
           trans.clas.editNews(),
         ),
         a(
-          dataIcon := "e",
+          dataIcon := Icons.mail,
           href     := routes.Clas.notifyStudents(c.id.value),
           cls      := "button button-clas text",
         )(

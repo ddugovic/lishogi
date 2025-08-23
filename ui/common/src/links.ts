@@ -43,7 +43,6 @@ export function setup(
 }
 
 export function encodeSfen(sfen: string, query = false): string {
-  const encoded = encodeURIComponent(sfen).replace(/%20/g, '_').replace(/%2F/g, '/');
-  if (query) return encoded;
-  else return encoded.replace(/%2B/g, '+');
+  if (query) return encodeURIComponent(sfen);
+  else return sfen.replace(/ /g, '_');
 }

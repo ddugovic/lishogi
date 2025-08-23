@@ -1,4 +1,5 @@
 import type { Challenge } from 'challenge/interfaces';
+import { icons } from 'common/icons';
 import type { MaybeVNode } from 'common/snabbdom';
 import { i18n, i18nVdom } from 'i18n';
 import { h, type VNode } from 'snabbdom';
@@ -16,7 +17,7 @@ export function challenges(ctrl: TournamentController): VNode {
           'div.text.empty-tab',
           {
             attrs: {
-              'data-icon': '',
+              'data-icon': icons.infoCircle,
             },
           },
           i18n('noChallenges'),
@@ -64,7 +65,7 @@ function renderChallenge(ctrl: TournamentController, c: Challenge, dir: 'in' | '
       },
     },
     [
-      h('td.small', h('i', { attrs: { 'data-icon': 'U' } })),
+      h('td.small', h('i', { attrs: { 'data-icon': icons.challenge } })),
       ctrl.isOrganized() ? h('td.bold.small', a?.name || '') : undefined,
       h(
         'td.small',
@@ -76,7 +77,7 @@ function renderChallenge(ctrl: TournamentController, c: Challenge, dir: 'in' | '
           h('a.button', {
             attrs: {
               href: `/challenge/${c.id}`,
-              'data-icon': 'v',
+              'data-icon': icons.view,
               title: i18n('viewInFullSize'),
             },
             on: {
@@ -89,7 +90,7 @@ function renderChallenge(ctrl: TournamentController, c: Challenge, dir: 'in' | '
             ? h('button.button.button-red', {
                 attrs: {
                   title: i18n('decline'),
-                  'data-icon': 'L',
+                  'data-icon': icons.cancel,
                 },
                 on: {
                   click: e => {
@@ -105,7 +106,7 @@ function renderChallenge(ctrl: TournamentController, c: Challenge, dir: 'in' | '
             : h('button.button.button-red', {
                 attrs: {
                   title: i18n('cancel'),
-                  'data-icon': 'L',
+                  'data-icon': icons.cancel,
                 },
                 on: {
                   click: e => {

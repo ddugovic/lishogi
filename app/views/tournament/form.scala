@@ -37,7 +37,7 @@ object form {
             allFieldsets(form, fields, teams = myTeams, tour = none),
             form3.actions(
               a(href := routes.Tournament.homeDefault(1))(trans.cancel()),
-              form3.submit(trans.createANewTournament(), icon = "g".some),
+              form3.submit(trans.createANewTournament(), icon = Icons.trophy.some),
             ),
           ),
         ),
@@ -66,12 +66,12 @@ object form {
             allFieldsets(form, fields, teams = myTeams, tour = tour.some),
             form3.actions(
               a(href := routes.Tournament.show(tour.id))(trans.back()),
-              form3.submit(trans.save(), icon = "g".some),
+              form3.submit(trans.save(), icon = Icons.trophy.some),
             ),
           ),
           postForm(cls := "terminate", action := routes.Tournament.terminate(tour.id))(
             submitButton(
-              dataIcon := "!",
+              dataIcon := Icons.warning,
               cls      := s"text button button-red confirm${tour.isFinished ?? " disabled"}",
             )(s"${trans.delete.txt()} - ${trans.notReversible.txt()}"),
           ),

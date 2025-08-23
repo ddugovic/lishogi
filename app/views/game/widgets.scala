@@ -57,7 +57,7 @@ object widgets {
           div(cls := "header__center")(
             div(cls := "versus")(
               gamePlayer(g.sentePlayer),
-              div(cls := "swords", dataIcon := "U"),
+              div(cls := "swords", dataIcon := Icons.challenge),
               gamePlayer(g.gotePlayer),
             ),
             div(cls := "result")(
@@ -86,7 +86,9 @@ object widgets {
             )
           else frag(br, br),
           g.metadata.analysed option
-            div(cls := "metadata text", dataIcon := "")(trans.computerAnalysisAvailable()),
+            div(cls := "metadata text", dataIcon := Icons.barChart)(
+              trans.computerAnalysisAvailable(),
+            ),
         ),
       )
     }

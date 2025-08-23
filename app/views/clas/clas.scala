@@ -50,7 +50,7 @@ object clas {
           href     := routes.Clas.form,
           cls      := "new button button-empty",
           title    := trans.clas.newClass.txt(),
-          dataIcon := "O",
+          dataIcon := Icons.createNew,
         ),
       ),
       if (classes.isEmpty)
@@ -71,7 +71,7 @@ object clas {
       classes.map { clas =>
         div(
           cls      := List("clas-widget" -> true, "clas-widget-archived" -> clas.isArchived),
-          dataIcon := "f",
+          dataIcon := Icons.people,
         )(
           a(cls := "overlay", href := routes.Clas.show(clas.id.value)),
           div(

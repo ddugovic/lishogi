@@ -37,7 +37,7 @@ object chatroom {
         cls := "chat-room box",
       )(
         div(cls := "box__top")(
-          h1(cls := "text", dataIcon := "f")(trans.chatRoom()),
+          h1(cls := "text", dataIcon := Icons.teapot)(trans.chatRoom()),
         ),
         div(
           cls           := "chat__members",

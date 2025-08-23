@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { i18n, i18nPluralSame } from 'i18n';
 import { h, type VNode } from 'snabbdom';
 import type TournamentController from '../../ctrl';
@@ -21,7 +22,7 @@ export function players(ctrl: TournamentController, klass?: string): VNode {
           'div.text.empty-tab',
           {
             attrs: {
-              'data-icon': '',
+              'data-icon': icons.infoCircle,
             },
           },
           i18n('noPlayersJoinedYet'),
@@ -89,7 +90,7 @@ function playerTr(ctrl: TournamentController, player: ArrangementPlayer, rank: n
         player.withdraw
           ? h('i', {
               attrs: {
-                'data-icon': player.kicked ? 'L' : 'Z',
+                'data-icon': player.kicked ? icons.cancel : icons.pause,
                 title: player.kicked ? i18n('denied') : i18n('pause'),
               },
             })

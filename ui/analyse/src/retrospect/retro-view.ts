@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { bind, dataIcon } from 'common/snabbdom';
 import spinner from 'common/spinner';
 import { i18n, i18nFormatCapitalized, i18nVdom } from 'i18n';
@@ -34,7 +35,7 @@ function jumpToNext(ctrl: RetroCtrl) {
     {
       hook: bind('click', ctrl.jumpToNext),
     },
-    [h('i', { attrs: dataIcon('G') }), i18n('next')],
+    [h('i', { attrs: dataIcon(icons.play) }), i18n('next')],
   );
 }
 
@@ -97,7 +98,7 @@ const feedback = {
   offTrack(ctrl: RetroCtrl): VNode[] {
     return [
       h('div.player', [
-        h('div.icon.off', { attrs: { 'data-icon': '!' } }),
+        h('div.icon.off', { attrs: { 'data-icon': icons.warning } }),
         h('div.instruction', [
           h('strong', i18n('youBrowsedAway')),
           h('div.choices.off', [
@@ -116,7 +117,7 @@ const feedback = {
   fail(ctrl: RetroCtrl): VNode[] {
     return [
       h('div.player', [
-        h('div.icon.bad', { attrs: { 'data-icon': 'L' } }),
+        h('div.icon.bad', { attrs: { 'data-icon': icons.cancel } }),
         h('div.instruction', [
           h('strong', i18n('youCanDoBetter')),
           h(
@@ -136,7 +137,7 @@ const feedback = {
       h(
         'div.half.top',
         h('div.player', [
-          h('div.icon', { attrs: { 'data-icon': 'K' } }),
+          h('div.icon', { attrs: { 'data-icon': icons.correct } }),
           h('div.instruction', h('strong', i18n('goodMove'))),
         ]),
       ),
@@ -148,7 +149,7 @@ const feedback = {
       h(
         'div.half.top',
         h('div.player', [
-          h('div.icon', { attrs: { 'data-icon': 'K' } }),
+          h('div.icon', { attrs: { 'data-icon': icons.correct } }),
           h('div.instruction', [
             h('strong', i18n('solution')),
             h(

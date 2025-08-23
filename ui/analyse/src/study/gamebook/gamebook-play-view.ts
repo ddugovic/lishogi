@@ -1,4 +1,5 @@
 import { loadCssPath } from 'common/assets';
+import { icons } from 'common/icons';
 import { richHTML } from 'common/rich-text';
 import { bind, dataIcon } from 'common/snabbdom';
 import { i18n, i18nFormatCapitalized } from 'i18n';
@@ -74,7 +75,7 @@ function renderFeedback(ctrl: GamebookPlayCtrl, state: State) {
       {
         hook: bind('click', ctrl.retry),
       },
-      [iconTag('P'), h('span', i18n('retry'))],
+      [iconTag(icons.reload), h('span', i18n('retry'))],
     );
   if (fb === 'good' && state.comment)
     return h(
@@ -82,7 +83,7 @@ function renderFeedback(ctrl: GamebookPlayCtrl, state: State) {
       {
         hook: bind('click', ctrl.next),
       },
-      [h('span.text', { attrs: dataIcon('G') }, i18n('next')), h('kbd', '<space>')],
+      [h('span.text', { attrs: dataIcon(icons.play) }, i18n('next')), h('kbd', '<space>')],
     );
   if (fb === 'end') return renderEnd(ctrl);
   return h(
@@ -115,7 +116,7 @@ function renderEnd(ctrl: GamebookPlayCtrl) {
       ? h(
           'a.next.text',
           {
-            attrs: dataIcon('G'),
+            attrs: dataIcon(icons.play),
             hook: bind('click', () => study.setChapter(nextChapter.id)),
           },
           i18n('next'),
@@ -124,7 +125,7 @@ function renderEnd(ctrl: GamebookPlayCtrl) {
     h(
       'a.retry',
       {
-        attrs: dataIcon('P'),
+        attrs: dataIcon(icons.reload),
         hook: bind('click', () => ctrl.root.userJump(''), ctrl.redraw),
       },
       i18n('storm:playAgain'),
@@ -132,7 +133,7 @@ function renderEnd(ctrl: GamebookPlayCtrl) {
     h(
       'a.analyse',
       {
-        attrs: dataIcon('A'),
+        attrs: dataIcon(icons.microscope),
         hook: bind('click', () => study.setGamebookOverride('analyse'), ctrl.redraw),
       },
       i18n('analyse'),

@@ -1,4 +1,5 @@
 import { requestIdleCallbackWithFallback } from 'common/common';
+import { icons } from 'common/icons';
 import { isHoverable } from 'common/mobile';
 import { spinnerHtml } from 'common/spinner';
 import { pubsub } from './pubsub';
@@ -47,9 +48,9 @@ const userPowertip = (el: HTMLElement, pos?: any) => {
             </div>
           </div>
           <div class="upt__actions btn-rack">
-            ${uptA(`/@/${u}/tv`, '1')}
-            ${uptA(`/inbox/new?user=${u}`, 'c')}
-            ${uptA(`/?user=${u}#friend`, 'U')}
+            ${uptA(`/@/${u}/tv`, icons.television)}
+            ${uptA(`/inbox/new?user=${u}`, icons.talk)}
+            ${uptA(`/?user=${u}#friend`, icons.challenge)}
             <a class="btn-rack__btn relation-button" disabled></a>
           </div>`,
         );

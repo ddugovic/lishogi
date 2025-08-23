@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import * as enhance from 'common/rich-text';
 import { i18n, i18nFormat, i18nFormatCapitalized } from 'i18n';
 import { colorName } from 'shogi/color-name';
@@ -310,7 +311,7 @@ function renderLine(ctrl: ChatCtrl, line: Line) {
           ctrl.data.userId && line.u && ctrl.data.userId != line.u
             ? h('i.flag', {
                 attrs: {
-                  'data-icon': '!',
+                  'data-icon': icons.warning,
                   title: 'Report',
                 },
               })

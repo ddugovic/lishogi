@@ -19,7 +19,7 @@ object create {
   )(implicit ctx: Context) =
     views.html.site.message(
       title = trans.toStudy.txt(),
-      icon = Some("4"),
+      icon = Icons.study.some,
       back = data.sfen.map(sf => routes.Editor.parseArg(s"${data.variant.key}/${sf.value}").url),
       moreCss = cssTag("analyse.study.create").some,
     ) {
@@ -36,7 +36,7 @@ object create {
               name     := "as",
               value    := "study",
               cls      := "submit button large new text",
-              dataIcon := "4",
+              dataIcon := Icons.study,
             )(trans.study.createStudy()),
           ),
           div(cls := "studies")(

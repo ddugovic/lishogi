@@ -1,5 +1,6 @@
 @use 'pkg:breakpoint-sass' as breakpoint;
 @use 'pkg:common/abstract/extends';
+@use 'pkg:common/abstract/icons';
 @use 'pkg:common/abstract/media-queries';
 @use 'pkg:common/abstract/mixins';
 @use 'pkg:common/theme';
@@ -35,7 +36,7 @@
     &::before {
       @extend %data-icon;
 
-      content: '-';
+      content: icons.$puzzle;
       color: theme.$c-font-dimmer;
       flex: 0 0 1.6em;
       text-align: center;

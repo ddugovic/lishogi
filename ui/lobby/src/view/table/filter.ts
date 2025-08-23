@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { bind } from 'common/snabbdom';
 import { i18n } from 'i18n';
 import { h, type VNode } from 'snabbdom';
@@ -42,7 +43,7 @@ export function toggle(ctrl: LobbyController, nbFiltered: number): VNode {
       class: { gamesFiltered: hasFiltered, active: filter.open },
       hook: bind('mousedown', filter.toggle, ctrl.redraw),
       attrs: {
-        'data-icon': filter.open ? 'L' : '%',
+        'data-icon': filter.open ? icons.cancel : icons.gear,
         title: i18n('filterGames'),
       },
     },

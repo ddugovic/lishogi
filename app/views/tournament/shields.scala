@@ -27,7 +27,7 @@ object shields {
                 section(
                   h2(
                     a(href := routes.Tournament.categShields(categ.key))(
-                      span(cls := "shield-trophy")(categ.iconChar.toString),
+                      span(cls := "shield-trophy")(categ.icon),
                       categ.trans,
                     ),
                   ),
@@ -56,13 +56,13 @@ object shields {
         views.html.user.bits.communityMenu("shield"),
         div(cls := "page-menu__content box")(
           h1(
-            a(href := routes.Tournament.shields, dataIcon := "I", cls := "text"),
+            a(href := routes.Tournament.shields, dataIcon := Icons.left, cls := "text"),
             categ.trans,
             " shields",
           ),
           ol(awards.map { aw =>
             li(
-              span(cls := "shield-trophy")(categ.iconChar.toString),
+              span(cls := "shield-trophy")(categ.icon),
               userIdLink(aw.owner.value.some),
               a(href := routes.Tournament.show(aw.tourId))(showDate(aw.date)),
             )

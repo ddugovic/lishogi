@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { i18n } from 'i18n';
 import { h, type VNode } from 'snabbdom';
 import type LearnCtrl from '../ctrl';
@@ -7,7 +8,7 @@ import completed from './overlays/completed';
 import starting from './overlays/starting';
 import side from './side';
 
-const star = h('i', { attrs: { 'data-icon': 't' } });
+const star = h('i', { attrs: { 'data-icon': icons.starFull } });
 
 function makeStars(score: number): VNode {
   const stars = [];

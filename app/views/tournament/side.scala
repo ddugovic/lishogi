@@ -22,7 +22,7 @@ object side {
   )(implicit ctx: Context) =
     frag(
       div(cls := "tour__meta")(
-        st.section(dataIcon := tour.perfType.iconChar.toString)(
+        st.section(dataIcon := tour.perfType.icon)(
           div(
             p(
               tour.timeControl.show,
@@ -36,7 +36,9 @@ object side {
             (isGranted(_.ManageTournament) || (ctx.userId
               .has(tour.createdBy) && !tour.isFinished)) option frag(
               " ",
-              a(href := routes.Tournament.edit(tour.id), title := trans.edit.txt())(iconTag("%")),
+              a(href := routes.Tournament.edit(tour.id), title := trans.edit.txt())(
+                iconTag(Icons.gear),
+              ),
             ),
           ),
         ),
@@ -53,7 +55,7 @@ object side {
         ),
         tour.teamBattle map { battle =>
           st.section(cls := "team-battle")(
-            p(cls := "team-battle__title text", dataIcon := "f")(
+            p(cls := "team-battle__title text", dataIcon := Icons.people)(
               s"Battle of ${battle.teams.size} teams and ${battle.nbLeaders} leaders",
             ),
           )
@@ -62,7 +64,7 @@ object side {
           st.section(
             lila.common.String.html.markdownLinks(s.description),
             shieldOwner map { owner =>
-              p(cls := "defender", dataIcon := "5")(
+              p(cls := "defender", dataIcon := Icons.shield)(
                 s"${trans.arena.defender.txt()}:",
                 userIdLink(owner.value.some),
               )
@@ -71,7 +73,7 @@ object side {
         },
         tour.looksLikePrize option bits.userPrizeDisclaimer,
         verdicts.relevant option st.section(
-          dataIcon := "7",
+          dataIcon := Icons.target,
           cls := List(
             "conditions" -> true,
             "accepted"   -> (ctx.isAuth && verdicts.accepted),
@@ -95,13 +97,13 @@ object side {
             },
           ),
         ),
-        tour.isArena && tour.noBerserk option div(cls := "text", dataIcon := "`")(
+        tour.isArena && tour.noBerserk option div(cls := "text", dataIcon := Icons.berserk)(
           trans.arena.noBerserkAllowed(),
         ),
-        tour.isArena && tour.noStreak option div(cls := "text", dataIcon := "Q")(
+        tour.isArena && tour.noStreak option div(cls := "text", dataIcon := Icons.streak)(
           trans.arena.noArenaStreaks(),
         ),
-        tour.proMode option div(cls := "text", dataIcon := "8")(
+        tour.proMode option div(cls := "text", dataIcon := Icons.crown)(
           trans.proMode(),
         ),
         !tour.isScheduled option frag(trans.by(userIdLink(tour.createdBy.some)), br),
@@ -122,7 +124,7 @@ object side {
         (tour.hasArrangements && ctx.pref.tourChallenge != lila.pref.Pref.Challenge.ALWAYS) option a(
           cls      := "text challenge-warning",
           href     := routes.Pref.form("privacy"),
-          dataIcon := "!",
+          dataIcon := Icons.warning,
         )(
           "You cannot receive challenges from all users",
         ),

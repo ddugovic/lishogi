@@ -1,6 +1,7 @@
 @use 'sass:color';
 @use 'util' as *;
 @use 'dark' as *;
+@use '../abstract/icons';
 
 $c-bg-page: hsl($c-site-hue, 10%, 92%);
 $c-bg-high: hsl(0deg, 0%, 100%);
@@ -75,8 +76,8 @@ $metal-shadow: 0 1px 0 white;
 $c-bg-metal-hover: color.adjust($c-bg-high, $lightness: -3%);
 $c-font-metal-hover: inherit;
 
-$sente-symbol: '☗';
-$gote-symbol: '☖';
+$sente-symbol: icons.$shogi-full;
+$gote-symbol: icons.$shogi-outline;
 
 $c-sente: $c-font-dim;
 $c-gote: $c-shade;

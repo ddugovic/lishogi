@@ -37,14 +37,14 @@ object bits {
       dataVariant := variant.key,
     )(shogigroundEmpty(variant, color))
 
-  def gameIcon(game: Game): Char =
+  def gameIcon(game: Game): String =
     game.perfType match {
-      case _ if game.initialSfen.isDefined   => '*'
-      case _ if game.imported                => '/'
-      case Some(p) if !game.variant.standard => p.iconChar
-      case _ if game.hasAi                   => 'n'
-      case Some(p)                           => p.iconChar
-      case _                                 => '9'
+      case _ if game.initialSfen.isDefined   => Icons.position
+      case _ if game.imported                => Icons.uploadCloud
+      case Some(p) if !game.variant.standard => p.icon
+      case _ if game.hasAi                   => Icons.cogs
+      case Some(p)                           => p.icon
+      case _                                 => Icons.chartLine
     }
 
   def sides(

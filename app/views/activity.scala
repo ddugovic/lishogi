@@ -45,7 +45,7 @@ object activity {
 
   private def renderPatron(p: Patron)(implicit ctx: Context) =
     div(cls := "entry plan")(
-      iconTag(""),
+      iconTag(Icons.patron),
       div(
         trans.activity.supportedNbMonths
           .plural(p.months, p.months, a(href := routes.Plan.index)("Patron")), // patron
@@ -55,7 +55,7 @@ object activity {
   private def renderPractice(p: Map[lila.practice.PracticeStudy, Int])(implicit ctx: Context) = {
     val ps = p.toSeq.sortBy(-_._2)
     entryTag(
-      iconTag(""),
+      iconTag(Icons.bullseye),
       div(
         ps.headOption map onePractice,
         ps match {
@@ -78,7 +78,7 @@ object activity {
 
   private def renderPuzzles(p: Puzzles)(implicit ctx: Context) =
     entryTag(
-      iconTag("-"),
+      iconTag(Icons.puzzle),
       scoreFrag(p.score),
       div(
         trans.activity.solvedNbPuzzles.pluralSame(p.score.size),
@@ -88,7 +88,7 @@ object activity {
 
   private def renderStorm(s: Storm)(implicit ctx: Context) =
     entryTag(
-      iconTag("."),
+      iconTag(Icons.storm),
       scoreTag(winTag(trans.storm.highscoreX(strong(s.score)))),
       div(
         trans.storm.playedNbRunsOfPuzzleStorm
@@ -99,7 +99,7 @@ object activity {
   private def renderGames(games: Games)(implicit ctx: Context) =
     games.value.toSeq.sortBy(-_._2.size).map { case (pt, score) =>
       entryTag(
-        iconTag(pt.iconChar),
+        iconTag(pt.icon),
         scoreFrag(score),
         div(
           trans.activity.playedNbGames.plural(score.size, score.size, pt.trans),
@@ -112,7 +112,7 @@ object activity {
       ctx: Context,
   ) =
     ctx.noKid option entryTag(
-      iconTag("d"),
+      iconTag(Icons.talkAlt),
       div(
         posts.toSeq.map { case (topic, posts) =>
           val url = routes.ForumTopic.show(topic.categId, topic.slug)
@@ -133,7 +133,7 @@ object activity {
 
   private def renderCorresMoves(nb: Int, povs: List[lila.game.LightPov])(implicit ctx: Context) =
     entryTag(
-      iconTag(";"),
+      iconTag(Icons.correspondence),
       div(
         trans.activity.playedNbMoves.pluralSame(nb),
         " ",
@@ -161,7 +161,7 @@ object activity {
       ctx: Context,
   ) =
     entryTag(
-      iconTag(";"),
+      iconTag(Icons.correspondence),
       div(
         trans.activity.completedNbGames.plural(score.size, subCount(score.size)),
         score.rp.filterNot(_.isEmpty).map(ratingProgFrag),
@@ -193,7 +193,7 @@ object activity {
 
   private def renderFollows(all: Follows)(implicit ctx: Context) =
     entryTag(
-      iconTag("h"),
+      iconTag(Icons.thumbsUp),
       div(
         List(all.in.map(_ -> true), all.out.map(_ -> false)).flatten map { case (f, in) =>
           frag(
@@ -212,7 +212,7 @@ object activity {
 
   private def renderSimuls(u: User)(simuls: List[lila.simul.Simul])(implicit ctx: Context) =
     entryTag(
-      iconTag("f"),
+      iconTag(Icons.people),
       div(
         simuls.groupBy(_.isHost(u.some)).toSeq.map { case (isHost, simuls) =>
           frag(
@@ -237,7 +237,7 @@ object activity {
 
   private def renderStudies(studies: List[lila.study.Study.IdName])(implicit ctx: Context) =
     entryTag(
-      iconTag("4"),
+      iconTag(Icons.study),
       div(
         trans.activity.createdNbStudies.pluralSame(studies.size),
         subTag(
@@ -250,7 +250,7 @@ object activity {
 
   private def renderTeams(teams: Teams)(implicit ctx: Context) =
     ctx.noKid option entryTag(
-      iconTag("f"),
+      iconTag(Icons.people),
       div(
         trans.activity.joinedNbTeams.pluralSame(teams.value.size),
         subTag(fragList(teams.value.map(id => teamLink(id)))),
@@ -259,7 +259,7 @@ object activity {
 
   private def renderTours(tours: lila.activity.ActivityView.Tours)(implicit ctx: Context) =
     entryTag(
-      iconTag("g"),
+      iconTag(Icons.trophy),
       div(
         trans.activity.competedInNbTournaments.pluralSame(tours.nb),
         subTag(
@@ -270,7 +270,7 @@ object activity {
                 "is-gold" -> (t.rank == 1),
                 "text"    -> (t.rank <= 3),
               ),
-              dataIcon := (t.rank <= 3).option("g"),
+              dataIcon := (t.rank <= 3).option(Icons.trophy),
             )(
               trans.activity.rankedInTournament.plural(
                 t.nbGames,
@@ -288,13 +288,13 @@ object activity {
 
   private def renderStream(u: User)(implicit ctx: Context) =
     ctx.noKid option entryTag(
-      iconTag(""),
+      iconTag(Icons.mic),
       a(href := routes.Streamer.redirect(u.username))(trans.activity.hostedALiveStream()),
     )
 
   private def renderSignup(implicit ctx: Context) =
     entryTag(
-      iconTag("s"),
+      iconTag(Icons.starOutline),
       div(trans.activity.signedUp()),
     )
 

@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { richHTML } from 'common/rich-text';
 import { bind } from 'common/snabbdom';
 import { i18n } from 'i18n';
@@ -43,7 +44,7 @@ export function currentComments(ctrl: AnalyseCtrl, includingMine: boolean): VNod
         canDelete && study.vm.mode.write
           ? h('a.edit', {
               attrs: {
-                'data-icon': 'q',
+                'data-icon': icons.trashBin,
                 title: i18n('delete'),
               },
               hook: bind(

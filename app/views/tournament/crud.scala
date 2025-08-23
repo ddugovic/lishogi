@@ -63,7 +63,7 @@ object crud {
             action := routes.TournamentCrud.cloneT(tour.id),
             method := "get",
           )(
-            form3.submit("Clone", "g".some, klass = "button-green"),
+            form3.submit("Clone", Icons.trophy.some, klass = "button-green"),
           ),
         ),
         standardFlash(),
@@ -154,7 +154,11 @@ object crud {
         div(cls := "box__top")(
           h1("Tournament manager"),
           div(cls := "box__top__actions")(
-            a(cls := "button button-green", href := routes.TournamentCrud.form, dataIcon := "O"),
+            a(
+              cls      := "button button-green",
+              href     := routes.TournamentCrud.form,
+              dataIcon := Icons.createNew,
+            ),
           ),
         ),
         table(cls := "slist slist-pad")(
@@ -195,7 +199,7 @@ object crud {
                 td(
                   a(
                     href     := routes.Tournament.show(tour.id),
-                    dataIcon := "v",
+                    dataIcon := Icons.view,
                     title    := "View on site",
                   ),
                 ),

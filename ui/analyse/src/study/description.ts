@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { richHTML } from 'common/rich-text';
 import { bind, onInsert } from 'common/snabbdom';
 import { h, type VNode } from 'snabbdom';
@@ -43,7 +44,7 @@ export function view(study: StudyCtrl, chapter: boolean): VNode | undefined {
             ? null
             : h('a', {
                 attrs: {
-                  'data-icon': 'm',
+                  'data-icon': icons.pencil,
                   title: 'Edit',
                 },
                 hook: bind(
@@ -56,7 +57,7 @@ export function view(study: StudyCtrl, chapter: boolean): VNode | undefined {
               }),
           h('a', {
             attrs: {
-              'data-icon': 'q',
+              'data-icon': icons.trashBin,
               title: 'Delete',
             },
             hook: bind('click', () => {
@@ -89,7 +90,7 @@ function edit(ctrl: DescriptionCtrl, id: string, chapter: boolean): VNode {
       descTitle(chapter),
       h('button.button.button-empty.button-red', {
         attrs: {
-          'data-icon': 'L',
+          'data-icon': icons.cancel,
           title: 'Close',
         },
         hook: bind(

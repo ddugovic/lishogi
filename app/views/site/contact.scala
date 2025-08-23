@@ -164,7 +164,7 @@ object contact {
                 ),
                 p(
                   youCanAlsoReachReportPage(
-                    button(cls := "thin button button-empty", dataIcon := "!"),
+                    button(cls := "thin button button-empty", dataIcon := Icons.warning),
                   ),
                 ),
                 p(
@@ -342,7 +342,7 @@ object contact {
   private def makeLink(id: String) = href  := s"#help-$id"
 
   private def goBack(parent: Node): Frag =
-    a(makeLink(parent.id), cls := "back", dataIcon := "I", title := "Go back")
+    a(makeLink(parent.id), cls := "back", dataIcon := Icons.left, title := "Go back")
 
   def apply()(implicit ctx: Context) =
     help.layout(

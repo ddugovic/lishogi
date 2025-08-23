@@ -85,7 +85,7 @@ object student {
 
   private def top(clas: Clas, s: Student.WithUser)(implicit ctx: Context) =
     div(cls := "student-show__top")(
-      h1(dataIcon := "r")(
+      h1(dataIcon := Icons.person)(
         span(
           strong(s.user.username),
           em(s.student.realName),
@@ -138,7 +138,10 @@ object student {
         trans.clas.addStudent(),
         s" ($nbStudents/${lila.clas.Clas.maxStudents})",
       ),
-      nbStudents > (lila.clas.Clas.maxStudents / 2) option p(dataIcon := "", cls := "text")(
+      nbStudents > (lila.clas.Clas.maxStudents / 2) option p(
+        dataIcon := Icons.infoCircle,
+        cls      := "text",
+      )(
         s"Note that a class can have up to ${lila.clas.Clas.maxStudents} students.",
         "To manage more students, ",
         a(href := routes.Clas.studentForm(c.id.value))("create more classes"),

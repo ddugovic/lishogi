@@ -1,4 +1,5 @@
 @use 'pkg:common/abstract/extends';
+@use 'pkg:common/abstract/icons';
 @use 'pkg:common/abstract/variables';
 @use 'pkg:common/theme';
 
@@ -21,7 +22,7 @@
     &.result-empty::before {
       @extend %data-icon;
 
-      content: 'E';
+      content: icons.$correct;
       font-size: 0.9em;
     }
 
@@ -35,7 +36,7 @@
       color: theme.$c-bad-over;
 
       &.result-empty::before {
-        content: 'L';
+        content: icons.$cancel;
       }
     }
 

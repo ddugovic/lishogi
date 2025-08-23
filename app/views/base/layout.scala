@@ -105,7 +105,7 @@ object layout {
         "Disable"
       else "Enable"} blind mode</button></form>""")
   private val zenToggle = raw(
-    """<a data-icon="E" id="zentog" class="text fbt active">ZEN MODE</a>""",
+    s"""<a data-icon="${Icons.correct}" id="zentog" class="text fbt active">ZEN MODE</a>""",
   )
   private def dasher(me: lila.user.User) =
     raw(
@@ -116,14 +116,14 @@ object layout {
     spaceless(s"""<div>
   <a id="challenge-toggle" class="toggle link">
     <span title="${trans.challenges
-        .txt()}" class="data-count" data-count="${ctx.nbChallenges}" data-icon="U"></span>
+        .txt()}" class="data-count" data-count="${ctx.nbChallenges}" data-icon="${Icons.challenge}"></span>
   </a>
   <div id="challenge-app" class="dropdown"></div>
 </div>
 <div>
   <a id="notify-toggle" class="toggle link">
     <span title="${trans.notifications
-        .txt()}" class="data-count" data-count="${ctx.nbNotifications}" data-icon=""></span>
+        .txt()}" class="data-count" data-count="${ctx.nbNotifications}" data-icon="${Icons.bell}"></span>
   </a>
   <div id="notify-app" class="dropdown"></div>
 </div>""")
@@ -131,7 +131,7 @@ object layout {
   private def anonDasher(playing: Boolean)(implicit ctx: Context) =
     spaceless(s"""<div class="dasher">
   <a class="toggle link anon">
-    <span title="${trans.preferences.preferences.txt()}" data-icon="%"></span>
+    <span title="${trans.preferences.preferences.txt()}" data-icon="${Icons.gear}"></span>
   </a>
   <div id="dasher_app" class="dropdown" data-playing="$playing"></div>
 </div>
@@ -140,7 +140,7 @@ object layout {
       )}" class="signin button button-empty">${trans.signIn
         .txt()}</a>""")
 
-  private val clinputLink = a(cls := "link")(span(dataIcon := "y"))
+  private val clinputLink = a(cls := "link")(span(dataIcon := Icons.search))
 
   private def clinput(implicit ctx: Context) =
     div(id := "clinput")(
@@ -305,7 +305,7 @@ object layout {
           i18nJsTag("core"),
           jsTag("site"),
           moreJs,
-          ctx.pageData.inquiry.isDefined option jsTag("misc.inquiry"),
+          ctx.pageData.inquiry.isDefined option jsTag("user.inquiry"),
         ),
         st.body(
           cls := List(
@@ -361,14 +361,14 @@ object layout {
             id := "friend_box",
           )(
             div(cls := "friend_box_title")(
-              iconTag("S"),
+              iconTag(Icons.up),
               trans.friends(),
             ),
             div(cls := "content_wrap none")(
               div(cls := "content list"),
             ),
           ),
-          a(id := "reconnecting", cls := "link text", dataIcon := "B"),
+          a(id := "reconnecting", cls := "link text", dataIcon := Icons.loop),
         ),
       ),
     )
@@ -389,7 +389,7 @@ object layout {
           title     := "Moderation",
           href      := routes.Report.list,
           dataCount := blockingReportNbOpen,
-          dataIcon  := "",
+          dataIcon  := Icons.agent,
         )
 
     private def teamRequests(implicit ctx: Context) =
@@ -398,7 +398,7 @@ object layout {
           cls       := "link data-count link-center",
           href      := routes.Team.requests,
           dataCount := ctx.teamNbRequests,
-          dataIcon  := "f",
+          dataIcon  := Icons.people,
           title     := trans.team.teams.txt(),
         )
 

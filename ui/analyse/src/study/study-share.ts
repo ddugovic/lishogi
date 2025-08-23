@@ -1,4 +1,5 @@
 import { type Prop, prop } from 'common/common';
+import { icons } from 'common/icons';
 import { bind } from 'common/snabbdom';
 import { i18n, i18nVdom } from 'i18n';
 import { h, type VNode } from 'snabbdom';
@@ -111,7 +112,7 @@ export function view(ctrl: StudyShareCtrl): VNode {
           ? h(
               'p.form-help.text',
               {
-                attrs: { 'data-icon': '' },
+                attrs: { 'data-icon': icons.infoCircle },
               },
               i18n('study:youCanPasteThisInTheForumToEmbed'),
             )
@@ -151,7 +152,7 @@ export function view(ctrl: StudyShareCtrl): VNode {
                     attrs: {
                       href: '/developers#embed-study',
                       target: '_blank',
-                      'data-icon': '',
+                      'data-icon': icons.infoCircle,
                     },
                   },
                   i18n('study:readMoreAboutEmbedding'),
@@ -175,7 +176,7 @@ export function view(ctrl: StudyShareCtrl): VNode {
         'a.button.text',
         {
           attrs: {
-            'data-icon': 'x',
+            'data-icon': icons.download,
             href: `/study/${studyId}/${chapter.id}.kif`,
             download: true,
           },
@@ -187,7 +188,7 @@ export function view(ctrl: StudyShareCtrl): VNode {
             'a.button.text',
             {
               attrs: {
-                'data-icon': 'x',
+                'data-icon': icons.download,
                 href: `/study/${studyId}/${chapter.id}.csa`,
                 download: true,
               },
@@ -200,7 +201,7 @@ export function view(ctrl: StudyShareCtrl): VNode {
             'a.button.text',
             {
               attrs: {
-                'data-icon': '4',
+                'data-icon': icons.study,
                 href: `/study/${studyId}/clone`,
               },
             },
@@ -212,7 +213,7 @@ export function view(ctrl: StudyShareCtrl): VNode {
             'a.button.text',
             {
               attrs: {
-                'data-icon': 'x',
+                'data-icon': icons.download,
                 href: `/study/${studyId}/${chapter.id}.gif`,
                 download: true,
               },

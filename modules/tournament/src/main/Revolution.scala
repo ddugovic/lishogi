@@ -67,7 +67,7 @@ object Revolution {
       variant: Variant,
       tourId: Tournament.ID,
   ) {
-    val iconChar = lila.rating.PerfType iconByVariant variant
+    val icon = lila.rating.PerfType iconByVariant variant
   }
 
   type PerOwner = Map[User.ID, List[Award]]

@@ -71,7 +71,7 @@ export function fillJquery(): void {
     if (!html.clone) html = $(`<div>${html}</div>`);
     const $wrap = $('<div id="modal-wrap">')
       .html(html.clone(withDataAndEvents).removeClass('none'))
-      .prepend('<span class="close" data-icon="L"></span>');
+      .prepend(`<span class="close" data-icon="${icons.cancel}"></span>`);
     const $overlay = $('<div id="modal-overlay">')
       .addClass(cls)
       .data('onClose', onClose)

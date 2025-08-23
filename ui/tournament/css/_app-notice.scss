@@ -1,4 +1,5 @@
 @use 'pkg:common/abstract/extends';
+@use 'pkg:common/abstract/icons';
 @use 'pkg:common/theme';
 
 .tour__notice {
@@ -22,7 +23,7 @@
 
   &::before,
   &::after {
-    content: 'U';
+    content: icons.$challenge;
     font-size: 2rem;
     position: absolute;
     top: 30px;

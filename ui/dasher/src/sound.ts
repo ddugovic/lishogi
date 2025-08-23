@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { debounce } from 'common/timings';
 import { i18n } from 'i18n';
 import { h, type VNode } from 'snabbdom';
@@ -114,7 +115,7 @@ function soundView(ctrl: SoundCtrl, current: SoundKey) {
       {
         hook: bind('click', () => ctrl.set(s.key)),
         class: { active: current === s.key },
-        attrs: { 'data-icon': 'E' },
+        attrs: { 'data-icon': icons.correct },
       },
       s.name,
     );

@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { bind } from 'common/snabbdom';
 import { opposite } from 'shogiground/util';
 import { h, type VNode } from 'snabbdom';
@@ -23,7 +24,7 @@ function featuredPlayer(player: FeaturedPlayer) {
     player.berserk
       ? h('i', {
           attrs: {
-            'data-icon': '`',
+            'data-icon': icons.berserk,
             title: 'Berserk',
           },
         })

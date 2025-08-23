@@ -35,7 +35,7 @@ object edit {
       evenMoreCss = frag(cssTag("misc.coach.editor"), cssTag("misc.tagify")),
       evenMoreJs = frag(
         tagifyTag,
-        jsTag("misc.coachForm"),
+        jsTag("misc.coach-form"),
       ),
       active = "coach",
     )(
@@ -68,7 +68,7 @@ object edit {
               a(
                 href     := routes.Coach.show(c.user.username),
                 cls      := "button button-empty text",
-                dataIcon := "v",
+                dataIcon := Icons.view,
               )("Preview coach page"),
             ),
           ),
@@ -167,7 +167,7 @@ object edit {
               )(form3.textarea(_)(rows := 6)),
             ),
           ),
-          div(cls := "status text", dataIcon := "E")("Your changes have been saved."),
+          div(cls := "status text", dataIcon := Icons.correct)("Your changes have been saved."),
         ),
       ),
     )

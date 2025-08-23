@@ -1,5 +1,6 @@
 import { loadVendorScript } from 'common/assets';
 import { type Prop, prop } from 'common/common';
+import { icons } from 'common/icons';
 import { hasTouchEvents } from 'common/mobile';
 import { bind, dataIcon } from 'common/snabbdom';
 import { i18n } from 'i18n';
@@ -147,7 +148,7 @@ export function view(ctrl: StudyCtrl): VNode {
           [
             h('span', loading ? h('span.ddloader') : [`${i + 1}`]),
             h('h3', chapter.name),
-            canContribute ? h('act', { attrs: dataIcon('%') }) : null,
+            canContribute ? h('act', { attrs: dataIcon(icons.gear) }) : null,
           ],
         );
       })
@@ -159,7 +160,7 @@ export function view(ctrl: StudyCtrl): VNode {
                 {
                   hook: bind('click', ctrl.chapters.toggleNewForm, ctrl.redraw),
                 },
-                [h('span', iconTag('O')), h('h3', i18n('study:addNewChapter'))],
+                [h('span', iconTag(icons.createNew)), h('h3', i18n('study:addNewChapter'))],
               ),
             ]
           : [],

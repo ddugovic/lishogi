@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { bind } from 'common/snabbdom';
 import { ids } from 'game/status';
 import { i18n, i18nVdom } from 'i18n';
@@ -55,7 +56,7 @@ export function arrangements(ctrl: TournamentController): VNode {
           'div.text.empty-tab',
           {
             attrs: {
-              'data-icon': '',
+              'data-icon': icons.infoCircle,
             },
           },
           i18n('noGameFound'),
@@ -101,7 +102,12 @@ export function renderGames(
       [
         h(
           'td.small.fade',
-          h('i', { attrs: { 'data-icon': a.status && a.status >= ids.mate ? 'E' : 'J' } }),
+          h('i', {
+            attrs: {
+              'data-icon':
+                a.status && a.status >= ids.mate ? icons.circleFull : icons.circleOutline,
+            },
+          }),
         ),
         ctrl.isOrganized() ? h('td.bold.small', a.name) : undefined,
         h(
@@ -142,7 +148,7 @@ export function renderGames(
               h(
                 'td.bold.center.text',
                 {
-                  attrs: { colspan: 5, 'data-icon': 'O' },
+                  attrs: { colspan: 5, 'data-icon': icons.createNew },
                   hook: bind('click', () => {
                     ctrl.showOrganizerArrangement(ctrl.newArrangementSettings());
                   }),

@@ -26,7 +26,7 @@ object bits {
         span(cls := "target")(vv.video.targets.map(lila.video.Target.name).mkString(", ")),
         span(cls := "tags")(
           vv.video.tags.map { tag =>
-            span(dataIcon := "o")(tag.capitalize)
+            span(dataIcon := Icons.tag)(tag.capitalize)
           },
         ),
       ),
@@ -47,7 +47,7 @@ object bits {
         h1(
           a(
             cls      := "is4 text",
-            dataIcon := "i",
+            dataIcon := Icons.back,
             href     := s"${routes.Video.index}?${control.queryString}",
           ),
           name,
@@ -75,7 +75,7 @@ object bits {
   def notFound(control: lila.video.UserControl)(implicit ctx: Context) =
     layout(title = "Video not found", control = control)(
       div(cls := "content_box_top")(
-        a(cls := "is4 text lishogi_title", dataIcon := "i", href := routes.Video.index)(
+        a(cls := "is4 text lishogi_title", dataIcon := Icons.back, href := routes.Video.index)(
           "Video library",
         ),
       ),
@@ -83,7 +83,7 @@ object bits {
         h1("Video Not Found!"),
         br,
         br,
-        a(cls := "big button text", dataIcon := "i", href := routes.Video.index)(
+        a(cls := "big button text", dataIcon := Icons.back, href := routes.Video.index)(
           "Return to the video library",
         ),
       ),
@@ -100,7 +100,7 @@ object bits {
         h1(cls := "lishogi_title")(
           a(
             cls      := "text",
-            dataIcon := "i",
+            dataIcon := Icons.back,
             href     := s"${routes.Video.index}?${control.queryString}",
           )(
             "All ",

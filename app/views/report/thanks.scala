@@ -25,7 +25,7 @@ object thanks {
             cls                 := "report-block button",
             st.title            := trans.block.txt(),
           )(
-            span(cls := "text", dataIcon := "k")("Block ", usernameOrId(userId)),
+            span(cls := "text", dataIcon := Icons.forbidden)("Block ", usernameOrId(userId)),
           ),
         ),
         br,

@@ -7,6 +7,7 @@ import play.api.i18n.Lang
 import org.joda.time.DateTime
 import reactivemongo.api.ReadPreference
 
+import lila.common.Icons
 import lila.db.dsl._
 import lila.memo.CacheApi._
 import lila.rating.PerfType
@@ -112,7 +113,7 @@ object TournamentShield {
 
   sealed abstract class Category(
       val of: SpeedOrVariant,
-      val iconChar: Char,
+      val icon: String,
   ) {
     def key = of.fold(_.key, _.key)
     def matches(tour: Tournament) =
@@ -132,61 +133,61 @@ object TournamentShield {
     case object Bullet
         extends Category(
           of = Left(Schedule.Speed.Bullet),
-          iconChar = 'T',
+          icon = Icons.bullet,
         )
 
     case object SuperBlitz
         extends Category(
           of = Left(Schedule.Speed.SuperBlitz),
-          iconChar = ')',
+          icon = Icons.blitz,
         )
 
     case object Blitz
         extends Category(
           of = Left(Schedule.Speed.Blitz),
-          iconChar = ')',
+          icon = Icons.blitz,
         )
 
     case object Rapid
         extends Category(
           of = Left(Schedule.Speed.Rapid),
-          iconChar = '#',
+          icon = Icons.rapid,
         )
 
     case object Classical
         extends Category(
           of = Left(Schedule.Speed.Classical),
-          iconChar = '+',
+          icon = Icons.classical,
         )
 
     case object Minishogi
         extends Category(
           of = Right(shogi.variant.Minishogi),
-          iconChar = ',',
+          icon = Icons.minishogi,
         )
 
     // case object Chushogi
     //     extends Category(
     //       of = Right(shogi.variant.Chushogi),
-    //       iconChar = '('
+    //       icon = Icons.chushogi,
     //     )
 
     case object Annanshogi
         extends Category(
           of = Right(shogi.variant.Annanshogi),
-          iconChar = '',
+          icon = Icons.annanshogi,
         )
 
     case object Kyotoshogi
         extends Category(
           of = Right(shogi.variant.Kyotoshogi),
-          iconChar = '',
+          icon = Icons.kyotoshogi,
         )
 
     case object Checkshogi
         extends Category(
           of = Right(shogi.variant.Checkshogi),
-          iconChar = '>',
+          icon = Icons.checkshogi,
         )
 
     val all: List[Category] = List(
@@ -209,7 +210,7 @@ object TournamentShield {
 
   def spotlight(name: String) =
     Spotlight(
-      iconFont = "5".some,
+      iconFont = lila.common.Icons.shield.some,
       headline = s"Battle for the $name Shield",
       description = s"""This Shield trophy is unique.
 The winner keeps it for one month,

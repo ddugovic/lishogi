@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { bind, type MaybeVNode } from 'common/snabbdom';
 import { i18n } from 'i18n';
 import { h } from 'snabbdom';
@@ -21,7 +22,7 @@ function withdraw(ctrl: TournamentController): MaybeVNode {
       {
         attrs: {
           title: title,
-          'data-icon': pause ? 'Z' : 'b',
+          'data-icon': pause ? icons.pause : icons.surrender,
         },
         class: {
           withdraw: !pause,
@@ -51,7 +52,7 @@ function join(ctrl: TournamentController): MaybeVNode {
       {
         attrs: {
           disabled: !joinable,
-          'data-icon': ctrl.data.isFull || ctrl.data.isClosed ? 'L' : 'G',
+          'data-icon': ctrl.data.isFull || ctrl.data.isClosed ? icons.cancel : icons.play,
         },
         hook: bind(
           'click',
@@ -112,7 +113,7 @@ export function joinWithdraw(ctrl: TournamentController): MaybeVNode {
         {
           attrs: {
             href: `/login?referrer=${window.location.pathname}`,
-            'data-icon': 'G',
+            'data-icon': icons.play,
           },
         },
         i18n('signIn'),

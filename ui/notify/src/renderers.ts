@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { i18n, i18nFormat } from 'i18n';
 import { h, type VNode } from 'snabbdom';
 import type { Notification, Renderers } from './interfaces';
@@ -14,7 +15,7 @@ export const renderers: Renderers = {
   },
   mention: {
     html: n =>
-      generic(n, `/forum/redirect/post/${n.content.postId}`, 'd', [
+      generic(n, `/forum/redirect/post/${n.content.postId}`, icons.talkAlt, [
         h('span', [h('strong', userFullName(n.content.mentionedBy)), drawTime(n)]),
         h('span', ` mentioned you in « ${n.content.topic} ».`),
       ]),
@@ -22,7 +23,7 @@ export const renderers: Renderers = {
   },
   invitedStudy: {
     html: n =>
-      generic(n, `/study/${n.content.studyId}`, '4', [
+      generic(n, `/study/${n.content.studyId}`, icons.study, [
         h('span', [h('strong', userFullName(n.content.invitedBy)), drawTime(n)]),
         h('span', ` invited you to « ${n.content.studyName} ».`),
       ]),
@@ -30,7 +31,7 @@ export const renderers: Renderers = {
   },
   privateMessage: {
     html: n =>
-      generic(n, `/inbox/${n.content.user.name}`, 'c', [
+      generic(n, `/inbox/${n.content.user.name}`, icons.talk, [
         h('span', [h('strong', userFullName(n.content.user)), drawTime(n)]),
         h('span', n.content.text),
       ]),
@@ -38,7 +39,7 @@ export const renderers: Renderers = {
   },
   teamJoined: {
     html: n =>
-      generic(n, `/team/${n.content.id}`, 'f', [
+      generic(n, `/team/${n.content.id}`, icons.people, [
         h('span', [h('strong', n.content.name), drawTime(n)]),
         h('span', 'You are now part of the team.'),
       ]),
@@ -46,7 +47,7 @@ export const renderers: Renderers = {
   },
   titledTourney: {
     html: n =>
-      generic(n, `/tournament/${n.content.id}`, 'g', [
+      generic(n, `/tournament/${n.content.id}`, icons.trophy, [
         h('span', [h('strong', 'Lishogi Titled Arena'), drawTime(n)]),
         h('span', n.content.text),
       ]),
@@ -54,7 +55,7 @@ export const renderers: Renderers = {
   },
   tournamentReminder: {
     html: n => {
-      return generic(n, `/tournament/${n.content.id}`, 'g', [
+      return generic(n, `/tournament/${n.content.id}`, icons.trophy, [
         h('span', [h('strong', [i18n('tournament')]), drawTime(n)]),
         h('span', [i18n('starting'), ' ', new Date(n.content.date).toLocaleString()]),
       ]);
@@ -63,7 +64,7 @@ export const renderers: Renderers = {
   },
   arrangementReminder: {
     html: n => {
-      return generic(n, `/tournament/${arrangementPath(n)}`, 'p', [
+      return generic(n, `/tournament/${arrangementPath(n)}`, icons.clock, [
         h('span', [h('strong', [i18n('tourArrangements:yourUpcomingGames')]), drawTime(n)]),
         h('span', [
           i18nFormat(
@@ -79,7 +80,7 @@ export const renderers: Renderers = {
   },
   arrangementConfirmation: {
     html: n => {
-      return generic(n, `/tournament/${arrangementPath(n)}`, 'p', [
+      return generic(n, `/tournament/${arrangementPath(n)}`, icons.clock, [
         h('span', [h('strong', [i18n('tourArrangements:gameScheduling')]), drawTime(n)]),
         h('span', i18nFormat('tourArrangements:xAcceptedTime', userFullName(n.content.user))),
       ]);
@@ -88,7 +89,7 @@ export const renderers: Renderers = {
   },
   reportedBanned: {
     html: n =>
-      generic(n, undefined, '', [
+      generic(n, undefined, icons.infoCircle, [
         h('span', [h('strong', 'Someone you reported was banned')]),
         h('span', 'Thank you for the help!'),
       ]),
@@ -133,7 +134,7 @@ export const renderers: Renderers = {
             `#${n.content.id}`,
           );
       }
-      return generic(n, `/${n.content.id}`, ';', [
+      return generic(n, `/${n.content.id}`, icons.correspondence, [
         h('span', [h('strong', title), drawTime(n)]),
         h('span', result),
       ]);
@@ -170,7 +171,7 @@ export const renderers: Renderers = {
   },
   pausedGame: {
     html: n =>
-      generic(n, `/${n.content.id}`, 'G', [
+      generic(n, `/${n.content.id}`, icons.play, [
         h('span', [h('strong', 'Do not forget!'), drawTime(n)]),
         h('span', `Adjourned game with ${userFullName(n.content.opponent)}`),
       ]),
@@ -178,7 +179,7 @@ export const renderers: Renderers = {
   },
   planStart: {
     html: n =>
-      generic(n, '/patron', '', [
+      generic(n, '/patron', icons.patron, [
         h('span', [h('strong', i18n('thankYou')), drawTime(n)]),
         h('span', i18n('patron:justBecamePatron')),
       ]),
@@ -186,7 +187,7 @@ export const renderers: Renderers = {
   },
   planExpire: {
     html: n =>
-      generic(n, '/patron', '', [
+      generic(n, '/patron', icons.patron, [
         h('span', [h('strong', i18n('patron:expired')), drawTime(n)]),
         h('span', i18n('patron:considerRenewing')),
       ]),
@@ -194,7 +195,7 @@ export const renderers: Renderers = {
   },
   ratingRefund: {
     html: n =>
-      generic(n, '/player/myself', '', [
+      generic(n, '/player/myself', icons.infoCircle, [
         h('span', [h('strong', 'You lost to a cheater'), drawTime(n)]),
         h('span', `Refund: ${n.content.points} ${n.content.perf} rating points.`),
       ]),
@@ -202,7 +203,7 @@ export const renderers: Renderers = {
   },
   corresAlarm: {
     html: n =>
-      generic(n, `/${n.content.id}`, ';', [
+      generic(n, `/${n.content.id}`, icons.correspondence, [
         h('span', [h('strong', i18n('timeAlmostUp')), drawTime(n)]),
         h('span', i18nFormat('gameAgainstX', n.content.op)),
       ]),

@@ -24,7 +24,7 @@ object categ {
     ) {
       main(cls := "forum index box")(
         div(cls := "box__top")(
-          h1(dataIcon := "d", cls := "text")(s"Lishogi ${trans.forum.txt()}"),
+          h1(dataIcon := Icons.talkAlt, cls := "text")(s"Lishogi ${trans.forum.txt()}"),
           bits.searchForm(),
         ),
         showCategs(categs.filterNot(_.categ.isTeam)),
@@ -47,7 +47,7 @@ object categ {
       a(
         href     := routes.ForumTopic.form(categ.slug),
         cls      := "button button-empty button-green text",
-        dataIcon := "m",
+        dataIcon := Icons.pencil,
       )(
         trans.createANewTopic(),
       )
@@ -88,7 +88,7 @@ object categ {
           h1(
             a(
               href     := categ.team.fold(routes.ForumCateg.index)(routes.Team.show(_)),
-              dataIcon := "I",
+              dataIcon := Icons.left,
               cls      := "text",
             ),
             categ.team.fold(frag(categ.translatedName))(teamIdToName),

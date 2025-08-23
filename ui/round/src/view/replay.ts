@@ -125,7 +125,7 @@ export function analysisButton(ctrl: RoundController): VNode {
         disabled: disabled,
         title: isForecast ? i18n('conditionalPremoves') : i18n('analysis'),
         href: `${gameRoute(ctrl.data, ctrl.data.player.color)}/analysis#${ctrl.ply}`,
-        'data-icon': isForecast ? 'm' : 'A',
+        'data-icon': isForecast ? icons.pencil : icons.microscope,
       },
     },
     forecastCount ? [`${forecastCount}`] : [],
@@ -161,14 +161,14 @@ function renderButtons(ctrl: RoundController) {
         attrs: {
           title: i18n('flipBoard'),
           'data-act': 'flip',
-          'data-icon': 'B',
+          'data-icon': icons.loop,
         },
       }),
       ...[
-        ['W', firstPly],
-        ['Y', ctrl.ply - 1],
-        ['X', ctrl.ply + 1],
-        ['V', lastPly],
+        [icons.first, firstPly],
+        [icons.prev, ctrl.ply - 1],
+        [icons.next, ctrl.ply + 1],
+        [icons.last, lastPly],
       ].map((b, i) => {
         const ply = b[1] as number;
         const enabled = ctrl.ply !== ply && ply >= firstPly && ply <= lastPly;
@@ -269,9 +269,9 @@ export function render(ctrl: RoundController): VNode | undefined {
             (moves
               ? col1
                 ? h('div.col1-moves', [
-                    col1Button(ctrl, -1, 'Y', ctrl.ply == round.firstPly(d)),
+                    col1Button(ctrl, -1, icons.prev, ctrl.ply == round.firstPly(d)),
                     moves,
-                    col1Button(ctrl, 1, 'X', ctrl.ply == round.lastPly(d)),
+                    col1Button(ctrl, 1, icons.next, ctrl.ply == round.lastPly(d)),
                   ])
                 : h(
                     'div.areplay',

@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import type { MaybeVNode } from 'common/snabbdom';
 import { i18n } from 'i18n';
 import { h, type VNode, type VNodes } from 'snabbdom';
@@ -112,7 +113,7 @@ function renderCandidates(ctrl: TournamentController): MaybeVNode {
                   h(
                     'button.button.text',
                     {
-                      attrs: { 'data-icon': 'E', title: i18n('accept') },
+                      attrs: { 'data-icon': icons.correct, title: i18n('accept') },
                       on: {
                         click: () => {
                           ctrl.processCandidate(c.id, true);
@@ -122,7 +123,7 @@ function renderCandidates(ctrl: TournamentController): MaybeVNode {
                     i18n('accept'),
                   ),
                   h('button.button.button-red', {
-                    attrs: { 'data-icon': 'L', title: i18n('decline') },
+                    attrs: { 'data-icon': icons.cancel, title: i18n('decline') },
                     on: {
                       click: () => {
                         ctrl.processCandidate(c.id, false);
@@ -160,7 +161,7 @@ function renderDenied(ctrl: TournamentController) {
                 h('td.name', renderUser(d)),
                 h('td.actions', [
                   h('button.button', {
-                    attrs: { 'data-icon': 'P', title: i18n('accept') },
+                    attrs: { 'data-icon': icons.reload, title: i18n('accept') },
                     on: {
                       click: () => {
                         ctrl.processCandidate(d.id, true);

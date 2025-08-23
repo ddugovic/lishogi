@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { i18n, i18nFormat } from 'i18n';
 import type { VNode } from 'snabbdom';
 import { h } from 'snabbdom';
@@ -52,7 +53,7 @@ function renderStudyFooter(study: StudyData) {
       attrs: {
         target: '_blank',
         class: 'open',
-        'data-icon': '=',
+        'data-icon': icons.screenFull,
         href: url,
         title: i18n('study:open'),
       },

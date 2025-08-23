@@ -68,10 +68,15 @@ object filter {
           ),
         ),
         div(cls := "actions")(
-          submitButton(cls := "button button-empty button-red text reset", dataIcon := "k")(
+          submitButton(
+            cls      := "button button-empty button-red text reset",
+            dataIcon := Icons.forbidden,
+          )(
             trans.reset(),
           ),
-          submitButton(cls := "button button-green text apply", dataIcon := "E")(trans.apply()),
+          submitButton(cls := "button button-green text apply", dataIcon := Icons.correct)(
+            trans.apply(),
+          ),
         ),
       ),
     )

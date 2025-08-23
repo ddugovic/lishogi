@@ -23,7 +23,7 @@ object side {
     def showPerf(perf: lila.rating.Perf, perfType: PerfType) = {
       val isPuzzle = perfType == lila.rating.PerfType.Puzzle
       a(
-        dataIcon := perfType.iconChar,
+        dataIcon := perfType.icon,
         title    := perfType.desc,
         cls := List(
           "perf-item" -> true,
@@ -55,7 +55,7 @@ object side {
             )
           },
         ),
-        !isPuzzle option iconTag("G"),
+        !isPuzzle option iconTag(Icons.play),
       )
     }
 
@@ -86,7 +86,7 @@ object side {
 
   private def showStorm(storm: lila.rating.Perf.Storm, user: User)(implicit lang: Lang) =
     a(
-      dataIcon := '.',
+      dataIcon := Icons.storm,
       cls := List(
         "perf-item" -> true,
         "empty"     -> !storm.nonEmpty,
@@ -102,12 +102,12 @@ object side {
           ),
         ),
       ),
-      iconTag("G"),
+      iconTag(Icons.play),
     )
 
   private def aiLevel(level: Int, variant: shogi.variant.Variant)(implicit lang: Lang) =
     div(
-      dataIcon := 'n',
+      dataIcon := Icons.cogs,
       cls      := s"perf-item ai-level ai-level-$level",
       span(
         h3(variantName(variant)),

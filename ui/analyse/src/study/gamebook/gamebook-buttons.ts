@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { bind, dataIcon } from 'common/snabbdom';
 import { i18n } from 'i18n';
 import { h, type VNode } from 'snabbdom';
@@ -17,7 +18,7 @@ export function playButtons(root: AnalyseCtrl): VNode | undefined {
       h(
         'div.text.back',
         {
-          attrs: { 'data-icon': 'I', disabled: !root.path },
+          attrs: { 'data-icon': icons.left, disabled: !root.path },
           hook: bind('click', () => root.userJump(''), ctrl.redraw),
         },
         i18n('back'),
@@ -25,7 +26,7 @@ export function playButtons(root: AnalyseCtrl): VNode | undefined {
       h(
         'div.text.solution',
         {
-          attrs: { 'data-icon': 'G', disabled: !myTurn },
+          attrs: { 'data-icon': icons.play, disabled: !myTurn },
           hook: bind('click', ctrl.solution, ctrl.redraw),
         },
         i18n('viewTheSolution'),
@@ -43,7 +44,7 @@ export function overrideButton(study: StudyCtrl): VNode | undefined {
         'a.fbt.text.preview',
         {
           class: { active: o === 'play' },
-          attrs: dataIcon('v'),
+          attrs: dataIcon(icons.view),
           hook: bind(
             'click',
             () => {
@@ -62,7 +63,7 @@ export function overrideButton(study: StudyCtrl): VNode | undefined {
           'a.fbt.text.preview',
           {
             class: { active: isAnalyse },
-            attrs: dataIcon('A'),
+            attrs: dataIcon(icons.microscope),
             hook: bind(
               'click',
               () => {

@@ -37,7 +37,7 @@ object ratingDistribution {
                 span(perfType.trans),
                 PerfType.leaderboardable map { pt =>
                   a(
-                    dataIcon := pt.iconChar,
+                    dataIcon := pt.icon,
                     cls      := (perfType == pt).option("current"),
                     href     := routes.Stat.ratingDistribution(pt.key),
                   )(pt.trans)
@@ -45,7 +45,7 @@ object ratingDistribution {
               ),
             ),
           ),
-          div(cls := "desc", dataIcon := perfType.iconChar)(
+          div(cls := "desc", dataIcon := perfType.icon)(
             ctx.me.flatMap(_.perfs(perfType).glicko.establishedIntRating).map { rating =>
               lila.user.Stat.percentile(data, rating) match {
                 case (under, sum) =>

@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import spinner from 'common/spinner';
 import { i18n } from 'i18n';
 import { h, type VNode } from 'snabbdom';
@@ -22,7 +23,7 @@ function renderContent(ctrl: Ctrl, d: NotifyData): VNode[] {
   if (pager.previousPage)
     nodes.push(
       h('div.pager.prev', {
-        attrs: { 'data-icon': 'S' },
+        attrs: { 'data-icon': icons.up },
         hook: clickHook(ctrl.previousPage),
       }),
     );
@@ -32,7 +33,7 @@ function renderContent(ctrl: Ctrl, d: NotifyData): VNode[] {
         'div.clear',
         h('button.delete.button.button-empty', {
           attrs: {
-            'data-icon': 'q',
+            'data-icon': icons.trashBin,
             title: i18n('delete'),
           },
           hook: clickHook(ctrl.clear),
@@ -45,7 +46,7 @@ function renderContent(ctrl: Ctrl, d: NotifyData): VNode[] {
   if (pager.nextPage)
     nodes.push(
       h('div.pager.next', {
-        attrs: { 'data-icon': 'R' },
+        attrs: { 'data-icon': icons.down },
         hook: clickHook(ctrl.nextPage),
       }),
     );
@@ -106,5 +107,5 @@ function recentNotifications(d: NotifyData, scrolling: boolean): VNode {
 }
 
 function empty() {
-  return h('div.empty.text', { attrs: { 'data-icon': '' } }, 'No notifications.');
+  return h('div.empty.text', { attrs: { 'data-icon': icons.infoCircle } }, 'No notifications.');
 }

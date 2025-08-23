@@ -1,5 +1,6 @@
 import { loadLishogiScript } from 'common/assets';
 import { requestIdleCallbackWithFallback } from 'common/common';
+import { icons } from 'common/icons';
 import { bind, onInsert } from 'common/snabbdom';
 import spinner from 'common/spinner';
 import { i18n } from 'i18n';
@@ -91,7 +92,7 @@ function requestButton(ctrl: ServerEval) {
               'a.button.text',
               {
                 attrs: {
-                  'data-icon': '',
+                  'data-icon': icons.barChart,
                   disabled: root.mainline.length < 5,
                 },
                 hook: bind('click', ctrl.request, root.redraw),

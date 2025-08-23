@@ -1,5 +1,6 @@
 @use 'pkg:common/abstract/extends';
 @use 'pkg:common/abstract/uniboard';
+@use 'pkg:common/abstract/icons';
 @use 'pkg:common/theme';
 
 $c-study-button: theme.$c-accent;
@@ -60,13 +61,13 @@ $c-study-button: theme.$c-accent;
 
     i::before {
       font-size: 1.4em;
-      content: 'L';
+      content: icons.$cancel;
       color: theme.$c-bad;
       margin-right: 0.2rem;
     }
 
     &.on i::before {
-      content: 'E';
+      content: icons.$correct;
       color: theme.$c-good;
     }
 

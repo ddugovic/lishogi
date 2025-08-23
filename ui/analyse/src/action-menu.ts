@@ -1,4 +1,5 @@
 import { notEmpty } from 'common/common';
+import { icons } from 'common/icons';
 import { editor, encodeSfen, setup } from 'common/links';
 import { modal } from 'common/modal';
 import { bind, bindNonPassive, dataIcon, type MaybeVNodes } from 'common/snabbdom';
@@ -55,7 +56,7 @@ function deleteButton(ctrl: AnalyseCtrl, userId: string | null): VNode | undefin
           {
             attrs: {
               type: 'submit',
-              'data-icon': 'q',
+              'data-icon': icons.trashBin,
             },
           },
           i18n('delete'),
@@ -116,7 +117,7 @@ function studyButton(ctrl: AnalyseCtrl) {
         attrs: {
           href: `/study/${ctrl.study.data.id}#${ctrl.study.currentChapter().id}`,
           target: '_blank',
-          'data-icon': '4',
+          'data-icon': icons.study,
         },
       },
       i18n('openStudy'),
@@ -127,7 +128,7 @@ function studyButton(ctrl: AnalyseCtrl) {
       'button.button.button-empty',
       {
         attrs: {
-          'data-icon': '4',
+          'data-icon': icons.study,
           disabled: !document.body.dataset.user,
         },
         hook: bind('click', _ => {
@@ -162,7 +163,7 @@ function studyButton(ctrl: AnalyseCtrl) {
           {
             attrs: {
               type: 'submit',
-              'data-icon': '4',
+              'data-icon': icons.study,
             },
           },
           i18n('toStudy'),
@@ -191,7 +192,7 @@ export function view(ctrl: AnalyseCtrl): VNode {
         'a.button.button-empty',
         {
           hook: bind('click', ctrl.flip),
-          attrs: dataIcon('B'),
+          attrs: dataIcon(icons.loop),
         },
         i18n('flipBoard'),
       ),
@@ -206,7 +207,7 @@ export function view(ctrl: AnalyseCtrl): VNode {
                   : `/${d.game.id}/edit?sfen=${encodeSfen(ctrl.node.sfen, true)}`,
                 rel: 'nofollow',
                 target: ctrl.embed ? '_blank' : '',
-                'data-icon': 'm',
+                'data-icon': icons.pencil,
               },
             },
             i18n('boardEditor'),
@@ -219,7 +220,7 @@ export function view(ctrl: AnalyseCtrl): VNode {
                 ctrl.continueWith = !ctrl.continueWith;
                 ctrl.redraw();
               }),
-              attrs: dataIcon('U'),
+              attrs: dataIcon(icons.challenge),
             },
             i18n('continueFromHere'),
           )

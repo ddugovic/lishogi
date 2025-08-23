@@ -29,7 +29,7 @@ object index {
         stream.isDefined option span(cls := "ribbon")(span(trans.streamer.live())),
         bits.pic(s.streamer, s.user),
         div(cls := "overview")(
-          h2(dataIcon := "")(titleTag(s.user.title), stringValueFrag(s.streamer.name)),
+          h2(dataIcon := Icons.mic)(titleTag(s.user.title), stringValueFrag(s.streamer.name)),
           s.streamer.headline.map(_.value).map { d =>
             p(
               cls := s"headline ${if (d.sizeIs < 60) "small"
@@ -68,7 +68,7 @@ object index {
       main(cls := "page-menu")(
         bits.menu(if (requests) "requests" else "index", none)(ctx)(cls := " page-menu__menu"),
         div(cls := "page-menu__content box streamer-list")(
-          h1(dataIcon := "", cls := "text")(title),
+          h1(dataIcon := Icons.mic, cls := "text")(title),
           !requests option div(cls := "list live")(
             live.map { s =>
               st.article(cls := "streamer")(widget(s.withoutStream, s.stream))

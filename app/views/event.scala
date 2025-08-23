@@ -38,7 +38,7 @@ object event {
             action := routes.Event.cloneE(event.id),
             method := "get",
           )(
-            form3.submit("Clone", "".some, klass = "button-green"),
+            form3.submit("Clone", Icons.mic.some, klass = "button-green"),
           ),
         ),
         standardFlash(),
@@ -55,7 +55,7 @@ object event {
       moreJs = jsTag("misc.event-countdown"),
     ) {
       main(cls := "page-small event box box-pad")(
-        h1(dataIcon := "", cls := "text")(e.title),
+        h1(dataIcon := Icons.mic, cls := "text")(e.title),
         h2(cls := "headline")(e.headline),
         e.description.map { d =>
           p(cls := "desc")(richText(d))
@@ -80,7 +80,7 @@ object event {
         div(cls := "box__top")(
           h1(title),
           div(cls := "box__top__actions")(
-            a(cls := "button button-green", href := routes.Event.form, dataIcon := "O"),
+            a(cls := "button button-green", href := routes.Event.form, dataIcon := Icons.createNew),
           ),
         ),
         table(cls := "slist slist-pad")(
@@ -109,7 +109,7 @@ object event {
                   showDateTimeUTC(e.finishesAt),
                   momentFromNow(e.finishesAt),
                 ),
-                td(a(cls := "text", href := routes.Event.show(e.id), dataIcon := "v")),
+                td(a(cls := "text", href := routes.Event.show(e.id), dataIcon := Icons.view)),
               )
             },
           ),

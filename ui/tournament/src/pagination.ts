@@ -1,4 +1,6 @@
+import { icons } from 'common/icons';
 import { bind, type MaybeVNodes } from 'common/snabbdom';
+import { i18n } from 'i18n';
 import { h, type VNode } from 'snabbdom';
 import type TournamentController from './ctrl';
 import type { PageData } from './interfaces';
@@ -28,11 +30,29 @@ export function renderPager(ctrl: TournamentController, pag: PageData): MaybeVNo
   const page = ctrl.page;
   return pag.nbPages > -1
     ? searchOr(ctrl, [
-        button('First', 'W', () => ctrl.userSetPage(1), enabled && page > 1, ctrl),
-        button('Prev', 'Y', ctrl.userPrevPage, enabled && page > 1, ctrl),
+        button(
+          i18n('study:first'),
+          icons.first,
+          () => ctrl.userSetPage(1),
+          enabled && page > 1,
+          ctrl,
+        ),
+        button(i18n('study:previous'), icons.prev, ctrl.userPrevPage, enabled && page > 1, ctrl),
         h('span.page', `${pag.nbResults ? pag.from + 1 : 0}-${pag.to} / ${pag.nbResults}`),
-        button('Next', 'X', ctrl.userNextPage, enabled && page < pag.nbPages, ctrl),
-        button('Last', 'V', ctrl.userLastPage, enabled && page < pag.nbPages, ctrl),
+        button(
+          i18n('study:next'),
+          icons.next,
+          ctrl.userNextPage,
+          enabled && page < pag.nbPages,
+          ctrl,
+        ),
+        button(
+          i18n('study:last'),
+          icons.last,
+          ctrl.userLastPage,
+          enabled && page < pag.nbPages,
+          ctrl,
+        ),
       ])
     : [];
 }

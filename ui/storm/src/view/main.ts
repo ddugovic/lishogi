@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { onInsert } from 'common/snabbdom';
 import { i18n } from 'i18n';
 import { makeSgOpts } from 'puz/run';
@@ -77,13 +78,13 @@ const renderControls = (ctrl: StormCtrl): VNode =>
     h('a.puz-side__control__reload.button.button-empty', {
       attrs: {
         href: '/storm',
-        'data-icon': 'B',
+        'data-icon': icons.loop,
         title: i18n('storm:newRun'),
       },
     }),
     h('a.puz-side__control__end.button.button-empty', {
       attrs: {
-        'data-icon': 'b',
+        'data-icon': icons.surrender,
         title: i18n('storm:endRun'),
       },
       hook: onInsert(el => el.addEventListener('click', ctrl.endNow)),
@@ -101,7 +102,7 @@ const renderStart = () =>
 
 const renderReload = (msg: string) =>
   h('div.storm.storm--reload.box.box-pad', [
-    h('i', { attrs: { 'data-icon': '.' } }),
+    h('i', { attrs: { 'data-icon': icons.storm } }),
     h('p', msg),
     h(
       'a.storm--dup__reload.button',

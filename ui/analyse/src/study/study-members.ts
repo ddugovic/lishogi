@@ -1,4 +1,5 @@
 import { type Prop, prop } from 'common/common';
+import { icons } from 'common/icons';
 import { bind, dataIcon, onInsert } from 'common/snabbdom';
 import { i18n } from 'i18n';
 import { h, type VNode } from 'snabbdom';
@@ -197,7 +198,7 @@ export function view(ctrl: StudyCtrl): VNode {
           title: contrib ? i18n('study:contributor') : i18n('study:spectator'),
         },
       },
-      [iconTag(contrib ? 'r' : 'v')],
+      [iconTag(contrib ? icons.person : icons.view)],
     );
   }
 
@@ -208,7 +209,7 @@ export function view(ctrl: StudyCtrl): VNode {
     )
       return h('act', {
         key: `cfg-${member.user.id}`,
-        attrs: dataIcon('%'),
+        attrs: dataIcon(icons.gear),
         hook: bind(
           'click',
           _ => {
@@ -221,7 +222,7 @@ export function view(ctrl: StudyCtrl): VNode {
       return h('act.leave', {
         key: 'leave',
         attrs: {
-          'data-icon': 'F',
+          'data-icon': icons.exit,
           title: i18n('study:leaveTheStudy'),
         },
         hook: bind('click', members.leave, ctrl.redraw),
@@ -266,7 +267,7 @@ export function view(ctrl: StudyCtrl): VNode {
           h(
             'a.button.button-red.button-empty.text',
             {
-              attrs: dataIcon('L'),
+              attrs: dataIcon(icons.cancel),
               hook: bind('click', _ => members.kick(member.user.id), ctrl.redraw),
             },
             i18n('study:kick'),
@@ -314,7 +315,7 @@ export function view(ctrl: StudyCtrl): VNode {
             },
             [
               h('div.left', [
-                h('span.status', iconTag('O')),
+                h('span.status', iconTag(icons.createNew)),
                 h('div.user-link', i18n('study:addMembers')),
               ]),
             ],

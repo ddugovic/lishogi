@@ -5,6 +5,7 @@ import play.api.i18n.Lang
 import shogi.Centis
 import shogi.Speed
 
+import lila.common.Icons
 import lila.i18n.I18nKeys
 
 sealed abstract class PerfType(
@@ -12,10 +13,8 @@ sealed abstract class PerfType(
     val key: Perf.Key,
     private val name: String,
     private val title: String,
-    val iconChar: Char,
+    val icon: String,
 ) {
-
-  def iconString = iconChar.toString
 
   def trans(implicit lang: Lang): String = PerfType.trans(this)
 
@@ -30,7 +29,7 @@ object PerfType {
         key = "ultraBullet",
         name = Speed.UltraBullet.name,
         title = Speed.UltraBullet.title,
-        iconChar = '{',
+        icon = Icons.ultraBullet,
       )
 
   case object Bullet
@@ -39,7 +38,7 @@ object PerfType {
         key = "bullet",
         name = Speed.Bullet.name,
         title = Speed.Bullet.title,
-        iconChar = 'T',
+        icon = Icons.bullet,
       )
 
   case object Blitz
@@ -48,7 +47,7 @@ object PerfType {
         key = "blitz",
         name = Speed.Blitz.name,
         title = Speed.Blitz.title,
-        iconChar = ')',
+        icon = Icons.blitz,
       )
 
   case object Rapid
@@ -57,7 +56,7 @@ object PerfType {
         key = "rapid",
         name = Speed.Rapid.name,
         title = Speed.Rapid.title,
-        iconChar = '#',
+        icon = Icons.rapid,
       )
 
   case object Classical
@@ -66,7 +65,7 @@ object PerfType {
         key = "classical",
         name = Speed.Classical.name,
         title = Speed.Classical.title,
-        iconChar = '+',
+        icon = Icons.classical,
       )
 
   case object Correspondence
@@ -75,7 +74,7 @@ object PerfType {
         key = "correspondence",
         name = "Correspondence",
         title = Speed.Correspondence.title,
-        iconChar = ';',
+        icon = Icons.correspondence,
       )
 
   case object Standard
@@ -84,7 +83,7 @@ object PerfType {
         key = "standard",
         name = shogi.variant.Standard.name,
         title = "Standard rules of shogi",
-        iconChar = '8',
+        icon = Icons.standard,
       )
 
   case object Minishogi
@@ -93,7 +92,7 @@ object PerfType {
         key = "minishogi",
         name = shogi.variant.Minishogi.name,
         title = "Standard rules of shogi, but smaller board",
-        iconChar = ',',
+        icon = Icons.minishogi,
       )
 
   case object Chushogi
@@ -102,7 +101,7 @@ object PerfType {
         key = "chushogi",
         name = shogi.variant.Chushogi.name,
         title = "Most popular large board shogi variant",
-        iconChar = '(',
+        icon = Icons.chushogi,
       )
 
   case object Annanshogi
@@ -111,7 +110,7 @@ object PerfType {
         key = "annanshogi",
         name = shogi.variant.Annanshogi.name,
         title = shogi.variant.Annanshogi.title,
-        iconChar = '',
+        icon = Icons.annanshogi,
       )
 
   case object Kyotoshogi
@@ -120,7 +119,7 @@ object PerfType {
         key = "kyotoshogi",
         name = shogi.variant.Kyotoshogi.name,
         title = shogi.variant.Kyotoshogi.title,
-        iconChar = '',
+        icon = Icons.kyotoshogi,
       )
 
   case object Checkshogi
@@ -129,7 +128,7 @@ object PerfType {
         key = "checkshogi",
         name = shogi.variant.Checkshogi.name,
         title = shogi.variant.Checkshogi.title,
-        iconChar = '>',
+        icon = Icons.checkshogi,
       )
 
   case object Puzzle
@@ -138,7 +137,7 @@ object PerfType {
         key = "puzzle",
         name = "Training",
         title = "Shogi tactics trainer",
-        iconChar = '-',
+        icon = Icons.puzzle,
       )
 
   val all: List[PerfType] = List(
@@ -250,8 +249,8 @@ object PerfType {
     }
     .to(Map)
 
-  def iconByVariant(variant: shogi.variant.Variant): Char =
-    byVariant(variant).fold('C')(_.iconChar)
+  def iconByVariant(variant: shogi.variant.Variant): String =
+    byVariant(variant).fold(Icons.standard)(_.icon)
 
   def trans(pt: PerfType)(implicit lang: Lang): String =
     pt match {

@@ -144,7 +144,7 @@ object inquiry {
       ),
       div(cls := "actions")(
         isGranted(_.ModMessage) option div(cls := "dropper warn buttons")(
-          iconTag("e"),
+          iconTag(Icons.mail),
           div(
             lila.msg.MsgPreset.all.map { preset =>
               postForm(action := routes.Mod.warn(in.user.username, preset.name))(
@@ -158,7 +158,7 @@ object inquiry {
           val url = routes.Mod.engine(in.user.username, !in.user.marks.engine).url
           div(cls := "dropper engine buttons")(
             postForm(action := url, title := "Mark as cheat")(
-              markButton(in.user.marks.engine)(dataIcon := "n"),
+              markButton(in.user.marks.engine)(dataIcon := Icons.cogs),
               autoNextInput,
             ),
             thenForms(url, markButton(false)),
@@ -168,7 +168,7 @@ object inquiry {
           val url = routes.Mod.booster(in.user.username, !in.user.marks.boost).url
           div(cls := "dropper booster buttons")(
             postForm(action := url, cls := "main", title := "Mark as booster or sandbagger")(
-              markButton(in.user.marks.boost)(dataIcon := "9"),
+              markButton(in.user.marks.boost)(dataIcon := Icons.chartLine),
               autoNextInput,
             ),
             thenForms(url, markButton(false)),
@@ -182,7 +182,7 @@ object inquiry {
               title  := (if (in.user.marks.troll) "Un-shadowban" else "Shadowban"),
               cls    := "main",
             )(
-              markButton(in.user.marks.troll)(dataIcon := "c"),
+              markButton(in.user.marks.troll)(dataIcon := Icons.talk),
               autoNextInput,
             ),
             thenForms(url, markButton(false)),
@@ -199,7 +199,7 @@ object inquiry {
           )
         },
         div(cls := "dropper more buttons")(
-          iconTag("u"),
+          iconTag(Icons.expand),
           div(
             postForm(action := routes.Report.xfiles(in.report.id))(
               submitButton(
@@ -223,7 +223,7 @@ object inquiry {
           title  := "Dismiss this report as processed.",
           cls    := "process",
         )(
-          submitButton(dataIcon := "E", cls := "fbt"),
+          submitButton(dataIcon := Icons.correct, cls := "fbt"),
           autoNextInput,
         ),
         postForm(
@@ -231,7 +231,7 @@ object inquiry {
           title  := "Cancel the inquiry, re-instore the report",
           cls    := "cancel",
         )(
-          submitButton(dataIcon := "L", cls := "fbt"),
+          submitButton(dataIcon := Icons.cancel, cls := "fbt"),
         ),
       ),
     )

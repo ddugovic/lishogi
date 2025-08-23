@@ -1,5 +1,6 @@
 import type { ChatPlugin } from 'chat/interfaces';
 import { loadCssPath } from 'common/assets';
+import { icons } from 'common/icons';
 import type { Team, TourPlayer } from 'game/interfaces';
 import { i18n } from 'i18n';
 import { h, type VNode } from 'snabbdom';
@@ -31,7 +32,7 @@ export function tourStandingCtrl(players: TourPlayer[], team: Team | undefined):
             ? h(
                 'h3.text',
                 {
-                  attrs: { 'data-icon': 'f' },
+                  attrs: { 'data-icon': icons.people },
                 },
                 team.name,
               )
@@ -56,7 +57,7 @@ export function tourStandingCtrl(players: TourPlayer[], team: Team | undefined):
                     p.f
                       ? {
                           class: { 'is-gold': true },
-                          attrs: { 'data-icon': 'Q' },
+                          attrs: { 'data-icon': icons.streak },
                         }
                       : {},
                     `${p.s}`,

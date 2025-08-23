@@ -64,13 +64,13 @@ object list {
                       frag(
                         if (r.processedBy.isDefined)
                           postForm(action := routes.Report.inquiry(r.id), cls := "reopen")(
-                            submitButton(dataIcon := "G", cls := "text button button-metal")(
+                            submitButton(dataIcon := Icons.play, cls := "text button button-metal")(
                               "Reopen",
                             ),
                           )
                         else
                           postForm(action := routes.Report.inquiry(r.id), cls := "inquiry")(
-                            submitButton(dataIcon := "G", cls := "button button-metal"),
+                            submitButton(dataIcon := Icons.play, cls := "button button-metal"),
                           ),
                         postForm(action := routes.Report.process(r.id), cls := "cancel")(
                           submitButton(cls := "button button-thin button-empty")("Dismiss"),

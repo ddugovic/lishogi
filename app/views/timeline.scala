@@ -87,7 +87,7 @@ object timeline {
             })(
               a(
                 href     := routes.Round.player(playerId),
-                dataIcon := perf.iconChar,
+                dataIcon := perf.icon,
                 cls      := "text glpt",
               )(win match {
                 case Some(true)  => trans.victory()
@@ -113,12 +113,14 @@ object timeline {
             trans.patron.xBecamePatron(userIdLink(userId.some, withOnline = true)),
           )
         case BlogPost(_) =>
-          a(cls := "text", dataIcon := "6", href := routes.Blog.latest)(trans.officialBlog())
+          a(cls := "text", dataIcon := Icons.inkPen, href := routes.Blog.latest)(
+            trans.officialBlog(),
+          )
         case StreamStart(id, name) =>
           views.html.streamer.bits
-            .redirectLink(id)(cls := "text", dataIcon := "")(trans.xStartedStreaming(name))
+            .redirectLink(id)(cls := "text", dataIcon := Icons.mic)(trans.xStartedStreaming(name))
         case SystemNotification(text) =>
-          div(cls := "text system-notification", dataIcon := "n")(text)
+          div(cls := "text system-notification", dataIcon := Icons.cogs)(text)
       },
       " ",
       momentFromNow(e.date),

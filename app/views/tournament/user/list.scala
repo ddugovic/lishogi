@@ -38,7 +38,7 @@ object list {
             ),
             pager.currentPageResults.map { e =>
               tr(cls := List("paginated" -> true, "scheduled" -> e.tour.isScheduled))(
-                td(cls := "icon")(tournamentIcon(e.tour)),
+                td(cls := "icon")(tournamentIconTag(e.tour)),
                 td(cls := "header")(
                   a(href := routes.Tournament.show(e.tour.id))(
                     span(cls := "name")(e.tour.trans),

@@ -1,3 +1,4 @@
+import { icons } from 'common/icons';
 import { i18n } from 'i18n';
 import { makeCsaHeader, parseCsaHeader } from 'shogiops/notation/csa';
 import { makeKifHeader, parseKifHeader } from 'shogiops/notation/kif';
@@ -58,7 +59,7 @@ export function inputs(ctrl: EditorCtrl, sfen: string): VNode | undefined {
       h(
         'button.button.button-thin.action.text',
         {
-          attrs: { 'data-icon': 'G' },
+          attrs: { 'data-icon': icons.play },
           on: {
             click: () => {
               const kifEl = document.querySelector(
@@ -88,7 +89,7 @@ export function inputs(ctrl: EditorCtrl, sfen: string): VNode | undefined {
           h(
             'button.button.button-thin.action.text',
             {
-              attrs: { 'data-icon': 'G' },
+              attrs: { 'data-icon': icons.play },
               on: {
                 click: () => {
                   const csaEl = document.querySelector(

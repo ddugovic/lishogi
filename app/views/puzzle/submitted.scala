@@ -45,7 +45,7 @@ object submitted {
           ),
           ctx.isAuth option a(
             cls      := "button button-green submit-puzzle",
-            dataIcon := "O",
+            dataIcon := Icons.createNew,
             href     := routes.Puzzle.newPuzzlesForm.url,
           ),
           div(cls := "puzzle-of-player__results")(

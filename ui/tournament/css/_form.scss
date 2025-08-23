@@ -1,4 +1,5 @@
 @use 'pkg:common/abstract/extends';
+@use 'pkg:common/abstract/icons';
 @use 'pkg:common/abstract/variables';
 @use 'pkg:common/theme';
 
@@ -91,7 +92,7 @@
     cursor: pointer;
 
     &::after {
-      content: 'S';
+      content: icons.$up;
       font-family: lishogi;
       margin-left: 1ch;
     }
@@ -115,7 +116,7 @@
 
     &::after {
       font-family: lishogi;
-      content: 'R';
+      content: icons.$down;
     }
   }
 
