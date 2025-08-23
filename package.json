@@ -18,16 +18,16 @@
   },
   "dependencies": {
     "@config/tsconfig": "workspace:*",
-    "@types/jquery": "^3.5.32",
+    "@types/jquery": "^3.5.33",
     "@types/lishogi": "workspace:*",
-    "@types/node": "^22.16.4",
-    "tsx": "^4.20.3",
-    "typescript": "^5.8.3"
+    "@types/node": "^22.17.2",
+    "tsx": "^4.20.4",
+    "typescript": "^5.9.2"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.1.4",
+    "@biomejs/biome": "^2.2.0",
     "@types/node": "catalog:",
-    "knip": "^5.61.3",
+    "knip": "^5.63.0",
     "prettier": "^3.6.2",
     "stylelint": "~16.15.0",
     "stylelint-config-standard-scss": "^14.0.0"
