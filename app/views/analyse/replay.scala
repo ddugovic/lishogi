@@ -51,6 +51,8 @@ object replay {
       moreCss = frag(
         cssTag("analyse.round"),
         ctx.blind option cssTag("round.nvui"),
+        pov.game.variant.chushogi option chuPieceSprite,
+        pov.game.variant.kyotoshogi option kyoPieceSprite,
       ),
       moreJs = frag(
         ctx.blind option analyseNvuiTag,
