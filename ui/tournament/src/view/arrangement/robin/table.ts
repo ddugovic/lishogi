@@ -32,7 +32,7 @@ function playerNameStanding(player: ArrangementPlayer) {
           })
         : undefined,
       renderPlayer(player, {
-        asLink: false,
+        asLink: true,
         withRating: true,
       }),
     ],
