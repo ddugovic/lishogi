@@ -23,6 +23,7 @@ object arrangements {
 
     views.html.base.layout(
       title = title,
+      wrapClass = "full-screen-force",
       moreCss = cssTag("tournament.home"),
       moreJs = infiniteScrollTag,
     ) {

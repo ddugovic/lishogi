@@ -12,6 +12,7 @@ object faq {
   def page(format: lila.tournament.Format)(implicit ctx: Context) =
     views.html.base.layout(
       title = trans.faq.faqAbbreviation.txt(),
+      wrapClass = "full-screen-force",
       moreCss = frag(
         cssTag("misc.page"),
         cssTag("tournament.faq"),

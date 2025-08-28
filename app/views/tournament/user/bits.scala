@@ -68,6 +68,7 @@ object bits {
         u <- userOpt
         p <- curPath
       } yield s"${u.username} - ${p._2}").getOrElse(trans.pageNotFound.txt()),
+      wrapClass = "full-screen-force",
       moreCss = cssTag("tournament.user"),
       moreJs = moreJs,
     ) {
