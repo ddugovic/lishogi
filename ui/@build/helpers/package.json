@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@pnpm/find-workspace-dir": "^1000.1.2",
+    "@pnpm/worker": "^1000.1.11",
     "@pnpm/workspace.find-packages": "^1000.0.33",
     "fast-glob": "^3.3.3"
   }
