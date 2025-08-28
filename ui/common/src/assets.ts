@@ -41,9 +41,17 @@ const loadPieceSprite = (id: string, variant: VariantKey, defaultSet: string): v
 };
 
 export const loadChushogiPieceSprite: () => void = () =>
-  loadPieceSprite('chu-piece-sprite', 'chushogi', 'ryoko_1kanji');
+  loadPieceSprite(
+    'chu-piece-sprite',
+    'chushogi',
+    document.body.dataset.chuPieceSet || 'ryoko_1kanji',
+  );
 export const loadKyotoshogiPieceSprite: () => void = () =>
-  loadPieceSprite('kyo-piece-sprite', 'kyotoshogi', 'ryoko_1kanji');
+  loadPieceSprite(
+    'kyo-piece-sprite',
+    'kyotoshogi',
+    document.body.dataset.kyoPieceSet || 'ryoko_1kanji',
+  );
 
 export const loadScript = (src: string): Promise<void> =>
   new Promise((resolve, reject) => {
