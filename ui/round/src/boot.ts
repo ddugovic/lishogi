@@ -22,7 +22,7 @@ export function boot(
 
   function startTournamentClock() {
     if (data.tournament)
-      $('.game__tournament .clock').each(function (this: HTMLElement) {
+      $('.game__tournament-clock .clock').each(function (this: HTMLElement) {
         $(this).clock({
           time: Number.parseFloat($(this).data('time')),
         });
