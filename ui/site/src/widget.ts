@@ -1,5 +1,6 @@
 // @ts-nocheck
 
+import { icons } from 'common/icons';
 import { wsSend } from 'common/ws';
 import { i18n, i18nVdomPlural } from 'i18n';
 
@@ -52,16 +53,18 @@ export function initWidgets(): void {
       if (!data || !data.nb) return this.element.addClass('none');
       if (this.number.length) this.number.text(data.nb);
       if (data.users) {
-        const tags = data.users.map(u =>
-          u
-            ? `<a class="user-link ulpt" href="/@/${(u.includes(' ') ? u.split(' ')[1] : u).toLowerCase()}">${u}</a>`
-            : anonHtml,
-        );
+        const tags = data.users.map(u => {
+          const username = u?.includes(' ') ? u.split(' ')[1] : u;
+          return username
+            ? `<a class="user-link ulpt" href="/@/${username.toLowerCase()}">${username}</a>`
+            : anonHtml;
+        });
         if (data.anons === 1) tags.push(anonHtml);
         else if (data.anons)
           tags.push(`<span class="anon">${i18n('anonymousUser')} (${data.anons})</span>`);
         this.list.html(tags.join(', '));
-      } else if (!this.number.length) this.list.html(`${data.nb} players in the chat`);
+      } else if (!this.number.length)
+        this.list.html(`<span data-icon="${icons.person}">${data.nb}</span>`);
       this.element.removeClass('none');
     },
   });
