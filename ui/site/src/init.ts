@@ -1,4 +1,5 @@
 import { assetUrl, lishogiScriptPath, loadCssPath, loadLishogiScript } from 'common/assets';
+import * as domData from 'common/data';
 import { icons } from 'common/icons';
 import { initAll as initMiniBoards, update as updateMiniBoard } from 'common/mini-board';
 import { wsConnect, wsConnected } from 'common/ws';
@@ -79,7 +80,19 @@ export function init(): void {
         navigator.clipboard
           .writeText(textToCopy)
           .then(() => {
-            $(this).attr('data-icon', icons.correct);
+            this.classList.add('copied');
+
+            const prevTimeout = domData.get<number>(this, 'copyTimeout');
+            if (prevTimeout) clearTimeout(prevTimeout);
+
+            domData.set(
+              this,
+              'copyTimeout',
+              setTimeout(() => {
+                this.classList.remove('copied');
+                domData.set(this, 'copyTimeout', undefined);
+              }, 2000),
+            );
           })
           .catch(err => {
             console.error('Failed to copy text: ', err);
