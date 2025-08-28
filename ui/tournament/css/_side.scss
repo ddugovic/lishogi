@@ -40,6 +40,21 @@
       margin-right: 4%;
     }
 
+    &:first-child {
+      display: flex;
+
+      .tour-icon {
+        width: 35px;
+        height: 35px;
+        margin: 0 1rem 0 0;
+
+        .extra-icon {
+          position: absolute;
+          left: 0;
+        }
+      }
+    }
+
     p {
       margin: 0;
     }

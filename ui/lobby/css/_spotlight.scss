@@ -20,22 +20,20 @@
     background: theme.$c-bg-zebra;
   }
 
-  .img {
+  .tour-icon {
     flex: 0 0 50px;
     margin: 0 0.5em 0 0.3em;
-  }
-
-  img.img {
     width: 40px;
-  }
-
-  i.img,
-  .img.icon {
+    height: 40px;
     margin: 0 5px 0 0;
   }
 
-  i.img::before {
-    font-size: 50px;
+  .tour-icon svg {
+    padding: 0.35rem;
+  }
+
+  .tour-icon i::before {
+    font-size: 37px;
   }
 
   .content {
@@ -56,24 +54,6 @@
 
       time {
         margin-left: 3px;
-      }
-    }
-  }
-
-  &.Yearly,
-  &.Unique {
-    .img {
-      color: theme.$c-brag;
-    }
-  }
-
-  &.little {
-    .img {
-      flex: 0 0 40px;
-      margin: 0 0.5em 0 0.3em;
-
-      &::before {
-        font-size: 40px;
       }
     }
   }

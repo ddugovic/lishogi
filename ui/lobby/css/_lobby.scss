@@ -2,6 +2,7 @@
 @use 'pkg:common/abstract/variables';
 @use 'pkg:common/abstract/extends';
 @use 'pkg:common/theme';
+@use 'ui/tournament/css/icons';
 @use 'local';
 @use 'layout';
 @use 'app/app';
@@ -93,8 +94,9 @@ body {
 .lobby__studies,
 .lobby__tournaments {
   .lobby__box__content {
-    td:first-child {
+    td.name {
       width: 50%;
+      padding-left: 1rem;
     }
 
     td:last-child {

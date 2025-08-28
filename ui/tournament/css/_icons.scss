@@ -1,0 +1,48 @@
+@use 'pkg:common/theme';
+@use 'pkg:common/abstract/extends';
+@use 'pkg:common/abstract/icons';
+
+.tour-icon {
+  position: relative;
+  margin: auto;
+  text-align: center;
+  color: theme.$c-font-dim;
+
+  .licon {
+    font-family: lishogi;
+  }
+
+  &.ti-hourly {
+    color: theme.$c-secondary;
+  }
+
+  &.ti-daily,
+  &.ti-eastern {
+    color: theme.$c-primary;
+  }
+
+  &.ti-weekly {
+    color: theme.$c-accent;
+  }
+
+  &.ti-monthly {
+    color: theme.$c-red;
+  }
+
+  &.ti-yearly,
+  &.ti-unique,
+  &.ti-weekend {
+    color: theme.$c-brilliant;
+  }
+
+  &.ti-shield {
+    position: relative;
+    color: theme.$c-brag;
+    opacity: 0.8;
+  }
+
+  svg.extra-icon {
+    width: 100%;
+    height: 100%;
+  }
+}

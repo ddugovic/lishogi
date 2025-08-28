@@ -82,17 +82,16 @@
     }
   }
 
-  .tour-sched & h1,
-  .tour-sched & .img {
+  .tour-sched-monthly & h1 {
+    color: theme.$c-red;
+  }
+
+  .tour-sched-yearly & h1 {
     color: theme.$c-brag;
   }
 
   .tour__main-finished & h1 {
     text-align: center;
-
-    .tour-sched-marathon & {
-      padding-left: 0;
-    }
   }
 
   .time {
@@ -111,28 +110,6 @@
     white-space: nowrap;
   }
 
-  .tour-sched-marathon & h1 {
-    color: #4166a0 !important;
-    padding-left: 90px;
-    letter-spacing: 2px;
-  }
-
-  .tour-sched-marathon & .fire-trophy {
-    position: absolute;
-    top: 0;
-    left: 10px;
-    width: 70px;
-    height: 80px;
-    opacity: 0.7;
-    transition: 1s;
-    font-family: lishogi;
-    filter: hue-rotate(190deg);
-
-    &:hover {
-      opacity: 1;
-    }
-  }
-
   .tour-sched-shield & {
     h1 {
       padding-left: 90px;
@@ -149,7 +126,7 @@
         background-size: contain;
         font-family: lishogi;
         font-size: 40px;
-        line-height: 80px;
+        line-height: 75px;
         text-align: center;
         color: #333 !important;
         text-shadow: 0 0 6px #fff;

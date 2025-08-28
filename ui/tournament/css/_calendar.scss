@@ -50,10 +50,10 @@
     position: absolute;
     top: 0;
     padding: 4px 0;
-    background-color: #303e43;
+    background-color: theme.$c-bg-zebra;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
     transition: filter 0.13s;
-    color: #fff;
+    color: theme.$c-font-clearer;
     white-space: nowrap;
     font-size: 0.9em;
 
@@ -63,53 +63,35 @@
 
     &.hourly {
       background-color: #3d9333;
+      color: white;
     }
 
     &.daily,
     &.eastern {
       background-color: #0072b2;
-    }
-
-    @keyframes animated-background {
-      from {
-        background-position: 0 0;
-      }
-
-      to {
-        background-position: 0 1000%;
-      }
-    }
-
-    &.weekly,
-    &.weekend,
-    &.monthly,
-    &.marathon,
-    &.yearly {
-      text-shadow: 0 0 2px rgba(0, 0, 0, 0.7);
-      letter-spacing: 1px;
-      background-image: url('../images/grain.png');
-      animation: animated-background 50s linear infinite;
+      color: white;
     }
 
     &.weekly {
       background-color: #d55e00;
+      color: white;
     }
 
     &.monthly {
       background-color: #c93d3d;
+      color: white;
     }
 
     &.yearly,
+    &.unique,
     &.weekend {
       background-color: theme.$c-brag;
+      color: theme.$c-brag-over;
     }
 
-    &.marathon {
-      background-color: #66558c;
-    }
-
-    &.unique {
-      background-color: theme.$c-brag;
+    &.shield {
+      background-color: #303e43;
+      color: white;
     }
 
     &.max-rating {
@@ -123,7 +105,7 @@
 
     .icon {
       font-size: 1.3em;
-      margin: 2px 1px -1px 3px;
+      margin: 0 2px;
     }
 
     .body {

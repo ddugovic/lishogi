@@ -1,7 +1,9 @@
 @use 'pkg:breakpoint-sass' as breakpoint;
 @use 'pkg:common/abstract/media-queries';
+@use 'pkg:common/abstract/extends';
 @use 'pkg:common/abstract/mixins';
 @use 'pkg:common/theme';
+@use '../icons';
 
 .tour-home__list {
   max-width: 1200px;
@@ -55,11 +57,6 @@
       }
     }
 
-    .icon i {
-      padding-left: 1rem;
-      font-size: 4em;
-    }
-
     @include breakpoint.breakpoint(media-queries.$mq-not-small) {
       thead th:nth-child(2),
       thead th:nth-child(3),
@@ -81,19 +78,12 @@
 }
 
 .slist {
-  .icon i {
-    opacity: 0.8;
+  .tour-icon {
+    width: 4rem;
+    height: 4rem;
 
-    &.arena {
-      color: theme.$c-font-clear;
-    }
-
-    &.robin {
-      color: theme.$c-accent;
-    }
-
-    &.organized {
-      color: theme.$c-primary;
+    .licon {
+      font-size: 3rem;
     }
   }
 }
