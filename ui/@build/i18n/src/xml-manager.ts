@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { writeIfChanged } from '@build/helpers/util';
 import { otherLangs } from './constants.js';
 import { parseXmls } from './parser/xml.js';
 import type { I18nObj } from './types.js';
@@ -30,11 +31,12 @@ export async function createXmlManager(rootDir: string): Promise<TranslationMana
     );
     console.log('Parsed translation source directory');
 
-    await fs.writeFile(
+    const written = await writeIfChanged(
       path.join(rootDir, '/ui/@types/lishogi/i18n.d.ts'),
       dtsFile(rootDir, sourceI18n),
     );
-    console.log('Generated i18n dts file');
+    if (written) console.log('Generated i18n dts file');
+    else console.log('i18n.d.ts aready up to date');
   }
 
   async function initDests(): Promise<void> {
