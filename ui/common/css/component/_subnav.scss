@@ -12,7 +12,7 @@
 
   @include breakpoint.breakpoint(media-queries.$mq-subnav-top) {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(17ch, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(21ch, 1fr));
     grid-gap: 3px;
     margin-bottom: 3px;
     background: theme.$c-bg-page;

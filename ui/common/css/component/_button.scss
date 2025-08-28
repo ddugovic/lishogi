@@ -110,6 +110,13 @@
     }
   }
 
+  &.copy {
+    &.copied {
+      background-color: theme.$c-good;
+      color: theme.$c-good-over;
+    }
+  }
+
   &.disabled {
     opacity: 0.5;
     pointer-events: none;

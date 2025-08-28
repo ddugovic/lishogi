@@ -16,12 +16,8 @@ main.chat-room {
     display: flex;
     align-items: center;
     height: 3rem;
-    padding: 0 1.5rem;
+    padding: 0 0.5rem;
     background: theme.$c-bg-zebra2;
-
-    .title {
-      margin-right: 0.5rem;
-    }
 
     span {
       white-space: nowrap;

@@ -25,10 +25,10 @@
     flex-flow: row nowrap;
 
     &::before {
-      content: ' ';
+      content: '';
       width: 5rem;
       height: 5rem;
-      background-image: functions.img-url('icons/tornado.svg');
+      // background-image: functions.img-url('icons/tornado.svg');
       background-repeat: no-repeat;
       margin-right: 1.5rem;
     }

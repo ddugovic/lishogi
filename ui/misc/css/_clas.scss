@@ -1,5 +1,6 @@
 @use 'pkg:breakpoint-sass' as breakpoint;
 @use 'pkg:common/abstract/extends';
+@use 'pkg:common/abstract/icons';
 @use 'pkg:common/abstract/fluid-size';
 @use 'pkg:common/abstract/media-queries';
 @use 'pkg:common/abstract/mixins';
@@ -498,7 +499,7 @@ $c-bg-clas-over-dim: theme.$m-white_clas_mix_80;
       &::before {
         @extend %data-icon;
 
-        content: '5'; // todo
+        content: icons.$cogs;
         font-size: 3em;
       }
     }
