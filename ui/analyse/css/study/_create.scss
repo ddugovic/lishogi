@@ -26,6 +26,7 @@
     }
 
     button {
+      font-size: 1.1em;
       width: 100%;
       text-align: left;
       overflow: hidden;
@@ -33,9 +34,11 @@
       padding: 1rem;
       text-transform: none;
       background: theme.$c-bg-zebra;
+      color: theme.$c-font;
 
       &:hover {
         background: theme.$c-bg-zebra2;
+        color: theme.$c-font-clear;
       }
     }
   }
