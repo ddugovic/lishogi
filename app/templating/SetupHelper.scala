@@ -234,9 +234,10 @@ trait SetupHelper { self: I18nHelper =>
 
   def translatedByoyomiStyles(implicit lang: Lang) =
     List(
-      (Pref.ByoyomiStyle.TICK, trans.byoyomiStyleTick.txt()),
-      (Pref.ByoyomiStyle.ENGLISH, trans.byoyomiStyleEnglish.txt()),
-      (Pref.ByoyomiStyle.JAPANESE, trans.byoyomiStyleJapanese.txt()),
+      (Pref.ByoyomiStyle.LANG, trans.language.txt()),
+      (Pref.ByoyomiStyle.TICK, trans.preferences.byoyomiStyleTick.txt()),
+      (Pref.ByoyomiStyle.ENGLISH, "English"),
+      (Pref.ByoyomiStyle.JAPANESE, "日本語"),
     )
 
   def translatedMoveEventChoices(implicit lang: Lang) =

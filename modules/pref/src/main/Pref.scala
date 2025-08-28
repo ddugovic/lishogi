@@ -342,11 +342,13 @@ object Pref {
   }
 
   object ByoyomiStyle {
-    val TICK     = 0
-    val ENGLISH  = 1
-    val JAPANESE = 2
+    val LANG     = 0
+    val TICK     = 1
+    val ENGLISH  = 2
+    val JAPANESE = 3
 
     val choices = Seq(
+      LANG,
       TICK,
       ENGLISH,
       JAPANESE,
