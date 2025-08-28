@@ -29,9 +29,9 @@ object crosstable {
           ),
         )(ct.users.toList.map { u =>
           val (linkClass, text) = r.winnerId match {
-            case Some(w) if w == u.id => "glpt win"  -> "1"
-            case None                 => "glpt"      -> "½"
-            case _                    => "glpt loss" -> "0"
+            case Some(w) if w == u.id => "glpt win"  -> iconTag(Icons.circleFull)
+            case None                 => "glpt"      -> iconTag(Icons.triangle)
+            case _                    => "glpt loss" -> iconTag(Icons.circleFull)
           }
           a(
             href := s"""${routes.Round.watcher(r.gameId, "sente")}?pov=${u.id}""",
