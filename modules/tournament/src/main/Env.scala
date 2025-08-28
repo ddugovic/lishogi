@@ -39,7 +39,6 @@ final class Env(
     lightUserApi: lila.user.LightUserApi,
     onStart: lila.round.OnStart,
     historyApi: lila.history.HistoryApi,
-    trophyApi: lila.user.TrophyApi,
     remoteSocketApi: lila.socket.RemoteSocket,
     mode: play.api.Mode,
 )(implicit

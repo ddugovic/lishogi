@@ -38,7 +38,6 @@ final class TournamentApi(
     callbacks: TournamentApi.Callbacks,
     tellRound: lila.round.TellRound,
     roundSocket: lila.round.RoundSocket,
-    trophyApi: lila.user.TrophyApi,
     verify: Condition.Verify,
     duelStore: DuelStore,
     pause: Pause,
@@ -255,7 +254,6 @@ final class TournamentApi(
               lila.hub.actorApi.round.TourFinishedOrDeleted(tour.id),
               "tourFinishedOrDeleted",
             )
-            awardTrophies(tour).logFailure(logger, _ => s"${tour.id} awardTrophies")
             callbacks.indexLeaderboard(tour).logFailure(logger, _ => s"${tour.id} indexLeaderboard")
             callbacks.clearWinnersCache(tour)
             callbacks.clearTrophyCache(tour)
@@ -270,21 +268,6 @@ final class TournamentApi(
     if (tour.isStarted && tour.isArena) fuccess(arenaKillSchedule add tour.id).void
     else if (tour.isStarted || tour.isCreated) destroy(tour)
     else funit
-  }
-
-  private def awardTrophies(tour: Tournament): Funit = {
-    import lila.user.TrophyKind._
-    import lila.tournament.Tournament.tournamentUrl
-    tour.schedule.??(_.freq == Schedule.Freq.Marathon) ?? {
-      playerRepo.bestByTourWithRank(tour.id, 10).flatMap {
-        _.map {
-          case rp if rp.rank == 1 =>
-            trophyApi.award(tournamentUrl(tour.id), rp.player.userId, marathonWinner)
-          case rp =>
-            trophyApi.award(tournamentUrl(tour.id), rp.player.userId, marathonTopTen)
-        }.sequenceFu.void
-      }
-    }
   }
 
   def verdicts(

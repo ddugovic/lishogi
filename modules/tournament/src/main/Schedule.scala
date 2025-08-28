@@ -124,16 +124,15 @@ object Schedule {
     def isWeeklyOrBetter = this >= Schedule.Freq.Weekly
   }
   object Freq {
-    case object Hourly   extends Freq(10, 10)
-    case object Daily    extends Freq(20, 20)
-    case object Eastern  extends Freq(30, 15)
-    case object Weekly   extends Freq(40, 40)
-    case object Weekend  extends Freq(41, 41)
-    case object Monthly  extends Freq(50, 50)
-    case object Shield   extends Freq(51, 51)
-    case object Marathon extends Freq(60, 60)
-    case object Yearly   extends Freq(70, 70)
-    case object Unique   extends Freq(90, 59)
+    case object Hourly  extends Freq(10, 10)
+    case object Daily   extends Freq(20, 20)
+    case object Eastern extends Freq(30, 15)
+    case object Weekly  extends Freq(40, 40)
+    case object Weekend extends Freq(41, 41)
+    case object Monthly extends Freq(50, 50)
+    case object Shield  extends Freq(51, 51)
+    case object Yearly  extends Freq(70, 70)
+    case object Unique  extends Freq(90, 59)
     val all: List[Freq] = List(
       Hourly,
       Daily,
@@ -142,7 +141,6 @@ object Schedule {
       Weekend,
       Monthly,
       Shield,
-      Marathon,
       Yearly,
       Unique,
     )
@@ -268,8 +266,6 @@ object Schedule {
       case (Yearly, _, HyperRapid)                         => 60 * 4
       case (Yearly, _, Rapid)                              => 60 * 6
       case (Yearly, _, Classical)                          => 60 * 8
-
-      case (Marathon, _, _) => 60 * 24 // lol
 
       case (Unique, _, _) => 60 * 6
       case (_, _, _)      => 60 * 1

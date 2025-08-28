@@ -61,7 +61,7 @@ case class Tournament(
   def isTeamBattle = teamBattle.isDefined
 
   def trans(implicit lang: Lang) =
-    if (isMarathon || isUnique) name
+    if (isUnique) name
     else if (isTeamBattle) lila.i18n.I18nKeys.tourname.xTeamBattle.txt(name)
     else schedule.fold(name)(_.trans)
 
@@ -73,17 +73,9 @@ case class Tournament(
 
   def notFull = nbPlayers < maxPlayersOrDefault
 
-  def isMarathon =
-    schedule.map(_.freq) exists {
-      case Schedule.Freq.Marathon => true
-      case _                      => false
-    }
-
   def isShield = schedule.map(_.freq) has Schedule.Freq.Shield
 
   def isUnique = schedule.map(_.freq) has Schedule.Freq.Unique
-
-  def isMarathonOrUnique = isMarathon || isUnique
 
   def isScheduled = schedule.isDefined
 

@@ -281,7 +281,7 @@ final class PlayerRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCo
   def winner(tourId: Tournament.ID): Fu[Option[Player]] =
     coll.find(selectTour(tourId)).sort(bestSort).one[Player]
 
-  // freaking expensive (marathons)
+  // freaking expensive
   private[tournament] def computeRanking(tourId: Tournament.ID): Fu[Ranking] =
     coll
       .aggregateWith[Bdoc]() { framework =>
