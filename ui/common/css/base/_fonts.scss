@@ -4,11 +4,15 @@
   @return url(#{variables.$font-path}/#{$path});
 }
 
+@function local-icons($path) {
+  @return url(#{variables.$icons-path}/#{$path});
+}
+
 @font-face {
   font-family: lishogi;
   src:
-    local-font('lishogi.woff2') format('woff2'),
-    local-font('lishogi.woff') format('woff');
+    local-icons('lishogi.woff2') format('woff2'),
+    local-icons('lishogi.woff') format('woff');
   font-display: block;
   font-weight: normal;
   font-style: normal;
@@ -296,6 +300,6 @@
   font-style: normal;
   font-weight: 400;
   src:
-    url('#{variables.$font-path}/Segment7.woff2') format('woff2'),
-    url('#{variables.$font-path}/Segment7.woff') format('woff');
+    local-font('Segment7.woff2') format('woff2'),
+    local-font('Segment7.woff') format('woff');
 }
