@@ -196,7 +196,7 @@ export class StrongSocket implements IStrongSocket {
         this.lastVersionTime = performance.now();
         if (this.version !== false && m.d > this.version) {
           text('POST', '/jsmon/socketVersion', {
-            url: { v: window.location.pathname },
+            url: { v: `${window.location.pathname}:${m.d}:${this.version}` },
           });
           this.debug('socket version mismatch');
           reload();
