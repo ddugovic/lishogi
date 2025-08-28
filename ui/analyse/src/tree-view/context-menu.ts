@@ -93,7 +93,7 @@ function view(opts: Opts, coords: Coords): VNode {
         : action(icons.up, i18n('promoteVariation'), () => ctrl.promote(opts.path, false)),
       onMainline || cantChangeMainline
         ? null
-        : action(icons.correct, i18n('makeMainLine'), () => ctrl.promote(opts.path, true)),
+        : action(icons.right, i18n('makeMainLine'), () => ctrl.promote(opts.path, true)),
       onMainline && cantChangeMainline
         ? null
         : action(icons.trashBin, i18n('deleteFromHere'), () => ctrl.deleteNode(opts.path)),

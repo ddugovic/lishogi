@@ -72,7 +72,7 @@ function presetButton(p: Preset, ctrl: LobbyController): VNode {
       h('div.perf', perfName),
       isReady
         ? h('i.check-mark', {
-            attrs: { 'data-icon': icons.correct, title: 'Ready to play' },
+            attrs: { 'data-icon': icons.circleFull, title: i18n('readyToPlay') },
           })
         : null,
     ],

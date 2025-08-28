@@ -118,21 +118,6 @@
         color: theme.$c-secondary-over !important;
       }
 
-      &::before {
-        margin-right: 8px;
-        font-size: 19px;
-        justify-content: center;
-        align-items: center;
-        opacity: 0;
-
-        @include mixins.transition(opacity);
-      }
-
-      &:hover::before {
-        opacity: 1;
-        color: theme.$c-secondary;
-      }
-
       &.active::before {
         opacity: 1;
         color: theme.$c-secondary-over !important;

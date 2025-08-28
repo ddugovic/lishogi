@@ -1,5 +1,4 @@
 import { loadCssPath } from 'common/assets';
-import { icons } from 'common/icons';
 import { debounce } from 'common/timings';
 import { i18n } from 'i18n';
 import { h, type VNode } from 'snabbdom';
@@ -89,7 +88,6 @@ export function view(ctrl: BackgroundCtrl): VNode {
           'a.text',
           {
             class: { active: cur === bg.key },
-            attrs: { 'data-icon': icons.correct },
             hook: bind('click', () => ctrl.set(bg.key)),
             disabled: bg.key === 'custom' && !supportsCustom,
             title:

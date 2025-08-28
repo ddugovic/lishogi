@@ -1,4 +1,3 @@
-import { icons } from 'common/icons';
 import { i18n } from 'i18n';
 import { Notation } from 'shogi/notation';
 import { h, type VNode } from 'snabbdom';
@@ -54,7 +53,6 @@ function notationView(ctrl: NotationCtrl, current: Notation) {
         class: { active: current === n },
         attrs: {
           title: notationExample(n),
-          'data-icon': icons.correct,
         },
       },
       notationDisplay(n),

@@ -1,4 +1,4 @@
-import { icons as fontIcons } from 'common/icons';
+import { icons } from 'common/icons';
 import type { MaybeVNodes } from 'common/snabbdom';
 import * as game from 'game';
 import * as status from 'game/status';
@@ -53,17 +53,17 @@ export const renderTablePlay = (ctrl: RoundController): MaybeVNodes => {
   const pausable = ctrl.showPauseButton();
   const paused = pausable && (status.paused(ctrl.data) || status.prepaused(ctrl.data));
   const submit = button.submitUsi(ctrl) || button.sealedUsi(ctrl);
-  const icons = loading
+  const ricons = loading
     ? loaderIcon
     : submit || paused
       ? []
       : [
           game.abortable(d)
-            ? button.standard(ctrl, undefined, fontIcons.cancel, i18n('abortGame'), 'abort')
+            ? button.standard(ctrl, undefined, icons.cancel, i18n('abortGame'), 'abort')
             : button.standard(
                 ctrl,
                 game.takebackable,
-                fontIcons.back,
+                icons.back,
                 i18n('proposeATakeback'),
                 'takeback-yes',
                 ctrl.takebackYes,
@@ -75,7 +75,7 @@ export const renderTablePlay = (ctrl: RoundController): MaybeVNodes => {
               : button.standard(
                   ctrl,
                   ctrl.canOfferDraw,
-                  fontIcons.draw,
+                  icons.draw,
                   i18n('offerDraw'),
                   'draw-yes',
                   () => ctrl.offerDraw(true),
@@ -87,7 +87,7 @@ export const renderTablePlay = (ctrl: RoundController): MaybeVNodes => {
               : button.standard(
                   ctrl,
                   ctrl.canOfferPause,
-                  fontIcons.pause,
+                  icons.pause,
                   i18n('offerAdjournment'),
                   'pause-yes',
                   () => ctrl.offerPause(true),
@@ -98,7 +98,7 @@ export const renderTablePlay = (ctrl: RoundController): MaybeVNodes => {
             : button.standard(
                 ctrl,
                 game.resignable,
-                fontIcons.surrender,
+                icons.surrender,
                 i18n('resign'),
                 'resign-confirm',
                 () => ctrl.resign(true),
@@ -128,10 +128,10 @@ export const renderTablePlay = (ctrl: RoundController): MaybeVNodes => {
         {
           class: {
             confirm: !!(ctrl.drawConfirm || ctrl.resignConfirm || ctrl.pauseConfirm),
-            empty: icons.length === 0,
+            empty: ricons.length === 0,
           },
         },
-        icons,
+        ricons,
       ),
     ]),
   ];
