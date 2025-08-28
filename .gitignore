@@ -15,6 +15,7 @@ project/target
 /public/css
 /public/i18n
 /public/piece-css
+/public/icons
 /public/vendors
 node_modules/
 tsconfig.tsbuildinfo
