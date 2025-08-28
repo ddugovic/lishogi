@@ -88,6 +88,7 @@ final class TournamentApi(
       streakable = setup.streakable | true,
       teamBattle = setup.teamBattleByTeam map TeamBattle.init,
       description = setup.description,
+      icon = setup.icon,
       hasChat = setup.hasChat | true,
     ) pipe { tour =>
       tour.copy(conditions = setup.conditions.convert(myTeams.view.map(_.pair).toMap))
@@ -119,6 +120,7 @@ final class TournamentApi(
         proMode = ~data.proMode,
         teamBattle = old.teamBattle,
         description = data.description,
+        icon = data.icon.flatMap(lila.common.String.iconSanityCheck),
         hasChat = data.hasChat | true,
       ) pipe { tour =>
       tour.copy(

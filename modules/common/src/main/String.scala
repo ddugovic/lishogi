@@ -133,4 +133,9 @@ object String {
   // used in system chat (maybe someday) and comments
   def usiNotationFormat(ply: Int, usi: String): String =
     s"[usi:$ply.$usi]"
+
+  def iconSanityCheck(str: String): Option[String] = {
+    val clean = str.take(32).filter(c => c.isLetter || c == '-')
+    (clean.nonEmpty && !clean.startsWith("li-")) option clean
+  }
 }

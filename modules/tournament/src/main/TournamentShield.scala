@@ -210,7 +210,6 @@ object TournamentShield {
 
   def spotlight(name: String) =
     Spotlight(
-      iconFont = lila.common.Icons.shield.some,
       headline = s"Battle for the $name Shield",
       description = s"""This Shield trophy is unique.
 The winner keeps it for one month,

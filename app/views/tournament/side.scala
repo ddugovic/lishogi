@@ -22,7 +22,8 @@ object side {
   )(implicit ctx: Context) =
     frag(
       div(cls := "tour__meta")(
-        st.section(dataIcon := tour.perfType.icon)(
+        st.section(
+          tournamentIconTag(tour),
           div(
             p(
               tour.timeControl.show,
@@ -64,7 +65,7 @@ object side {
           st.section(
             lila.common.String.html.markdownLinks(s.description),
             shieldOwner map { owner =>
-              p(cls := "defender", dataIcon := Icons.shield)(
+              p(cls := "defender")(
                 s"${trans.arena.defender.txt()}:",
                 userIdLink(owner.value.some),
               )
@@ -73,7 +74,6 @@ object side {
         },
         tour.looksLikePrize option bits.userPrizeDisclaimer,
         verdicts.relevant option st.section(
-          dataIcon := Icons.target,
           cls := List(
             "conditions" -> true,
             "accepted"   -> (ctx.isAuth && verdicts.accepted),

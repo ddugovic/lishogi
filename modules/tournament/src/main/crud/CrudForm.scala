@@ -9,8 +9,6 @@ import org.joda.time.DateTime
 import shogi.format.forsyth.Sfen
 import shogi.variant.Variant
 
-import lila.common.Form._
-
 object CrudForm {
 
   import lila.common.Form.UTCDate._
@@ -26,7 +24,7 @@ object CrudForm {
       "variant"          -> number.verifying(Variant exists _),
       "position"         -> optional(lila.common.Form.sfen.clean),
       "date"             -> utcDate,
-      "image"            -> stringIn(imageChoices),
+      "icon"             -> optional(text(maxLength = 40)),
       "headline"         -> text(minLength = 5, maxLength = 30),
       "description"      -> text(minLength = 10, maxLength = 400),
       "conditions"       -> Condition.DataForm.all,
@@ -44,7 +42,7 @@ object CrudForm {
     variant = shogi.variant.Standard.id,
     position = none,
     date = DateTime.now plusDays 7,
-    image = "",
+    icon = none,
     headline = "",
     description = "",
     conditions = Condition.DataForm.AllSetup.default,
@@ -60,7 +58,7 @@ object CrudForm {
       variant: Int,
       position: Option[Sfen],
       date: DateTime,
-      image: String,
+      icon: Option[String],
       headline: String,
       description: String,
       conditions: Condition.DataForm.AllSetup,
@@ -87,8 +85,4 @@ object CrudForm {
       60 * timeControlSetup.clockTime + 30 * timeControlSetup.clockIncrement + 20 * timeControlSetup.periods * timeControlSetup.clockByoyomi
   }
 
-  val imageChoices = List(
-    "" -> "Lishogi",
-  )
-  val imageDefault = ""
 }

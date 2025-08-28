@@ -227,7 +227,6 @@ object bits {
       href := (if (e.isNow) e.url else routes.Event.show(e.id).url),
       cls := List(
         s"tour-spotlight event-spotlight id_${e.id}" -> true,
-        "invert"                                     -> e.isNowOrSoon,
       ),
     )(
       i(cls := "img", dataIcon := Icons.mic),

@@ -8,9 +8,8 @@
     "xml2js": "^0.6.2"
   },
   "scripts": {
-    "font-generate": "./scripts/font-generate.sh",
-    "font-dump": "./scripts/font-dump.py",
-    "trans-dump": "tsx ./scripts/trans.ts",
+    "icons-dump": "tsx ./scripts/icons-dump.ts",
+    "trans-dump": "tsx ./scripts/trans-dump.ts",
     "trans-lint": "./scripts/trans-lint.py ../translation/dest/*/*.xml",
     "module-deps": "PYTHONHASHSEED=0 ./scripts/module-deps.py"
   }

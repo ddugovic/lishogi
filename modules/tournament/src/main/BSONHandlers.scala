@@ -129,6 +129,7 @@ object BSONHandlers {
         featuredId = r strO "featured",
         spotlight = r.getO[Spotlight]("spotlight"),
         description = r strO "description",
+        icon = r strO "icon",
         hasChat = r boolO "chat" getOrElse true,
       )
     }
@@ -169,6 +170,7 @@ object BSONHandlers {
         "featured"    -> o.featuredId,
         "spotlight"   -> o.spotlight,
         "description" -> o.description,
+        "icon"        -> o.icon,
         "chat"        -> (!o.hasChat).option(false),
       )
   }

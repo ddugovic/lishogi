@@ -3,5 +3,5 @@
   "compilerOptions": {
     "rootDir": "scripts"
   },
-  "include": ["scripts/trans.ts"]
+  "include": ["scripts/*.ts"]
 }

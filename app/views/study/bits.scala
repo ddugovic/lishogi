@@ -64,8 +64,9 @@ object bits {
         cls := "top",
       )(
         div(
-          cls   := "study__icon",
-          style := s.study.icon.map(i => s"--icon:url(${assetUrl(s"icons/$i.svg")})"),
+          cls := "study__icon",
+        )(
+          spriteSvg("study", s.study.icon.getOrElse("study")),
         ),
         div(
           tag(cls := "study-name")(s.study.name.value),

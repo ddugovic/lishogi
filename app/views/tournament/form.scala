@@ -99,7 +99,10 @@ object form {
       fields: TourFields,
   )(implicit ctx: Context) =
     form3.fieldset(trans.tournament.txt(), toggle = true.some)(
-      form3.split(fields.name, fields.format),
+      form3.split(cls := "icon-name-format")(
+        form3.split(cls := "icon-name form-half")(fields.icon, fields.name),
+        fields.format,
+      ),
       form3.split(fields.startDate, fields.finishDate),
       form3.split(fields.description),
     )
@@ -264,11 +267,21 @@ final private class TourFields(form: Form[_], tour: Option[Tournament])(implicit
       ),
     )
 
+  def icon =
+    form3.group(
+      form("icon"),
+      trans.icon(),
+    ) { f =>
+      frag(
+        form3.input(f, klass = "none"),
+        div(id := "icon-selector", cls := "icon-select"),
+      )
+    }
+
   def name =
     form3.group(
       form("name"),
       trans.name(),
-      half = true,
       help = frag(
         trans.safeTournamentName(),
         br,

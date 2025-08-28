@@ -796,7 +796,7 @@ final class StudyApi(
             description = settings.description option {
               study.description.filter(_.nonEmpty) | "-"
             },
-            icon = data.icon,
+            icon = data.icon.flatMap(lila.common.String.iconSanityCheck),
           )
           (newStudy != study) ?? {
             studyRepo.updateSomeFields(newStudy) >>-

@@ -163,8 +163,6 @@ type TimeControl = TCRealTime | TCCorres;
 interface Spotlight {
   headline: string;
   description: string;
-  iconImg?: string;
-  iconFont?: string;
 }
 
 export interface TeamBattle {

@@ -60,13 +60,14 @@ final private class TournamentScheduler(
           Schedule(Format.Arena, Unique, Rapid, Standard, none, date) plan {
             _.copy(
               name = s"${date.getYear} Lishogi Anniversary",
+              icon = "li-anniversary".some,
               minutes = 12 * 60,
               spotlight = Spotlight(
                 headline = s"$yo years of free shogi!",
                 description = s"""
 We've had $yo great shogi years together!
 
-Thank you all, you rock!""",
+Thank you all, you rock! ありがとうございます！""",
                 homepageHours = 32.some,
               ).some,
             )
@@ -125,6 +126,7 @@ Thank you all, you rock!""",
               Schedule(Format.Arena, Shield, speed, Standard, none, date) plan {
                 _.copy(
                   name = s"${speed.toString} Shield",
+                  icon = "li-shield".some,
                   spotlight = Some(TournamentShield spotlight speed.toString),
                 )
               }
@@ -140,6 +142,7 @@ Thank you all, you rock!""",
               Schedule(Format.Arena, Shield, Blitz, variant, none, date) plan {
                 _.copy(
                   name = s"${variant.name} Shield",
+                  icon = "li-shield".some,
                   spotlight = Some(TournamentShield spotlight variant.name),
                 )
               }

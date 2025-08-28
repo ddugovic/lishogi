@@ -47,6 +47,7 @@ case class Tournament(
     featuredId: Option[String] = None,
     spotlight: Option[Spotlight] = None,
     description: Option[String] = None,
+    icon: Option[String] = None,
     hasChat: Boolean = true,
 ) {
 
@@ -184,6 +185,7 @@ object Tournament {
       streakable: Boolean,
       teamBattle: Option[TeamBattle],
       description: Option[String],
+      icon: Option[String],
       hasChat: Boolean,
   ) =
     Tournament(
@@ -210,6 +212,7 @@ object Tournament {
       schedule = None,
       startsAt = startDate,
       description = description,
+      icon = icon,
       hasChat = hasChat,
     )
 

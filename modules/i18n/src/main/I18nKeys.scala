@@ -884,6 +884,7 @@ object I18nKeys {
   val `tourClosed` = new I18nKey("tourClosed")
   val `proMode` = new I18nKey("proMode")
   val `proModeDescription` = new I18nKey("proModeDescription")
+  val `icon` = new I18nKey("icon")
   val `opponentLeftCounter` = new I18nKey("opponentLeftCounter")
   val `nbMoves` = new I18nKey("nbMoves")
   val `nbPlayers` = new I18nKey("nbPlayers")
@@ -926,9 +927,6 @@ object I18nKeys {
   val `andSaveNbPremoveLines` = new I18nKey("andSaveNbPremoveLines")
   val `nbCandidatePlayers` = new I18nKey("nbCandidatePlayers")
   val `nbAcceptedPlayers` = new I18nKey("nbAcceptedPlayers")
-  val `byoyomiStyleTick` = new I18nKey("byoyomiStyleTick")
-  val `byoyomiStyleEnglish` = new I18nKey("byoyomiStyleEnglish")
-  val `byoyomiStyleJapanese` = new I18nKey("byoyomiStyleJapanese")
 
   object activity {
     val `activity` = new I18nKey("activity:activity")
@@ -1814,6 +1812,7 @@ object I18nKeys {
     val `yorozuyaNotation` = new I18nKey("preferences:yorozuyaNotation")
     val `yourPreferencesHaveBeenSaved` = new I18nKey("preferences:yourPreferencesHaveBeenSaved")
     val `smallMoves` = new I18nKey("preferences:smallMoves")
+    val `byoyomiStyleTick` = new I18nKey("preferences:byoyomiStyleTick")
 }
 
   object puzzle {

@@ -42,9 +42,8 @@ object bits {
         tr(
           td(cls := "name")(
             a(
-              cls      := s"text ${tour.format}",
-              dataIcon := tournamentIcon(tour),
-              href     := routes.Tournament.show(tour.id),
+              cls  := s"text ${tour.format}",
+              href := routes.Tournament.show(tour.id),
             )(
               tour.trans,
             ),

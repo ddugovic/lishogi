@@ -8,8 +8,6 @@ case class Spotlight(
     headline: String,
     description: String,
     homepageHours: Option[Int] = None, // feature on homepage hours before start
-    iconFont: Option[String] = None,
-    iconImg: Option[String] = None,
 )
 
 object Spotlight {

@@ -41,6 +41,7 @@ final class DataForm {
       streakable = true.some,
       proMode = false.some,
       description = none,
+      icon = none,
       hasChat = true.some,
     )
 
@@ -64,6 +65,7 @@ final class DataForm {
       streakable = tour.streakable.some,
       proMode = tour.proMode.some,
       description = tour.description,
+      icon = tour.icon,
       hasChat = tour.hasChat.some,
     )
 
@@ -141,6 +143,7 @@ final class DataForm {
       "streakable"       -> optional(boolean),
       "proMode"          -> optional(boolean),
       "description"      -> optional(cleanNonEmptyText(maxLength = 3000)),
+      "icon"             -> optional(cleanNonEmptyText(maxLength = 32)),
       "hasChat"          -> optional(boolean),
     )(TournamentSetup.apply)(TournamentSetup.unapply)
       .verifying("Invalid starting position", _.validPosition)
@@ -194,6 +197,7 @@ private[tournament] case class TournamentSetup(
     streakable: Option[Boolean],
     proMode: Option[Boolean],
     description: Option[String],
+    icon: Option[String],
     hasChat: Option[Boolean],
 ) {
 

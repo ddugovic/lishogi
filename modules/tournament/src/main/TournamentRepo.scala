@@ -387,6 +387,7 @@ final class TournamentRepo(val coll: Coll, playerCollName: CollName)(implicit
           tour.denied.isEmpty option "denied",
           !tour.candidatesOnly option "candidatesOnly",
           !tour.proMode option "proMode",
+          tour.icon.isEmpty option "icon",
         ).flatten,
       ),
     )

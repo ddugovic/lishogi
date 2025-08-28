@@ -1,6 +1,5 @@
-import { assetUrl } from 'common/assets';
 import { icons } from 'common/icons';
-import { dataIcon, type MaybeVNode } from 'common/snabbdom';
+import type { MaybeVNode } from 'common/snabbdom';
 import { i18n } from 'i18n';
 import { h, type VNode } from 'snabbdom';
 import type TournamentController from '../ctrl';
@@ -66,23 +65,8 @@ function clock(ctrl: TournamentController): MaybeVNode {
   } else return;
 }
 
-function image(d: TournamentDataFull): VNode | undefined {
-  if (d.isFinished) return;
-  if (hasFreq('shield', d) || hasFreq('marathon', d)) return;
-  const s = d.spotlight;
-  if (s?.iconImg)
-    return h('img.img', {
-      attrs: { src: assetUrl(`images/${s.iconImg}`) },
-    });
-  return h('i.img', {
-    attrs: dataIcon(s?.iconFont || icons.trophy),
-  });
-}
-
 function title(ctrl: TournamentController) {
   const d = ctrl.data;
-  if (hasFreq('marathon', d))
-    return h('h1', { attrs: { title: d.fullName } }, [h('i.fire-trophy', '\\'), d.fullName]);
   if (hasFreq('shield', d))
     return h('h1', [
       h(
@@ -120,5 +104,5 @@ function title(ctrl: TournamentController) {
 }
 
 export default function (ctrl: TournamentController): VNode {
-  return h('div.tour__main__header', [image(ctrl.data), title(ctrl), clock(ctrl)]);
+  return h('div.tour__main__header', [title(ctrl), clock(ctrl)]);
 }

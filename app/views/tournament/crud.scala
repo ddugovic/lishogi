@@ -93,8 +93,8 @@ object crud {
           half = true,
           help = raw("Ask first").some,
         )(form3.input(_, typ = "number")),
-        form3.group(form("image"), raw("Custom icon"), half = true)(
-          form3.select(_, CrudForm.imageChoices),
+        form3.group(form("icon"), raw("Custom icon"), half = true)(
+          form3.input(_),
         ),
       ),
       form3.group(

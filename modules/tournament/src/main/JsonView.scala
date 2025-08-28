@@ -174,6 +174,7 @@ final class JsonView(
               .add("joinWith" -> me.isDefined.option(teamsToJoinWith.sorted))
           })
           .add("description" -> tour.description)
+          .add("icon" -> tour.icon)
       }
 
   def clearCache(tour: Tournament): Unit = {
@@ -694,8 +695,6 @@ object JsonView {
         "headline"    -> s.headline,
         "description" -> s.description,
       )
-      .add("iconImg" -> s.iconImg)
-      .add("iconFont" -> s.iconFont)
   }
 
   implicit private[tournament] def perfTypeWrites(implicit lang: Lang): OWrites[PerfType] =

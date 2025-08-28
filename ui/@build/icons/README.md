@@ -1,0 +1,2 @@
+- `pnpm server:icons` needs to be run when adding/removing from `lishogi` directory
+- When deleting icons from `lishogi` directory, remove `codepoints.json` at some point to get rid of gaps in encoding. Build icons again after. (not done automatically to keep server encodings in sync with ui)

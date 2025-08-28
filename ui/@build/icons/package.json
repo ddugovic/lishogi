@@ -1,0 +1,20 @@
+{
+  "name": "@build/icons",
+  "private": true,
+  "license": "AGPL-3.0-or-later",
+  "type": "module",
+  "dependencies": {
+    "@build/helpers": "workspace:*",
+    "@twbs/fantasticon": "^3.1.0",
+    "svg-sprite": "^2.0.4",
+    "svgo": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/svg-sprite": "^0.0.39"
+  },
+  "scripts": {
+    "svgo": "svgo assets/**/*.svg",
+    "build": "tsx ./src/main.ts",
+    "build:watch": "tsx watch --clear-screen=false --include ../../../pnpm-lock.yaml --include ./assets ./src/main.ts"
+  }
+}

@@ -24,7 +24,7 @@ final class CrudApi(tournamentRepo: TournamentRepo) {
       variant = tour.variant.id,
       position = tour.position,
       date = tour.startsAt,
-      image = ~tour.spotlight.flatMap(_.iconImg),
+      icon = tour.icon,
       headline = tour.spotlight.??(_.headline),
       description = tour.spotlight.??(_.description),
       conditions = Condition.DataForm.AllSetup(tour.conditions),
@@ -78,6 +78,7 @@ final class CrudApi(tournamentRepo: TournamentRepo) {
       streakable = true,
       teamBattle = none,
       description = none,
+      icon = none,
       hasChat = true,
     )
 
@@ -103,10 +104,9 @@ final class CrudApi(tournamentRepo: TournamentRepo) {
         headline = headline,
         description = description,
         homepageHours = homepageHours.some.filterNot(0 ==),
-        iconFont = none,
-        iconImg = image.some.filter(_.nonEmpty),
       ).some,
       position = data.position,
+      icon = data.icon,
       noBerserk = !data.berserkable,
       teamBattle = data.teamBattle option (tour.teamBattle | TeamBattle(Set.empty, 10)),
     )

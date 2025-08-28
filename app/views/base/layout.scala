@@ -63,8 +63,8 @@ object layout {
         s"""type="$t" """,
       )}${crossorigin ?? "crossorigin"}>""")
 
-  private val fontPreload = frag(
-    preload(assetUrl("font/lishogi.woff2"), "font", crossorigin = true, "font/woff2".some),
+  private val iconsPreload = frag(
+    preload(assetUrl("icons/lishogi.woff2"), "font", crossorigin = true, "icons/woff2".some),
   )
 
   private def boardPreload(implicit ctx: Context) =
@@ -286,7 +286,7 @@ object layout {
           !robots option raw("""<meta content="noindex, nofollow" name="robots">"""),
           noTranslate,
           openGraph.map(_.frags(ctx.lang)),
-          fontPreload,
+          iconsPreload,
           boardPreload,
           manifests,
           jsLicense,

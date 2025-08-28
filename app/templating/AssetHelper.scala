@@ -112,6 +112,11 @@ trait AssetHelper { self: I18nHelper with SecurityHelper =>
   def kyoPieceSprite(ps: lila.pref.PieceSet): Frag =
     pieceSprite("kyo-piece-sprite", s"piece-css/kyotoshogi/$ps.css")
 
+  def spriteSvg(categ: String, key: String): Frag =
+    tag("svg")(cls := "extra-icon")(
+      tag("use")(href := assetUrl(s"icons/${categ}.svg#$key")),
+    )
+
   def basicCsp(implicit req: RequestHeader): ContentSecurityPolicy = {
     val assets = if (req.secure) s"https://$assetDomain" else assetDomain.value
     val sockets = socketDomains map { socketDomain =>

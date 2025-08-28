@@ -275,7 +275,7 @@ object teacherDashboard {
             sortNumberTh(trans.games()),
             sortNumberTh(trans.puzzles()),
             sortNumberTh(trans.clas.lastActiveDate()),
-            th(iconTag(Icons.shield)(title := trans.clas.managed.txt())),
+            th(iconTag(Icons.cogs)(title := trans.clas.managed.txt())),
           ),
         ),
         tbody(
@@ -292,7 +292,7 @@ object teacherDashboard {
               ),
               td(
                 dataSort := (if (student.managed) 1 else 0),
-                student.managed option iconTag(Icons.shield)(title := trans.clas.managed.txt()),
+                student.managed option iconTag(Icons.cogs)(title := trans.clas.managed.txt()),
               ),
             )
           },
