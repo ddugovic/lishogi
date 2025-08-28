@@ -1,4 +1,4 @@
-import { makeChat } from 'chat';
+import { chatMembers, makeChat } from 'chat';
 import { initAll } from 'common/mini-board';
 import { richHTML } from 'common/rich-text';
 import { onInsert } from 'common/snabbdom';
@@ -34,11 +34,7 @@ export default function (ctrl: SimulCtrl): VNode {
       },
       [...handler(ctrl), showText(ctrl)],
     ),
-    h('div.chat__members.none', {
-      hook: onInsert(el => {
-        $(el).watchers();
-      }),
-    }),
+    chatMembers(),
   ]);
 }
 

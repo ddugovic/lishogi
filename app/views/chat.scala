@@ -80,4 +80,16 @@ object chat {
       .add("noteAge" -> withNoteAge)
       .add("timeoutReasons" -> isGranted(_.ChatTimeout).option(lila.chat.JsonView.timeoutReasons))
 
+  def members =
+    div(
+      cls       := "chat__members none",
+      aria.live := "off",
+    )(
+      div(cls := "chat__members__inner")(
+        span(cls := "number", dataIcon := Icons.person)("0"),
+        " ",
+        span(cls := "list"),
+      ),
+    )
+
 }

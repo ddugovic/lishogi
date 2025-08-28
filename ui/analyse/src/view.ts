@@ -1,5 +1,5 @@
 import * as cevalView from 'ceval/view';
-import { makeChat } from 'chat';
+import { chatMembers, makeChat } from 'chat';
 import { defined } from 'common/common';
 import { icons } from 'common/icons';
 import { bindMobileMousedown, hasTouchEvents } from 'common/mobile';
@@ -503,15 +503,7 @@ export default function (ctrl: AnalyseCtrl): VNode {
             ctrl.opts.chat.instance = makeChat(ctrl.opts.chat);
           }),
         }),
-      ctrl.embed
-        ? null
-        : h(
-            'div.chat__members.none',
-            {
-              hook: onInsert(el => $(el).watchers()),
-            },
-            [h('span.number', '\xa0'), ' ', i18n('spectators'), ' ', h('span.list')],
-          ),
+      ctrl.embed ? null : chatMembers(),
     ],
   );
 }

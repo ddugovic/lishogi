@@ -1,6 +1,5 @@
-import { makeChat } from 'chat';
+import { chatMembers, makeChat } from 'chat';
 import { type MaybeVNodes, onInsert } from 'common/snabbdom';
-import { i18n } from 'i18n';
 import { h, type VNode } from 'snabbdom';
 import type TournamentController from '../ctrl';
 import { joinWithTeamSelector } from './arena/battle';
@@ -66,15 +65,7 @@ export default function (ctrl: TournamentController): VNode {
             : [...handler.main(ctrl), h('div.tour__bottom', [desc, faq])],
       ),
     ]),
-    ctrl.opts.chat
-      ? h('div.chat__members', [
-          h('span.number', '0'),
-          ' ',
-          i18n('spectators'),
-          ' ',
-          h('span.list'),
-        ])
-      : null,
+    ctrl.opts.chat ? chatMembers() : null,
     ctrl.joinWithTeamSelector ? joinWithTeamSelector(ctrl) : null,
   ]);
 }

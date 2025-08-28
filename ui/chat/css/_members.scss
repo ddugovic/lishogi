@@ -1,11 +1,31 @@
 @use 'pkg:common/abstract/extends';
+@use 'pkg:common/theme';
 
 .chat__members {
   @extend %page-text;
 
   font-size: 0.9em;
-  // min-height: 5em;
-  // max-height: 9em;
   height: 100%;
   overflow: hidden;
+
+  &__inner {
+    display: flex;
+    align-items: flex-start;
+
+    .number {
+      display: flex;
+      align-items: center;
+      margin-right: 1ch;
+
+      &::before {
+        font-size: 1em;
+        color: var(--c-font-dim);
+        margin-right: 0.3ch;
+      }
+    }
+
+    .user-link {
+      color: theme.$c-font-dim;
+    }
+  }
 }

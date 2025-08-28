@@ -39,14 +39,7 @@ object chatroom {
         div(cls := "box__top")(
           h1(cls := "text", dataIcon := Icons.teapot)(trans.chatRoom()),
         ),
-        div(
-          cls           := "chat__members",
-          aria.live     := "off",
-          aria.relevant := "additions removals text",
-        )(
-          span(cls := "title")(trans.onlinePlayers()),
-          span(cls := "list"),
-        ),
+        views.html.chat.members,
         div(cls := "chat-room__content")(
           views.html.chat.frag,
         ),

@@ -3,6 +3,8 @@ import makeCtrl from './ctrl';
 import type { ChatCtrl, ChatOpts } from './interfaces';
 import view from './view';
 
+export { members as chatMembers } from './members';
+
 export function makeChat(opts: ChatOpts): ChatCtrl {
   const patch = init([classModule, attributesModule]);
   const element = document.querySelector('.mchat')!;
