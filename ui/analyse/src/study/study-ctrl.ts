@@ -210,6 +210,7 @@ export default function (
     const keys: (keyof StudyData)[] = [
       'position',
       'name',
+      'icon',
       'visibility',
       'features',
       'settings',

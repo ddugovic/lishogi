@@ -1,5 +1,8 @@
 @use 'pkg:breakpoint-sass' as breakpoint;
 @use 'pkg:common/abstract/media-queries';
+@use 'pkg:common/abstract/extends';
+@use 'pkg:common/abstract/mixins';
+@use 'pkg:common/component/icon-selector';
 @use 'pkg:common/theme';
 
 .study__modal#modal-wrap {

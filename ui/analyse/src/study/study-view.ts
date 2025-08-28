@@ -1,3 +1,4 @@
+import { svgSprite } from 'common/icon-selector';
 import { icons } from 'common/icons';
 import { bind, dataIcon, type MaybeVNode, type MaybeVNodes } from 'common/snabbdom';
 import { i18n, i18nPluralSame } from 'i18n';
@@ -200,7 +201,17 @@ function metadata(ctrl: StudyCtrl): VNode {
   const title = `${d.name}: ${ctrl.currentChapter().name}`;
   return h('div.study__metadata', [
     h('h2', [
-      h('span.name', { attrs: { title } }, title),
+      h('div.name', [
+        h('span.icon', {
+          key: d.icon,
+          hook: {
+            insert: vnode => {
+              (vnode.elm as HTMLElement).innerHTML = d.icon ? svgSprite('study', d.icon) : '';
+            },
+          },
+        }),
+        h('span', { attrs: { title } }, title),
+      ]),
       h(
         'span.liking.text',
         {

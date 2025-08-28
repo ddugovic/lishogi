@@ -65,21 +65,9 @@ $c-study: theme.$c-primary;
         height: 4rem;
         width: 4rem;
 
-        &::before {
-          @extend %data-icon;
-
-          content: icons.$study;
-          font-size: 3.5rem;
-        }
-
-        @supports (mask: url('') no-repeat center/contain) {
-          & {
-            background-color: $c-study;
-            mask-image: var(--icon, url('../icons/bookshelf.svg'));
-            mask-repeat: no-repeat;
-            mask-position: center;
-            mask-size: contain;
-          }
+        svg {
+          width: 100%;
+          height: 100%;
         }
       }
 

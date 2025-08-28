@@ -1,7 +1,7 @@
-import { assetUrl } from 'common/assets';
 import { type Prop, prop } from 'common/common';
+import { createIconSelector, svgSprite } from 'common/icon-selector';
 import { modal } from 'common/modal';
-import { bindNonPassive, bindSubmit, type MaybeVNodes } from 'common/snabbdom';
+import { bind, bindNonPassive, bindSubmit, type MaybeVNodes } from 'common/snabbdom';
 import { i18n } from 'i18n';
 import { h, type VNode } from 'snabbdom';
 import { emptyRedButton } from '../util';
@@ -85,9 +85,19 @@ export function ctrl(
   };
 }
 
+let iconSelector: ReturnType<typeof createIconSelector> | undefined;
+const clearIconSelector = () => {
+  if (iconSelector) {
+    iconSelector.destroy();
+    iconSelector = undefined;
+  }
+};
+
 export function view(ctrl: StudyFormCtrl): VNode {
   const data = ctrl.getData();
   const isNew = ctrl.isNew();
+  const icon = iconSelector?.selected() || data.icon || 'study';
+
   const updateName = (vnode: VNode, isUpdate: boolean) => {
     const el = vnode.elm as HTMLInputElement;
     if (!isUpdate && !el.value) {
@@ -103,9 +113,11 @@ export function view(ctrl: StudyFormCtrl): VNode {
     ['member', i18n('study:members')],
     ['everyone', i18n('study:everyone')],
   ];
+
   return modal({
     class: 'study__modal.study-edit',
     onClose() {
+      clearIconSelector();
       ctrl.open(false);
       ctrl.redraw();
     },
@@ -129,22 +141,51 @@ export function view(ctrl: StudyFormCtrl): VNode {
               const el = (e.target as HTMLElement).querySelector(`#study-${n}`) as HTMLInputElement;
               if (el) obj[n] = el.value;
             });
+            clearIconSelector();
             ctrl.save(obj, isNew);
           }, ctrl.redraw),
         },
         [
-          h('div.form-group', [
-            h('label.form-label', { attrs: { for: 'study-name' } }, i18n('name')),
-            h('div.icon-name', [
-              h(
-                'div.icon-select#icon-select',
-                {
-                  hook: {
-                    insert: () => {}, // todo
+          h('div.form-split.icon-name', [
+            h('div.form-group', [
+              h('label.form-label', { attrs: { for: 'study-icon' } }, i18n('icon')),
+              h('input#study-icon.none', {
+                hook: {
+                  insert: vnode => {
+                    if (data.icon) (vnode.elm as HTMLInputElement).value = data.icon;
                   },
                 },
-                data.icon ? h('img', { attrs: { src: assetUrl(`icon/${data.icon}.svg`) } }) : null,
+              }),
+              h(
+                'div#icon-selector.icon-select',
+                {
+                  hook: bind('click', () => {
+                    if (iconSelector) iconSelector.toggle();
+                    else
+                      iconSelector = createIconSelector(
+                        document.getElementById('icon-selector')!,
+                        data.icon || 'study',
+                        'study',
+                        key => {
+                          const input = document.getElementById('study-icon') as HTMLInputElement;
+                          input.value = key;
+                          ctrl.redraw();
+                        },
+                      );
+                  }),
+                },
+                h('div.icon', {
+                  key: icon,
+                  hook: {
+                    insert: vnode => {
+                      (vnode.elm as HTMLElement).innerHTML = svgSprite('study', icon);
+                    },
+                  },
+                }),
               ),
+            ]),
+            h('div.form-group', [
+              h('label.form-label', { attrs: { for: 'study-name' } }, i18n('name')),
               h('input#study-name.form-control', {
                 attrs: {
                   minlength: 3,

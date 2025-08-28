@@ -1,3 +1,5 @@
+import { createIconSelector, svgSprite } from 'common/icon-selector';
+
 window.lishogi.ready.then(() => {
   function updateFormatClass() {
     const $select = $('#form3-format');
@@ -22,6 +24,24 @@ window.lishogi.ready.then(() => {
 
   $('#form3-format').on('change', updateFormatClass);
   $('#form3-timeControlSetup_timeControl').on('change', updateTimeControlClass);
+
+  const selectorInputEl = document.getElementById('form3-icon') as HTMLInputElement;
+  const selectorEl = document.getElementById('icon-selector')!;
+  selectorEl.innerHTML = '<div class="icon"></div>';
+  function updateIconSelectorDisplay(icon: string | undefined) {
+    const selectorIcon = selectorEl.getElementsByClassName('icon')[0];
+    selectorIcon.innerHTML = icon ? svgSprite('tour', icon) : '';
+  }
+  updateIconSelectorDisplay(selectorInputEl.value);
+  let selector: any;
+  selectorEl.addEventListener('click', () => {
+    if (selector) selector.toggle();
+    else
+      selector = createIconSelector(selectorEl, selectorInputEl.value || '', 'tour', key => {
+        selectorInputEl.value = key;
+        updateIconSelectorDisplay(key);
+      });
+  });
 
   $('.form-fieldset--toggle').each(function () {
     const toggle = () => this.classList.toggle('form-fieldset--toggle-off');

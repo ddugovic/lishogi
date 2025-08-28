@@ -18,7 +18,15 @@
     .name {
       @extend %ellipsis;
 
+      display: flex;
+      align-items: center;
       padding: 0.7rem 0;
+
+      .icon {
+        width: 24px;
+        height: 24px;
+        margin-right: 0.5rem;
+      }
     }
 
     .credit {
