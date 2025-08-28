@@ -10,6 +10,12 @@ import type { SetupDataKey } from './ctrl';
 export const variantChoicesTranslated: [number, string][] = RULES.map(
   r => [variantToId(r), i18nVariant(r)] as [number, string],
 );
+const validAiVariantsIds = (['standard', 'minishogi', 'kyotoshogi'] as VariantKey[]).map(v =>
+  variantToId(v),
+);
+export const aiVariantChoicesTranslated: [number, string][] = variantChoicesTranslated.filter(vt =>
+  validAiVariantsIds.includes(vt[0]),
+);
 
 export const timeChoices: number[] = [
   0, 0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,

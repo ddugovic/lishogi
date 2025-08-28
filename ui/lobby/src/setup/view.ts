@@ -14,6 +14,7 @@ import { h, type VNode } from 'snabbdom';
 import type SetupCtrl from './ctrl';
 import {
   aiLevelChoices,
+  aiVariantChoicesTranslated,
   byoChoices,
   colorChoices,
   dayChoices,
@@ -81,7 +82,11 @@ function variant(ctrl: SetupCtrl): VNode {
         },
       }),
       h('label', {}, `${i18n('variant')}:`),
-      select(ctrl, 'variant', variantChoicesTranslated),
+      select(
+        ctrl,
+        'variant',
+        ctrl.key === 'ai' ? aiVariantChoicesTranslated : variantChoicesTranslated,
+      ),
     ]),
     ctrl.key !== 'hook'
       ? h('div.setup-position', [
@@ -330,7 +335,12 @@ function innerModalNvui(ctrl: SetupCtrl): MaybeVNodes {
           ? i18n('playWithAFriend')
           : i18n('createAGame'),
     ),
-    selectNvui(ctrl, i18n('variant'), 'variant', variantChoicesTranslated),
+    selectNvui(
+      ctrl,
+      i18n('variant'),
+      'variant',
+      ctrl.key === 'ai' ? aiVariantChoicesTranslated : variantChoicesTranslated,
+    ),
     ctrl.key !== 'hook'
       ? h('div', [
           selectNvui(ctrl, i18n('fromPosition'), 'position', positionChoicesTranslated),
