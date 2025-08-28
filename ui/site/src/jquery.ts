@@ -65,32 +65,4 @@ export function fillJquery(): void {
     };
     $.isArray = Array.isArray; // for ui-slider
   })($);
-
-  $.modal = (html, cls, onClose, withDataAndEvents) => {
-    $.modal.close();
-    if (!html.clone) html = $(`<div>${html}</div>`);
-    const $wrap = $('<div id="modal-wrap">')
-      .html(html.clone(withDataAndEvents).removeClass('none'))
-      .prepend(`<span class="close" data-icon="${icons.cancel}"></span>`);
-    const $overlay = $('<div id="modal-overlay">')
-      .addClass(cls)
-      .data('onClose', onClose)
-      .html($wrap);
-    $wrap.find('.close').on('click', $.modal.close);
-    $overlay.on('mousedown', () => {
-      $.modal.close();
-    });
-    $wrap.on('mousedown', e => {
-      e.stopPropagation();
-    });
-    $('body').addClass('overlayed').prepend($overlay);
-    return $wrap;
-  };
-  $.modal.close = () => {
-    $('body').removeClass('overlayed');
-    $('#modal-overlay').each(function () {
-      ($(this).data('onClose') || $.noop)();
-      $(this).remove();
-    });
-  };
 }

@@ -1,4 +1,5 @@
 import { loadCssPath, loadLishogiScript } from 'common/assets';
+import { modalJs } from 'common/modal';
 import { escapeHtml } from 'common/string';
 
 function main(opts: { $wrap: JQuery; toggle: () => void }): void {
@@ -51,8 +52,9 @@ function commandHelp(aliases: string, args: string, desc: string) {
 
 function help() {
   loadCssPath('misc.clinput.help');
-  $.modal(
-    `<h3>Commands</h3>
+  modalJs({
+    class: 'clinput-help',
+    content: `<h3>Commands</h3>
     ${commandHelp('/tv /follow', ' <user>', 'Watch someone play')}
     ${commandHelp('/play /challenge /match', ' <user>', 'Challenge someone to play')}
     ${commandHelp('/light /dark /transp', '', 'Change the background theme')}
@@ -62,8 +64,7 @@ function help() {
     ${commandHelp('/', '', 'Type a command')}
     ${commandHelp('c', '', 'Focus the chat input')}
     ${commandHelp('esc', '', 'Close modals like this one')}`,
-    'clinput-help',
-  );
+  });
 }
 
 function getDasher(cb: (dasher: any) => void) {

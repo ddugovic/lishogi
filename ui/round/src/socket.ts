@@ -1,4 +1,5 @@
 import { loadCssPath } from 'common/assets';
+import { modalJs } from 'common/modal';
 import notify from 'common/notification';
 import throttle from 'common/throttle';
 import { wsVersion } from 'common/ws';
@@ -163,20 +164,18 @@ export function make(send: Socket.Send, ctrl: RoundController): RoundSocket {
     },
     simulEnd(simul: Simul) {
       loadCssPath('misc.modal');
-      $.modal(
-        $(
-          `<div class="simul-complete">
-            <div class="title">
-              ${i18n('simulComplete')}
-            </div>
-            <div data-icon="f">
-            </div>
-            <a class="button" href="/simul/${simul.id}">
-              ${i18n('backToSimul')}
-            </a>
-          </div>`,
-        ),
-      );
+      modalJs({
+        content: `<div class="simul-complete">
+          <div class="title">
+            ${i18n('simulComplete')}
+          </div>
+          <div data-icon="f">
+          </div>
+          <a class="button" href="/simul/${simul.id}">
+            ${i18n('backToSimul')}
+          </a>
+        </div>`,
+      });
     },
     postGameStudy(studyId: string) {
       ctrl.data.game.postGameStudy = studyId;

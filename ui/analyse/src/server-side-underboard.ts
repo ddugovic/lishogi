@@ -1,5 +1,6 @@
 import { loadLishogiScript } from 'common/assets';
 import { icons } from 'common/icons';
+import { modalJs } from 'common/modal';
 import { spinnerHtml } from 'common/spinner';
 import { escapeHtml } from 'common/string';
 import { i18n } from 'i18n';
@@ -122,11 +123,20 @@ export default function (element: HTMLElement, ctrl: AnalyseCtrl): void {
   $panels.on('click', '.embed-howto', function (this: HTMLElement) {
     const url = `${baseUrl()}/embed/${data.game.id}${location.hash}`;
     const iframe = `<iframe src="${url}?theme=auto&bg=auto"\nwidth=600 height=371 frameborder=0></iframe>`;
-    $.modal(
-      $(
-        `<strong style="font-size:1.5em">${$(this).html()}</strong><br /><br /><pre>${escapeHtml(iframe)}</pre><br />${iframe}<br /><br /><a class="text" data-icon="${icons.infoCircle}" href="/developers#embed-game">${i18n('study:readMoreAboutEmbedding')}</a>`,
-      ),
-    );
+    modalJs({
+      class: 'modal-embed',
+      content: `<strong style="font-size:1.5em">${$(this).html()}</strong>
+        <br>
+        <br>
+        <pre>${escapeHtml(iframe)}</pre>
+        <br>
+        ${iframe}
+        <br>
+        <br>
+        <a class="text" data-icon="${icons.infoCircle}" href="/developers#embed-game">
+          ${i18n('study:readMoreAboutEmbedding')}
+        </a>`,
+    });
   });
 
   function updateNotationLinks(params: Record<string, boolean>): void {
