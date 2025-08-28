@@ -105,25 +105,31 @@
   }
 
   // maybe some colors could look nice
-  // &__leaderboard h2:before {
-  //   color: theme.$c-red;
-  // }
-  // &__winners h2:before {
+  &__leaderboard h2::before {
+    color: theme.$c-red;
+  }
+
+  &__winners h2::before {
+    color: theme.$c-brag;
+  }
+
+  // &__tournaments h2::before {
   //   color: theme.$c-brag;
   // }
-  // &__tournaments h2:before {
-  //   color: theme.$c-brag;
-  // }
-  // &__blog h2:before {
+
+  // &__blog h2::before {
   //   color: theme.$c-secondary;
   // }
-  // &__studies h2:before {
+
+  // &__studies h2::before {
   //   color: theme.$c-primary;
   // }
-  // &__forum h2:before {
-  //   color: theme.$c-secondary;
+
+  // &__forum h2::before {
+  //   color: theme.$c-primary;
   // }
-  // &__description h2:before {
+
+  // &__description h2::before {
   //   color: theme.$c-font;
   // }
 }
