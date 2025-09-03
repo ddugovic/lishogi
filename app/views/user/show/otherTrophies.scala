@@ -15,13 +15,11 @@ object otherTrophies {
         trophies =>
           div(cls := "stacked")(
             trophies.sorted.map { trophy =>
-              trophy.kind.icon.map { icon =>
-                a(
-                  awardCls(trophy),
-                  href := trophy.kind.url.orElse(trophy.url),
-                  ariaTitle(s"${trophy.kind.name}"),
-                )(raw(icon))
-              }
+              a(
+                awardCls(trophy),
+                href := trophy.kind.url.orElse(trophy.url),
+                ariaTitle(s"${trophy.kind.name}"),
+              )
             },
           )
       },
@@ -50,13 +48,11 @@ object otherTrophies {
         )
       },
       info.trophies.filter(_.kind.klass.has("icon3d")).sorted.map { trophy =>
-        trophy.kind.icon.map { icon =>
-          a(
-            awardCls(trophy),
-            href := trophy.kind.url,
-            ariaTitle(trophy.kind.name),
-          )(raw(icon))
-        }
+        a(
+          awardCls(trophy),
+          href := trophy.kind.url,
+          ariaTitle(trophy.kind.name),
+        )(trophy.kind.icon)
       },
       info.isCoach option
         a(
