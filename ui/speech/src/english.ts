@@ -107,6 +107,8 @@ function pronounce(str: string): string | undefined {
       return 'unpromotes';
     case '!':
       return 'promoted';
+    case '同':
+      return 'same destination';
     default:
       return;
   }
