@@ -44,7 +44,7 @@ export function renderClock(ctrl: RoundController, player: Player, position: Pos
         byo: usingByo,
         emerg:
           (millis < clock.emergMs && clock.byoyomi === 0) ||
-          (usingByo && millis < clock.byoEmergeS * 1000),
+          (usingByo && millis < (clock.byoyomi * 1000) / 3),
       },
     },
     clock.opts.nvui
@@ -110,7 +110,6 @@ function formatClockTime(time: Millis, showTenths: boolean, isRunning: boolean, 
     if (!isRunning && time < 1000) {
       tenthsStr += `<huns>${Math.floor(millis / 10) % 10}</huns>`;
     }
-
     return `${baseStr}<tenths><sep>.</sep>${tenthsStr}</tenths>`;
   } else {
     return baseStr;
@@ -134,7 +133,7 @@ export function updateElements(
     const cl = els.clock.parentElement.classList;
     if (
       (millis < clock.emergMs && clock.byoyomi === 0) ||
-      (clock.isUsingByo(color) && millis < clock.byoEmergeS * 1000)
+      (clock.isUsingByo(color) && millis < (clock.byoyomi * 1000) / 3)
     )
       cl.add('emerg');
     else if (cl.contains('emerg')) cl.remove('emerg');
