@@ -1,4 +1,4 @@
-import { useJp } from 'common/common';
+import { useJapanese } from 'common/common';
 import { toMoveOrDrop } from 'keyboard-move/util';
 import { allKeys, files, ranks } from 'shogiground/constants';
 import { boardToSfen } from 'shogiground/sfen';
@@ -36,7 +36,7 @@ export function styleSetting(): Setting<Style> {
       ['nato', 'Nato: pawn, 7 golf 3 foxtrot'],
       ['japanese', 'Japanese: ７ 七 ３ 六'],
     ],
-    default: useJp() ? 'japanese' : 'anna',
+    default: useJapanese() ? 'japanese' : 'anna',
     storage: window.lishogi.storage.make('nvui.moveNotation'),
   });
 }

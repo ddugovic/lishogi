@@ -37,6 +37,6 @@ export const memoize = <A>(compute: () => A): (() => A) => {
   };
 };
 
-export const useJp: () => boolean = memoize(() => document.documentElement.lang === 'ja');
+export const useJapanese: () => boolean = memoize(() => document.documentElement.lang === 'ja');
 
 export const isOnline: () => boolean = () => !('onLine' in navigator) || navigator.onLine;

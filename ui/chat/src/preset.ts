@@ -1,4 +1,4 @@
-import { useJp } from 'common/common';
+import { useJapanese } from 'common/common';
 import { bind } from 'common/snabbdom';
 import { h, type VNode } from 'snabbdom';
 
@@ -53,7 +53,7 @@ const jpGroups: PresetGroups = {
 };
 
 function groupsByLang(): PresetGroups {
-  return useJp() ? jpGroups : enGroups;
+  return useJapanese() ? jpGroups : enGroups;
 }
 
 export function presetCtrl(opts: PresetOpts): PresetCtrl {

@@ -1,4 +1,4 @@
-import { useJp } from 'common/common';
+import { useJapanese } from 'common/common';
 import { icons } from 'common/icons';
 import { initOneWithState, update } from 'common/mini-board';
 import { modal } from 'common/modal';
@@ -98,8 +98,8 @@ function variant(ctrl: SetupCtrl): VNode {
 }
 
 function positionInput(ctrl: SetupCtrl): VNode {
-  const jp = useJp();
-  const handicapLink = jp
+  const ja = useJapanese();
+  const handicapLink = ja
     ? 'https://ja.wikipedia.org/wiki/%E5%B0%86%E6%A3%8B%E3%81%AE%E6%89%8B%E5%90%88%E5%89%B2'
     : 'https://en.wikipedia.org/wiki/Handicap_(shogi)';
   const variant = ctrl.variantKey();
@@ -119,7 +119,7 @@ function positionInput(ctrl: SetupCtrl): VNode {
         ctrl,
         'handicap',
         findHandicaps({ rules: variant }).map(h => {
-          const name = jp ? h.japaneseName : h.englishName;
+          const name = ja ? h.japaneseName : h.englishName;
           return [h.sfen, name];
         }),
         true,
