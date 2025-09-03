@@ -355,20 +355,6 @@ object Pref {
     )
   }
 
-  object ByoyomiStyle {
-    val LANG     = 0
-    val TICK     = 1
-    val ENGLISH  = 2
-    val JAPANESE = 3
-
-    val choices = Seq(
-      LANG,
-      TICK,
-      ENGLISH,
-      JAPANESE,
-    )
-  }
-
   object Challenge {
     val NEVER  = 1
     val RATING = 2

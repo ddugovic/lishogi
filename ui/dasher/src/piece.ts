@@ -97,7 +97,10 @@ export function view(ctrl: PieceCtrl): VNode {
         }),
       },
       h(
-        `div.list.tab-${ctrl.activeTab}`,
+        `div.list.tab.${ctrl.activeTab}`,
+        {
+          key: ctrl.activeTab,
+        },
         ctrl.activeTab === 'chushogi'
           ? ctrl.chu.list.map(pieceView(ctrl.chu.current))
           : ctrl.activeTab === 'kyotoshogi'

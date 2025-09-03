@@ -1,3 +1,6 @@
 {
-  "extends": "@config/tsconfig/build"
+  "extends": "@config/tsconfig/build",
+  "compilerOptions": {
+    "noImplicitAny": false
+  }
 }

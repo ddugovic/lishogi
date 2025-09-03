@@ -59,7 +59,7 @@ export function createIconSelector(
 
   window.lishogi.xhr
     .text('GET', assetUrl(`icons/${categ}.txt`))
-    .then(txt => txt.split('\n').filter(Boolean))
+    .then(txt => txt.split('\n').filter(l => !!l))
     .then(list => {
       list.forEach(icon => {
         const iconEl = document.createElement('div');

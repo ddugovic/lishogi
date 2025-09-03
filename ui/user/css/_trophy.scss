@@ -61,21 +61,6 @@
   font-size: 65px;
 }
 
-.fire-trophy {
-  opacity: 0.9;
-  height: 80px;
-  position: relative;
-
-  &,
-  &:hover {
-    color: theme.$c-font;
-  }
-
-  &:hover {
-    opacity: 1;
-  }
-}
-
 .packed .trophy {
   margin-right: -8px;
 }

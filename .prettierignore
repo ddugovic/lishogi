@@ -10,6 +10,7 @@
 /translation
 /ui/**/generated
 /ui/**/assets
+codepoints.json
 pnpm-lock.yaml
 
 # biome js

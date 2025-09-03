@@ -77,6 +77,7 @@ export async function font(rootDir: string, outDir: string): Promise<void> {
       const key = toKebabCase(name);
       scssLines.push(`$${key}: '${formatScssChar(cp)}';`);
     }
+    scssLines.push('');
 
     const scssWritten = await writeIfChanged(scssExportPath, scssLines.join('\n'));
     if (scssWritten) console.log(`SCSS - Wrote ${scssExportPath}`);
