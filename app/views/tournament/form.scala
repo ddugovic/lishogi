@@ -59,7 +59,7 @@ object form {
     ) {
       val fields = new TourFields(form, tour.some)
       main(cls := "page-small")(
-        div(cls := "tour__form box box-pad")(
+        div(cls := s"tour__form box box-pad${tour.isFinished ?? " tour-finished"}")(
           h1(title),
           postForm(cls := "form3", action := routes.Tournament.update(tour.id))(
             form3.globalError(form),
@@ -156,7 +156,10 @@ object form {
           half = true,
         )(form3.input(_)(autocomplete := "off")),
         form3.group(form("conditions.nbRatedGame.nb"), frag("Minimum rated games"), half = true)(
-          form3.select(_, Condition.DataForm.nbRatedGameChoices),
+          form3.select(
+            _,
+            Condition.DataForm.nbRatedGameChoices,
+          ),
         ),
       ),
       form3.split(
@@ -165,7 +168,10 @@ object form {
         ),
         form3
           .group(form("conditions.maxRating.rating"), frag("Maximum weekly rating"), half = true)(
-            form3.select(_, Condition.DataForm.maxRatingChoices),
+            form3.select(
+              _,
+              Condition.DataForm.maxRatingChoices,
+            ),
           ),
       ),
       (tour.isEmpty && teams.nonEmpty) option {
@@ -414,7 +420,7 @@ final private class TourFields(form: Form[_], tour: Option[Tournament])(implicit
         form3.select(
           _,
           DataForm.minutes.map(m => (m, trans.nbMinutes.pluralSameTxt(m))),
-          disabled = disabledAfterFinish,
+          disabled = disabledAfterFinish || tour.exists(_.hasArrangements),
         ),
       ),
       form3.group(
@@ -422,7 +428,7 @@ final private class TourFields(form: Form[_], tour: Option[Tournament])(implicit
         trans.endDate(),
         klass = "f-robin f-organized",
         half = true,
-      )(form3.flatpickr(_, disabled = disabledAfterFinish)),
+      )(form3.flatpickr(_, disabled = disabledAfterFinish || !tour.exists(_.hasArrangements))),
     )
 
   def description =

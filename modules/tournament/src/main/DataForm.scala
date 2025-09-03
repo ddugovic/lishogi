@@ -50,9 +50,9 @@ final class DataForm {
       name = tour.name.some,
       format = tour.format.key.some,
       timeControlSetup = TimeControl.DataForm.Setup(tour.timeControl),
-      minutes = tour.minutes.some,
+      minutes = tour.isArena option tour.minutes,
       startDate = tour.startsAt.some,
-      finishDate = tour.finishesAt.some,
+      finishDate = tour.hasArrangements option tour.finishesAt,
       variant = tour.variant.id.toString.some,
       position = tour.position,
       rated = tour.mode.rated.some,
@@ -86,8 +86,17 @@ final class DataForm {
   private def form(user: User, prev: Option[Tournament]) =
     Form {
       makeMapping(user) pipe { m =>
-        prev.fold(m) { tour =>
+        prev.fold(
+          m.verifying(
+            "Finish date needs to be in the future",
+            _.finishDate.fold(true)(_.isAfter(DateTime.now)),
+          ),
+        ) { tour =>
           m
+            .verifying(
+              "Finish date needs to be in the future",
+              tour.isFinished || _.finishDate.fold(true)(_.isAfter(DateTime.now)),
+            )
             .verifying(
               "Can't change variant after players have joined",
               _.realVariant == tour.variant || tour.nbPlayers == 0,
@@ -125,12 +134,9 @@ final class DataForm {
       "name"             -> optional(nameType),
       "format"           -> optional(stringIn(Format.all.map(_.key).toSet)),
       "timeControlSetup" -> TimeControl.DataForm.setup,
-      "minutes" -> optional {
-        if (lila.security.Granter(_.ManageTournament)(user)) number
-        else numberIn(minutes)
-      },
+      "minutes"          -> optional(number),
       "startDate"        -> optional(ISODateTimeOrTimestamp.isoDateTimeOrTimestamp),
-      "finishDate"       -> optional(inTheFuture(ISODateTimeOrTimestamp.isoDateTimeOrTimestamp)),
+      "finishDate"       -> optional(ISODateTimeOrTimestamp.isoDateTimeOrTimestamp),
       "variant"          -> optional(text.verifying(v => guessVariant(v).isDefined)),
       "position"         -> optional(lila.common.Form.sfen.clean),
       "rated"            -> optional(boolean),
@@ -147,7 +153,10 @@ final class DataForm {
       "hasChat"          -> optional(boolean),
     )(TournamentSetup.apply)(TournamentSetup.unapply)
       .verifying("Invalid starting position", _.validPosition)
-      .verifying("Provide valid duration", _.validMinutes)
+      .verifying(
+        "Provide valid duration",
+        _.validMinutes(lila.security.Granter(_.ManageTournament)(user)),
+      )
       .verifying("End date needs to come at least 20 minutes after start date", _.validFinishDate)
       .verifying("Games with this time control cannot be rated", _.validRatedVariant)
       .verifying("Cannot have correspondence in arena format", _.validTimeControl)
@@ -226,7 +235,8 @@ private[tournament] case class TournamentSetup(
     sfen.toSituation(realVariant).exists(_.playable(strict = true, withImpasse = true))
   }
 
-  def validMinutes = minutes.isDefined || realFormat != Format.Arena
+  def validMinutes(granted: Boolean) =
+    realFormat != Format.Arena || (~minutes.map(m => granted || minutes.contains(m)))
 
   def validFinishDate =
     finishDate.fold(realFormat == Format.Arena)(_.minusMinutes(20) isAfter realStartDate)
