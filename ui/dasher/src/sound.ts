@@ -1,56 +1,73 @@
+import { useJapanese } from 'common/common';
 import { debounce } from 'common/timings';
 import { i18n } from 'i18n';
 import { h, type VNode } from 'snabbdom';
 import { bind, type Close, header } from './util';
 
-type SoundKey = string;
-
 interface Sound {
-  key: SoundKey;
-  name: string;
+  key: SoundSet | ClockSoundSet;
+  en: string;
+  ja: string;
 }
 
+type Tab = 'system' | 'clock';
+
 export interface SoundData {
-  list: Sound[];
+  system: Sound[];
+  clock: Sound[];
 }
 
 export interface SoundCtrl {
-  makeList(): Sound[];
-  api: any;
-  set(k: SoundKey): void;
+  data: SoundData;
+  activeTab: Tab;
+  setActiveTab(t: Tab): void;
+  set(k: SoundSet): void;
+  setClock(k: ClockSoundSet): void;
   volume(v: number): void;
   redraw: Redraw;
   close: Close;
 }
 
-export function ctrl(soundData: SoundData, redraw: Redraw, close: Close): SoundCtrl {
-  const api = window.lishogi.sound;
+const soundApi = window.lishogi.sound;
 
+export function ctrl(soundData: SoundData, redraw: Redraw, close: Close): SoundCtrl {
   return {
-    makeList() {
-      const canSpeech = window.speechSynthesis?.getVoices().length;
-      return soundData.list.filter(s => s.key != 'speech' || canSpeech);
+    data: soundData,
+    activeTab: 'system',
+    setActiveTab(t: Tab) {
+      this.activeTab = t;
+      this.redraw();
     },
-    api,
-    set(key: SoundKey) {
-      api.speech(key == 'speech');
-      window.lishogi.pubsub.emit('speech.enabled', api.speech());
-      if (api.speech()) api.say({ en: 'Speech synthesis ready', jp: '音声合成の準備が整いました' });
-      else {
-        api.changeSet(key);
-        // If we want to play move for all sets we need to get move sound for pentatonic
-        if (key === 'music') api.play('genericNotify');
-        else api.play('move');
-        window.lishogi.xhr
-          .text('POST', '/pref/soundSet', { formData: { set: key } })
-          .catch(() => window.lishogi.announce({ msg: 'Failed to save sound preference' }));
-      }
+    set(key: SoundSet) {
+      soundApi.soundSet(key);
+      window.lishogi.pubsub.emit('speech.enabled', key === 'speech');
+
+      if (key === 'speech')
+        soundApi.say({ en: 'Speech synthesis ready', ja: '音声合成の準備が整いました' });
+      else soundApi.move();
+
+      window.lishogi.xhr
+        .text('POST', '/pref/soundSet', { formData: { set: key } })
+        .catch(() => window.lishogi.announce({ msg: 'Failed to save sound preference' }));
+
+      redraw();
+    },
+    setClock(key: ClockSoundSet) {
+      soundApi.clockSoundSet(key);
+
+      soundApi.play('low-time', 'clock');
+
+      window.lishogi.xhr
+        .text('POST', '/pref/clockSoundSet', { formData: { set: key } })
+        .catch(() => window.lishogi.announce({ msg: 'Failed to save sound preference' }));
+
       redraw();
     },
     volume(v: number) {
-      api.setVolume(v);
-      // plays a move sound if speech is off
-      api.sayOrPlay('move', { en: 'Volume set', jp: '音量が設定されました' });
+      soundApi.volume(v);
+      if (soundApi.soundSet() === 'speech')
+        soundApi.say({ en: 'Volume set', ja: '音量が設定されました' });
+      else soundApi.move();
     },
     redraw,
     close,
@@ -58,10 +75,15 @@ export function ctrl(soundData: SoundData, redraw: Redraw, close: Close): SoundC
 }
 
 export function view(ctrl: SoundCtrl): VNode {
-  const current = ctrl.api.speech() ? 'speech' : ctrl.api.set();
+  const current = ctrl.activeTab === 'system' ? soundApi.soundSet() : soundApi.clockSoundSet();
+  const canSpeech = window.speechSynthesis?.getVoices().length;
+  const list =
+    ctrl.activeTab === 'system'
+      ? ctrl.data.system.filter(s => s.key !== 'speech' || canSpeech)
+      : ctrl.data.clock;
 
   return h(
-    `div.sub.sound.${ctrl.api.set()}`,
+    `div.sub.sound.${soundApi.soundSet()}`,
     {
       hook: {
         insert() {
@@ -71,8 +93,24 @@ export function view(ctrl: SoundCtrl): VNode {
     },
     [
       header(i18n('sound'), ctrl.close),
+      h(
+        'a.categ-tabs',
+        {
+          hook: bind('click', e => {
+            const tab = ((e.target as HTMLElement).dataset.tab || 'standard') as Tab;
+            ctrl.setActiveTab(tab);
+          }),
+        },
+        ['system', 'clock'].map((v: Tab) =>
+          h(
+            'div',
+            { attrs: { 'data-tab': v }, class: { active: ctrl.activeTab === v } },
+            v === 'system' ? i18n('preferences:systemSound') : i18n('clock'),
+          ),
+        ),
+      ),
       h('div.content', [
-        h('div.selector', ctrl.makeList().map(soundView(ctrl, current))),
+        h('div.selector', { key: ctrl.activeTab }, list.map(soundView(ctrl, current))),
         slider(ctrl),
       ]),
     ],
@@ -95,7 +133,7 @@ function slider(ctrl: SoundCtrl): VNode {
           const el = vnode.elm as HTMLInputElement;
           const setVolume = debounce(ctrl.volume, 300);
 
-          el.value = ctrl.api.getVolume();
+          el.value = soundApi.volume().toString();
           el.addEventListener('input', _ => {
             const value = Number.parseFloat(el.value);
             setVolume(value);
@@ -107,14 +145,18 @@ function slider(ctrl: SoundCtrl): VNode {
   );
 }
 
-function soundView(ctrl: SoundCtrl, current: SoundKey) {
+function soundView(ctrl: SoundCtrl, current: string) {
   return (s: Sound) =>
     h(
       'a.text',
       {
-        hook: bind('click', () => ctrl.set(s.key)),
+        hook: bind('click', () =>
+          ctrl.activeTab === 'system'
+            ? ctrl.set(s.key as SoundSet)
+            : ctrl.setClock(s.key as ClockSoundSet),
+        ),
         class: { active: current === s.key },
       },
-      s.name,
+      useJapanese() ? s.ja : s.en,
     );
 }

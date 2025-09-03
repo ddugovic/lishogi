@@ -116,20 +116,16 @@ object pref {
           ),
           categFieldset(PrefCateg.ShogiClock, categ)(
             setting(
+              audibleClocks(),
+              radios(form("clock.audible"), translatedClockAudibleChoices),
+            ),
+            setting(
               tenthsOfSeconds(),
               radios(form("clock.tenths"), translatedClockTenthsChoices),
             ),
             setting(
-              clockTickingStart(),
-              radios(form("clock.countdown"), translatedClockCountdownChoices),
-            ),
-            setting(
               soundWhenTimeGetsCritical(),
               radios(form("clock.sound"), booleanChoices),
-            ),
-            setting(
-              byoyomiStyle(),
-              radios(form("clock.byoyomiStyle"), translatedByoyomiStyles),
             ),
             setting(
               giveMoreTime(),

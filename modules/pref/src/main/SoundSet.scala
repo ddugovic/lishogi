@@ -1,35 +1,60 @@
 package lila.pref
 
-class SoundSet private[pref] (val key: String, val name: String) {
+class SoundSet private[pref] (val key: String, val enName: String, val jaName: String) {
 
   override def toString = key
 
   def cssClass = key
 }
 
-object SoundSet {
+sealed trait SoundSetBase {
 
-  val default = new SoundSet("shogi", "Shogi")
-  val silent  = new SoundSet("silent", "Silent")
+  val all: List[SoundSet]
 
-  val list = List(
-    silent,
-    new SoundSet("chess", "Chess"),
-    new SoundSet("nes", "NES"),
-    new SoundSet("sfx", "SFX"),
-    new SoundSet("futuristic", "Futuristic"),
-    new SoundSet("robot", "Robot"),
-    new SoundSet("music", "Pentatonic"),
-    new SoundSet("shogialt", "Shogi Alternative"),
-    default,
-    new SoundSet("speech", "Speech"),
-  )
+  val default: SoundSet
 
-  lazy val allByKey = list map { c =>
-    c.key -> c
+  lazy val allByKey = all map { s =>
+    s.key -> s
   } toMap
 
   def apply(key: String) = allByKey.getOrElse(key.toLowerCase, default)
 
   def contains(key: String) = allByKey contains key.toLowerCase
+
+}
+
+object SoundSet extends SoundSetBase {
+
+  val default = new SoundSet("shogi", "Shogi", "将棋")
+  val silent  = new SoundSet("silent", "Silent", "無音")
+
+  val all = List(
+    silent,
+    default,
+    new SoundSet("shogialt", "Shogi Alternative", "将棋（代替）"),
+    new SoundSet("chess", "Chess", "チェス"),
+    new SoundSet("nes", "NES", "ファミコン"),
+    new SoundSet("sfx", "SFX", "効果音"),
+    new SoundSet("speech", "Speech", "音声"),
+  )
+
+}
+
+object ClockSoundSet extends SoundSetBase {
+
+  val default = new SoundSet("system", "System", "システム")
+  val silent  = new SoundSet("silent", "Silent", "無音")
+
+  val all = List(
+    silent,
+    default,
+    new SoundSet("chisei_mazawa", "Mazawa Chisei", "真澤千星"),
+    new SoundSet("shougi_sennin", "Shogi sage", "将棋仙人"),
+    new SoundSet("ippan_dansei", "Ordinary Male", "一般男性"),
+    new SoundSet("sakura_ajisai", "Sakura Ajisai", "紫陽花さくら"),
+    new SoundSet("robot_ja", "Robot (JP)", "ロボット"),
+    new SoundSet("eigo", "English", "English"),
+    new SoundSet("robot_en", "Robot (EN)", "Robot"),
+  )
+
 }

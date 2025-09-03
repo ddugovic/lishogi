@@ -8,6 +8,7 @@
 
       background-size: cover;
       background-position: center;
+      padding-bottom: 1rem;
 
       .no-square {
         width: 56.25px;
@@ -27,29 +28,6 @@
           height: 200%;
           margin: calc(-50% / 11 * 12) -50%;
           background-repeat: no-repeat;
-        }
-      }
-    }
-
-    .piece-tabs {
-      display: flex;
-      justify-content: space-around;
-      border-top: 2px solid theme.$c-secondary;
-
-      div {
-        flex: 1;
-        opacity: 0.65;
-        padding: 10px 0;
-        text-align: center;
-        font-size: 0.9rem;
-
-        &:hover {
-          opacity: 0.9;
-        }
-
-        &.active {
-          opacity: 1;
-          font-weight: bold;
         }
       }
     }

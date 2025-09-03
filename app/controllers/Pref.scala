@@ -84,16 +84,17 @@ final class Pref(env: Env) extends LilaController(env) {
     }
 
   private lazy val setters = Map(
-    "theme"       -> (forms.theme       -> save("theme") _),
-    "pieceSet"    -> (forms.pieceSet    -> save("pieceSet") _),
-    "chuPieceSet" -> (forms.chuPieceSet -> save("chuPieceSet") _),
-    "kyoPieceSet" -> (forms.kyoPieceSet -> save("kyoPieceSet") _),
-    "soundSet"    -> (forms.soundSet    -> save("soundSet") _),
-    "bg"          -> (forms.bg          -> save("bg") _),
-    "thickGrid"   -> (forms.thickGrid   -> save("thickGrid") _),
-    "bgImg"       -> (forms.bgImg       -> save("bgImg") _),
-    "zen"         -> (forms.zen         -> save("zen") _),
-    "notation"    -> (forms.notation    -> save("notation") _),
+    "theme"         -> (forms.theme         -> save("theme") _),
+    "pieceSet"      -> (forms.pieceSet      -> save("pieceSet") _),
+    "chuPieceSet"   -> (forms.chuPieceSet   -> save("chuPieceSet") _),
+    "kyoPieceSet"   -> (forms.kyoPieceSet   -> save("kyoPieceSet") _),
+    "soundSet"      -> (forms.soundSet      -> save("soundSet") _),
+    "clockSoundSet" -> (forms.clockSoundSet -> save("clockSoundSet") _),
+    "bg"            -> (forms.bg            -> save("bg") _),
+    "thickGrid"     -> (forms.thickGrid     -> save("thickGrid") _),
+    "bgImg"         -> (forms.bgImg         -> save("bgImg") _),
+    "zen"           -> (forms.zen           -> save("zen") _),
+    "notation"      -> (forms.notation      -> save("notation") _),
   )
 
   private def save(name: String)(value: String, ctx: Context): Fu[Cookie] =

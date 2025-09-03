@@ -73,6 +73,22 @@ export function view(ctrl: PieceCtrl): VNode {
   return h('div.sub.piece', [
     header(i18n('pieceSet'), () => ctrl.close()),
     h(
+      'a.categ-tabs',
+      {
+        hook: bind('click', e => {
+          const tab = ((e.target as HTMLElement).dataset.tab || 'standard') as Tab;
+          ctrl.setActiveTab(tab);
+        }),
+      },
+      ['standard', 'chushogi', 'kyotoshogi'].map((v: Tab) =>
+        h(
+          'div',
+          { attrs: { 'data-tab': v }, class: { active: ctrl.activeTab === v } },
+          i18nVariant(v),
+        ),
+      ),
+    ),
+    h(
       'div.list-wrap',
       {
         hook: bind('click', e => {
@@ -87,22 +103,6 @@ export function view(ctrl: PieceCtrl): VNode {
           : ctrl.activeTab === 'kyotoshogi'
             ? ctrl.kyo.list.map(pieceView(ctrl.kyo.current))
             : ctrl.std.list.map(pieceView(ctrl.std.current)),
-      ),
-    ),
-    h(
-      'a.piece-tabs',
-      {
-        hook: bind('click', e => {
-          const tab = ((e.target as HTMLElement).dataset.tab || 'standard') as Tab;
-          ctrl.setActiveTab(tab);
-        }),
-      },
-      ['standard', 'chushogi', 'kyotoshogi'].map((v: Tab) =>
-        h(
-          'div',
-          { attrs: { 'data-tab': v }, class: { active: ctrl.activeTab === v } },
-          i18nVariant(v),
-        ),
       ),
     ),
   ]);

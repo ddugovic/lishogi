@@ -31,6 +31,7 @@ object RequestPref {
       chuPieceSet = paramOrSession("chuPieceSet") | default.chuPieceSet,
       kyoPieceSet = paramOrSession("kyoPieceSet") | default.kyoPieceSet,
       soundSet = paramOrSession("soundSet") | default.soundSet,
+      clockSoundSet = paramOrSession("clockSoundSet") | default.clockSoundSet,
       bgImg = paramOrSession("bgImg"),
       notation =
         paramOrSession("notation").flatMap(_.toIntOption) | defaultNotation(req, languageNotation),

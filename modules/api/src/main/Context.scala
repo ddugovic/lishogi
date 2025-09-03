@@ -69,6 +69,8 @@ sealed trait Context extends lila.user.UserContextWrapper {
 
   def currentSoundSet = lila.pref.SoundSet(pref.soundSet)
 
+  def currentClockSoundSet = lila.pref.ClockSoundSet(pref.clockSoundSet)
+
   def currentBg = lila.pref.Background(pref.background)
 
   lazy val isMobileBrowser = HTTPRequest isMobile req

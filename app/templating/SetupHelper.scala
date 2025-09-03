@@ -217,27 +217,17 @@ trait SetupHelper { self: I18nHelper =>
       (Pref.ColorName.BLACK, s"${trans.black.txt()}/${trans.white.txt()}"),
     )
 
+  def translatedClockAudibleChoices(implicit lang: Lang) =
+    List(
+      (Pref.ClockAudible.MINE, trans.preferences.myClock.txt()),
+      (Pref.ClockAudible.ALL, trans.preferences.allClocks.txt()),
+    )
+
   def translatedClockTenthsChoices(implicit lang: Lang) =
     List(
       (Pref.ClockTenths.NEVER, trans.never.txt()),
       (Pref.ClockTenths.LOWTIME, trans.preferences.whenTimeRemainingLessThanTenSeconds.txt()),
       (Pref.ClockTenths.ALWAYS, trans.always.txt()),
-    )
-
-  def translatedClockCountdownChoices(implicit lang: Lang) =
-    List(
-      (Pref.ClockCountdown.NEVER, trans.never.txt()),
-      (Pref.ClockCountdown.THREE, trans.nbSeconds.pluralSameTxt(3)),
-      (Pref.ClockCountdown.FIVE, trans.nbSeconds.pluralSameTxt(5)),
-      (Pref.ClockCountdown.TEN, trans.nbSeconds.pluralSameTxt(10)),
-    )
-
-  def translatedByoyomiStyles(implicit lang: Lang) =
-    List(
-      (Pref.ByoyomiStyle.LANG, trans.language.txt()),
-      (Pref.ByoyomiStyle.TICK, trans.preferences.byoyomiStyleTick.txt()),
-      (Pref.ByoyomiStyle.ENGLISH, "English"),
-      (Pref.ByoyomiStyle.JAPANESE, "日本語"),
     )
 
   def translatedMoveEventChoices(implicit lang: Lang) =

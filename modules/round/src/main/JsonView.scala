@@ -96,10 +96,9 @@ final class JsonView(
                   "coords"            -> pref.coords,
                   "resizeHandle"      -> pref.resizeHandle,
                   "replay"            -> pref.replay,
+                  "clockAudible"      -> pref.clockAudible,
                   "clockTenths"       -> pref.clockTenths,
-                  "clockCountdown"    -> pref.clockCountdown,
                   "moveEvent"         -> pref.moveEvent,
-                  "byoyomiStyle"      -> pref.byoyomiStyle,
                 )
                 .add("clockSound" -> pref.clockSound)
                 .add("confirmResign" -> (!nvui && pref.confirmResign == Pref.ConfirmResign.YES))
@@ -189,8 +188,8 @@ final class JsonView(
                   "coords"            -> pref.coords,
                   "resizeHandle"      -> pref.resizeHandle,
                   "replay"            -> pref.replay,
+                  "clockAudible"      -> pref.clockAudible,
                   "clockTenths"       -> pref.clockTenths,
-                  "clockCountdown"    -> pref.clockCountdown,
                   "moveEvent"         -> pref.moveEvent,
                 )
                 .add("highlightLastDests" -> pref.highlightLastDests)

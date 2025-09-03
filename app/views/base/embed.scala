@@ -3,7 +3,6 @@ package views.html.base
 import lila.app.templating.Environment._
 import lila.app.ui.EmbedConfig
 import lila.app.ui.ScalatagsTemplate._
-import lila.pref.SoundSet
 
 object embed {
 
@@ -36,15 +35,16 @@ object embed {
           moreJs,
         ),
         st.body(cls := s"base highlight ${config.theme}")(
-          layout.dataSoundSet     := SoundSet.silent.key,
-          layout.dataAssetUrl     := env.net.assetBaseUrl,
-          layout.dataAssetVersion := assetVersion.value,
-          layout.dataTheme        := config.bg,
-          layout.dataPieceSet     := config.pieceSet.key,
-          layout.dataChuPieceSet  := config.chuPieceSet.key,
-          layout.dataKyoPieceSet  := config.kyoPieceSet.key,
-          layout.dataNotation     := config.notation,
-          layout.dataColorName    := config.colorName.toString,
+          layout.dataSoundSet      := lila.pref.SoundSet.silent.key,
+          layout.dataClockSoundSet := lila.pref.ClockSoundSet.silent.key,
+          layout.dataAssetUrl      := env.net.assetBaseUrl,
+          layout.dataAssetVersion  := assetVersion.value,
+          layout.dataTheme         := config.bg,
+          layout.dataPieceSet      := config.pieceSet.key,
+          layout.dataChuPieceSet   := config.chuPieceSet.key,
+          layout.dataKyoPieceSet   := config.kyoPieceSet.key,
+          layout.dataNotation      := config.notation,
+          layout.dataColorName     := config.colorName.toString,
           body,
         ),
       ),

@@ -222,6 +222,7 @@ object layout {
   val dataColorName             = attr("data-color-name")
   val dataNotation              = attr("data-notation")
   val dataSoundSet              = attr("data-sound-set")
+  val dataClockSoundSet         = attr("data-clock-sound-set")
   val dataTheme                 = attr("data-theme")
   val dataBoardTheme            = attr("data-board-theme")
   val dataPieceSet              = attr("data-piece-set")
@@ -327,6 +328,7 @@ object layout {
           dataUser          := ctx.userId,
           dataDate          := (ctx.req.path == "/").option(showEnglishDayMonth(DateTime.now)),
           dataSoundSet      := ctx.currentSoundSet.toString,
+          dataClockSoundSet := ctx.currentClockSoundSet.toString,
           dataSocketDomains := socketDomains.mkString(","),
           dataAssetUrl      := assetBaseUrl,
           dataAssetVersion  := assetVersion.value,

@@ -101,7 +101,6 @@
 
   .selector {
     flex: 1 1 100%;
-    margin: 0.5rem 0;
 
     a {
       display: block;
@@ -118,6 +117,16 @@
         color: theme.$c-secondary-over !important;
       }
 
+      &::before {
+        margin-right: 8px;
+        font-size: 19px;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+
+        @include mixins.transition(opacity);
+      }
+
       &.active::before {
         opacity: 1;
         color: theme.$c-secondary-over !important;
@@ -126,6 +135,35 @@
 
     &.large a {
       padding: 1rem;
+    }
+  }
+
+  .categ-tabs {
+    display: flex;
+    justify-content: space-around;
+    border-bottom: theme.$border;
+
+    div {
+      flex: 1;
+      padding: 0.5rem 0;
+      text-align: center;
+      font-size: 0.9rem;
+      border-right: theme.$border;
+      transition: color 100ms;
+
+      &:last-child {
+        border-right: none;
+      }
+
+      &:hover {
+        background: local.$c-dasher-light;
+      }
+
+      &.active {
+        background: theme.$c-secondary;
+        color: theme.$c-secondary-over;
+        font-weight: bold;
+      }
     }
   }
 
@@ -141,6 +179,7 @@
 
   .sound {
     .slider {
+      display: flex;
       border-top: theme.$border;
 
       input {

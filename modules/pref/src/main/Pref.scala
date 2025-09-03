@@ -11,13 +11,13 @@ case class Pref(
     chuPieceSet: String,
     kyoPieceSet: String,
     soundSet: String,
+    clockSoundSet: String,
     blindfold: Int,
     takeback: Int,
     moretime: Int,
+    clockAudible: Int,
     clockTenths: Int,
-    clockCountdown: Int,
     clockSound: Boolean,
-    byoyomiStyle: Int,
     premove: Boolean,
     boardLayout: Int,
     animation: Int,
@@ -97,6 +97,10 @@ case class Pref(
       case "soundSet" =>
         SoundSet.allByKey get value map { s =>
           copy(soundSet = s.key)
+        }
+      case "clockSoundSet" =>
+        ClockSoundSet.allByKey get value map { s =>
+          copy(clockSoundSet = s.key)
         }
       case "thickGrid" => copy(thickGrid = if (value == "1") 1 else 0).some
       case "zen"       => copy(zen = if (value == "1") 1 else 0).some
@@ -315,6 +319,16 @@ object Pref {
     )
   }
 
+  object ClockAudible {
+    val MINE = 0
+    val ALL  = 1
+
+    val choices = Seq(
+      MINE,
+      ALL,
+    )
+  }
+
   object ClockTenths {
     val NEVER   = 0
     val LOWTIME = 1
@@ -428,11 +442,11 @@ object Pref {
     chuPieceSet = ChuPieceSet.default.key,
     kyoPieceSet = KyoPieceSet.default.key,
     soundSet = SoundSet.default.key,
+    clockSoundSet = ClockSoundSet.default.key,
     blindfold = Blindfold.NO,
     takeback = Takeback.ALWAYS,
     moretime = Moretime.ALWAYS,
     clockSound = true,
-    byoyomiStyle = ByoyomiStyle.TICK,
     premove = true,
     boardLayout = BoardLayout.DEFAULT,
     animation = 2,
@@ -447,8 +461,8 @@ object Pref {
     dropDestination = true,
     replay = Replay.ALWAYS,
     colorName = ColorName.LANG,
+    clockAudible = ClockAudible.MINE,
     clockTenths = ClockTenths.LOWTIME,
-    clockCountdown = ClockCountdown.THREE,
     challenge = Challenge.ALWAYS,
     tourChallenge = Challenge.ALWAYS,
     message = Message.ALWAYS,

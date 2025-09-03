@@ -38,10 +38,18 @@ final class Dasher(env: Env) extends LilaController(env) {
                 "list"     -> LangList.choices,
               ),
               "sound" -> Json.obj(
-                "list" -> JsArray(lila.pref.SoundSet.list.map { sound =>
+                "system" -> JsArray(lila.pref.SoundSet.all.map { sound =>
                   Json.obj(
-                    "key"  -> sound.key,
-                    "name" -> sound.name,
+                    "key" -> sound.key,
+                    "en"  -> sound.enName,
+                    "ja"  -> sound.jaName,
+                  )
+                }),
+                "clock" -> JsArray(lila.pref.ClockSoundSet.all.map { sound =>
+                  Json.obj(
+                    "key" -> sound.key,
+                    "en"  -> sound.enName,
+                    "ja"  -> sound.jaName,
                   )
                 }),
               ),
