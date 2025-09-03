@@ -10,6 +10,15 @@ main {
     .coach-side {
       grid-area: side;
       margin: 2em 2em 0 2em;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+
+      a {
+        width: 100%;
+        text-align: center;
+      }
     }
 
     display: grid;

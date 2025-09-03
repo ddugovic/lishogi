@@ -1,5 +1,6 @@
 @use 'pkg:breakpoint-sass' as breakpoint;
 @use 'pkg:common/abstract/extends';
+@use 'pkg:common/abstract/icons';
 @use 'pkg:common/abstract/mixins';
 @use 'pkg:common/theme';
 @use 'local';
@@ -80,16 +81,18 @@
       a {
         display: flex;
         color: theme.$c-font;
-
-        span {
-          margin-left: 0.5em;
-        }
       }
     }
 
     .flag {
       margin-left: 0.5em;
       vertical-align: text-bottom;
+    }
+
+    .available {
+      span[data-icon='#{icons.$correct}']::before {
+        color: theme.$c-good;
+      }
     }
 
     [data-icon] {
