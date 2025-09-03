@@ -64,7 +64,7 @@ object layout {
       )}${crossorigin ?? "crossorigin"}>""")
 
   private val iconsPreload = frag(
-    preload(assetUrl("icons/lishogi.woff2"), "font", crossorigin = true, "icons/woff2".some),
+    preload(assetUrl("icons/lishogi.woff2"), "font", crossorigin = true, "font/woff2".some),
   )
 
   private def boardPreload(implicit ctx: Context) =
