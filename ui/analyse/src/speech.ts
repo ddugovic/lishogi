@@ -2,7 +2,7 @@ import { loadLishogiScript } from 'common/assets';
 
 export function setup(): void {
   window.lishogi.pubsub.on('speech.enabled', onSpeechChange);
-  onSpeechChange(window.lishogi.sound.speech());
+  onSpeechChange(window.lishogi.sound.soundSet() === 'speech');
 }
 
 function onSpeechChange(enabled: boolean) {

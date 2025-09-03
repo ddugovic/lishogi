@@ -7,7 +7,7 @@ import type RoundController from './ctrl';
 
 export function setup(ctrl: RoundController): void {
   window.lishogi.pubsub.on('speech.enabled', onSpeechChange(ctrl));
-  onSpeechChange(ctrl)(window.lishogi.sound.speech());
+  onSpeechChange(ctrl)(window.lishogi.sound.soundSet() === 'speech');
 }
 
 function onSpeechChange(ctrl: RoundController) {
@@ -26,10 +26,10 @@ export function status(ctrl: RoundController): void {
   const s = viewStatus(ctrl.data.game.status, ctrl.data.game.winner, handicap);
   if (s === 'playingRightNow') notation(ctrl.stepAt(ctrl.ply)?.notation);
   else if (window.lishogi.modules.speech) {
-    window.lishogi.sound.say({ en: s, jp: s }, false);
+    window.lishogi.sound.say({ en: s, ja: s }, false);
     const w = ctrl.data.game.winner;
     const text = w && i18nFormatCapitalized('xIsVictorious', colorName(w, handicap));
-    if (text) window.lishogi.sound.say({ en: text, jp: text }, false);
+    if (text) window.lishogi.sound.say({ en: text, ja: text }, false);
   }
 }
 

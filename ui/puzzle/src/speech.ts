@@ -2,7 +2,7 @@ import { loadLishogiScript } from 'common/assets';
 
 export function setup(): void {
   window.lishogi.pubsub.on('speech.enabled', onSpeechChange);
-  onSpeechChange(window.lishogi.sound.speech());
+  onSpeechChange(window.lishogi.sound.soundSet() === 'speech');
 }
 
 function onSpeechChange(enabled: boolean): void {
@@ -16,10 +16,10 @@ export function node(n: Tree.Node, cut: boolean): void {
 
 export function failure(): void {
   if (window.lishogi.modules.speech)
-    window.lishogi.sound.say({ en: 'Failed!', jp: '失敗！' }, false);
+    window.lishogi.sound.say({ en: 'Failed!', ja: '失敗！' }, false);
 }
 
 export function success(): void {
   if (window.lishogi.modules.speech)
-    window.lishogi.sound.say({ en: 'Success!', jp: '成功！' }, false);
+    window.lishogi.sound.say({ en: 'Success!', ja: '成功！' }, false);
 }

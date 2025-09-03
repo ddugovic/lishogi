@@ -6,7 +6,6 @@ import { readOnlyProp } from '../../util';
 import type { StudyCtrl, StudyData } from '../interfaces';
 import * as xhr from '../study-xhr';
 import type { Goal, StudyPracticeCtrl, StudyPracticeData } from './interfaces';
-import makeSound from './sound';
 import makeSuccess from './study-practice-success';
 
 export default function (
@@ -18,7 +17,6 @@ export default function (
   const nbMoves = prop(0);
   // null = ongoing, true = win, false = fail
   const success = prop<boolean | null>(null);
-  const sound = makeSound();
   const analysisUrl = prop('');
   const autoNext = storedProp('analyse.practice-auto-next', true);
 
@@ -64,7 +62,7 @@ export default function (
 
   function onVictory(): void {
     saveNbMoves();
-    sound.success();
+    window.lishogi.sound.play('practice/victory', 'misc');
     if (autoNext()) setTimeout(goToNext, 1000);
   }
 
@@ -84,7 +82,7 @@ export default function (
 
   function onFailure(): void {
     root.node.fail = true;
-    sound.failure();
+    window.lishogi.sound.play('practice/failure', 'misc');
   }
 
   return {

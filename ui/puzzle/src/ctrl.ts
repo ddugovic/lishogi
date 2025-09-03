@@ -58,12 +58,6 @@ export default function (opts: PuzzleOpts, redraw: Redraw): Controller {
   vm.showComputer = () => vm.mode === 'view';
   vm.showAutoShapes = () => true;
 
-  const sound = {
-    move: window.lishogi.sound.throttlePlay('move'),
-    capture: window.lishogi.sound.throttlePlay('capture'),
-    check: window.lishogi.sound.throttlePlay('check'),
-  };
-
   function setPath(path: Tree.Path): void {
     vm.path = path;
     vm.nodeList = tree.getNodeList(path);
@@ -442,13 +436,9 @@ export default function (opts: PuzzleOpts, redraw: Redraw): Controller {
     shogiground.set(makeSgOpts());
     if (pathChanged) {
       if (isForwardStep) {
-        if (!vm.node.usi) sound.move();
         // initial position
-        else {
-          if (vm.node.capture) sound.capture();
-          else sound.move();
-        }
-        if (vm.node.check) sound.check();
+        if (!vm.node.usi) window.lishogi.sound.move();
+        else window.lishogi.sound.move(vm.node.capture);
       }
       threatMode(false);
       ceval.stop();

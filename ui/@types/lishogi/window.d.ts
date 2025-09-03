@@ -113,27 +113,6 @@ declare global {
     getPingInterval(): number;
   }
 
-  interface SoundI {
-    preloadGameSounds: (clock?: boolean) => void;
-    play: (name: string, volume?: number) => void;
-    throttlePlay: (name: string, delay?: number, volume?: number) => () => void;
-    setVolume: (value: number) => void;
-    getVolume: () => number;
-    enabled: () => boolean;
-    speech: (v?: boolean) => boolean;
-    say: (texts: { en?: string; jp?: string }, cut?: boolean, force?: boolean) => boolean;
-    sayOrPlay: (name: string, texts: { en?: string; jp?: string }) => boolean;
-    publish: () => void;
-    changeSet: (s: string) => void;
-    set: () => string;
-    loadStandard: (name: string, soundSet?: string) => void;
-  }
-
-  interface LishogiSpeech {
-    notation: string | undefined;
-    cut: boolean;
-  }
-
   type LishogiNvui = (redraw: () => void) => {
     render(ctrl: any): any;
   };

@@ -3,11 +3,7 @@ import cevalCtrl from 'ceval/ctrl';
 import { cevalRestarter } from 'ceval/restarter';
 import type { CevalCtrl, EvalMeta, NodeEvals } from 'ceval/types';
 import { isEvalBetter } from 'ceval/util';
-import {
-  loadChushogiPieceSprite,
-  loadKyotoshogiPieceSprite,
-  loadLishogiScript,
-} from 'common/assets';
+import { loadChushogiPieceSprite, loadKyotoshogiPieceSprite } from 'common/assets';
 import { defined, type Prop, prop, requestIdleCallbackWithFallback } from 'common/common';
 import { analysis } from 'common/links';
 import { getPerfIcon } from 'common/perf-icons';
@@ -125,7 +121,6 @@ export default class AnalyseCtrl {
   gamePath?: Tree.Path;
 
   // misc
-  music?: any;
   nvui?: NvuiPlugin;
 
   pvUsiQueue: Usi[] = [];
@@ -204,14 +199,6 @@ export default class AnalyseCtrl {
       this.redraw();
     });
 
-    li.pubsub.on('sound_set', (set: string) => {
-      if (!this.music && set === 'music')
-        loadLishogiScript('misc.music').then(() => {
-          this.music = window.lishogi.modules.miscMusic();
-        });
-      if (this.music && set !== 'music') this.music = null;
-    });
-
     li.pubsub.on('analysis.change.trigger', this.onChange);
     li.pubsub.on('analysis.chart.click', index => {
       this.jumpToIndex(index);
@@ -244,7 +231,7 @@ export default class AnalyseCtrl {
         : treePath.fromNodeList(treeOps.mainlineNodeList(this.tree.root));
     this.fork = makeFork(this);
 
-    window.lishogi.sound.preloadGameSounds();
+    li.sound.loadGameSounds();
   }
 
   setOrientation = (): void => {
@@ -380,18 +367,6 @@ export default class AnalyseCtrl {
     return config;
   }
 
-  private sound = li.sound
-    ? {
-        move: li.sound.throttlePlay('move', 50),
-        capture: li.sound.throttlePlay('capture', 50),
-        check: li.sound.throttlePlay('check', 50),
-      }
-    : {
-        move: () => {},
-        capture: () => {},
-        check: () => {},
-      };
-
   private captureRegex = /[a-z]/gi;
 
   private onChange: () => void = throttle(300, () => {
@@ -425,12 +400,8 @@ export default class AnalyseCtrl {
       if (this.study) this.study.setPath(path, this.node);
       if (isForwardStep) {
         // initial position
-        if (!this.node.usi) this.sound.move();
-        else if (!this.playedLastMoveMyself()) {
-          if (this.node.capture) this.sound.capture();
-          else this.sound.move();
-        }
-        if (this.node.check && this.data.game.variant.key !== 'chushogi') this.sound.check();
+        if (!this.node.usi) li.sound.move();
+        else if (!this.playedLastMoveMyself()) li.sound.move(this.node.capture);
       }
       this.threatMode(false);
       this.ceval.stop();
@@ -445,7 +416,6 @@ export default class AnalyseCtrl {
       if (this.practice) this.practice.onJump();
       if (this.study) this.study.onJump();
     }
-    if (this.music) this.music.jump(this.node);
     li.pubsub.emit('ply', this.node.ply);
   }
 
@@ -536,7 +506,7 @@ export default class AnalyseCtrl {
       role = promote(this.data.game.variant.key)(role) || role;
     const usi = makeUsi({ role: role, to: parseSquareName(key) });
     this.justPlayedUsi = usi;
-    this.sound.move();
+    li.sound.move();
     this.sendUsi(usi);
   };
 
@@ -548,7 +518,7 @@ export default class AnalyseCtrl {
 
     const usi = orig + dest + (prom ? '+' : '');
     this.justPlayedUsi = usi;
-    this.sound[capture ? 'capture' : 'move']();
+    li.sound.move(!!capture);
     this.sendUsi(usi);
   };
 
@@ -566,7 +536,7 @@ export default class AnalyseCtrl {
   };
 
   private chushogiUserMove = (orig: Key, dest: Key, prom: boolean, capture?: sg.Piece): void => {
-    this.sound[capture ? 'capture' : 'move']();
+    li.sound.move(!!capture);
 
     const posRes = this.position(this.node);
     const piece = posRes.isOk && posRes.value.board.get(parseSquareName(orig))!;

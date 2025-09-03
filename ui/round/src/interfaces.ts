@@ -120,11 +120,10 @@ interface Pref {
   animationDuration: number;
   blindfold: boolean;
   clockSound: boolean;
+  clockAudible: 0 | 1;
   clockTenths: 0 | 1 | 2;
-  clockCountdown: 0 | 3 | 5 | 10;
   confirmResign: boolean;
   coords: 0 | 1 | 2;
-  byoyomiStyle: 0 | 1 | 2;
   destination: boolean;
   dropDestination: boolean;
   enablePremove: boolean;

@@ -1,4 +1,3 @@
-import { loadScript } from 'common/assets';
 import { requestIdleCallbackWithFallback } from 'common/common';
 import { icons } from 'common/icons';
 import notify from 'common/notification';
@@ -57,7 +56,6 @@ import * as keyboard from './keyboard';
 import MoveOn from './move-on';
 import * as round from './round';
 import { make as makeSocket, type RoundSocket } from './socket';
-import * as sound from './sound';
 import * as speech from './speech';
 import * as title from './title';
 import TransientMove from './transient-move';
@@ -107,8 +105,6 @@ export default class RoundController {
   lastPauseOfferAtTime?: number;
   nvui?: NvuiPlugin;
   simulPlayerMoved?: boolean;
-
-  private music?: any;
 
   constructor(
     readonly opts: RoundOpts,
@@ -170,14 +166,6 @@ export default class RoundController {
       this.redraw();
     });
 
-    li.pubsub.on('sound_set', set => {
-      if (!this.music && set === 'music')
-        loadScript('javascripts/music/play.js').then(() => {
-          this.music = li.modules.miscMusic();
-        });
-      if (this.music && set !== 'music') this.music = undefined;
-    });
-
     li.pubsub.on('zen', () => {
       if (this.isPlaying()) {
         const zen = !$('body').hasClass('zen');
@@ -194,7 +182,7 @@ export default class RoundController {
     });
     this.versionCheck();
 
-    window.lishogi.sound.preloadGameSounds(!!d.clock);
+    window.lishogi.sound.loadGameSounds(!!d.clock);
   }
 
   private initNotation = (): void => {
@@ -318,14 +306,12 @@ export default class RoundController {
 
   private onMove = (_orig: Key, _dest: Key, _prom: boolean, captured?: Piece) => {
     if (status.prepaused(this.data)) return;
-    if (captured) {
-      sound.capture();
-    } else sound.move();
+    li.sound.move(!!captured);
   };
 
   private onDrop = (_piece: Piece, _key: Key, _prom: boolean) => {
     if (status.prepaused(this.data)) return;
-    sound.move();
+    li.sound.move();
   };
 
   private isSimulHost = () => {
@@ -397,11 +383,9 @@ export default class RoundController {
     const capture =
       isForwardStep && move && this.shogiground.state.pieces.get(makeSquareName(move.to));
     this.shogiground.set(config);
-    if (s.usi && isForwardStep) {
-      if (capture) sound.capture();
-      else sound.move();
-      if (s.check && variant !== 'chushogi') sound.check();
-    }
+
+    if (s.usi && isForwardStep) li.sound.move(!!capture);
+
     this.lionFirstMove = undefined;
     this.autoScroll();
     if (this.keyboardMove)
@@ -583,7 +567,6 @@ export default class RoundController {
           squares: [],
         },
       });
-      if (o.check && variant !== 'chushogi') sound.check();
       blur.onMove();
       li.pubsub.emit('ply', this.ply);
     }
@@ -601,8 +584,10 @@ export default class RoundController {
       this.shouldSendMoveTime = true;
       const oc = o.clock;
       const delay = playing && activeColor ? 0 : oc.lag || 1;
-      if (this.clock) this.clock.setClock(d, oc.sente, oc.gote, oc.sPer, oc.gPer, delay);
-      else if (this.corresClock) this.corresClock.update(oc.sente, oc.gote);
+      if (this.clock) {
+        this.clock.setClock(d, oc.sente, oc.gote, oc.sPer, oc.gPer, delay);
+        this.clock.resetByoTicks();
+      } else if (this.corresClock) this.corresClock.update(oc.sente, oc.gote);
     }
     if (this.data.expiration) {
       if (this.data.steps.length > 2) this.data.expiration = undefined;
@@ -628,12 +613,14 @@ export default class RoundController {
         sfen: step.sfen,
         lastSquare: lastStep?.usi ? parseUsi(lastStep.usi)?.to : undefined,
       });
-    if (this.music) this.music.jump(o);
     speech.notation(step.notation);
   };
 
   reload = (d: RoundData): void => {
-    if (d.steps.length !== this.data.steps.length) this.ply = d.steps[d.steps.length - 1].ply;
+    if (d.steps.length !== this.data.steps.length) {
+      this.ply = d.steps[d.steps.length - 1].ply;
+      this.clock?.resetByoTicks();
+    }
     round.massage(d);
     this.data = d;
     this.initNotation();
@@ -658,6 +645,7 @@ export default class RoundController {
   };
 
   endWithData = (o: ApiEnd): void => {
+    // todo outoftime juu
     const d = this.data;
     d.game.winner = o.winner;
     d.game.status = o.status;
@@ -946,7 +934,7 @@ export default class RoundController {
   private delayedInit = () => {
     const d = this.data;
     if (this.isPlaying() && game.nbMoves(d, d.player.color) === 0 && !this.isSimulHost()) {
-      li.sound.play('genericNotify');
+      li.sound.play('generic-notify');
     }
     requestIdleCallbackWithFallback(() => {
       const d = this.data;

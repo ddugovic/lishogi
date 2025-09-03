@@ -1,3 +1,4 @@
+import { defined } from 'common/common';
 import * as game from 'game';
 import type { RoundData } from '../interfaces';
 import { updateElements } from './clock-view';
@@ -14,12 +15,6 @@ interface ClockOpts {
 }
 
 type TenthsPref = 0 | 1 | 2;
-const ByoyomiPref = {
-  Tick: 0,
-  English: 1,
-  Japanese: 2,
-};
-type ByoyomiPref = (typeof ByoyomiPref)[keyof typeof ByoyomiPref];
 
 export interface ClockData {
   running: boolean;
@@ -31,7 +26,7 @@ export interface ClockData {
   gote: Seconds;
   emerg: Seconds;
   showTenths: TenthsPref;
-  clockCountdown: Seconds;
+  clockAudible: number;
   moretime: number;
   sPeriods: number;
   gPeriods: number;
@@ -54,10 +49,7 @@ export interface ClockElements {
 interface EmergSound {
   lowtime(): void;
   nextPeriod(): void;
-  tick(): void;
-  byoyomiCount(count: number): void;
-  byoyomiStyle: ByoyomiPref;
-  byoTicks?: number;
+  lastByoTick?: number;
   next?: number;
   delay: Millis;
   playable: {
@@ -68,11 +60,8 @@ interface EmergSound {
 
 export class ClockController {
   emergSound: EmergSound = {
-    lowtime: () => window.lishogi.sound.play('lowTime'),
-    nextPeriod: () => window.lishogi.sound.play('period'),
-    tick: () => window.lishogi.sound.play('tick'),
-    byoyomiCount: count => window.lishogi.sound.play(`countDown${count}`),
-    byoyomiStyle: ByoyomiPref.Tick,
+    lowtime: () => window.lishogi.sound.play('low-time', 'clock'),
+    nextPeriod: () => window.lishogi.sound.play('byoyomi', 'clock'),
     delay: 20000,
     playable: {
       sente: true,
@@ -84,7 +73,7 @@ export class ClockController {
   times: Times;
 
   emergMs: Millis;
-  byoEmergeS: Seconds;
+  audible: number;
 
   elements = {
     sente: {},
@@ -125,18 +114,7 @@ export class ClockController {
     this.goneBerserk[d.opponent.color] = !!d.opponent.berserk;
 
     this.emergMs = 1000 * Math.min(60, Math.max(10, cdata.initial * 0.125));
-    this.byoEmergeS = cdata.clockCountdown ?? 3;
-    this.emergSound.byoyomiStyle = d.pref.byoyomiStyle ?? ByoyomiPref.Tick;
-
-    for (let i = 10; i >= 0; i--) {
-      const key = `countDown${i}`;
-      const jpStyle = this.emergSound.byoyomiStyle === ByoyomiPref.Japanese;
-      if (jpStyle && i === 0) {
-        // Zero is not used in japanese count-up
-        continue;
-      }
-      window.lishogi.sound.loadStandard(key, jpStyle ? 'jp' : undefined);
-    }
+    this.audible = cdata.clockAudible;
 
     this.setClock(d, cdata.sente, cdata.gote, cdata.sPeriods, cdata.gPeriods);
   }
@@ -169,6 +147,7 @@ export class ClockController {
 
   addTime = (color: Color, time: Centis): void => {
     this.times[color] += time * 10;
+    this.resetByoTicks();
   };
 
   setBerserk = (color: Color): void => {
@@ -178,8 +157,8 @@ export class ClockController {
   nextPeriod = (color: Color): void => {
     this.curPeriods[color] += 1;
     this.times[color] += this.byoyomi * 1000;
-    if (this.opts.soundColor === color) this.emergSound.nextPeriod();
-    this.emergSound.byoTicks = undefined;
+    if (this.opts.soundColor === color || this.audible === 1) this.emergSound.nextPeriod();
+    this.resetByoTicks();
   };
 
   stopClock = (): Millis | undefined => {
@@ -188,7 +167,7 @@ export class ClockController {
       const curElapse = this.elapsed();
       this.times[color] = Math.max(0, this.times[color] - curElapse);
       this.times.activeColor = undefined;
-      this.emergSound.byoTicks = undefined;
+      this.resetByoTicks();
       return curElapse;
     }
     return;
@@ -198,13 +177,24 @@ export class ClockController {
     this.times.activeColor = undefined;
   };
 
+  resetByoTicks = (): void => {
+    this.emergSound.lastByoTick = undefined;
+  };
+
   private scheduleTick = (time: Millis, color: Color, extraDelay: Millis) => {
     if (this.tickCallback !== undefined) clearTimeout(this.tickCallback);
     this.tickCallback = setTimeout(
       this.tick,
       // changing the value of active node confuses the chromevox screen reader
       // so update the clock less often
-      this.opts.nvui ? 1000 : (time % (this.showTenths(time, color) ? 100 : 500)) + 1 + extraDelay,
+      this.opts.nvui
+        ? 1000
+        : (time %
+            (this.showTenths(time, color) || (this.isUsingByo(color) && time < 11 * 1000)
+              ? 100
+              : 500)) +
+            1 +
+            extraDelay,
     );
   };
 
@@ -231,9 +221,9 @@ export class ClockController {
     } else if (millis === 0) this.opts.onFlag();
     else updateElements(this, this.elements[color], millis, color);
 
-    if (this.opts.soundColor === color) {
+    if (this.opts.soundColor === color || this.audible === 1) {
       if (this.emergSound.playable[color]) {
-        if (millis < this.emergMs && !(now < this.emergSound.next!) && curPeriod === 0) {
+        if (millis < this.emergMs && !(now < this.emergSound.next!) && !this.isUsingByo(color)) {
           this.emergSound.lowtime();
           this.emergSound.next = now + this.emergSound.delay;
           this.emergSound.playable[color] = false;
@@ -241,28 +231,41 @@ export class ClockController {
       } else if (millis > 1.5 * this.emergMs) {
         this.emergSound.playable[color] = true;
       }
+
+      // To give more space for 'juubyou...' and such
+      const adjustedMillis = millis > 10 * 1000 ? millis - 200 : millis;
+
       if (
-        this.byoyomi >= 5 &&
         millis > 0 &&
-        ((this.emergSound.byoTicks === undefined && millis < this.byoEmergeS * 1000) ||
-          (this.emergSound.byoTicks && Math.floor(millis / 1000) < this.emergSound.byoTicks)) &&
-        this.isUsingByo(color)
+        this.isUsingByo(color) &&
+        (!defined(this.emergSound.lastByoTick) ||
+          Math.floor(adjustedMillis / 1000) < this.emergSound.lastByoTick)
       ) {
-        this.emergSound.byoTicks = Math.floor(millis / 1000);
-        if (this.emergSound.byoyomiStyle === ByoyomiPref.Japanese) {
-          // Japanese byo-yomi is counted from 1 to 9
-          const jpByoCount = this.byoEmergeS - this.emergSound.byoTicks - 1;
-          if (jpByoCount === 0) {
-            // Don't count zero if using japanese byo-yomi count
-            return;
-          }
-          this.emergSound.byoyomiCount(jpByoCount);
-        } else if (this.emergSound.byoyomiStyle === ByoyomiPref.English) {
-          // Add 1 to make the zeroth second to be counted as 1 (seconds left)
-          const enByoCount = this.emergSound.byoTicks + 1;
-          this.emergSound.byoyomiCount(enByoCount);
-        } else {
-          this.emergSound.tick();
+        this.emergSound.lastByoTick = Math.floor(adjustedMillis / 1000);
+
+        // in seconds
+        const remainingByo = Math.floor(adjustedMillis / 1000) + 1;
+        const spentByo = this.byoyomi - remainingByo;
+
+        if (this.byoyomi === remainingByo) return;
+
+        switch (window.lishogi.sound.clockSoundSet()) {
+          case 'chisei_mazawa':
+          case 'ippan_dansei':
+          case 'robot_ja':
+          case 'sakura_ajisai':
+          case 'shougi_sennin':
+            // count up from 0 to 9
+            if (remainingByo < 10) window.lishogi.sound.countdown(10 - remainingByo);
+            // after 10, 20, 30, 40, 50 seconds elapsed
+            else if (spentByo > 0 && spentByo % 10 === 0 && spentByo <= 50) {
+              window.lishogi.sound.play(`${spentByo}s`, 'clock');
+            }
+            break;
+          default:
+            if (remainingByo < 10 || (remainingByo < 60 && remainingByo % 10 === 0))
+              window.lishogi.sound.countdown(remainingByo);
+            break;
         }
       }
     }

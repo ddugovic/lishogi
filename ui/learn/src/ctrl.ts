@@ -18,7 +18,7 @@ import {
   illegalShogigroundMoveDests,
   inCheck,
 } from './shogi';
-import { currentPosition, sound } from './util';
+import { currentPosition } from './util';
 
 export default class LearnCtrl {
   shogiground: Api;
@@ -84,7 +84,7 @@ export default class LearnCtrl {
 
       window.history.replaceState('', '', `/learn#/${stage.id}/${level.id}`);
       window.scrollTo(0, 0);
-      if (this.vm.stageState === 'init') sound.start();
+      if (this.vm.stageState === 'init') window.lishogi.sound.play('learn/koto-start', 'misc');
     } else this.setHome();
   }
 
@@ -109,7 +109,7 @@ export default class LearnCtrl {
     if (this.vm) {
       if (this.vm.level.id === this.vm.stage.levels.length) {
         this.vm.stageState = 'completed';
-        sound.end();
+        window.lishogi.sound.play('learn/koto-end', 'misc');
       }
       this.vm.levelState = 'completed';
       this.vm.score = calcScore(this.vm.level, this.vm.usiCList);
@@ -239,8 +239,7 @@ export default class LearnCtrl {
   }
 
   onMove(_orig: Key, _dest: Key, _promotion: boolean, capturedPiece: Piece | undefined): void {
-    if (capturedPiece) sound.capture();
-    else sound.move();
+    window.lishogi.sound.move(!!capturedPiece);
 
     if (capturedPiece) {
       this.shogiground.addToHand({
@@ -251,6 +250,6 @@ export default class LearnCtrl {
   }
 
   onDrop(_piece: Piece, _key: Key): void {
-    sound.move();
+    window.lishogi.sound.move();
   }
 }

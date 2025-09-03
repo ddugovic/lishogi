@@ -11,15 +11,12 @@ function doCountDown(targetTime: number) {
   return function curCounter() {
     const secondsToStart = (targetTime - performance.now()) / 1000;
 
-    // always play the 0 sound before completing.
     const bestTick = Math.max(0, Math.round(secondsToStart));
-    if (bestTick <= 10) {
-      const key = `countDown${bestTick}`;
-      console.info(key, new Date());
-      li.sound.play(key);
+    if (bestTick <= 10 && bestTick > 0) {
+      li.sound.countdown(bestTick);
     }
 
-    if (bestTick > 0) {
+    if (bestTick > 1) {
       const nextTick = Math.min(10, bestTick - 1);
       countDownTimeout = setTimeout(
         curCounter,
@@ -39,30 +36,29 @@ export function end(data: TournamentDataFull): void {
   if (!data.isRecentlyFinished) return;
   if (!once(`tournament.end.sound.${data.id}`)) return;
 
-  let soundKey = 'Other';
-  if (data.me.rank < 4) soundKey = '1st';
-  else if (data.me.rank < 11) soundKey = '2nd';
-  else if (data.me.rank < 21) soundKey = '3rd';
+  let soundKey = 'other';
+  if (data.me.rank < 4) soundKey = '1';
+  else if (data.me.rank < 11) soundKey = '2';
+  else if (data.me.rank < 21) soundKey = '3';
 
-  const soundName = `tournament${soundKey}`;
-  li.sound.loadStandard(soundName);
+  const soundName = `tournament-${soundKey}`;
   li.sound.play(soundName);
 }
 
+const debug = false;
 export function countDown(data: TournamentDataFull): void {
-  if (!data.me || !data.secondsToStart || data.system !== 'arena') {
+  const secondsToStart = debug ? 11 : data.secondsToStart;
+
+  if (!data.me || !secondsToStart || data.system !== 'arena') {
     if (countDownTimeout) clearTimeout(countDownTimeout);
     countDownTimeout = undefined;
-    return;
+    if (!debug) return;
   }
   if (countDownTimeout) return;
-  if (data.secondsToStart > 60 * 60 * 24) return;
+  if (!secondsToStart || secondsToStart > 60 * 60 * 24) return;
 
-  countDownTimeout = setTimeout(
-    doCountDown(performance.now() + 1000 * data.secondsToStart - 100),
-    900,
-  ); // wait 900ms before starting countdown.
+  countDownTimeout = setTimeout(doCountDown(performance.now() + 1000 * secondsToStart - 100), 900); // wait 900ms before starting countdown.
 
-  // Preload countdown sounds.
-  for (let i = 10; i >= 0; i--) li.sound.loadStandard(`countDown${i}`);
+  // preloads countdown sounds and we will use game sounds anyway
+  li.sound.loadGameSounds(true);
 }

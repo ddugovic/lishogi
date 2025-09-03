@@ -5,7 +5,7 @@ import CurrentPuzzle from 'puz/current';
 import type { Run } from 'puz/interfaces';
 import { makeSgOpts } from 'puz/run';
 import sign from 'puz/sign';
-import { getNow, puzzlePov, sound } from 'puz/util';
+import { getNow, puzzlePov } from 'puz/util';
 import { Shogiground } from 'shogiground';
 import type { Api as SgApi } from 'shogiground/api';
 import type { MoveOrDrop, Piece, Role } from 'shogiops/types';
@@ -61,7 +61,7 @@ export default class StormCtrl {
     this.run.history.reverse();
     this.run.endAt = getNow();
     this.redraw();
-    sound.end();
+    window.lishogi.sound.play('storm/end', 'misc');
     xhr.record(this.runStats(), this.data.notAnExploit).then(res => {
       this.vm.response = res;
       this.redraw();
@@ -134,10 +134,9 @@ export default class StormCtrl {
         captureSound =
           captureSound || pos.board.occupied.has(parseUsi(puzzle.line[puzzle.moveIndex])!.to);
       }
-      if (captureSound) sound.capture();
-      else sound.move();
+      window.lishogi.sound.move(captureSound);
     } else {
-      sound.wrong();
+      window.lishogi.sound.play('storm/wrong', 'misc');
       this.pushToHistory(false);
       this.run.errors++;
       this.run.combo.reset();

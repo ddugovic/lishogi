@@ -1,122 +1,150 @@
 import { assetUrl } from 'common/assets';
-import { capitalize } from 'common/string';
+import { defined, useJapanese } from 'common/common';
 import throttle from 'common/throttle';
-import { pubsub } from './pubsub';
 import { storage } from './storage';
 
-type Name = string;
-type Path = string;
-
-export function createSound(): typeof window.lishogi.sound {
+export function createSound(): SoundI {
+  // takes too long to wake up
   window.Howler.autoSuspend = false;
 
+  const defaultSoundSet: SoundSet = 'shogi';
+  const defaultClockSoundSet: ClockSoundSet = 'system';
   const state = {
-    sounds: new Map<Name, Howl>(),
-    soundSet: document.body.dataset.soundSet!,
-    speechStorage: storage.makeBoolean('speech.enabled'),
+    sounds: new Map<string, Howl>(),
+    soundSet: (document.body.dataset.soundSet || defaultSoundSet) as SoundSet,
+    clockSoundSet: (document.body.dataset.clockSoundSet || defaultClockSoundSet) as ClockSoundSet,
     volumeStorage: storage.make('sound-volume'),
-    baseUrl: assetUrl('sound', { noVersion: true }),
+    baseUrl: assetUrl('sound', { noVersion: false }),
   };
 
-  if (state.soundSet === 'music') {
-    setTimeout(() => publish(), 500);
-  }
+  if (state.soundSet === 'speech' && !window.speechSynthesis?.getVoices().length)
+    state.soundSet = defaultSoundSet;
 
-  function loadOggOrMp3(name: Name, path: Path) {
-    return state.sounds.set(
-      name,
-      new window.Howl({
-        src: ['ogg', 'mp3'].map(ext => `${path}.${ext}`),
-      }),
+  function enabled(categ: SoundCateg) {
+    return (
+      volume() !== 0 &&
+      (categ === 'clock' ? state.clockSoundSet !== 'silent' : state.soundSet !== 'silent')
     );
   }
 
-  function loadStandard(name: Name, soundSet?: string) {
-    if (!enabled()) return;
-    const path = capitalize(name);
-    if (!state.sounds.get(path)) {
-      loadOggOrMp3(name, `${state.baseUrl}/${soundSet || state.soundSet}/${path}`);
-    }
+  function setForSoundCateg(categ: SoundCateg): string {
+    return categ === 'system' ? state.soundSet : categ === 'clock' ? state.clockSoundSet : '';
   }
 
-  function preloadGameSounds(clock = false) {
-    if (state.soundSet !== 'music') {
-      ['move', 'capture', 'check', 'genericNotify'].forEach(s => {
-        loadStandard(s);
-      });
-      if (clock) {
-        setTimeout(
-          () =>
-            ['tick', 'lowTime', 'period'].forEach(s => {
-              loadStandard(s);
-            }),
-          1000 * 5,
-        );
-      }
-    }
+  function soundPath(name: string, categ: SoundCateg, set?: string): string {
+    return [categ, set || setForSoundCateg(categ), name].filter(s => s).join('/');
   }
 
-  function play(name: string, volume?: number) {
-    if (!enabled()) return;
-    let set = state.soundSet;
-    if (set === 'music' || state.speechStorage.get()) {
-      if (['move', 'capture', 'check'].includes(name)) return;
-      set = 'shogi';
-    }
-    let s = state.sounds.get(name);
-    if (!s) {
-      loadStandard(name, set);
-      s = state.sounds.get(name);
-    }
-    window.Howler.volume(getVolume());
-
-    const doPlay = () => {
-      s!.volume(getVolume() * (volume || 1));
-      s!.play();
-    };
-    if (window.Howler.ctx?.state === 'suspended') {
-      window.Howler.ctx.resume().then(doPlay);
-    } else {
-      doPlay();
-    }
+  function soundSet(s?: SoundSet): SoundSet {
+    if (s) state.soundSet = s;
+    return state.soundSet;
   }
 
-  function throttlePlay(name: string, delay?: number, volume?: number): () => void {
-    return throttle(delay || 100, () => play(name, volume));
+  function clockSoundSet(s?: ClockSoundSet): ClockSoundSet {
+    if (s) state.clockSoundSet = s;
+    return state.clockSoundSet;
   }
 
-  function setVolume(value: number) {
-    return state.volumeStorage.set(value);
-  }
-
-  function getVolume() {
+  function volume(value?: number) {
+    if (defined(value)) state.volumeStorage.set(value);
     const v = Number.parseFloat(state.volumeStorage.get() || '');
     return v >= 0 ? v : 0.7;
   }
 
-  function enabled() {
-    return state.soundSet !== 'silent';
+  function loadSound(name: string, categ: SoundCateg, set?: string): Howl | undefined {
+    if (!enabled(categ)) return;
+
+    const path = soundPath(name, categ, set);
+    const cur = state.sounds.get(path);
+    if (cur) return cur;
+
+    // console.log(['ogg', 'mp3'].map(ext => `${state.baseUrl}/${ext}/${path}.${ext}`));
+
+    const howl = new window.Howl({
+      src: ['ogg', 'mp3'].map(ext => `${state.baseUrl}/${ext}/${path}.${ext}`),
+    });
+    state.sounds.set(path, howl);
+
+    return howl;
   }
 
-  function speech(v?: boolean): boolean {
-    if (typeof v !== 'undefined') {
-      state.speechStorage.set(v);
+  function loadGameSounds(clock = false): void {
+    if (!enabled) return;
+
+    if (state.soundSet !== 'speech') {
+      ['move', 'capture'].forEach(s => {
+        loadSound(s, 'system');
+      });
     }
-    return state.speechStorage.get();
+
+    if (clock) {
+      setTimeout(() => {
+        if (state.clockSoundSet === 'system') loadSound('tick', 'clock');
+        else {
+          for (let i = 10; i > 0; i--) {
+            loadSound(i.toString(), 'clock');
+          }
+        }
+        ['low-time', 'byoyomi'].forEach(s => {
+          loadSound(s, 'clock');
+        });
+      }, 1000 * 3);
+    }
   }
 
-  function say(texts: { en?: string; jp?: string }, cut = false, force = false) {
+  function play(name: string, categ?: SoundCateg): void {
+    if (!enabled(categ || 'system')) return;
+
+    categ = categ || 'system';
+
+    let set = setForSoundCateg(categ);
+    // speech only handles moves
+    if (categ === 'system' && state.soundSet === 'speech') {
+      if (['move', 'capture'].includes(name)) return;
+      else set = defaultSoundSet;
+    }
+
+    window.Howler.volume(volume());
+    const howl = loadSound(name, categ, set);
+
+    if (window.Howler.ctx?.state === 'suspended') {
+      window.Howler.ctx.resume().then(() => {
+        howl?.play();
+      });
+    } else howl?.play();
+  }
+
+  function move(capture?: boolean): void {
+    if (enabled('system') && state.soundSet !== 'speech') {
+      if (capture) play('capture');
+      else play('move');
+    }
+  }
+
+  function countdown(number: number): void {
+    if (enabled('clock')) {
+      if (state.clockSoundSet === 'system') play('tick', 'clock');
+      else play(number.toString(), 'clock');
+    }
+  }
+
+  function say(texts: { en?: string; ja?: string }, cut = false, force = false) {
     try {
-      if (!state.speechStorage.get() && !force) return false;
-      const useJp = !!texts.jp && document.documentElement.lang === 'ja';
-      const text = useJp ? texts.jp : texts.en;
-      const lang = useJp ? 'ja-JP' : 'en-US';
+      if ((state.soundSet !== 'speech' && !force) || volume() === 0) return false;
+
+      const useJa = !!texts.ja && useJapanese();
+      const text = useJa ? texts.ja : texts.en;
+      const lang = useJa ? 'ja-JP' : 'en-US';
+
       const msg = new SpeechSynthesisUtterance(text);
-      msg.volume = getVolume();
+      msg.volume = volume();
       msg.lang = lang;
+
       if (cut) speechSynthesis.cancel();
       speechSynthesis.speak(msg);
+
       console.log(`%c${msg.text}`, 'color: blue');
+
       return true;
     } catch (err) {
       console.error(err);
@@ -124,37 +152,14 @@ export function createSound(): typeof window.lishogi.sound {
     }
   }
 
-  function sayOrPlay(name: string, texts: { en?: string; jp?: string }): boolean {
-    return say(texts) || play(name) || false;
-  }
-
-  function publish() {
-    pubsub.emit('sound_set', state.soundSet);
-  }
-
-  function changeSet(s: string) {
-    state.soundSet = s;
-    state.sounds.clear();
-    publish();
-  }
-
-  function getSet() {
-    return state.soundSet;
-  }
-
   return {
-    preloadGameSounds,
     play,
-    throttlePlay,
-    setVolume,
-    getVolume,
-    enabled,
-    speech,
+    move: throttle(100, (o?: boolean) => move(o)),
+    countdown,
+    volume,
+    soundSet,
+    clockSoundSet,
+    loadGameSounds,
     say,
-    sayOrPlay,
-    publish,
-    changeSet,
-    set: getSet,
-    loadStandard,
   };
 }

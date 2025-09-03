@@ -14,7 +14,7 @@ export default function (ctrl: RoundController): MaybeVNode {
   const myTurn = isPlayerTurn(ctrl.data);
   const emerg = myTurn && timeLeft < 8000;
   if (!rang && emerg) {
-    window.lishogi.sound.play('lowTime');
+    window.lishogi.sound.play('low-time');
     rang = true;
   }
   const side = myTurn != ctrl.flip ? 'bottom' : 'top';

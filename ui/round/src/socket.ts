@@ -8,7 +8,6 @@ import type { Simul } from 'game/interfaces';
 import { i18n } from 'i18n';
 import type RoundController from './ctrl';
 import type { RoundData, Untyped } from './interfaces';
-import * as sound from './sound';
 import * as xhr from './xhr';
 
 const li = window.lishogi;
@@ -156,7 +155,8 @@ export function make(send: Socket.Send, ctrl: RoundController): RoundSocket {
         ctrl.simulPlayerMoved = true;
         if (!game.isPlayerTurn(ctrl.data)) {
           ctrl.setRedirecting();
-          sound.move();
+          // todo - add capture info
+          window.lishogi.sound.move();
           window.lishogi.properReload = true;
           location.href = `/${gameId}`;
         }

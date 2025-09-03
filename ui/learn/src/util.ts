@@ -41,21 +41,3 @@ export function average(nums: number[]): number {
   const sum = nums.reduce((a, b) => a + b, 0);
   return sum / nums.length || 0;
 }
-
-function make(file: string, volume?: number) {
-  const baseUrl = `${window.document.body.dataset.assetUrl}/assets/sound/`;
-  const sound = new window.Howl({
-    src: [`${baseUrl + file}.ogg`, `${baseUrl + file}.mp3`],
-    volume: volume || 1,
-  });
-  return () => {
-    if (window.lishogi.sound.set() !== 'silent') sound.play();
-  };
-}
-export const sound: Record<'move' | 'capture' | 'check' | 'start' | 'end', () => void> = {
-  move: window.lishogi.sound.throttlePlay('move'),
-  capture: window.lishogi.sound.throttlePlay('capture'),
-  check: window.lishogi.sound.throttlePlay('check'),
-  start: make('other/koto1', 0.35),
-  end: make('other/koto2', 0.35),
-};

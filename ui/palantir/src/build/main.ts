@@ -27,7 +27,7 @@ function main(opts: PalantirOpts): Palantir | undefined {
               myStream = s;
               setState('ready');
               window.lishogi.sound.say(
-                { en: 'Voice chat is ready.', jp: 'ボイスチャットの準備が整いました' },
+                { en: 'Voice chat is ready.', ja: 'ボイスチャットの準備が整いました' },
                 true,
                 true,
               );
@@ -65,7 +65,7 @@ function main(opts: PalantirOpts): Palantir | undefined {
       .on('stream', () => {
         log('call.stream');
         setState('on', call.peer);
-        window.lishogi.sound.say({ en: 'Connected', jp: '接続されました' }, true, true);
+        window.lishogi.sound.say({ en: 'Connected', ja: '接続されました' }, true, true);
       })
       .on('close', () => {
         log('call.close');

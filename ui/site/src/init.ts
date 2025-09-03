@@ -304,7 +304,7 @@ export function init(): void {
 
   pubsub.on('socket.in.new_notification', (e: any) => {
     $('#notify-toggle').attr('data-count', e.unread || 0);
-    window.lishogi.sound.play('newPM');
+    window.lishogi.sound.play('new-pm');
   });
 
   const $friendsBox = $('#friend_box');
