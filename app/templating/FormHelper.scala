@@ -14,7 +14,11 @@ trait FormHelper { self: I18nHelper =>
   def errMsg(form: Form[_])(implicit ctx: Context): Frag = errMsg(form.errors)
 
   def errMsg(error: FormError)(implicit ctx: Context): Frag =
-    p(cls := "error")(transKey(error.message, error.args))
+    p(cls := "error")(
+      if (error.message.contains(" "))
+        error.message
+      else transKey(error.message, error.args),
+    )
 
   def errMsg(errors: Seq[FormError])(implicit ctx: Context): Frag =
     errors map errMsg
@@ -37,7 +41,11 @@ trait FormHelper { self: I18nHelper =>
     private def errors(errs: Seq[FormError])(implicit ctx: Context): Frag = errs.distinct map error
     private def errors(field: Field)(implicit ctx: Context): Frag         = errors(field.errors)
     private def error(err: FormError)(implicit ctx: Context): Frag =
-      p(cls := "error")(transKey(err.message, err.args))
+      p(cls := "error")(
+        if (err.message.contains(" "))
+          err.message
+        else transKey(err.message, err.args),
+      )
 
     private def validationModifiers(field: Field): Seq[Modifier] =
       field.constraints collect {
