@@ -1,6 +1,5 @@
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import * as path from 'node:path';
-import { getRootDir } from '@build/helpers/workspace-packages';
 import SVGSpriter from 'svg-sprite';
 
 interface CompileResult {
@@ -54,13 +53,11 @@ async function generateSprite(categ: string, assetsDir: string, baseDestDir: str
   });
 }
 
-export async function sprites(categs: string[]): Promise<void> {
-  const rootDir = await getRootDir();
+export async function sprites(destDir: string, categs: string[]): Promise<void> {
   const assetsDir = path.join(import.meta.dirname, '../assets');
-  const baseDestDir = path.join(rootDir, 'public/icons/');
 
   for (const categ of categs) {
-    await generateSprite(categ, assetsDir, baseDestDir);
+    await generateSprite(categ, assetsDir, destDir);
   }
 
   console.log('All SVG sprites created!');

@@ -2,7 +2,6 @@ import * as fs from 'node:fs';
 import { mkdir } from 'node:fs/promises';
 import * as path from 'node:path';
 import { writeIfChanged } from '@build/helpers/util';
-import { getRootDir } from '@build/helpers/workspace-packages';
 import { FontAssetType, generateFonts } from '@twbs/fantasticon';
 
 function toCamelCase(str: string): string {
@@ -29,13 +28,11 @@ function formatScssChar(cp: number): string {
   return `\\${cp.toString(16).toUpperCase()}`;
 }
 
-export async function font(): Promise<void> {
+export async function font(rootDir: string, outDir: string): Promise<void> {
   const assetsDir = path.join(import.meta.dirname, '../assets');
   const iconsDir = path.join(assetsDir, 'lishogi');
   const codepointsFile = path.join(import.meta.dirname, '../codepoints.json');
 
-  const rootDir = await getRootDir();
-  const outDir = path.join(rootDir, 'public/icons');
   const tsExportPath = path.join(rootDir, 'ui/common/src/icons.ts');
   const scssExportPath = path.join(rootDir, 'ui/common/css/abstract/_icons.scss');
 
