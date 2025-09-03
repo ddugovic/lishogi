@@ -60,11 +60,7 @@ export function player(
       config.status ? h(`i.line${p.patron ? '.patron' : ''}`) : null,
       h(
         `span.name${config.defender ? '.defender.text' : config.leader ? '.leader.text' : ''}`,
-        config.defender
-          ? { attrs: dataIcon(icons.shield) }
-          : config.leader
-            ? { attrs: dataIcon(icons.crown) }
-            : {},
+        config.leader ? { attrs: dataIcon(icons.crown) } : {},
         playerName(p),
       ),
       config.withRating ? h('span.rating', ` ${p.rating}${p.provisional ? '?' : ''}`) : null,
