@@ -1812,7 +1812,10 @@ object I18nKeys {
     val `yorozuyaNotation` = new I18nKey("preferences:yorozuyaNotation")
     val `yourPreferencesHaveBeenSaved` = new I18nKey("preferences:yourPreferencesHaveBeenSaved")
     val `smallMoves` = new I18nKey("preferences:smallMoves")
-    val `byoyomiStyleTick` = new I18nKey("preferences:byoyomiStyleTick")
+    val `audibleClocks` = new I18nKey("preferences:audibleClocks")
+    val `systemSound` = new I18nKey("preferences:systemSound")
+    val `myClock` = new I18nKey("preferences:myClock")
+    val `allClocks` = new I18nKey("preferences:allClocks")
 }
 
   object puzzle {
