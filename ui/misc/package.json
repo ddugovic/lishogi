@@ -4,7 +4,7 @@
   "license": "AGPL-3.0-or-later",
   "type": "module",
   "dependencies": {
-    "@liskadan/sliding-puzzles": "^0.2.0",
+    "@liskadan/sliding-puzzles": "^0.3.0",
     "@textcomplete/core": "^0.1.13",
     "@textcomplete/textarea": "^0.1.13",
     "breakpoint-sass": "catalog:",

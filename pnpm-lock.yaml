@@ -571,8 +571,8 @@ importers:
   ui/misc:
     dependencies:
       '@liskadan/sliding-puzzles':
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^0.3.0
+        version: 0.3.0
       '@textcomplete/core':
         specifier: ^0.1.13
         version: 0.1.13
@@ -1234,8 +1234,8 @@ packages:
   '@kurkle/color@0.3.4':
     resolution: {integrity: sha512-M5UknZPHRu3DEDWoipU6sE8PdkZ6Z/S+v4dD+Ke8IaNlpdSQah50lz1KtcFBa2vsdOnwbbnxJwVM4wty6udA5w==}
 
-  '@liskadan/sliding-puzzles@0.2.0':
-    resolution: {integrity: sha512-3ue93HjqTcs1dzDIoT5Sv/kB8mKqwv1AOiC989QVdpIY2cVGRIb/g3+Vj8bnUhx7noLDI0tdK0+nqfM9uGJxhA==}
+  '@liskadan/sliding-puzzles@0.3.0':
+    resolution: {integrity: sha512-siXy10Xa/t//429+O/6DvaJIx6f74jgaBCOSX9vuRbfhXaVZ4CSbnUyjWZCyvgbk0pAgOWTE7B0ioDK0Fy8odg==}
 
   '@msgpack/msgpack@2.8.0':
     resolution: {integrity: sha512-h9u4u/jiIRKbq25PM+zymTyW6bhTzELvOoUd+AvYriWOAKpLGnIamaET3pnHYoI5iYphAHBI4ayx0MehR+VVPQ==}
@@ -5082,7 +5082,7 @@ snapshots:
 
   '@kurkle/color@0.3.4': {}
 
-  '@liskadan/sliding-puzzles@0.2.0': {}
+  '@liskadan/sliding-puzzles@0.3.0': {}
 
   '@msgpack/msgpack@2.8.0': {}
 
