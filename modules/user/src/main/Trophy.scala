@@ -20,26 +20,22 @@ case class Trophy(
 case class TrophyKind(
     _id: String,
     name: String,
-    icon: Option[String],
+    order: Int,
     url: Option[String],
     klass: Option[String],
-    order: Int,
-    withCustomImage: Boolean,
+    icon: Option[String] = none,
+    withCustomImage: Boolean = false,
 )
 
 object TrophyKind {
-  val moderator = "moderator"
-  val developer = "developer"
-  val verified  = "verified"
-
   object Unknown
       extends TrophyKind(
         _id = "unknown",
         name = "Unknown",
         order = 0,
         url = none,
-        icon = none,
         klass = none,
+        icon = none,
         withCustomImage = false,
       )
 }

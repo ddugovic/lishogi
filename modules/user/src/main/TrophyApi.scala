@@ -5,6 +5,7 @@ import scala.concurrent.duration._
 import org.joda.time.DateTime
 import reactivemongo.api.bson._
 
+import lila.common.Icons
 import lila.db.dsl._
 import lila.memo._
 
@@ -46,21 +47,42 @@ final class TrophyApi(
       isPublicMod option Trophy(
         _id = "",
         user = user.id,
-        kind = kindCache sync TrophyKind.moderator,
+        kind = TrophyKind(
+          _id = "moderator",
+          name = "Lishogi moderator",
+          url = "//lishogi.org/report".some,
+          klass = "icon3d".some,
+          icon = Icons.agent.some,
+          order = 100,
+        ),
         date = org.joda.time.DateTime.now,
         url = none,
       ),
       isDev option Trophy(
         _id = "",
         user = user.id,
-        kind = kindCache sync TrophyKind.developer,
+        kind = TrophyKind(
+          _id = "developer",
+          name = "Lishogi developer",
+          url = "https://github.com/WandererXII/lishogi".some,
+          klass = "icon3d".some,
+          icon = Icons.tools.some,
+          order = 101,
+        ),
         date = org.joda.time.DateTime.now,
         url = none,
       ),
       isVerified option Trophy(
         _id = "",
         user = user.id,
-        kind = kindCache sync TrophyKind.verified,
+        kind = TrophyKind(
+          _id = "verified",
+          name = "Verified account",
+          url = none,
+          klass = "icon3d".some,
+          icon = Icons.toriGate.some,
+          order = 102,
+        ),
         date = org.joda.time.DateTime.now,
         url = none,
       ),
