@@ -8,6 +8,8 @@
     "xml2js": "^0.6.2"
   },
   "scripts": {
+    "favicons": "./scripts/favicons.sh",
+    "sound-mp3": "./scripts/sound-mp3.sh",
     "icons-dump": "tsx ./scripts/icons-dump.ts",
     "trans-dump": "tsx ./scripts/trans-dump.ts",
     "trans-lint": "./scripts/trans-lint.py ../translation/dest/*/*.xml",
