@@ -1,5 +1,5 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
-import { basename, extname, join } from 'node:path';
+import { basename, extname, join, sep } from 'node:path';
 import type { CategorizedPieceSets, Ext, PieceSet, PieceSetVariant } from './types.js';
 
 export const colors = ['sente', 'gote'] as const;
@@ -22,8 +22,15 @@ export function dasherCss(path: string, pieceSet: PieceSet, variant: PieceSetVar
 }
 
 export function readImageAsBase64(path: string): string {
-  const image = readFileSync(path);
-  return image.toString('base64');
+  try {
+    const image = readFileSync(path);
+    return image.toString('base64');
+  } catch {
+    const parts = path.split(sep);
+    const [set, name] = parts.slice(-2);
+    console.error('Missing:', set, name);
+    return '';
+  }
 }
 
 export function categorizePieceSets(directoryPath: string): CategorizedPieceSets {
