@@ -44,7 +44,4 @@ object LightUser {
     def apply(u: UserID) = f(u)
   }
 
-  final class IsBotSync(f: UserID => Boolean) extends (UserID => Boolean) {
-    def apply(userId: UserID) = f(userId)
-  }
 }

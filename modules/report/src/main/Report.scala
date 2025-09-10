@@ -75,8 +75,7 @@ case class Report(
 
   def userIds: List[User.ID] = user :: atoms.toList.map(_.by.value)
 
-  def isRecentComm                 = room == Room.Comm && open
-  def isRecentCommOf(sus: Suspect) = isRecentComm && user == sus.user.id
+  def isRecentComm = room == Room.Comm && open
 
   def boostWith: Option[User.ID] =
     (reason == Reason.Boost) ?? {

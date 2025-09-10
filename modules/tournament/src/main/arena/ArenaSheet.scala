@@ -64,8 +64,6 @@ object Sheet {
     }
   }
 
-  val emptySheet = Sheet(Nil)
-
   def apply(userId: String, pairings: Pairings, version: Version, streakable: Streakable): Sheet =
     Sheet {
       val streaks = streakable == Streaks

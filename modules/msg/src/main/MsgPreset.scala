@@ -142,11 +142,5 @@ To follow new players, you must first unfollow some on https://lishogi.org/@/$us
 Thank you for your understanding.""",
     )
 
-  lazy val asJson = play.api.libs.json.Json.toJson {
-    all.map { p =>
-      List(p.name, p.text)
-    }
-  }
-
   def byName(s: String) = all.find(_.name == s)
 }

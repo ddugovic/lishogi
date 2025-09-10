@@ -130,13 +130,6 @@ object Query {
     l -> ("level " + l)
   }
 
-  val dates = List("0d" -> "Now") ++
-    options(List(1, 2, 6), "h", "%d hour{s} ago") ++
-    options(1 to 6, "d", "%d day{s} ago") ++
-    options(1 to 3, "w", "%d week{s} ago") ++
-    options(1 to 6, "m", "%d month{s} ago") ++
-    options(1 to 5, "y", "%d year{s} ago")
-
   val statuses = Status.finishedNotCheated.map {
     case s if s.is(_.Timeout)           => none
     case s if s.is(_.NoStart)           => none

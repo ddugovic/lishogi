@@ -187,11 +187,6 @@ object Node {
 
     def get(id: UsiCharPair): Option[Node] = nodes.find(_.id == id)
 
-    def getNodeAndIndex(id: UsiCharPair): Option[(Node, Int)] =
-      nodes.zipWithIndex.collectFirst {
-        case pair if pair._1.id == id => pair
-      }
-
     def has(id: UsiCharPair): Boolean = nodes.exists(_.id == id)
 
     def updateAllWith(op: Node => Node): Children =
@@ -274,11 +269,6 @@ object Node {
       )
 
   }
-
-  case class GameRootHelper(
-      gameMainlineExtensions: Option[Map[Int, GameMainlineExtension]],
-      variations: Option[Map[Int, Children]],
-  )
 
   case class Root(
       ply: Int,

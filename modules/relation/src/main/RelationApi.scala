@@ -78,9 +78,6 @@ final class RelationApi(
       coll.exists($doc("_id" -> makeId(u1, u2), "r" -> Block))
     }
 
-  def fetchAreFriends(u1: ID, u2: ID): Fu[Boolean] =
-    fetchFollows(u1, u2) >>& fetchFollows(u2, u1)
-
   private val countFollowingCache = cacheApi[ID, Int](1024, "relation.count.following") {
     _.expireAfterAccess(10 minutes)
       .maximumSize(8192)

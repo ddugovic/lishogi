@@ -80,14 +80,6 @@ final class TeamRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCont
   def disable(team: Team): Funit =
     coll.updateField($id(team.id), "enabled", false).void
 
-  def addRequest(teamId: Team.ID, request: Request): Funit =
-    coll.update
-      .one(
-        $id(teamId) ++ $doc("requests.user" $ne request.user),
-        $push("requests" -> request.user),
-      )
-      .void
-
   def cursor =
     coll
       .find(enabledSelect)

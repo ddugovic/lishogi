@@ -437,14 +437,4 @@ object BSONHandlers {
 
   implicit val StudyBSONHandler: BSONDocumentHandler[Study] = Macros.handler[Study]
 
-  implicit val lightStudyBSONReader: BSONDocumentReader[Study.LightStudy] =
-    new BSONDocumentReader[Study.LightStudy] {
-      def readDocument(doc: BSONDocument) =
-        Success(
-          Study.LightStudy(
-            isPublic = doc.string("visibility") has "public",
-            contributors = doc.getAsOpt[StudyMembers]("members").??(_.contributorIds),
-          ),
-        )
-    }
 }

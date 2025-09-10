@@ -260,18 +260,4 @@ object Event {
     override def owner = true
   }
 
-  case class Crowd(
-      sente: Boolean,
-      gote: Boolean,
-      watchers: Option[JsValue],
-  ) extends Event {
-    def typ = "crowd"
-    def data =
-      Json
-        .obj(
-          "sente" -> sente,
-          "gote"  -> gote,
-        )
-        .add("watchers" -> watchers)
-  }
 }

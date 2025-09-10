@@ -14,8 +14,6 @@ trait StringHelper { self: NumberHelper =>
 
   def pluralize(s: String, n: Int) = s"$n $s${if (n > 1) "s" else ""}"
 
-  def showNumber(n: Int): String = if (n > 0) s"+$n" else n.toString
-
   val urlencode = lila.common.String.urlencode _
 
   private val NumberFirstRegex = """(\d++)\s(.+)""".r

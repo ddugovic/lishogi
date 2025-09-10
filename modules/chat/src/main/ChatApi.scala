@@ -253,9 +253,6 @@ final class ChatApi(
       if (cond) find(chatId)
       else fuccess(Chat.makeMixed(chatId))
 
-    def findNonEmpty(chatId: Chat.Id): Fu[Option[MixedChat]] =
-      findOption(chatId) dmap (_ filter (_.nonEmpty))
-
     def optionsByOrderedIds(chatIds: List[Chat.Id]): Fu[List[Option[MixedChat]]] =
       coll.optionsByOrderedIds[MixedChat, Chat.Id](
         chatIds,

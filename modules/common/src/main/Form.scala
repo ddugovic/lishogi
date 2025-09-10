@@ -51,11 +51,6 @@ object Form {
       d -> format(d)
     }
 
-  def optionsDouble(it: Iterable[Double], format: Double => String): Options[Double] =
-    it map { d =>
-      d -> format(d)
-    }
-
   private def mustBeOneOf(choices: Iterable[Any]) = s"Must be one of: ${choices mkString ", "}"
 
   def numberIn(choices: Options[Int]) =

@@ -114,7 +114,6 @@ final private class EventBus[Event, Channel, Subscriber](
       }
     }
 
-  def keys: Set[Channel]       = entries.keySet.asScala.toSet
-  def size                     = entries.size
-  def sizeOf(channel: Channel) = Option(entries get channel).fold(0)(_.size)
+  def keys: Set[Channel] = entries.keySet.asScala.toSet
+  def size               = entries.size
 }

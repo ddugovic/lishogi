@@ -107,7 +107,6 @@ object Arrangement {
 
   // seconds
   val scheduleTolerance = 60
-  val readyTolerance    = 20
 
   type ID = String
 

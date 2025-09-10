@@ -43,8 +43,6 @@ case class Schedule(
 
   def sameVariant(other: Schedule) = variant.id == other.variant.id
 
-  def sameVariantAndSpeed(other: Schedule) = sameVariant(other) && sameSpeed(other)
-
   def sameFreq(other: Schedule) = freq == other.freq
 
   def sameConditions(other: Schedule) = conditions == other.conditions

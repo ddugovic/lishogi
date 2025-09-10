@@ -92,10 +92,6 @@ object PuzzleTheme {
 
   lazy val all: List[PuzzleTheme] = categorized.flatMap(_._2)
 
-  lazy val allTranslationKeys = all.flatMap { t =>
-    List(t.name, t.description)
-  }
-
   private lazy val byKey: Map[Key, PuzzleTheme] = all.view.map { t =>
     t.key -> t
   }.toMap

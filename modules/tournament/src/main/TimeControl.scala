@@ -59,13 +59,6 @@ object TimeControl {
     val periods        = 1 to 5
     val periodsDefault = 1
 
-    val clockConfigDefault = shogi.Clock.Config(
-      (clockTimeDefault * 60).toInt,
-      clockIncrementDefault,
-      clockByoyomiDefault,
-      periodsDefault,
-    )
-
     val daysPerTurn        = 1 to 5
     val daysPerTurnDefault = 1
 

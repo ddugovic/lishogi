@@ -87,12 +87,6 @@ case class Perfs(
     } | Perf.default.intRating
   }
 
-  def bestRatingInWithMinGames(types: List[PerfType], nbGames: Int): Option[Int] =
-    types.map(apply).foldLeft(none[Int]) {
-      case (ro, p) if p.nb >= nbGames && ro.fold(true)(_ < p.intRating) => p.intRating.some
-      case (ro, _)                                                      => ro
-    }
-
   def bestProgress: Int = bestProgressIn(PerfType.leaderboardable)
 
   def bestProgressIn(types: List[PerfType]): Int =
@@ -117,8 +111,6 @@ case class Perfs(
   )
 
   def ratingMap: Map[String, Int] = perfsMap.view.mapValues(_.intRating).toMap
-
-  def ratingOf(pt: String): Option[Int] = perfsMap get pt map (_.intRating)
 
   def apply(key: String): Option[Perf] = perfsMap get key
 
@@ -276,5 +268,4 @@ case object Perfs {
       checkshogi: List[User.LightPerf],
   )
 
-  val emptyLeaderboards = Leaderboards(Nil, Nil, Nil, Nil, Nil, Nil, Nil, Nil, Nil, Nil, Nil)
 }

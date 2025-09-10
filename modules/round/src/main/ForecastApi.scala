@@ -97,7 +97,5 @@ final class ForecastApi(coll: Coll, tellRound: TellRound)(implicit
 
   private def firstStep(steps: Forecast.Steps) = steps.headOption.flatMap(_.headOption)
 
-  def clearGame(g: Game) = coll.delete.one($inIds(shogi.Color.all.map(g.fullIdOf))).void
-
   def clearPov(pov: Pov) = coll.delete.one($id(pov.fullId)).void
 }

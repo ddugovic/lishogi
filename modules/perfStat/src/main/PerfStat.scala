@@ -115,8 +115,6 @@ object Streak {
   val init = Streak(0, none, none)
 }
 
-case class Bounds(from: RatingAt, to: RatingAt)
-
 case class Count(
     all: Int,
     rated: Int,

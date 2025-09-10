@@ -41,7 +41,6 @@ final class DisposableEmailDomain(
 
   def isOk(domain: Domain) = !apply(domain)
 
-  def fromDomain(mixedCase: String): Boolean = apply(Domain(mixedCase.toLowerCase))
 }
 
 private object DisposableEmailDomain {

@@ -2,19 +2,6 @@ package lila.evaluation
 
 import reactivemongo.api.bson.BSONHandler
 
-import shogi.Color
-
-case class PlayerAssessments(
-    sente: Option[PlayerAssessment],
-    gote: Option[PlayerAssessment],
-) {
-  def color(c: Color) =
-    c match {
-      case Color.Sente => sente
-      case _           => gote
-    }
-}
-
 sealed trait GameAssessment {
   val id: Int
   val description: String

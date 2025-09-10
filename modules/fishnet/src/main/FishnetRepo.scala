@@ -115,8 +115,6 @@ final private class FishnetRepo(
   def getSimilarAnalysis(work: Work.Analysis): Fu[Option[Work.Analysis]] =
     analysisColl.one[Work.Analysis]($doc("game.id" -> work.game.id))
 
-  def selectVariants(variantsKeys: List[Int]) = $doc("game.variant" $in variantsKeys)
-
   def selectWork(id: Work.Id)       = $id(id.value)
   def selectClient(key: Client.Key) = $id(key.value)
 

@@ -10,92 +10,15 @@ import shogi.variant.Variant
 import lila.i18n.{ I18nKeys => trans }
 import lila.pref.Pref
 import lila.report.Reason
-import lila.setup.TimeMode
 
 trait SetupHelper { self: I18nHelper =>
 
   type SelectChoice = (String, String, Option[String])
 
-  val clockTimeChoices: List[SelectChoice] = List(
-    ("0", "0", none),
-    ("0.25", "¼", none),
-    ("0.5", "½", none),
-    ("0.75", "¾", none),
-  ) ::: List(
-    "1",
-    "1.5",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    "10",
-    "11",
-    "12",
-    "13",
-    "14",
-    "15",
-    "16",
-    "17",
-    "18",
-    "19",
-    "20",
-    "25",
-    "30",
-    "35",
-    "40",
-    "45",
-    "60",
-    "75",
-    "90",
-    "105",
-    "120",
-    "135",
-    "150",
-    "165",
-    "180",
-  ).map { v =>
-    (v.toString, v.toString, none)
-  }
-
-  val clockIncrementChoices: List[SelectChoice] = {
-    (0 to 20).toList ::: List(25, 30, 35, 40, 45, 60, 90, 120, 150, 180)
-  } map { s =>
-    (s.toString, s.toString, none)
-  }
-
-  val clockByoyomiChoices: List[SelectChoice] = {
-    (0 to 20).toList ::: List(25, 30, 35, 40, 45, 60, 90, 120, 150, 180)
-  } map { s =>
-    (s.toString, s.toString, none)
-  }
-
-  val periodsChoices: List[SelectChoice] = {
-    (1 to 5).toList map { s =>
-      (s.toString, s.toString, none)
-    }
-  }
-
   def translatedCorresDaysChoices(implicit lang: Lang) =
     List(1, 2, 3, 5, 7, 10, 14) map { d =>
       (d.toString, trans.nbDays.pluralSameTxt(d), none)
     }
-
-  def anonTranslatedTimeModeChoices(implicit lang: Lang) =
-    List(
-      (TimeMode.RealTime.id.toString, trans.realTime.txt(), none),
-    )
-
-  def translatedTimeModeChoices(implicit lang: Lang) = {
-    List(
-      (TimeMode.RealTime.id.toString, trans.realTime.txt(), none),
-      (TimeMode.Correspondence.id.toString, trans.correspondence.txt(), none),
-      // (TimeMode.Unlimited.id.toString, trans.unlimited.txt(), none)
-    )
-  }
 
   def translatedReasonChoices(implicit lang: Lang) =
     List(
@@ -159,12 +82,6 @@ trait SetupHelper { self: I18nHelper =>
       shogi.variant.Kyotoshogi,
       shogi.variant.Checkshogi,
     ).map(variantTuple(encode))
-
-  def translatedAiChoices(implicit lang: Lang) =
-    standardChoice :: List(
-      shogi.variant.Minishogi,
-      shogi.variant.Kyotoshogi,
-    ).map(variantTuple(encodeId))
 
   def translatedSpeedChoices(implicit lang: Lang) =
     Speed.limited map { s =>

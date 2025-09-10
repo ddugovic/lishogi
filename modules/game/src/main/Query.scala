@@ -36,15 +36,9 @@ object Query {
 
   val finished: Bdoc = F.status $gte Status.Mate.id
 
-  val notFinished: Bdoc = F.status $lte Status.Started.id
-
   def analysed(an: Boolean): Bdoc = F.analysed $eq an
 
-  val frozen: Bdoc = F.status $gte Status.Mate.id
-
   def imported(u: String): Bdoc = s"${F.notationImport}.user" $eq u
-
-  val friend: Bdoc = s"${F.source}" $eq Source.Friend.id
 
   def clock(c: Boolean): Bdoc = F.clock $exists c
 
@@ -93,13 +87,6 @@ object Query {
       s"${F.playerUids}.1" $in userIds,
     )
 
-  val noProvisional: Bdoc = $doc(
-    "p0.p" $exists false,
-    "p1.p" $exists false,
-  )
-
-  def bothRatingsGreaterThan(v: Int) = $doc("p0.e" $gt v, "p1.e" $gt v)
-
   def pliesGt(nb: Int) = F.plies $gt nb
 
   def checkable = F.checkAt $lt DateTime.now
@@ -126,8 +113,7 @@ object Query {
       case _                          => $empty
     }
 
-  val sortCreated: Bdoc           = $sort desc F.createdAt
-  val sortChronological: Bdoc     = $sort asc F.createdAt
-  val sortAntiChronological: Bdoc = $sort desc F.createdAt
-  val sortMovedAtNoIndex: Bdoc    = $sort desc F.movedAt
+  val sortCreated: Bdoc        = $sort desc F.createdAt
+  val sortChronological: Bdoc  = $sort asc F.createdAt
+  val sortMovedAtNoIndex: Bdoc = $sort desc F.movedAt
 }

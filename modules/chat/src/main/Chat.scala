@@ -3,7 +3,6 @@ package lila.chat
 import reactivemongo.api.bson.BSONHandler
 
 import lila.common.Iso
-import lila.hub.actorApi.shutup.PublicSource
 import lila.user.User
 
 sealed trait AnyChat {
@@ -91,12 +90,7 @@ object Chat {
 
   case class ResourceId(value: String) extends AnyVal with StringValue
 
-  case class Setup(id: Id, publicSource: PublicSource)
-
   case class MaxLines(value: Int) extends AnyVal with IntValue
-
-  def tournamentSetup(tourId: String) = Setup(Id(tourId), PublicSource.Tournament(tourId))
-  def simulSetup(simulId: String)     = Setup(Id(simulId), PublicSource.Simul(simulId))
 
   // if restricted, only presets are available
   case class Restricted(chat: MixedChat, restricted: Boolean)

@@ -83,9 +83,6 @@ object PuzzleDashboard {
     PuzzleTheme.otherSources,
   ).map(_.key)
 
-  val relevantThemes = PuzzleTheme.all collect {
-    case t if !irrelevantThemes.contains(t.key) => t.key
-  }
 }
 
 final class PuzzleDashboardApi(

@@ -37,12 +37,8 @@ final class BookmarkApi(
   def removeByGameId(gameId: Game.ID): Funit =
     coll.delete.one($doc("g" -> gameId)).void
 
-  def removeByGameIds(gameIds: List[Game.ID]): Funit =
-    coll.delete.one($doc("g" $in gameIds)).void
-
   def remove(gameId: Game.ID, userId: User.ID): Funit =
     coll.delete.one(selectId(gameId, userId)).void
-  // def remove(selector: Bdoc): Funit = coll.remove(selector).void
 
   def toggle(gameId: Game.ID, userId: User.ID): Funit =
     exists(gameId, userId) flatMap { e =>

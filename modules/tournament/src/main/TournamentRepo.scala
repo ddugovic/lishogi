@@ -5,8 +5,6 @@ import reactivemongo.akkastream.AkkaStreamCursor
 import reactivemongo.akkastream.cursorProducer
 import reactivemongo.api.ReadPreference
 
-import shogi.variant.Variant
-
 import lila.common.config.CollName
 import lila.db.dsl._
 import lila.game.Game
@@ -18,21 +16,16 @@ final class TournamentRepo(val coll: Coll, playerCollName: CollName)(implicit
     ec: scala.concurrent.ExecutionContext,
 ) {
 
-  private val enterableSelect                  = $doc("status" $lt Status.Finished.id)
-  private[tournament] val createdSelect        = $doc("status" -> Status.Created.id)
-  private val startedSelect                    = $doc("status" -> Status.Started.id)
-  private[tournament] val finishedSelect       = $doc("status" -> Status.Finished.id)
-  private val unfinishedSelect                 = $doc("status" $ne Status.Finished.id)
-  private[tournament] val scheduledSelect      = $doc("schedule" $exists true)
-  private def forTeamSelect(id: TeamID)        = $doc("forTeams" -> id)
-  private def forTeamsSelect(ids: Seq[TeamID]) = $doc("forTeams" $in ids)
-  private def sinceSelect(date: DateTime)      = $doc("startsAt" $gt date)
-  private def variantSelect(variant: Variant) =
-    if (variant.standard) $doc("variant" $exists false)
-    else $doc("variant" -> variant.id)
-  private[tournament] val nonEmptySelect = $doc("nbPlayers" $ne 0)
-  private[tournament] val selectUnique   = $doc("schedule.freq" -> "unique")
-  private val arena                      = $doc("format" $exists false)
+  private val enterableSelect             = $doc("status" $lt Status.Finished.id)
+  private[tournament] val createdSelect   = $doc("status" -> Status.Created.id)
+  private val startedSelect               = $doc("status" -> Status.Started.id)
+  private[tournament] val finishedSelect  = $doc("status" -> Status.Finished.id)
+  private val unfinishedSelect            = $doc("status" $ne Status.Finished.id)
+  private[tournament] val scheduledSelect = $doc("schedule" $exists true)
+  private def forTeamSelect(id: TeamID)   = $doc("forTeams" -> id)
+  private[tournament] val nonEmptySelect  = $doc("nbPlayers" $ne 0)
+  private[tournament] val selectUnique    = $doc("schedule.freq" -> "unique")
+  private val arena                       = $doc("format" $exists false)
   // private val robin                    = $doc("format" -> Format.Robin.key)
 
   def byId(id: Tournament.ID): Fu[Option[Tournament]] = coll.byId[Tournament](id)
@@ -54,9 +47,6 @@ final class TournamentRepo(val coll: Coll, playerCollName: CollName)(implicit
   def uniqueById(id: Tournament.ID): Fu[Option[Tournament]] =
     coll.one[Tournament]($id(id) ++ selectUnique)
 
-  def byIdAndPlayerId(id: Tournament.ID, userId: User.ID): Fu[Option[Tournament]] =
-    coll.one[Tournament]($id(id) ++ $doc("players.id" -> userId))
-
   def createdById(id: Tournament.ID): Fu[Option[Tournament]] =
     coll.one[Tournament]($id(id) ++ createdSelect)
 
@@ -68,12 +58,6 @@ final class TournamentRepo(val coll: Coll, playerCollName: CollName)(implicit
 
   def finishedById(id: Tournament.ID): Fu[Option[Tournament]] =
     coll.one[Tournament]($id(id) ++ finishedSelect)
-
-  def startedOrFinishedById(id: Tournament.ID): Fu[Option[Tournament]] =
-    byId(id) map { _ filterNot (_.isCreated) }
-
-  def createdByIdAndCreator(id: Tournament.ID, userId: User.ID): Fu[Option[Tournament]] =
-    createdById(id) map (_ filter (_.createdBy == userId))
 
   def countCreated: Fu[Int] = coll.countSel(createdSelect)
 
@@ -265,8 +249,6 @@ final class TournamentRepo(val coll: Coll, playerCollName: CollName)(implicit
   def isTeamBattle(tourId: Tournament.ID): Fu[Boolean] =
     coll.exists($id(tourId) ++ $doc("teamBattle" $exists true))
 
-  def featuredGameId(tourId: Tournament.ID) = coll.primitiveOne[Game.ID]($id(tourId), "featured")
-
   private def startingSoonSelect(aheadMinutes: Int) =
     createdSelect ++
       $doc("startsAt" $lt (DateTime.now plusMinutes aheadMinutes))
@@ -282,19 +264,6 @@ final class TournamentRepo(val coll: Coll, playerCollName: CollName)(implicit
 
   def startedScheduled(limit: Int = Int.MaxValue): Fu[List[Tournament]] =
     coll.list[Tournament](startedSelect ++ scheduledSelect, limit)
-
-  def visibleForTeams(teamIds: Seq[TeamID], aheadMinutes: Int) =
-    coll.list[Tournament](
-      startingSoonSelect(aheadMinutes) ++ forTeamsSelect(teamIds),
-      ReadPreference.secondaryPreferred,
-    ) zip
-      coll
-        .list[Tournament](
-          startedSelect ++ forTeamsSelect(teamIds),
-          ReadPreference.secondaryPreferred,
-        ) dmap { case (created, started) =>
-        created ::: started
-      }
 
   private[tournament] def shouldStartCursor =
     coll
@@ -345,27 +314,6 @@ final class TournamentRepo(val coll: Coll, playerCollName: CollName)(implicit
       }._1
         .reverse
     }
-
-  def lastFinishedScheduledByFreq(freq: Schedule.Freq, since: DateTime): Fu[List[Tournament]] =
-    coll
-      .find(
-        finishedSelect ++ sinceSelect(since) ++ variantSelect(shogi.variant.Standard) ++ $doc(
-          "schedule.freq" -> freq.key,
-          "schedule.speed" $in Schedule.Speed.mostPopular.map(_.key),
-        ),
-      )
-      .sort($sort desc "startsAt")
-      .cursor[Tournament]()
-      .list(Schedule.Speed.mostPopular.size)
-
-  def lastFinishedDaily(variant: Variant): Fu[Option[Tournament]] =
-    coll
-      .find(
-        finishedSelect ++ sinceSelect(DateTime.now minusDays 1) ++ variantSelect(variant) ++
-          $doc("schedule.freq" -> Schedule.Freq.Daily.key),
-      )
-      .sort($sort desc "startsAt")
-      .one[Tournament]
 
   def update(tour: Tournament) =
     coll.update.one(

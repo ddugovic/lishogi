@@ -170,18 +170,6 @@ object Pref {
     )
   }
 
-  object AutoPromote {
-    val NEVER   = 1
-    val PREMOVE = 2
-    val ALWAYS  = 3
-
-    val choices = Seq(
-      NEVER,
-      ALWAYS,
-      PREMOVE,
-    )
-  }
-
   object SubmitMove {
     val NEVER                    = 0
     val CORRESPONDENCE_ONLY      = 4
@@ -338,20 +326,6 @@ object Pref {
       NEVER,
       LOWTIME,
       ALWAYS,
-    )
-  }
-
-  object ClockCountdown {
-    val NEVER = 0
-    val THREE = 3
-    val FIVE  = 5
-    val TEN   = 10
-
-    val choices = Seq(
-      NEVER,
-      THREE,
-      FIVE,
-      TEN,
     )
   }
 

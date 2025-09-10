@@ -259,7 +259,6 @@ package round {
   )
   case class CorresTakebackOfferEvent(gameId: String)
   case class CorresDrawOfferEvent(gameId: String)
-  case class BoardDrawEvent(gameId: String)
   case class SimulMoveEvent(
       move: MoveEvent,
       simulId: String,
@@ -268,7 +267,6 @@ package round {
   case class PostGameStudy(studyId: String)
   case class Berserk(gameId: String, userId: String)
   case class IsOnGame(color: shogi.Color, promise: Promise[Boolean])
-  case class TourStandingOld(data: JsArray)
   case class TourStanding(tourId: String, data: JsArray)
   case class TourFinishedOrDeleted(tourId: String)
   case class ArrangementDeleted(tourId: String, arrId: String)
@@ -287,11 +285,6 @@ package round {
   case class Abort(playerId: String)
   case class Resign(playerId: String)
   case class Mlat(micros: Int)
-}
-
-package evaluation {
-  case class AutoCheck(userId: String)
-  case class Refresh(userId: String)
 }
 
 package bookmark {

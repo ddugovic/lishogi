@@ -20,19 +20,6 @@ trait UserHelper { self: I18nHelper with StringHelper with NumberHelper with Dat
     else if (progress < 0) badTag(cls := "rp")(math.abs(progress)).some
     else none
 
-  val topBarSortedPerfTypes: List[PerfType] = List(
-    PerfType.Bullet,
-    PerfType.Blitz,
-    PerfType.Rapid,
-    PerfType.Classical,
-    PerfType.Correspondence,
-    PerfType.Minishogi,
-    PerfType.Chushogi,
-    PerfType.Annanshogi,
-    PerfType.Kyotoshogi,
-    PerfType.Checkshogi,
-  )
-
   def showPerfRating(rating: Int, name: String, nb: Int, provisional: Boolean, icon: String)(
       implicit lang: Lang,
   ): Frag =

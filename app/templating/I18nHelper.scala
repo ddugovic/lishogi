@@ -20,8 +20,6 @@ trait I18nHelper extends HasEnv with UserContext.ToLang {
 
   def langName = LangList.nameByStr _
 
-  def shortLangName(str: String) = langName(str).takeWhile(','.!=)
-
   def langHref(call: Call)(implicit ctx: lila.api.Context): String = langHref(call.url)
   def langHref(url: String)(implicit ctx: lila.api.Context): String =
     if (ctx.isAuth || ctx.lang.language == "en") url

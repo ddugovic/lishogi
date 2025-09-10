@@ -188,13 +188,6 @@ final private[video] class VideoApi(
       (viewColl.insert.one(a)).void recover
         lila.db.recoverDuplicateKey(_ => ())
 
-    def hasSeen(user: User, video: Video): Fu[Boolean] =
-      viewColl.countSel(
-        $doc(
-          View.BSONFields.id -> View.makeId(video.id, user.id),
-        ),
-      ) map (0 !=)
-
     def seenVideoIds(user: User, videos: Seq[Video]): Fu[Set[Video.ID]] =
       viewColl.distinctEasy[String, Set](
         View.BSONFields.videoId,

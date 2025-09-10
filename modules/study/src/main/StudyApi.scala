@@ -861,26 +861,10 @@ final class StudyApi(
 
   def chapterMetadatas = chapterRepo.orderedMetadataByStudy _
 
-  def withLiked(me: Option[User])(studies: Seq[Study]): Fu[Seq[Study.WithLiked]] =
-    me.?? { u =>
-      studyRepo.filterLiked(u, studies.map(_.id))
-    } map { liked =>
-      studies.map { study =>
-        Study.WithLiked(study, liked(study.id))
-      }
-    }
-
   def analysisRequest(studyId: Study.Id, chapterId: Chapter.Id, userId: User.ID): Funit =
     sequenceStudyWithChapter(studyId, chapterId) { case Study.WithChapter(study, chapter) =>
       Contribute(userId, study) {
         serverEvalRequester(study, chapter, userId)
-      }
-    }
-
-  def deleteAllChapters(studyId: Study.Id, by: User) =
-    sequenceStudy(studyId) { study =>
-      Contribute(by.id, study) {
-        chapterRepo deleteByStudy study
       }
     }
 

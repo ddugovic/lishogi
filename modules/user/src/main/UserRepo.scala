@@ -66,9 +66,6 @@ final class UserRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCont
       } yield xx -> yy
     }
 
-  def namePair(x: ID, y: ID): Fu[Option[(User, User)]] =
-    pair(normalize(x), normalize(y))
-
   def byOrderedIds(ids: Seq[ID], readPreference: ReadPreference): Fu[List[User]] =
     coll.byOrderedIds[User, User.ID](ids, readPreference = readPreference)(_.id)
 
@@ -109,33 +106,11 @@ final class UserRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCont
   def botsByIds(ids: Iterable[ID]): Fu[List[User]] =
     botsByIdsCursor(ids).list()
 
-  def usernameById(id: ID) =
-    coll.primitiveOne[User.ID]($id(id), F.username)
-
   def usernamesByIds(ids: List[ID]) =
     coll.distinctEasy[String, List](F.username, $inIds(ids), ReadPreference.secondaryPreferred)
 
   def createdAtById(id: ID) =
     coll.primitiveOne[DateTime]($id(id), F.createdAt)
-
-  def orderByGameCount(u1: User.ID, u2: User.ID): Fu[Option[(User.ID, User.ID)]] = {
-    coll
-      .find(
-        $inIds(List(u1, u2)),
-        $doc(s"${F.count}.game" -> true).some,
-      )
-      .cursor[Bdoc]()
-      .list() map { docs =>
-      docs
-        .sortBy {
-          _.child(F.count).flatMap(_.int("game"))
-        }
-        .flatMap(_.string("_id")) match {
-        case List(u1, u2) => (u1, u2).some
-        case _            => none
-      }
-    }
-  }
 
   def firstGetsSente(u1: User.ID, u2: User.ID): Fu[Boolean] =
     coll
@@ -245,12 +220,6 @@ final class UserRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCont
   def removeTitle(id: ID): Funit =
     coll.unsetField($id(id), F.title).void
 
-  def setPlayTime(id: ID, playTime: User.PlayTime): Funit =
-    coll.update.one($id(id), $set(F.playTime -> User.playTimeHandler.writeTry(playTime).get)).void
-
-  def getPlayTime(id: ID): Fu[Option[User.PlayTime]] =
-    coll.primitiveOne[User.PlayTime]($id(id), F.playTime)
-
   val enabledSelect  = $doc(F.enabled -> true)
   val disabledSelect = $doc(F.enabled -> false)
   def markSelect(mark: UserMark)(v: Boolean): Bdoc =
@@ -259,12 +228,7 @@ final class UserRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCont
   def engineSelect       = markSelect(UserMark.Engine) _
   def trollSelect        = markSelect(UserMark.Troll) _
   val enabledNoBotSelect = enabledSelect ++ $doc(F.title $ne Title.BOT)
-  def stablePerfSelect(perf: String) =
-    $doc(s"perfs.$perf.gl.d" -> $lt(lila.rating.Glicko.provisionalDeviation))
-  val patronSelect = $doc(s"${F.plan}.active" -> true)
-
-  def sortPerfDesc(perf: String) = $sort desc s"perfs.$perf.gl.r"
-  val sortCreatedAtDesc          = $sort desc F.createdAt
+  val patronSelect       = $doc(s"${F.plan}.active" -> true)
 
   def incNbGames(
       id: ID,
@@ -364,8 +328,6 @@ final class UserRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCont
 
   def updateTroll(user: User) = setTroll(user.id, user.marks.troll)
 
-  def isEngine(id: ID): Fu[Boolean] = coll.exists($id(id) ++ engineSelect(true))
-
   def isTroll(id: ID): Fu[Boolean] = coll.exists($id(id) ++ trollSelect(true))
 
   def isCreatedSince(id: ID, since: DateTime): Fu[Boolean] =
@@ -404,9 +366,6 @@ final class UserRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCont
         },
       )
       .void
-
-  def isMonitoredMod(userId: User.ID) =
-    coll.exists($id(userId) ++ $doc(F.roles -> "ROLE_MONITORED_MOD"))
 
   import Authenticator._
   def getPasswordHash(id: User.ID): Fu[Option[String]] =
@@ -501,8 +460,6 @@ final class UserRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCont
           .to(Map)
       }
 
-  def hasEmail(id: ID): Fu[Boolean] = email(id).dmap(_.isDefined)
-
   def isManaged(id: ID): Fu[Boolean] = email(id).dmap(_.exists(_.isNoReply))
 
   def setBot(user: User): Funit =
@@ -563,8 +520,6 @@ final class UserRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCont
 
   def setLang(user: User, lang: play.api.i18n.Lang) =
     coll.updateField($id(user.id), "lang", lang.code).void
-
-  def langOf(id: ID): Fu[Option[String]] = coll.primitiveOne[String]($id(id), "lang")
 
   def filterByEnabledPatrons(userIds: List[User.ID]): Fu[Set[User.ID]] =
     coll.distinctEasy[String, Set](

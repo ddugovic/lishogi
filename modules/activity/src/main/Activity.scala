@@ -50,7 +50,5 @@ object Activity {
     def today(userId: User.ID) = Id(userId, Day.today)
   }
 
-  case class WithUserId(activity: Activity, userId: User.ID)
-
   def make(userId: User.ID) = Activity(Id today userId)
 }

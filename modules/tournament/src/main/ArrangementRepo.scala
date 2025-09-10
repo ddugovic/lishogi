@@ -22,11 +22,6 @@ final class ArrangementRepo(val coll: Coll)(implicit
       Arrangement.BSONFields.tourId -> tourId,
       Arrangement.BSONFields.users  -> userId,
     )
-  private def selectTourUsers(tourId: Tournament.ID, user1Id: User.ID, user2Id: User.ID) =
-    $doc(
-      Arrangement.BSONFields.tourId -> tourId,
-      Arrangement.BSONFields.users $all List(user1Id, user2Id),
-    )
   // to hit tour index
   private def selectTourGame(tourId: Tournament.ID, gameId: Game.ID) =
     $doc(
@@ -52,9 +47,6 @@ final class ArrangementRepo(val coll: Coll)(implicit
 
   def allByTour(tourId: Tournament.ID): Fu[List[Arrangement]] =
     coll.list[Arrangement](selectTour(tourId))
-
-  def havePlayedTogether(tourId: Tournament.ID, user1Id: User.ID, user2Id: User.ID): Fu[Boolean] =
-    coll.exists(selectTourUsers(tourId, user1Id, user2Id))
 
   def clearUnfinished(tourId: Tournament.ID) =
     coll.update

@@ -162,12 +162,6 @@ final class PlayerRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCo
       }
   }
 
-  def bestTeamPlayers(tourId: Tournament.ID, teamId: TeamID, nb: Int): Fu[List[Player]] =
-    coll.find($doc("tid" -> tourId, "t" -> teamId)).sort($sort desc "m").cursor[Player]().list(nb)
-
-  def countTeamPlayers(tourId: Tournament.ID, teamId: TeamID): Fu[Int] =
-    coll.countSel($doc("tid" -> tourId, "t" -> teamId))
-
   def teamsOfPlayers(tourId: Tournament.ID, userIds: Seq[User.ID]): Fu[List[(User.ID, TeamID)]] =
     coll
       .find(
@@ -200,9 +194,6 @@ final class PlayerRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCo
 
   def remove(tourId: Tournament.ID, userId: User.ID) =
     coll.delete.one(selectTourUser(tourId, userId)).void
-
-  def existsActive(tourId: Tournament.ID, userId: User.ID) =
-    coll.exists(selectTourUser(tourId, userId) ++ selectActive)
 
   def exists(tourId: Tournament.ID, userId: User.ID) =
     coll.exists(selectTourUser(tourId, userId))
@@ -342,9 +333,6 @@ final class PlayerRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCo
       case List(p1, p2) if p1.is(id2) && p2.is(id1) => Some(p2 -> p1)
       case _                                        => none
     }
-
-  def setPerformance(player: Player, performance: Int) =
-    coll.update.one($id(player.id), $doc("$set" -> $doc("e" -> performance))).void
 
   private def rankPlayers(players: List[Player], ranking: Ranking): RankedPlayers =
     players

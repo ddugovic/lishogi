@@ -65,9 +65,6 @@ case class Game(
 
   def player(c: Color.type => Color): Player = player(c(Color))
 
-  def isPlayerFullId(player: Player, fullId: String): Boolean =
-    (fullId.sizeIs == Game.fullIdSize) && player.id == (fullId drop Game.gameIdSize)
-
   def player: Player = player(turnColor)
 
   def playerByUserId(userId: String): Option[Player]   = players.find(_.userId contains userId)
@@ -392,12 +389,6 @@ case class Game(
   def hasHuman: Boolean = players.exists(_.isHuman)
 
   def aiPov: Option[Pov] = aiPlayer.map(_.color) map pov
-
-  def mapPlayers(f: Player => Player) =
-    copy(
-      sentePlayer = f(sentePlayer),
-      gotePlayer = f(gotePlayer),
-    )
 
   def playerCanOfferDraw(color: Color) =
     Game.drawableVariants.contains(variant) &&
@@ -728,22 +719,12 @@ object Game {
     shogi.variant.Kyotoshogi,
   )
 
-  val unanalysableVariants: Set[Variant] = Variant.all.toSet -- analysableVariants
-
   val drawableVariants: Set[Variant] = Set(
     shogi.variant.Chushogi,
   )
 
   val pausableVariants: Set[Variant] = Set(
     shogi.variant.Chushogi,
-  )
-
-  val blindModeVariants: Set[Variant] = Set(
-    shogi.variant.Standard,
-    shogi.variant.Minishogi,
-    shogi.variant.Annanshogi,
-    shogi.variant.Kyotoshogi,
-    shogi.variant.Checkshogi,
   )
 
   val gifVariants: Set[Variant] =
@@ -757,7 +738,6 @@ object Game {
   val gameIdSize   = 8
   val playerIdSize = 4
   val fullIdSize   = 12
-  val tokenSize    = 4
 
   val unplayedHours = 24
   def unplayedDate  = DateTime.now minusHours unplayedHours

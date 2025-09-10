@@ -172,10 +172,7 @@ object Condition {
       val getMaxRating: GetMaxRating = perf => historyApi.lastWeekTopRating(user, perf)
       all.withVerdicts(getMaxRating, getUserTeamIds)(user, perfType)
     }
-    def canEnter(user: User, perfType: PerfType, getUserTeamIds: User.ID => Fu[List[TeamID]])(
-        tour: Tournament,
-    )(implicit ec: scala.concurrent.ExecutionContext): Fu[Boolean] =
-      apply(tour.conditions, user, perfType, getUserTeamIds).dmap(_.accepted)
+
   }
 
   object BSONHandlers {

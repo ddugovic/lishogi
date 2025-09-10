@@ -3,8 +3,6 @@ package lila.api
 import play.api.libs.json._
 
 import lila.common.config._
-import lila.common.paginator.Paginator
-import lila.common.paginator.PaginatorJson
 import lila.user.User
 
 final private[api] class UserApi(
@@ -20,9 +18,6 @@ final private[api] class UserApi(
     gameProxyRepo: lila.round.GameProxyRepo,
     net: NetConfig,
 )(implicit ec: scala.concurrent.ExecutionContext) {
-
-  def pagerJson(pag: Paginator[User]): JsObject =
-    Json.obj("paginator" -> PaginatorJson(pag mapResults one))
 
   def one(u: User): JsObject =
     addPlayingStreaming(jsonView(u), u.id) ++

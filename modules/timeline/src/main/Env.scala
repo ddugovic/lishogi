@@ -38,9 +38,6 @@ final class Env(
 
   lazy val unsubApi = new UnsubApi(db(config.unsubColl))
 
-  def isUnsub(channel: String)(userId: String): Fu[Boolean] =
-    unsubApi.get(channel, userId)
-
   def status(channel: String)(userId: String): Fu[Option[Boolean]] =
     unsubApi.get(channel, userId) flatMap {
       case true => fuccess(Some(true)) // unsubed

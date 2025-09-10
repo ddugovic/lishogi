@@ -141,33 +141,6 @@ final class ChapterRepo(
       }
     }
 
-  // overrides all children sub-nodes in DB! Make the tree merge beforehand.
-  def setChildren(children: Node.Children)(chapter: Chapter, path: Path): Funit = {
-
-    val set: Bdoc = {
-      (children.nodes.sizeIs > 1) ?? $doc(
-        pathToField(chapter.root, path, Node.BsonFields.order) -> children.nodes.map(_.id),
-      )
-    } ++ $doc(childrenTreeToBsonElements(chapter.root, path, children))
-
-    coll(_.update.one($id(chapter.id), $set(set))).void
-  }
-
-  private def childrenTreeToBsonElements(
-      root: Node.Root,
-      parentPath: Path,
-      children: Node.Children,
-  ): Vector[(String, Bdoc)] =
-    (parentPath.depth < Node.MAX_PLIES) ??
-      children.nodes.flatMap { node =>
-        val path = parentPath + node
-        childrenTreeToBsonElements(root, path, node.children) appended (path.toDbField(
-          root,
-        ) -> writeNode(
-          node,
-        ))
-      }
-
   private def setNodeValue[A: BSONWriter](
       field: String,
       value: Option[A],

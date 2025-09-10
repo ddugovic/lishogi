@@ -87,11 +87,6 @@ case class User(
 
   def withMarks(f: UserMarks => UserMarks) = copy(marks = f(marks))
 
-  def lightPerf(key: String) =
-    perfs(key) map { perf =>
-      User.LightPerf(light, key, perf.intRating, perf.progress)
-    }
-
   def lightCount = User.LightCount(light, count.game)
 
   private def bestOf(perfTypes: List[PerfType], nb: Int) =
@@ -162,10 +157,8 @@ object User {
     case object InvalidTotpToken          extends Result(none)
   }
 
-  val anonymous              = "Anonymous"
-  val lishogiId              = "lishogi"
-  val broadcasterId          = "broadcaster"
-  def isOfficial(userId: ID) = userId == lishogiId || userId == broadcasterId
+  val anonymous = "Anonymous"
+  val lishogiId = "lishogi"
 
   val seenRecently = 2.minutes
 

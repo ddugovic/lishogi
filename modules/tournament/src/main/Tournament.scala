@@ -151,13 +151,9 @@ case class Tournament(
     s"$id $startsAt $name $minutes minutes, $timeControl, $nbPlayers players"
 }
 
-case class EnterableTournaments(tours: List[Tournament], scheduled: List[Tournament])
-
 object Tournament {
 
   type ID = String
-
-  val minPlayers = 2
 
   def make(
       by: Either[User.ID, User],

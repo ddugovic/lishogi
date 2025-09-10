@@ -23,12 +23,6 @@ case class Pairing(
   def usersPair                                   = user1 -> user2
   def contains(user: User.ID): Boolean            = user1 == user || user2 == user
   def contains(u1: User.ID, u2: User.ID): Boolean = contains(u1) && contains(u2)
-  def notContains(user: User.ID)                  = !contains(user)
-
-  def opponentOf(userId: User.ID) =
-    if (userId == user1) user2.some
-    else if (userId == user2) user1.some
-    else none
 
   def finished = status >= shogi.Status.Mate
   def playing  = !finished

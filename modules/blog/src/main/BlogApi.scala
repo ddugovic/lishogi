@@ -53,7 +53,7 @@ final class BlogApi(
       .ref(api.master.ref)
       .query(
         Predicate.at("document.type", collection),
-        Predicate.year(s"my.$collection.date", year),
+        Predicate.apply("date.year", s"my.$collection.date", year),
       )
       .orderings(s"[my.$collection.date desc]")
       .pageSize(100) // prismic maximum
@@ -89,16 +89,6 @@ final class BlogApi(
 }
 
 object BlogApi {
-
-  def extract(body: Fragment.StructuredText): String =
-    body.blocks
-      .takeWhile(_.isInstanceOf[Fragment.StructuredText.Block.Paragraph])
-      .take(2)
-      .map {
-        case Fragment.StructuredText.Block.Paragraph(text, _, _) => s"<p>$text</p>"
-        case _                                                   => ""
-      }
-      .mkString
 
   case class Context(api: Api, linkResolver: DocumentLinkResolver)
 }

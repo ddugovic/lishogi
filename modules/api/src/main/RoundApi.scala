@@ -136,16 +136,6 @@ final private[api] class RoundApi(
       }
     }
 
-  def freeStudyJson(
-      pov: Pov,
-      pref: Pref,
-      orientation: shogi.Color,
-      me: Option[User],
-  ) =
-    withTree(pov, analysis = none, WithFlags())(
-      jsonView.userAnalysisJson(pov, pref, orientation, owner = false, me = me),
-    )
-
   private def withTree(pov: Pov, analysis: Option[Analysis], withFlags: WithFlags)(
       obj: JsObject,
   ) =

@@ -290,9 +290,6 @@ object mon {
       def fetch(success: Boolean, block: Boolean) =
         timer("checkMail.fetch").withTags(tags("success" -> successTag(success), "block" -> block))
     }
-    def usersAlikeTime(field: String) = timer("security.usersAlike.time").withTag("field", field)
-    def usersAlikeFound(field: String) =
-      histogram("security.usersAlike.found").withTag("field", field)
   }
   object tv {
     object streamer {
@@ -302,15 +299,12 @@ object mon {
     }
   }
   object crosstable {
-    val create                      = future("crosstable.create.time")
-    def createOffer(result: String) = counter("crosstable.create.offer").withTag("result", result)
-    val duplicate                   = counter("crosstable.create.duplicate").withoutTags()
-    val found                       = counter("crosstable.create.found").withoutTags()
-    val createNbGames               = histogram("crosstable.create.nbGames").withoutTags()
+    val create    = future("crosstable.create.time")
+    val duplicate = counter("crosstable.create.duplicate").withoutTags()
+    val found     = counter("crosstable.create.found").withoutTags()
   }
   object playTime {
-    val create         = future("playTime.create.time")
-    val createPlayTime = histogram("playTime.create.playTime").withoutTags()
+    val create = future("playTime.create.time")
   }
   object relation {
     private val c = counter("relation.action")
@@ -381,9 +375,6 @@ object mon {
       val view = counter("forum.topic.view").withoutTags()
     }
     def reaction(r: String) = counter("forum.reaction").withTag("reaction", r)
-  }
-  object team {
-    def massPm(teamId: String) = histogram("team.mass-pm").withTag("from", teamId)
   }
   object puzzle {
     object selector {
@@ -553,10 +544,7 @@ object mon {
     def oldest(as: String) = gauge("fishnet.oldest").withTag("for", as)
     object move {
       def time(client: String) = timer("fishnet.move.time").withTag("client", client)
-      def fullTimeLvl1(client: String) =
-        timer("fishnet.move.full_time_lvl_1").withTag("client", client)
-      val post   = gauge("fishnet.move.post")
-      val dbDrop = gauge("fishnet.move.db_drop")
+      val post                 = gauge("fishnet.move.post")
     }
     object analysis {
       object by {

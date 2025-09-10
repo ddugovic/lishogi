@@ -86,15 +86,6 @@ final class GameRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCont
 
   def remove(id: ID) = coll.delete.one($id(id)).void
 
-  def userPovsByGameIds(
-      gameIds: List[String],
-      user: User,
-      readPreference: ReadPreference = ReadPreference.secondaryPreferred,
-  ): Fu[List[Pov]] =
-    coll.byOrderedIds[Game, ID](gameIds, readPreference = readPreference)(_.id) dmap {
-      _.flatMap(g => Pov(g, user))
-    }
-
   def recentPovsByUserFromSecondary(user: User, nb: Int): Fu[List[Pov]] =
     coll
       .find(Query user user)
@@ -227,22 +218,9 @@ final class GameRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCont
       .one[Bdoc]
       .dmap { _.flatMap(_.getAsOpt[Game.ID](F.id)) }
 
-  def lastFinishedRatedNotFromPosition(user: User): Fu[Option[Game]] =
-    coll
-      .find(
-        Query.user(user.id) ++
-          Query.rated ++
-          Query.finished ++
-          Query.pliesGt(2) ++
-          Query.notFromPosition,
-      )
-      .sort(Query.sortAntiChronological)
-      .one[Game]
-
   def setTv(id: ID) = coll.updateFieldUnchecked($id(id), F.tvAt, DateTime.now)
 
-  def setAnalysed(id: ID): Unit   = coll.updateFieldUnchecked($id(id), F.analysed, true)
-  def setUnanalysed(id: ID): Unit = coll.updateFieldUnchecked($id(id), F.analysed, false)
+  def setAnalysed(id: ID): Unit = coll.updateFieldUnchecked($id(id), F.analysed, true)
 
   def setPostGameStudy(id: ID, studyId: String): Unit =
     coll.updateFieldUnchecked($id(id), F.postGameStudy, studyId)
@@ -414,12 +392,6 @@ final class GameRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCont
     } void
   }
 
-  def removeRecentChallengesOf(userId: String) =
-    coll.delete.one(
-      Query.created ++ Query.friend ++ Query.user(userId) ++
-        Query.createdSince(DateTime.now minusHours 1),
-    )
-
   def setCheckAt(g: Game, at: DateTime) =
     coll.update.one($id(g.id), $set(F.checkAt -> at))
 
@@ -480,16 +452,6 @@ final class GameRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCont
   def findNotationImport(notation: String): Fu[Option[Game]] =
     coll.one[Game](
       $doc(s"${F.notationImport}.h" -> NotationImport.hash(notation)),
-    )
-
-  def getOptionUsis(id: ID): Fu[Option[Usis]] = game(id) dmap2 { _.usis }
-
-  def lastGameBetween(u1: String, u2: String, since: DateTime): Fu[Option[Game]] =
-    coll.one[Game](
-      $doc(
-        F.playerUids $all List(u1, u2),
-        F.createdAt $gt since,
-      ),
     )
 
   def lastGamesBetween(u1: User, u2: User, since: DateTime, nb: Int): Fu[List[Game]] =

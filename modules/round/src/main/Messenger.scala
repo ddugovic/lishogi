@@ -51,9 +51,6 @@ final class Messenger(api: ChatApi) {
     if (game.nonAi) apiCall(Chat.Id(game.id), message, _.Round)
   }.unit
 
-  def systemForOwners(chatId: Chat.Id, message: String): Unit =
-    api.userChat.system(chatId, message, _.Round).unit
-
   def watcher(gameId: Game.Id, userId: User.ID, text: String) =
     api.userChat.write(
       watcherId(gameId),

@@ -42,13 +42,6 @@ object Accuracy {
     }
     .reverse
 
-  def prevColorInfos(pov: PovLike, analysis: Analysis): List[Info] = {
-    if (pov.color == pov.startColor) Info.start(pov.startedAtPly) :: analysis.infos
-    else analysis.infos
-  }.zipWithIndex.collect {
-    case (e, i) if (i % 2) == 0 => e
-  }
-
   def mean(pov: PovLike, analysis: Analysis): Option[Int] = {
     val diffs = diffsList(pov, analysis)
     val nb    = diffs.size

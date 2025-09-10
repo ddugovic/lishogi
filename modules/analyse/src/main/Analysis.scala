@@ -52,8 +52,6 @@ object Analysis {
 
   import lila.db.BSON
 
-  case class Analyzed(game: lila.game.Game, analysis: Analysis)
-
   case class PostGameStudy(studyId: String, chapterId: String)
 
   type ID = String

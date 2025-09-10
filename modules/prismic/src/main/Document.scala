@@ -16,8 +16,6 @@ case class Document(
     fragments: Map[String, Fragment],
 ) extends WithFragments {
 
-  def isTagged(requiredTags: Seq[String]) = requiredTags.forall(tag => tags.contains(tag))
-
   def asDocumentLink: DocumentLink =
     Fragment.DocumentLink(id, uid, typ, tags, lang, isBroken = false)
 }

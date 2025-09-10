@@ -15,7 +15,6 @@ import lila.evaluation.Analysed
 import lila.evaluation.Assessible
 import lila.evaluation.PlayerAggregateAssessment
 import lila.evaluation.PlayerAssessment
-import lila.evaluation.PlayerAssessments
 import lila.evaluation.PlayerFlags
 import lila.evaluation.Statistics
 import lila.game.Game
@@ -55,15 +54,6 @@ final class AssessApi(
       .sort($doc("date" -> -1))
       .cursor[PlayerAssessment](ReadPreference.secondaryPreferred)
       .gather[List](nb)
-
-  def getResultsByGameIdAndColor(gameId: String, color: Color) =
-    getPlayerAssessmentById(gameId + "/" + color.name)
-
-  def getGameResultsById(gameId: String) =
-    getResultsByGameIdAndColor(gameId, Color.Sente) zip
-      getResultsByGameIdAndColor(gameId, Color.Gote) map { a =>
-        PlayerAssessments(a._1, a._2)
-      }
 
   private def getPlayerAggregateAssessment(
       userId: String,

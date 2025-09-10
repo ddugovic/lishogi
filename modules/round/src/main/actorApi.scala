@@ -37,8 +37,6 @@ package round {
       promise: Option[Promise[Unit]] = None,
   )
 
-  case class PlayResult(events: Events, sfen: String, lastUsi: Option[String])
-
   case object AbortForce
   case object ResignAi
   case class ResignForce(playerId: PlayerId)

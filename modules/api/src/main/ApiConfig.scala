@@ -8,8 +8,6 @@ final class ApiConfig(
     val apiToken: Secret,
     val influxEventEndpoint: String,
     val influxEventEnv: String,
-    val isStage: Boolean,
-    val prismicApiUrl: String,
     val accessibility: ApiConfig.Accessibility,
 )
 
@@ -31,8 +29,6 @@ object ApiConfig {
       c.get[Secret]("api.token"),
       c.get[String]("api.influx_event.endpoint"),
       c.get[String]("api.influx_event.env"),
-      c.get[Boolean]("app.stage"),
-      c.get[String]("prismic.api_url"),
       new Accessibility(
         c.get[String]("accessibility.blind.cookie.name"),
         c.get[FiniteDuration]("accessibility.blind.cookie.max_age"),

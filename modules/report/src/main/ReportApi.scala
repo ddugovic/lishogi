@@ -108,9 +108,6 @@ final class ReportApi(
       (candidate.isAutomatic && candidate.isOther && candidate.suspect.user.marks.troll) ||
       (candidate.isComm && candidate.suspect.user.marks.troll)
 
-  def getMod(username: String): Fu[Option[Mod]] =
-    userRepo named username dmap2 Mod.apply
-
   def getLishogiMod: Fu[Mod] = userRepo.lishogi dmap2 Mod.apply orFail "User lishogi is missing"
   def getLishogiReporter: Fu[Reporter] =
     getLishogiMod map { l =>
@@ -357,16 +354,6 @@ final class ReportApi(
           .list(nb)
       about <- recent(Suspect(user), nb, ReadPreference.secondaryPreferred)
     } yield Report.ByAndAbout(by, about)
-
-  def currentCheatScore(suspect: Suspect): Fu[Option[Report.Score]] =
-    coll.primitiveOne[Report.Score](
-      $doc(
-        "user" -> suspect.user.id,
-        "room" -> Room.Cheat.key,
-        "open" -> true,
-      ),
-      "score",
-    )
 
   def currentCheatReport(suspect: Suspect): Fu[Option[Report]] =
     coll.one[Report](

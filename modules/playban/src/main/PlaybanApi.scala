@@ -14,7 +14,6 @@ import lila.common.Iso
 import lila.common.Uptime
 import lila.db.dsl._
 import lila.game.Game
-import lila.game.Player
 import lila.game.Pov
 import lila.game.Source
 import lila.msg.MsgApi
@@ -42,8 +41,6 @@ final class PlaybanApi(
   implicit private val BanBSONHandler: BSONDocumentHandler[TempBan] = Macros.handler[TempBan]
   implicit private val UserRecordBSONHandler: BSONDocumentHandler[UserRecord] =
     Macros.handler[UserRecord]
-
-  private case class Blame(player: Player, outcome: Outcome)
 
   private val blameableSources: Set[Source] = Set(Source.Lobby, Source.Tournament)
 

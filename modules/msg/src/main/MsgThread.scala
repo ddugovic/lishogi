@@ -29,8 +29,6 @@ object MsgThread {
 
   case class Id(value: String) extends AnyVal
 
-  case class WithMsgs(thread: MsgThread, msgs: List[Msg])
-
   case class WithContact(thread: MsgThread, contact: LightUser)
 
   case class Unread(thread: MsgThread)

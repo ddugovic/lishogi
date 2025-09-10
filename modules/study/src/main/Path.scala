@@ -65,8 +65,6 @@ object Path {
         .toVector
     }
 
-  def fromDbKey(key: String): Path = apply(decodeDbKey(key))
-
   val root = Path("")
 
   // mongodb objects don't support empty keys

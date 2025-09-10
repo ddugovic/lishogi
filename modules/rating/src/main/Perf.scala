@@ -93,8 +93,6 @@ case object Perf {
   type Key = String
   type ID  = Int
 
-  case class Typed(perf: Perf, perfType: PerfType)
-
   val default = Perf(Glicko.default, 0, Nil, None)
 
   /* Set a latest date as a hack so that these are written to the db even though there are no games */

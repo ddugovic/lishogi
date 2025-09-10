@@ -69,15 +69,6 @@ final class AccessTokenApi(coll: Coll, cacheApi: lila.memo.CacheApi)(implicit
       ),
     )
 
-  def findCompatiblePersonal(user: User, scopes: Set[OAuthScope]): Fu[Option[AccessToken]] =
-    coll.one[AccessToken](
-      $doc(
-        F.userId       -> user.id,
-        F.clientOrigin -> $exists(false),
-        F.scopes $all scopes.toSeq,
-      ),
-    )
-
   def listClients(user: User, limit: Int): Fu[List[AccessTokenApi.Client]] =
     coll.aggregateList(limit) { framework =>
       import framework._
