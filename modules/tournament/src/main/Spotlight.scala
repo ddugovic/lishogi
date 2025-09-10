@@ -25,14 +25,14 @@ object Spotlight {
   private def filter(tours: List[Tournament], user: Option[User]) =
     tours.filter { t =>
       !t.isFinished && user.fold(true)(validVariant(t, _)) && t.spotlight.fold(
-        automatically(t, user.isDefined),
+        automatically(t, user.isEmpty),
       )(
-        manually(t, _),
+        manually(t, _, user.isEmpty),
       )
     }
 
-  private def manually(tour: Tournament, spotlight: Spotlight): Boolean =
-    spotlight.homepageHours.exists { hours =>
+  private def manually(tour: Tournament, spotlight: Spotlight, isAnon: Boolean): Boolean =
+    spotlight.homepageHours.fold(automatically(tour, isAnon)) { hours =>
       tour.startsAt.minusHours(hours).isBeforeNow
     }
 
@@ -43,7 +43,8 @@ object Spotlight {
           case Unique           => 5 * 24 * 60
           case Yearly           => 3 * 24 * 60
           case Monthly | Shield => 36 * 60
-          case Weekly | Weekend => 6 * 60
+          case Weekend          => 12 * 60
+          case Weekly           => 6 * 60
           case Daily            => 2 * 60
           case _                => 30
         }
