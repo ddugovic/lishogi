@@ -428,7 +428,7 @@ final private class TourFields(form: Form[_], tour: Option[Tournament])(implicit
         trans.endDate(),
         klass = "f-robin f-organized",
         half = true,
-      )(form3.flatpickr(_, disabled = disabledAfterFinish || !tour.exists(_.hasArrangements))),
+      )(form3.flatpickr(_, disabled = disabledAfterFinish || tour.exists(!_.hasArrangements))),
     )
 
   def description =
