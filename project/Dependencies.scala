@@ -20,18 +20,18 @@ object Dependencies {
   val googleOAuth = "com.google.auth"    % "google-auth-library-oauth2-http" % "1.33.1"
   val galimatias  = "io.mola.galimatias" % "galimatias"                      % "0.2.2-NF"
   val scalatags   = "com.lihaoyi"       %% "scalatags"                       % "0.13.1"
-  val lettuce     = "io.lettuce"         % "lettuce-core"                    % "6.5.5.RELEASE"
+  val lettuce     = "io.lettuce"         % "lettuce-core"                    % "6.8.1.RELEASE"
   val autoconfig  = "io.methvin.play"   %% "autoconfig-macros"               % "0.3.2" % "provided"
-  val uaparser    = "org.uaparser"      %% "uap-scala"                       % "0.19.0"
-  val apacheText  = "org.apache.commons" % "commons-text"                    % "1.13.0"
+  val uaparser    = "org.uaparser"      %% "uap-scala"                       % "0.20.0"
+  val apacheText  = "org.apache.commons" % "commons-text"                    % "1.14.0"
 
   object play {
     import _root_.play.sbt.PlayImport
 
     val core      = PlayImport.playCore
     val ws        = PlayImport.ws
-    val json      = "com.typesafe.play" %% "play-json"      % "2.10.6"
-    val jsonJoda  = "com.typesafe.play" %% "play-json-joda" % "2.10.6"
+    val json      = "com.typesafe.play" %% "play-json"      % "2.10.7"
+    val jsonJoda  = "com.typesafe.play" %% "play-json-joda" % "2.10.7"
     val jodaForms = PlayImport.jodaForms
     val specs2    = PlayImport.specs2    % Test
   }
@@ -54,7 +54,7 @@ object Dependencies {
   }
 
   object macwire {
-    val version = "2.6.6"
+    val version = "2.6.7"
 
     val macros = "com.softwaremill.macwire" %% "macros" % version % "provided"
     val util   = "com.softwaremill.macwire" %% "util"   % version % "provided"
