@@ -52,9 +52,9 @@ object ClockSoundSet extends SoundSetBase {
     new SoundSet("shougi_sennin", "Shogi sage", "将棋仙人"),
     new SoundSet("ippan_dansei", "Ordinary Male", "一般男性"),
     new SoundSet("sakura_ajisai", "Sakura Ajisai", "紫陽花さくら"),
-    new SoundSet("robot_ja", "Robot (JP)", "ロボット"),
-    new SoundSet("eigo", "English", "English"),
-    new SoundSet("robot_en", "Robot (EN)", "Robot"),
+    new SoundSet("robot_ja", "Robot (JP)", "ロボット(日本語)"),
+    new SoundSet("eigo", "English", "英語女性"),
+    new SoundSet("robot_en", "Robot (EN)", "ロボット（英語）"),
   )
 
 }
