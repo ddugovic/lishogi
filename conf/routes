@@ -601,6 +601,7 @@ GET   /api/board/game/stream/:id        controllers.PlayApi.boardGameStream(id: 
 POST  /api/board/game/:id/move/:usi     controllers.PlayApi.boardMove(id: String, usi: String, offeringDraw: Option[Boolean] ?= None)
 POST  /api/board/seek                   controllers.Setup.boardApiHook
 POST  /api/board/*cmd                   controllers.PlayApi.boardCommand(cmd: String)
+GET   /api/board/*cmd                   controllers.PlayApi.boardCommandGet(cmd: String)
 
 # Account
 GET   /account/passwd                  controllers.Account.passwd
