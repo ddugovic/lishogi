@@ -97,7 +97,7 @@ export function view(ctrl: PieceCtrl): VNode {
         }),
       },
       h(
-        `div.list.tab.${ctrl.activeTab}`,
+        `div.list.tab-${ctrl.activeTab}`,
         {
           key: ctrl.activeTab,
         },
