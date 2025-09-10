@@ -1,4 +1,4 @@
-import { icons } from 'common/icons';
+import { svgSprite } from 'common/icon-selector';
 import addDays from 'date-fns/addDays';
 import areIntervalsOverlapping from 'date-fns/areIntervalsOverlapping';
 import eachDayOfInterval from 'date-fns/eachDayOfInterval';
@@ -19,10 +19,6 @@ function tournamentClass(tour: Tournament, day: Date) {
   return classes;
 }
 
-function iconOf(tour: any, perfIcon: string): string {
-  return tour.schedule && tour.schedule.freq === 'shield' ? icons.shield : perfIcon;
-}
-
 function renderTournament(tour: Tournament, day: Date) {
   let left = ((getHours(tour.bounds.start) + getMinutes(tour.bounds.start) / 60) / 24) * 100;
   if (tour.bounds.start < day) left -= 100;
@@ -39,16 +35,16 @@ function renderTournament(tour: Tournament, day: Date) {
       },
     },
     [
-      h(
-        'span.icon',
-        tour.perf
-          ? {
-              attrs: {
-                'data-icon': iconOf(tour, tour.perf.icon),
-              },
-            }
-          : {},
-      ),
+      h('span.icon', {
+        hook: {
+          insert: vnode => {
+            (vnode.elm as HTMLElement).innerHTML = svgSprite(
+              'tour',
+              tour.icon || `li-${tour.perf.key}`,
+            );
+          },
+        },
+      }),
       h('span.body', [tour.fullName]),
     ],
   );
