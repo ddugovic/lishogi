@@ -363,14 +363,19 @@ class Ackable {
 }
 
 function updateNetworkStatusElement(status: 'online' | 'reconnected' | 'offline'): void {
+  const onlineish = status === 'online' || status === 'reconnected';
   const cls = document.body.classList;
-  cls.toggle('online', status === 'online' || status === 'reconnected');
-  cls.toggle('offline', status === 'offline');
+  cls.toggle('online', onlineish);
+  cls.toggle('offline', !onlineish);
   if (status === 'reconnected') cls.add('reconnected');
 
   const el = document.getElementById('reconnecting');
   if (el) {
-    const statusText = isOnline() ? i18n('reconnecting') : 'Offline';
+    const statusText = onlineish
+      ? i18n('online')
+      : isOnline()
+        ? i18n('reconnecting')
+        : i18n('offline');
     el.textContent = statusText;
   }
 }
