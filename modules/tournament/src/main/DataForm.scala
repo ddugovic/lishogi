@@ -239,7 +239,7 @@ private[tournament] case class TournamentSetup(
     realFormat != Format.Arena || (~minutes.map(m => granted || minutes.contains(m)))
 
   def validFinishDate =
-    finishDate.fold(realFormat == Format.Arena)(_.minusMinutes(20) isAfter realStartDate)
+    realFormat == Format.Arena || finishDate.exists(_.minusMinutes(19) isAfter realStartDate)
 
   def validTimeControl = timeControlSetup.isRealTime || realFormat != Format.Arena
 
@@ -249,7 +249,7 @@ private[tournament] case class TournamentSetup(
 
   def validSufficientDuration =
     if (timeControlSetup.isRealTime)
-      estimateNumberOfGamesOneCanPlay >= 3
+      estimateNumberOfGamesOneCanPlay >= (if (realFormat == Format.Arena) 3 else 1)
     else realMinutes > 180
 
   def validNotExcessiveDuration =
