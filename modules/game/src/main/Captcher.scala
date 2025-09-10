@@ -60,24 +60,18 @@ final private class Captcher(gameRepo: GameRepo)(implicit ec: scala.concurrent.E
     private def createFromDb: Fu[Option[Captcha]] =
       findCheckmateInDb(10) flatMap {
         _.fold(findCheckmateInDb(1))(g => fuccess(g.some))
-      } flatMap {
-        _ ?? fromGame
-      }
+      } map { _ ?? makeCaptcha }
 
     private def findCheckmateInDb(distribution: Int): Fu[Option[Game]] =
       gameRepo findRandomMinishogiCheckmate distribution
 
     private def getFromDb(id: String): Fu[Option[Captcha]] =
-      gameRepo game id flatMap { _ ?? fromGame }
+      gameRepo game id map { _ ?? makeCaptcha }
 
-    private def fromGame(game: Game): Fu[Option[Captcha]] =
-      gameRepo getOptionUsis game.id map {
-        _ flatMap { makeCaptcha(game, _) }
-      }
-
-    private def makeCaptcha(game: Game, usis: Usis): Option[Captcha] =
+    private def makeCaptcha(game: Game): Option[Captcha] =
       for {
-        rewinded  <- rewind(usis)
+        _         <- game.variant.minishogi option true // sanity check
+        rewinded  <- rewind(game.usis)
         solutions <- solve(rewinded)
       } yield Captcha(game.id, sfen(rewinded), rewinded.color.sente, solutions)
 
