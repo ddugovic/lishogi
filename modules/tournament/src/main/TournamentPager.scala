@@ -41,7 +41,7 @@ final class TournamentPager(
             collection = repo.coll,
             selector = $doc("status" $lt Status.Finished.id) ++ selector(order),
             projection = none,
-            sort = sort(order),
+            sort = sort(order, false),
             hint = none,
           ),
           currentPage = page,
@@ -55,7 +55,7 @@ final class TournamentPager(
         collection = repo.coll,
         selector = $doc("status" -> Status.Finished.id) ++ selector(order),
         projection = none,
-        sort = sort(order),
+        sort = sort(order, true),
         hint = none,
       ),
       currentPage = page,
@@ -64,18 +64,18 @@ final class TournamentPager(
 
   private def selector(order: TournamentPager.Order) =
     order match {
-      case TournamentPager.Order.Created | TournamentPager.Order.Started =>
+      case TournamentPager.Order.Created =>
         $doc("schedule" $exists false)
       case TournamentPager.Order.Lishogi =>
         $doc("schedule" $exists true)
       case _ => $empty
     }
 
-  private def sort(order: TournamentPager.Order) =
+  private def sort(order: TournamentPager.Order, finished: Boolean) =
     order match {
       case TournamentPager.Order.Popular => $sort desc "nbPlayers"
       case TournamentPager.Order.Created => $sort desc "createdAt"
-      case _                             => $sort desc "startsAt"
+      case _ => if (finished) ($sort desc "startsAt") else ($sort asc "startsAt")
     }
 
   object Featured {
@@ -97,8 +97,8 @@ final class TournamentPager(
 
     private def worthSomething(tour: Tournament) =
       tour.nbPlayers > 0 ||
-        tour.startsAt.isAfterNow ||
-        tour.finishesAt.plusMinutes(30).isAfterNow
+        tour.startsAt.plusHours(2).isAfterNow ||
+        tour.finishesAt.plusHours(2).isAfterNow
 
     private def calcScore(t: Tournament): Int = {
       val minuteDistance = math.abs(Minutes.minutesBetween(DateTime.now, t.startsAt).getMinutes)
