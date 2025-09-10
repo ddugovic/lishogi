@@ -26,8 +26,9 @@ export async function createBuilder(
   };
   const compiler = await sass.initAsyncCompiler();
 
+  // breaks source maps in dev...
   const postCssPlugins: postcss.AcceptedPlugin[] = !isProd
-    ? [autoprefixer({ remove: false })]
+    ? []
     : [
         autoprefixer({ remove: false }),
         cssnano({
