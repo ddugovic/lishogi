@@ -43,9 +43,9 @@ function podiumPosition(p: ArrangementPlayer, pos: string, games: Arrangement[])
 }
 
 export function arrangementPodium(ctrl: TournamentController): VNode {
-  const p = [...ctrl.data.standing.players]
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 3) as ArrangementPlayer[];
+  const p = ([...ctrl.data.standing.players] as ArrangementPlayer[])
+    .sort((a, b) => (b.magicScore || 0) - (a.magicScore || 0))
+    .slice(0, 3);
   const games = ctrl.data.standing.arrangements.filter(a => !!a.gameId);
   return h('div.tour__podium', [
     podiumPosition(p[1], 'second', games),

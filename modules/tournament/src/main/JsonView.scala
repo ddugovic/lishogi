@@ -612,12 +612,13 @@ object JsonView {
     lightUserApi asyncFallback player.userId map { light =>
       Json
         .obj(
-          "id"     -> player.userId,
-          "name"   -> light.name,
-          "patron" -> light.isPatron,
-          "order"  -> ~player.order,
-          "rating" -> player.rating,
-          "score"  -> player.scoreNotKicked,
+          "id"         -> player.userId,
+          "name"       -> light.name,
+          "patron"     -> light.isPatron,
+          "order"      -> ~player.order,
+          "rating"     -> player.rating,
+          "score"      -> player.scoreNotKicked,
+          "magicScore" -> player.magicScore,
         )
         .add("title" -> light.title)
         .add("provisional" -> player.provisional)

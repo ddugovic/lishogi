@@ -23,6 +23,7 @@ export interface ArrangementPlayer extends BasePlayer {
   id: string;
   order: number;
   score: number;
+  magicScore: number;
   kicked?: boolean;
   withdraw?: boolean;
 }
