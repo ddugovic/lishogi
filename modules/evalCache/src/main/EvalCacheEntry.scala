@@ -54,7 +54,7 @@ object EvalCacheEntry {
       trust: Trust,
   ) {
 
-    def multiPv = pvs.size
+    def multiPv = pvs.size atMost MAX_MULTI_PV
 
     def bestPv: Pv = pvs.head
 
