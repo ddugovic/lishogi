@@ -93,5 +93,5 @@ export function createIconSelector(
 }
 
 export function svgSprite(categ: string, key: string): string {
-  return `<svg class="icon"><use href="${assetUrl(`icons/${categ}.svg`)}#${key}"></use></svg>`;
+  return `<svg class="extra-icon"><use href="${assetUrl(`icons/${categ}.svg`)}#${key}"></use></svg>`;
 }

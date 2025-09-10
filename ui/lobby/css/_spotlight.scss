@@ -1,6 +1,7 @@
 @use 'pkg:common/abstract/extends';
 @use 'pkg:common/abstract/mixins';
 @use 'pkg:common/theme';
+@use 'ui/tournament/css/icons';
 
 .lobby__spotlights {
   flex: 0 0 auto;
@@ -9,6 +10,7 @@
 .tour-spotlight {
   @extend %flex-center-nowrap, %nowrap-hidden, %box-neat-force;
 
+  gap: 0.5rem;
   flex: 0 0 auto;
   padding: 0.3em;
   margin: 3px 0;
@@ -20,19 +22,22 @@
     background: theme.$c-bg-zebra;
   }
 
+  .licon {
+    font-family: lishogi;
+    font-size: 2.5rem;
+    color: theme.$c-brag;
+    margin: 0;
+  }
+
   .tour-icon {
-    flex: 0 0 50px;
-    margin: 0 0.5em 0 0.3em;
+    flex: 0 0 40px;
+    margin: 0;
     width: 40px;
     height: 40px;
-  }
 
-  .tour-icon svg {
-    padding: 0.35rem;
-  }
-
-  .tour-icon i::before {
-    font-size: 37px;
+    svg {
+      padding: 2px;
+    }
   }
 
   .content {
