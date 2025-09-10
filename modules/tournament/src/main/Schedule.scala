@@ -218,55 +218,57 @@ object Schedule {
     import Freq._, Speed._
     import shogi.variant._
 
-    (s.freq, s.variant, s.speed) match {
+    (s.format, s.freq, s.variant, s.speed) match {
 
-      case (Hourly, _, UltraBullet | HyperBullet | Bullet) => 27
-      case (Hourly, _, SuperBlitz | Blitz | HyperRapid)    => 57
-      case (Hourly, _, Rapid) if s.hasMaxRating            => 57
-      case (Hourly, _, Rapid | Classical)                  => 117
+      case (Format.Robin, _, _, _) => 24 * 60
 
-      case (Daily | Eastern, Standard, Blitz)      => 120
-      case (Daily | Eastern, Standard, HyperRapid) => 150
-      case (Daily | Eastern, _, HyperRapid)        => 120
-      case (Daily | Eastern, _, Rapid | Classical) => 180
-      case (Daily | Eastern, _, _)                 => 75
+      case (_, Hourly, _, UltraBullet | HyperBullet | Bullet) => 27
+      case (_, Hourly, _, SuperBlitz | Blitz | HyperRapid)    => 57
+      case (_, Hourly, _, Rapid) if s.hasMaxRating            => 57
+      case (_, Hourly, _, Rapid | Classical)                  => 117
 
-      case (Weekly, Minishogi | Kyotoshogi, _)             => 60
-      case (Weekly, _, UltraBullet | HyperBullet | Bullet) => 60 * 1 + 30
-      case (Weekly, _, SuperBlitz | Blitz)                 => 60 * 2
-      case (Weekly, _, HyperRapid | Rapid)                 => 60 * 3
-      case (Weekly, _, Classical)                          => 60 * 4
+      case (_, Daily | Eastern, Standard, Blitz)      => 120
+      case (_, Daily | Eastern, Standard, HyperRapid) => 150
+      case (_, Daily | Eastern, _, HyperRapid)        => 120
+      case (_, Daily | Eastern, _, Rapid | Classical) => 180
+      case (_, Daily | Eastern, _, _)                 => 75
 
-      case (Weekend, _, UltraBullet | HyperBullet | Bullet) => 60 * 1 + 30
-      case (Weekend, _, SuperBlitz | Blitz)                 => 60 * 2
-      case (Weekend, _, HyperRapid)                         => 60 * 2
-      case (Weekend, _, Rapid)                              => 60 * 3
-      case (Weekend, _, Classical)                          => 60 * 4
+      case (_, Weekly, Minishogi | Kyotoshogi, _)             => 60
+      case (_, Weekly, _, UltraBullet | HyperBullet | Bullet) => 60 * 1 + 30
+      case (_, Weekly, _, SuperBlitz | Blitz)                 => 60 * 2
+      case (_, Weekly, _, HyperRapid | Rapid)                 => 60 * 3
+      case (_, Weekly, _, Classical)                          => 60 * 4
 
-      case (Monthly, Minishogi | Kyotoshogi, _) => 60 * 2
-      case (Monthly, _, UltraBullet)            => 60 * 2
-      case (Monthly, _, HyperBullet | Bullet)   => 60 * 3
-      case (Monthly, _, SuperBlitz | Blitz)     => 60 * 3 + 30
-      case (Monthly, _, HyperRapid)             => 60 * 4
-      case (Monthly, _, Rapid)                  => 60 * 5
-      case (Monthly, _, Classical)              => 60 * 6
+      case (_, Weekend, _, UltraBullet | HyperBullet | Bullet) => 60 * 1 + 30
+      case (_, Weekend, _, SuperBlitz | Blitz)                 => 60 * 2
+      case (_, Weekend, _, HyperRapid)                         => 60 * 2
+      case (_, Weekend, _, Rapid)                              => 60 * 3
+      case (_, Weekend, _, Classical)                          => 60 * 4
 
-      case (Shield, _, UltraBullet)          => 60 * 1 + 30
-      case (Shield, _, HyperBullet | Bullet) => 60 * 2
-      case (Shield, _, SuperBlitz | Blitz)   => 60 * 3
-      case (Shield, _, HyperRapid)           => 60 * 4
-      case (Shield, _, Rapid)                => 60 * 6
-      case (Shield, _, Classical)            => 60 * 8
+      case (_, Monthly, Minishogi | Kyotoshogi, _) => 60 * 2
+      case (_, Monthly, _, UltraBullet)            => 60 * 2
+      case (_, Monthly, _, HyperBullet | Bullet)   => 60 * 3
+      case (_, Monthly, _, SuperBlitz | Blitz)     => 60 * 3 + 30
+      case (_, Monthly, _, HyperRapid)             => 60 * 4
+      case (_, Monthly, _, Rapid)                  => 60 * 5
+      case (_, Monthly, _, Classical)              => 60 * 6
 
-      case (Yearly, Minishogi | Kyotoshogi, _)             => 60 * 2
-      case (Yearly, _, UltraBullet | HyperBullet | Bullet) => 60 * 2
-      case (Yearly, _, SuperBlitz | Blitz)                 => 60 * 3
-      case (Yearly, _, HyperRapid)                         => 60 * 4
-      case (Yearly, _, Rapid)                              => 60 * 6
-      case (Yearly, _, Classical)                          => 60 * 8
+      case (_, Shield, _, UltraBullet)          => 60 * 1 + 30
+      case (_, Shield, _, HyperBullet | Bullet) => 60 * 2
+      case (_, Shield, _, SuperBlitz | Blitz)   => 60 * 3
+      case (_, Shield, _, HyperRapid)           => 60 * 4
+      case (_, Shield, _, Rapid)                => 60 * 6
+      case (_, Shield, _, Classical)            => 60 * 8
 
-      case (Unique, _, _) => 60 * 6
-      case (_, _, _)      => 60 * 1
+      case (_, Yearly, Minishogi | Kyotoshogi, _)             => 60 * 2
+      case (_, Yearly, _, UltraBullet | HyperBullet | Bullet) => 60 * 2
+      case (_, Yearly, _, SuperBlitz | Blitz)                 => 60 * 3
+      case (_, Yearly, _, HyperRapid)                         => 60 * 4
+      case (_, Yearly, _, Rapid)                              => 60 * 6
+      case (_, Yearly, _, Classical)                          => 60 * 8
+
+      case (_, Unique, _, _) => 60 * 6
+      case _                 => 60 * 1
     }
   }
 
@@ -295,25 +297,16 @@ object Schedule {
   private[tournament] def conditionFor(s: Schedule) =
     if (s.conditions.relevant) s.conditions
     else {
-      import Freq._, Speed._
+      import Freq._
 
       val nbRatedGame = (s.freq, s.speed) match {
-
-        case (Hourly | Daily | Eastern, HyperBullet | Bullet) => 0
-        case (Hourly | Daily | Eastern, SuperBlitz | Blitz)   => 0
-        case (Hourly | Daily | Eastern, HyperRapid | Rapid)   => 0
-
-        case (Weekly | Weekend | Monthly, HyperBullet | Bullet) => 1
-        case (Weekly | Weekend | Monthly, SuperBlitz | Blitz)   => 1
-        case (Weekly | Weekend | Monthly, HyperRapid | Rapid)   => 1
-
-        case (Shield, _) => 3
-
-        case _ => 0
+        case (Hourly | Daily | Eastern, _)   => 0
+        case (Weekend | Monthly | Yearly, _) => 1
+        case (Shield, _)                     => 3
+        case _                               => 0
       }
 
       val minRating = (s.freq, s.variant) match {
-        // case (Weekend, _)                        => 2200
         case _ => 0
       }
 
