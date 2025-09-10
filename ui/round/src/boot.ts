@@ -20,6 +20,13 @@ export function boot(
   let chat: ChatCtrl | undefined;
   if (data.tournament) $('body').data('tournament-id', data.tournament.id);
 
+  // not ideal - flashed blue board
+  const bodyCls = document.body.classList;
+  if ((data.game.isProMode && bodyCls.contains('blue')) || bodyCls.contains('gray')) {
+    bodyCls.remove('blue', 'grey');
+    bodyCls.add('wood');
+  }
+
   function startTournamentClock() {
     if (data.tournament)
       $('.game__tournament-clock .clock').each(function (this: HTMLElement) {

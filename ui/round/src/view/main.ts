@@ -17,7 +17,7 @@ export function main(ctrl: RoundController): VNode {
     : h(
         `div.${ctrl.opts.klasses.join('.')}`,
         {
-          class: { 'move-confirm': !!ctrl.usiToSubmit },
+          class: { 'move-confirm': !!ctrl.usiToSubmit, 'pro-mode': !!d.game.isProMode },
         },
         [
           h(
