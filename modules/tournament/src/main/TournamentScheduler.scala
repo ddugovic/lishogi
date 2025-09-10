@@ -49,6 +49,7 @@ final private class TournamentScheduler(
     def orNextYear(date: DateTime) = if (date isBefore rightNow) date plusYears 1 else date
 
     val farFuture = today plusMonths 7
+    val threeDays = today plusDays 3
 
     val birthday = new DateTime(2020, 9, 29, 12, 0, 0)
 
@@ -125,7 +126,6 @@ Thank you all, you rock! ありがとうございます！""",
             at(day, 12) map { date =>
               Schedule(Format.Arena, Shield, speed, Standard, none, date) plan {
                 _.copy(
-                  name = s"${speed.toString} Shield",
                   icon = "li-shield".some,
                   spotlight = Some(TournamentShield spotlight speed.toString),
                 )
@@ -141,9 +141,22 @@ Thank you all, you rock! ありがとうございます！""",
             at(day, 16) map { date =>
               Schedule(Format.Arena, Shield, Blitz, variant, none, date) plan {
                 _.copy(
-                  name = s"${variant.name} Shield",
                   icon = "li-shield".some,
                   spotlight = Some(TournamentShield spotlight variant.name),
+                )
+              }
+            }
+          },
+          List( // weekend round-robin
+            month.firstWeek.withDayOfWeek(SATURDAY)  -> Bullet,
+            month.secondWeek.withDayOfWeek(SATURDAY) -> Blitz,
+            month.thirdWeek.withDayOfWeek(SATURDAY)  -> Rapid,
+            month.lastWeek.withDayOfWeek(SATURDAY)   -> Classical,
+          ).flatMap { case (day, speed) =>
+            at(day, 12) filter threeDays.isAfter map { date =>
+              Schedule(Format.Robin, Weekend, speed, Standard, none, date).plan {
+                _.copy(
+                  icon = "li-weekend".some,
                 )
               }
             }
