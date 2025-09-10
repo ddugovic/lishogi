@@ -11,6 +11,7 @@ object calendar {
   def apply(json: play.api.libs.json.JsObject)(implicit ctx: Context) =
     views.html.base.layout(
       title = trans.tournamentCalendar.txt(),
+      wrapClass = "full-screen-force",
       moreJs = frag(
         moduleJsTag(
           "tournament.calendar",

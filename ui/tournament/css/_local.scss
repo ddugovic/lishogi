@@ -1,8 +1,22 @@
 @use 'pkg:common/abstract/media-queries';
 @use 'pkg:common/abstract/uniboard';
+@use 'pkg:common/theme';
 
 $mq-col1: uniboard.$mq-col1-uniboard;
 $mq-col2: media-queries.$mq-small;
 $mq-col3: uniboard.$mq-col3-uniboard;
 
 $mq-mobile: media-queries.$mq-not-small;
+
+$c-hourly: theme.$c-secondary;
+$c-hourly-over: theme.$c-secondary-over;
+$c-daily: theme.$c-primary;
+$c-daily-over: theme.$c-primary-over;
+$c-weekly: theme.$c-accent;
+$c-weekly-over: theme.$c-accent-over;
+$c-monthly: theme.$c-error;
+$c-monthly-over: theme.$c-error-over;
+$c-yearly: theme.$c-brilliant;
+$c-yearly-over: white;
+$c-shield: theme.$c-brag;
+$c-shield-over: theme.$c-brag-over;

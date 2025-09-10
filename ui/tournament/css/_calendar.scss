@@ -1,5 +1,6 @@
 @use 'pkg:common/abstract/extends';
 @use 'pkg:common/theme';
+@use './local';
 
 #tournament-calendar {
   user-select: none;
@@ -62,36 +63,36 @@
     }
 
     &.hourly {
-      background-color: #3d9333;
-      color: white;
+      background-color: local.$c-hourly;
+      color: local.$c-hourly-over;
     }
 
     &.daily,
     &.eastern {
-      background-color: #0072b2;
-      color: white;
+      background-color: local.$c-daily;
+      color: local.$c-daily-over;
     }
 
-    &.weekly {
-      background-color: #d55e00;
-      color: white;
+    &.weekly,
+    &.weekend {
+      background-color: local.$c-weekly;
+      color: local.$c-weekly-over;
     }
 
     &.monthly {
-      background-color: #c93d3d;
-      color: white;
+      background-color: local.$c-monthly;
+      color: local.$c-monthly-over;
     }
 
     &.yearly,
-    &.unique,
-    &.weekend {
+    &.unique {
       background-color: theme.$c-brag;
       color: theme.$c-brag-over;
     }
 
     &.shield {
-      background-color: #303e43;
-      color: white;
+      background-color: local.$c-shield;
+      color: local.$c-shield-over;
     }
 
     &.max-rating {
@@ -104,8 +105,14 @@
     }
 
     .icon {
-      font-size: 1.3em;
+      width: 16px;
+      height: 16px;
       margin: 0 2px;
+
+      svg {
+        width: 100%;
+        height: 100%;
+      }
     }
 
     .body {

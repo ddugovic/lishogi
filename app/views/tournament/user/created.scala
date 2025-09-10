@@ -30,8 +30,8 @@ object created {
             thead(
               tr(
                 th(cls := "count")(pager.nbResults),
-                th(colspan := 2)(h1(userLink(user, withOnline = true), " tournaments")),
-                th(trans.winner()),
+                th(h1(userLink(user, withOnline = true), " - ", trans.tournaments())),
+                th(trans.search.date()),
                 th(trans.players()),
               ),
             ),
@@ -53,10 +53,7 @@ object created {
                   td(cls := "icon")(tournamentIconTag(t)),
                   views.html.tournament.list.header(t),
                   td(momentFromNow(t.startsAt)),
-                  td(cls := "winner")(
-                    t.winnerId.isDefined option userIdLink(t.winnerId, withOnline = false),
-                  ),
-                  td(cls := "text", dataIcon := Icons.person)(t.nbPlayers.localize),
+                  views.html.tournament.list.playersCell(t),
                 )
               },
             ),

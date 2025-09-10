@@ -15,7 +15,7 @@ object list {
       u: User,
       path: String,
       pager: Paginator[lila.tournament.LeaderboardApi.TourEntry],
-      count: String,
+      count: Frag,
   )(implicit lang: Lang) =
     if (pager.nbResults == 0)
       div(cls := "box-pad")(u.username, " hasn't played in any tournament yet!")
@@ -25,10 +25,10 @@ object list {
           thead(
             tr(
               th(cls := "count")(count),
-              th(h1(userLink(u, withOnline = true), " tournaments")),
-              th("Games"),
-              th("Points"),
-              th("Rank"),
+              th(h1(userLink(u, withOnline = true), " - ", trans.tournaments())),
+              th(trans.games()),
+              th(trans.points()),
+              th(trans.rank()),
             ),
           ),
           tbody(cls := "infinitescroll")(

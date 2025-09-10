@@ -1,13 +1,10 @@
 @use 'pkg:breakpoint-sass' as breakpoint;
 @use 'pkg:common/abstract/media-queries';
-@use 'pkg:common/abstract/extends';
 @use 'pkg:common/abstract/mixins';
 @use 'pkg:common/theme';
 @use '../icons';
 
 .tour-home__list {
-  max-width: 1200px;
-
   .slist {
     td {
       &.duration {
@@ -16,6 +13,7 @@
     }
 
     .header {
+      max-width: 65%;
       letter-spacing: 2px;
       cursor: pointer;
 
@@ -29,14 +27,14 @@
       }
     }
 
-    .winner {
-      color: theme.$c-brag;
-    }
-
     .players {
       & > span {
         display: block;
         margin: 0.5em 0;
+      }
+
+      .winner {
+        color: theme.$c-brag;
       }
     }
 
@@ -45,6 +43,15 @@
 
       &:hover {
         color: theme.$c-link-hover;
+      }
+    }
+
+    .icon {
+      width: 0;
+
+      .tour-icon {
+        width: 4rem;
+        height: 4rem;
       }
     }
 
@@ -70,20 +77,5 @@
   .notours {
     text-align: center;
     padding: 1rem;
-  }
-
-  .tour-scheduled .icon i {
-    color: theme.$c-brag;
-  }
-}
-
-.slist {
-  .tour-icon {
-    width: 4rem;
-    height: 4rem;
-
-    .licon {
-      font-size: 3rem;
-    }
   }
 }

@@ -1,6 +1,7 @@
 @use 'pkg:common/theme';
 @use 'pkg:common/abstract/extends';
 @use 'pkg:common/abstract/icons';
+@use './local';
 
 .tour-icon {
   position: relative;
@@ -8,31 +9,27 @@
   text-align: center;
   color: theme.$c-font-dim;
 
-  .licon {
-    font-family: lishogi;
-  }
-
   &.ti-hourly {
-    color: theme.$c-secondary;
+    color: local.$c-hourly;
   }
 
   &.ti-daily,
   &.ti-eastern {
-    color: theme.$c-primary;
+    color: local.$c-daily;
   }
 
-  &.ti-weekly {
-    color: theme.$c-accent;
+  &.ti-weekly,
+  &.ti-weekend {
+    color: local.$c-weekly;
   }
 
   &.ti-monthly {
-    color: theme.$c-red;
+    color: local.$c-monthly;
   }
 
   &.ti-yearly,
-  &.ti-unique,
-  &.ti-weekend {
-    color: theme.$c-brilliant;
+  &.ti-unique {
+    color: local.$c-yearly;
   }
 
   &.ti-shield {

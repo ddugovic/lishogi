@@ -24,6 +24,7 @@
     animation: scroll 30s linear infinite;
     animation-delay: 2s;
     will-change: transform;
+    // animation: none;
 
     & > div {
       display: inline-flex;

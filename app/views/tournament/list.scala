@@ -35,18 +35,7 @@ object list {
               ),
               header(t),
               td(cls := "date")(momentFromNow(t.startsAt)),
-              td(cls := "players")(
-                span(
-                  t.winnerId.isDefined option frag(
-                    i(cls := "text winner", dataIcon := Icons.trophy),
-                    userIdLink(t.winnerId, withOnline = false),
-                  ),
-                ),
-                span(
-                  i(cls := "text nb-players", dataIcon := Icons.person),
-                  trans.nbPlayers.pluralSameTxt(t.nbPlayers),
-                ),
-              ),
+              playersCell(t),
             )
           },
         ),
@@ -66,6 +55,20 @@ object list {
           " - ",
           t.format.trans,
         ),
+      ),
+    )
+
+  def playersCell(t: Tournament)(implicit ctx: Context) =
+    td(cls := "players")(
+      span(
+        t.winnerId.isDefined option frag(
+          i(cls := "text winner", dataIcon := Icons.trophy),
+          userIdLink(t.winnerId, withOnline = false),
+        ),
+      ),
+      span(
+        i(cls := "text nb-players", dataIcon := Icons.person),
+        trans.nbPlayers.pluralSameTxt(t.nbPlayers),
       ),
     )
 }

@@ -20,7 +20,7 @@ object bits {
       path = "best",
       moreJs = infiniteScrollTag,
     ) {
-      views.html.tournament.user.list(user, "best", pager, "BEST")
+      views.html.tournament.user.list(user, "best", pager, iconTag(Icons.trophy))
     }
 
   def recent(query: String, user: User, pager: Paginator[lila.tournament.LeaderboardApi.TourEntry])(
