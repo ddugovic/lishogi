@@ -24,7 +24,8 @@ export interface LangsCtrl {
 }
 
 export function ctrl(data: LangsData, close: Close): LangsCtrl {
-  const accepted = new Set(data.accepted);
+  // always show English and Japanese options
+  const accepted = new Set([...data.accepted, 'en-GB', 'ja-JP']);
   return {
     list() {
       return [
