@@ -7,7 +7,11 @@
     "@build/helpers": "workspace:*",
     "dedent": "^1.6.0"
   },
+  "devDependencies": {
+    "svgo": "^4.0.0"
+  },
   "scripts": {
+    "svgo": "svgo --config svgo.config.js --pretty -f assets -r",
     "build": "tsx ./src/main.ts",
     "build:watch": "tsx watch --clear-screen=false --include ../../../pnpm-lock.yaml --include assets ./src/main.ts"
   }

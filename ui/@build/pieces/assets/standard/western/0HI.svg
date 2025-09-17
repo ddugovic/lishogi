@@ -1,1 +1,21 @@
-<svg height="136" width="136" xmlns="http://www.w3.org/2000/svg"><defs><filter style="color-interpolation-filters:sRGB" id="a" x="-.041" y="-.036" width="1.118" height="1.104"><feFlood flood-opacity=".498" flood-color="#000" result="flood"/><feComposite in="flood" in2="SourceGraphic" operator="in" result="composite1"/><feGaussianBlur in="composite1" stdDeviation=".8" result="blur"/><feOffset dx="2" dy="2" result="offset"/><feComposite in="SourceGraphic" in2="offset" result="fbSourceGraphic"/><feColorMatrix result="fbSourceGraphicAlpha" in="fbSourceGraphic" values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"/><feFlood flood-opacity=".498" flood-color="#000" result="flood"/><feComposite in2="fbSourceGraphic" in="flood" operator="in" result="composite1"/><feGaussianBlur in="composite1" stdDeviation=".8" result="blur"/><feOffset dx="2" dy="2" result="offset"/><feComposite in2="offset" in="fbSourceGraphic" result="composite2"/></filter></defs><g style="filter:url(#a)"><path style="fill:#c9983f;fill-opacity:1;stroke:#000;stroke-width:.3;stroke-miterlimit:4;stroke-dasharray:none" transform="matrix(-3.9895 0 0 -3.9895 123.255 131.544)" d="m27.7 0-3.845 27.358L13.85 31 3.845 27.358 0 0z"/><g style="opacity:1;fill-opacity:1;fill-rule:evenodd;stroke:#000;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"><path d="M9.1 39.961h26.924V36.1H9.1Z" style="stroke-width:1.69937134;stroke-linecap:butt" transform="matrix(2.61797 0 0 2.61797 8.934 10.227)"/><path d="m12.5 32 1.5-2.5h17l1.5 2.5zM12 36v-4h21v4z" style="stroke-linecap:butt" transform="matrix(2.61797 0 0 2.61797 8.934 10.227)"/><path d="M14 29.5v-13h17v13z" style="stroke-linecap:butt;stroke-linejoin:miter" transform="matrix(2.61797 0 0 2.61797 8.934 10.227)"/><path d="M14 16.5 11 14h23l-3 2.5zM11 14V9h4v3.717h5V9h5v3.717h5V9h4v5z" style="stroke-linecap:butt" transform="matrix(2.61797 0 0 2.61797 8.934 10.227)"/><path d="M12.525 34.063h19.95M15.08 16.5h14.84" style="fill:none;stroke:#fff;stroke-width:1;stroke-linejoin:miter" transform="matrix(2.61797 0 0 2.61797 8.934 10.227)"/></g></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="136" height="136">
+    <defs>
+        <filter id="0HI_svg__a" width="1.118" height="1.104" x="-.041" y="-.036" color-interpolation-filters="sRGB">
+            <feGaussianBlur in="SourceAlpha" result="blur" stdDeviation=".8"/>
+            <feOffset dx="2" dy="2" in="blur" result="offset"/>
+            <feFlood flood-color="#000" flood-opacity=".5" result="shadow"/>
+            <feComposite in="shadow" in2="offset" operator="in"/>
+            <feComposite in="SourceGraphic"/>
+        </filter>
+    </defs>
+    <g stroke="#000" filter="url(#0HI_svg__a)">
+        <path fill="#c9983f" stroke-width="1.197" d="m12.745 131.544 15.34-109.145L67.998 7.87l39.915 14.53 15.34 109.145z"/>
+        <g fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+            <path stroke-linecap="butt" stroke-width="4.448" d="M32.758 114.844h70.486v-10.108H32.758Z"/>
+            <path stroke-linecap="butt" stroke-width="3.927" d="m41.659 94.002 3.927-6.545H90.09l3.927 6.545zm-1.31 10.472V94.002h54.978v10.472z"/>
+            <path stroke-linecap="butt" stroke-linejoin="miter" stroke-width="3.927" d="M45.586 87.457V53.424H90.09v34.033z"/>
+            <path stroke-linecap="butt" stroke-width="3.927" d="m45.586 53.424-7.854-6.545h60.213l-7.854 6.545zm-7.854-6.545v-13.09h10.472v9.73h13.09v-9.73h13.09v9.73h13.09v-9.73h10.471v13.09z"/>
+            <path fill="none" stroke="#fff" stroke-linejoin="miter" stroke-width="2.618" d="M41.724 99.403h52.229m-45.54-45.98h38.85"/>
+        </g>
+    </g>
+</svg>

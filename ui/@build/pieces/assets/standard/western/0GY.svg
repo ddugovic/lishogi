@@ -1,1 +1,22 @@
-<svg width="136" height="136" xmlns="http://www.w3.org/2000/svg"><defs><filter style="color-interpolation-filters:sRGB" id="a" x="-.039" y="-.035" width="1.114" height="1.102"><feFlood flood-opacity=".498" flood-color="#000" result="flood"/><feComposite in="flood" in2="SourceGraphic" operator="in" result="composite1"/><feGaussianBlur in="composite1" stdDeviation=".8" result="blur"/><feOffset dx="2" dy="2" result="offset"/><feComposite in="SourceGraphic" in2="offset" result="fbSourceGraphic"/><feColorMatrix result="fbSourceGraphicAlpha" in="fbSourceGraphic" values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"/><feFlood flood-opacity=".498" flood-color="#000" result="flood"/><feComposite in2="fbSourceGraphic" in="flood" operator="in" result="composite1"/><feGaussianBlur in="composite1" stdDeviation=".8" result="blur"/><feOffset dx="2" dy="2" result="offset"/><feComposite in2="offset" in="fbSourceGraphic" result="composite2"/></filter></defs><g style="filter:url(#a)"><path style="fill:#c9983f;fill-opacity:1;stroke:#000;stroke-width:.3;stroke-miterlimit:4;stroke-dasharray:none" d="m29.243 268.275 4.017 28.59H4.185l4.018-28.59 10.52-3.66z" transform="matrix(3.93802 0 0 3.93802 -5.731 -1037.514)"/><g style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"><path d="M22.5 11.63V6" style="fill:none;stroke:#000;stroke-linejoin:miter" transform="translate(16.226 18.198) scale(2.30324)"/><path d="M22.5 25s4.5-7.5 3-10.5c0 0-1-2.5-3-2.5s-3 2.5-3 2.5c-1.5 3 3 10.5 3 10.5" style="fill:#000;fill-opacity:1;stroke-linecap:butt;stroke-linejoin:miter" transform="translate(16.226 18.198) scale(2.30324)"/><path d="M11.5 37c5.5 3.5 15.5 3.5 21 0v-7s9-4.5 6-10.5c-4-6.5-13.5-3.5-16 4V27v-3.5c-3.5-7.5-13-10.5-16-4-3 6 5 10 5 10z" style="fill:#000;stroke:#000" transform="translate(16.226 18.198) scale(2.30324)"/><path d="M20 8h5" style="fill:none;stroke:#000;stroke-linejoin:miter" transform="translate(16.226 18.198) scale(2.30324)"/><path d="M32 29.5s8.5-4 6.03-9.65C34.15 14 25 18 22.5 24.5l.01 2.1-.01-2.1C20 18 9.906 14 6.997 19.85c-2.497 5.65 4.853 9 4.853 9" style="fill:none;stroke:#fff" transform="translate(16.226 18.198) scale(2.30324)"/><path d="M11.5 30c5.5-3 15.5-3 21 0m-21 3.5c5.5-3 15.5-3 21 0m-21 3.5c5.5-3 15.5-3 21 0" style="fill:none;stroke:#fff" transform="translate(16.226 18.198) scale(2.30324)"/></g></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="136" height="136">
+    <defs>
+        <filter id="0GY_svg__a" width="1.114" height="1.102" x="-.039" y="-.035" color-interpolation-filters="sRGB">
+            <feGaussianBlur in="SourceAlpha" result="blur" stdDeviation=".8"/>
+            <feOffset dx="2" dy="2" in="blur" result="offset"/>
+            <feFlood flood-color="#000" flood-opacity=".5" result="shadow"/>
+            <feComposite in="shadow" in2="offset" operator="in"/>
+            <feComposite in="SourceGraphic"/>
+        </filter>
+    </defs>
+    <g stroke="#000" filter="url(#0GY_svg__a)">
+        <path fill="#c9983f" stroke-width="1.181" d="m109.429 18.958 15.819 112.588H10.75L26.573 18.958 68 4.545z"/>
+        <g fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.455">
+            <path stroke-linejoin="miter" d="M68.049 44.985V32.017"/>
+            <path fill="#000" stroke-linecap="butt" stroke-linejoin="miter" d="M68.049 75.779s10.364-17.274 6.91-24.184c0 0-2.304-5.758-6.91-5.758s-6.91 5.758-6.91 5.758c-3.455 6.91 6.91 24.184 6.91 24.184"/>
+            <path fill="#000" d="M42.713 103.418c12.668 8.061 35.7 8.061 48.368 0V87.295s20.73-10.364 13.82-24.184c-9.213-14.97-31.094-8.061-36.852 9.213v8.061-8.06C59.988 55.05 38.107 48.14 31.197 63.11c-6.91 13.82 11.516 23.033 11.516 23.033z"/>
+            <path stroke-linejoin="miter" d="M62.29 36.624h11.517"/>
+            <path stroke="#fff" d="M89.93 86.144s19.577-9.213 13.888-22.227c-8.936-13.474-30.011-4.26-35.77 10.71l.024 4.837-.023-4.837c-5.758-14.97-29.007-24.184-35.707-10.71-5.751 13.014 11.177 20.73 11.177 20.73"/>
+            <path stroke="#fff" d="M42.713 87.295c12.668-6.91 35.7-6.91 48.368 0m-48.368 8.062c12.668-6.91 35.7-6.91 48.368 0m-48.368 8.06c12.668-6.909 35.7-6.909 48.368 0"/>
+        </g>
+    </g>
+</svg>
