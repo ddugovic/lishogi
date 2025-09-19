@@ -139,6 +139,7 @@ piece {
 
   &.anim {
     z-index: z.get('sg__piece.anim');
+    will-change: transform;
   }
 
   &.fading {
