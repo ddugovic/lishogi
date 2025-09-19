@@ -1,20 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="498.898" height="544.252" viewBox="0 0 1320 1440">
     <defs>
-        <linearGradient id="0_PRINCE_svg__b" x1="236.943" x2="278.677" y1="670.458" y2="670.458" gradientUnits="userSpaceOnUse" spreadMethod="reflect">
+        <linearGradient id="0_PRINCE_svg__a" x1="236.943" x2="278.677" y1="670.458" y2="670.458" gradientUnits="userSpaceOnUse" spreadMethod="reflect">
             <stop offset="0" stop-color="#ffd285"/>
             <stop offset=".232" stop-color="#ffcd79"/>
             <stop offset=".616" stop-color="#ffca73"/>
             <stop offset=".808" stop-color="#ffd386"/>
             <stop offset="1" stop-color="#ffc86e"/>
         </linearGradient>
-        <linearGradient id="0_PRINCE_svg__c" x1="660" x2="670.254" y1="115.844" y2="1157.469" gradientUnits="userSpaceOnUse">
+        <linearGradient id="0_PRINCE_svg__b" x1="660" x2="670.254" y1="115.844" y2="1157.469" gradientUnits="userSpaceOnUse">
             <stop offset=".604" stop-color="#fff"/>
             <stop offset="1"/>
         </linearGradient>
-        <filter id="0_PRINCE_svg__a" width="1.02" height="1.021" x="-.01" y="-.011" color-interpolation-filters="sRGB">
-            <feGaussianBlur stdDeviation="2.441"/>
-        </filter>
-        <filter id="0_PRINCE_svg__d" width="1.095" height="1.083" x="-.048" y="-.042" color-interpolation-filters="sRGB">
+        <filter id="0_PRINCE_svg__c" width="1.095" height="1.083" x="-.048" y="-.042" color-interpolation-filters="sRGB">
             <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="6"/>
             <feDiffuseLighting in="blur" lighting-color="#fff" result="diffuse" surfaceScale="4">
                 <feDistantLight azimuth="235" elevation="45"/>
@@ -27,9 +24,9 @@
             <feComposite in="shaded" in2="SourceGraphic" operator="in"/>
         </filter>
     </defs>
-    <path d="m-2765.718 268.206 28.198 35.189h538.751l10.087-9.413-86.673-527.828-31.462-17.601z" filter="url(#0_PRINCE_svg__a)" opacity=".5" transform="matrix(-2.0051 0 0 2.0051 -4355.682 800.271)"/>
-    <path fill="url(#0_PRINCE_svg__b)" d="M660 115.844 254.043 268.378l-139.111 999.236 13.312 73.804 20.099 16.718H1169.89l20.099-16.718 13.312-73.804-137.282-999.246z"/>
-    <path fill="url(#0_PRINCE_svg__c)" d="M660 115.844 253.994 268.369l-137.243 999.246 11.442 73.812 20.099 16.719h1021.563l20.134-16.728 15.13-73.802-139.1-999.248z" opacity=".25" style="mix-blend-mode:overlay"/>
+    <path d="m1189.86 1338.05-56.54 70.558H53.07l-20.226-18.874L206.632 331.386l63.085-35.291z" opacity=".5"/>
+    <path fill="url(#0_PRINCE_svg__a)" d="M660 115.844 254.043 268.378l-139.111 999.236 13.312 73.804 20.099 16.718H1169.89l20.099-16.718 13.312-73.804-137.282-999.246z"/>
+    <path fill="url(#0_PRINCE_svg__b)" d="M660 115.844 253.994 268.369l-137.243 999.246 11.442 73.812 20.099 16.719h1021.563l20.134-16.728 15.13-73.802-139.1-999.248z" opacity=".25" style="mix-blend-mode:overlay"/>
     <path fill="#fff" d="m1182.559 1262.571-.043 21.064 20.75-16.013z" opacity=".8"/>
     <path d="m1203.266 1267.622-20.75 16.013-12.661 74.512 20.099-16.719z" opacity=".6"/>
     <g fill="#fff">
@@ -42,5 +39,5 @@
     <path d="m135.588 1262.571.043 21.064-20.75-16.013z" opacity=".6"/>
     <path d="M135.588 1262.571h1046.971l-.043 21.064H135.631z" opacity=".2"/>
     <path d="m1182.516 1283.635-12.661 74.512H148.292l-12.661-74.512z" opacity=".7"/>
-    <path fill="#9b0000" d="M494 442.657c-9.76.3-16.367 10.042-13.001 19.243l24.462 75.135c2.337 5.58 7.943 9.13 13.986 8.724h198.165l-97.08 74.603v107.147H398.458c-6.507-.088-12.243 4.256-13.985 10.479l-24.463 64.657c-3.523 9.536 3.826 19.608 13.986 19.221H620.53v207.953l-76.584-.899c-5.847.648-13.741-.424-21.115.399l24.697 32.73c24.696 31.654 39.652 48.34 74.968 70.563 29.884-.6 59.395-12.497 101.798-35.094l-.66-67.688V821.893H947.9c10.16.374 17.458-9.635 13.97-19.221l-24.452-70.728c-1.753-6.29-43.127-4.51-49.63-4.43H723.64v-107.01l93.118-74.725c45.117-34.812 64.867-42.14 68.635-83.869 3.477-9.535-3.825-19.598-13.968-19.223l-376.436.02a14 14 0 0 0-.99-.02z" enable-background="accumulate" filter="url(#0_PRINCE_svg__d)" opacity=".99" overflow="visible"/>
+    <path fill="#9b0000" d="M494 442.657c-9.76.3-16.367 10.042-13.001 19.243l24.462 75.135c2.337 5.58 7.943 9.13 13.986 8.724h198.165l-97.08 74.603v107.147H398.458c-6.507-.088-12.243 4.256-13.985 10.479l-24.463 64.657c-3.523 9.536 3.826 19.608 13.986 19.221H620.53v207.953l-76.584-.899c-5.847.648-13.741-.424-21.115.399l24.697 32.73c24.696 31.654 39.652 48.34 74.968 70.563 29.884-.6 59.395-12.497 101.798-35.094l-.66-67.688V821.893H947.9c10.16.374 17.458-9.635 13.97-19.221l-24.452-70.728c-1.753-6.29-43.127-4.51-49.63-4.43H723.64v-107.01l93.118-74.725c45.117-34.812 64.867-42.14 68.635-83.869 3.477-9.535-3.825-19.598-13.968-19.223l-376.436.02a14 14 0 0 0-.99-.02z" enable-background="accumulate" filter="url(#0_PRINCE_svg__c)" opacity=".99" overflow="visible"/>
 </svg>

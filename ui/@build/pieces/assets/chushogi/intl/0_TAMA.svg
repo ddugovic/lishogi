@@ -1,20 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="498.898" height="544.252" viewBox="0 0 1320 1440">
     <defs>
-        <linearGradient id="0_TAMA_svg__b" x1="236.943" x2="278.677" y1="670.458" y2="670.458" gradientUnits="userSpaceOnUse" spreadMethod="reflect">
+        <linearGradient id="0_TAMA_svg__a" x1="236.943" x2="278.677" y1="670.458" y2="670.458" gradientUnits="userSpaceOnUse" spreadMethod="reflect">
             <stop offset="0" stop-color="#ffd285"/>
             <stop offset=".232" stop-color="#ffcd79"/>
             <stop offset=".616" stop-color="#ffca73"/>
             <stop offset=".808" stop-color="#ffd386"/>
             <stop offset="1" stop-color="#ffc86e"/>
         </linearGradient>
-        <linearGradient id="0_TAMA_svg__c" x1="660" x2="670.254" y1="115.844" y2="1157.469" gradientUnits="userSpaceOnUse">
+        <linearGradient id="0_TAMA_svg__b" x1="660" x2="670.254" y1="115.844" y2="1157.469" gradientUnits="userSpaceOnUse">
             <stop offset=".604" stop-color="#fff"/>
             <stop offset="1"/>
         </linearGradient>
-        <filter id="0_TAMA_svg__a" width="1.02" height="1.021" x="-.01" y="-.011" color-interpolation-filters="sRGB">
-            <feGaussianBlur stdDeviation="2.441"/>
-        </filter>
-        <filter id="0_TAMA_svg__d" width="1.079" height="1.083" x="-.039" y="-.042" color-interpolation-filters="sRGB">
+        <filter id="0_TAMA_svg__c" width="1.079" height="1.083" x="-.039" y="-.042" color-interpolation-filters="sRGB">
             <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="6"/>
             <feDiffuseLighting in="blur" lighting-color="#fff" result="diffuse" surfaceScale="4">
                 <feDistantLight azimuth="235" elevation="45"/>
@@ -27,9 +24,9 @@
             <feComposite in="shaded" in2="SourceGraphic" operator="in"/>
         </filter>
     </defs>
-    <path d="m-2765.718 268.206 28.198 35.189h538.751l10.087-9.413-86.673-527.828-31.462-17.601z" filter="url(#0_TAMA_svg__a)" opacity=".5" transform="matrix(-2.0051 0 0 2.0051 -4355.682 800.271)"/>
-    <path fill="url(#0_TAMA_svg__b)" d="M660 115.844 254.043 268.378l-139.111 999.236 13.312 73.804 20.099 16.718H1169.89l20.099-16.718 13.312-73.804-137.282-999.246z"/>
-    <path fill="url(#0_TAMA_svg__c)" d="M660 115.844 253.994 268.369l-137.243 999.246 11.442 73.812 20.099 16.719h1021.563l20.134-16.728 15.13-73.802-139.1-999.248z" opacity=".25" style="mix-blend-mode:overlay"/>
+    <path d="m1189.86 1338.05-56.54 70.558H53.07l-20.226-18.874L206.632 331.386l63.085-35.291z" opacity=".5"/>
+    <path fill="url(#0_TAMA_svg__a)" d="M660 115.844 254.043 268.378l-139.111 999.236 13.312 73.804 20.099 16.718H1169.89l20.099-16.718 13.312-73.804-137.282-999.246z"/>
+    <path fill="url(#0_TAMA_svg__b)" d="M660 115.844 253.994 268.369l-137.243 999.246 11.442 73.812 20.099 16.719h1021.563l20.134-16.728 15.13-73.802-139.1-999.248z" opacity=".25" style="mix-blend-mode:overlay"/>
     <path fill="#fff" d="m1182.559 1262.571-.043 21.064 20.75-16.013z" opacity=".8"/>
     <path d="m1203.266 1267.622-20.75 16.013-12.661 74.512 20.099-16.719z" opacity=".6"/>
     <g fill="#fff">
@@ -42,5 +39,5 @@
     <path d="m135.588 1262.571.043 21.064-20.75-16.013z" opacity=".6"/>
     <path d="M135.588 1262.571h1046.971l-.043 21.064H135.631z" opacity=".2"/>
     <path d="m1182.516 1283.635-12.661 74.512H148.292l-12.661-74.512z" opacity=".7"/>
-    <path d="M388.099 427.154c-9.759.304-16.368 10.043-13.003 19.24l24.463 75.135c2.337 5.583 7.945 9.129 13.985 8.725h192.222v181.75H464.214c-6.508-.088-12.243 4.26-13.985 10.478l-24.463 64.656c-3.505 9.535 3.812 19.609 13.985 19.223h166.014v207.953H331.409c-5.847.65-10.704 4.77-12.24 10.489l-24.463 75.135c-2.032 8.927 4.798 17.487 13.988 17.478h702.503c8.471-1.013 14.166-9.13 12.222-17.478l-22.715-75.135a14.29 14.29 0 0 0-13.985-10.489H708.871V806.375h162.522c10.162.381 17.46-9.636 13.967-19.222l-24.462-64.657a14.29 14.29 0 0 0-13.968-10.49H708.871V530.28H902.84c6.05.33 11.64-3.13 13.985-8.725l24.463-75.146c3.487-9.535-3.81-19.599-13.968-19.225l-538.235.019q-.495-.027-.99-.02z" enable-background="accumulate" filter="url(#0_TAMA_svg__d)" opacity=".99" overflow="visible"/>
+    <path d="M388.099 427.154c-9.759.304-16.368 10.043-13.003 19.24l24.463 75.135c2.337 5.583 7.945 9.129 13.985 8.725h192.222v181.75H464.214c-6.508-.088-12.243 4.26-13.985 10.478l-24.463 64.656c-3.505 9.535 3.812 19.609 13.985 19.223h166.014v207.953H331.409c-5.847.65-10.704 4.77-12.24 10.489l-24.463 75.135c-2.032 8.927 4.798 17.487 13.988 17.478h702.503c8.471-1.013 14.166-9.13 12.222-17.478l-22.715-75.135a14.29 14.29 0 0 0-13.985-10.489H708.871V806.375h162.522c10.162.381 17.46-9.636 13.967-19.222l-24.462-64.657a14.29 14.29 0 0 0-13.968-10.49H708.871V530.28H902.84c6.05.33 11.64-3.13 13.985-8.725l24.463-75.146c3.487-9.535-3.81-19.599-13.968-19.225l-538.235.019q-.495-.027-.99-.02z" enable-background="accumulate" filter="url(#0_TAMA_svg__c)" opacity=".99" overflow="visible"/>
 </svg>

@@ -1,20 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="498.898" height="544.252" viewBox="0 0 1320 1440">
     <defs>
-        <linearGradient id="0_GOBETWEEN_svg__c" x1="-1430.769" x2="-1409.955" y1="-77.47" y2="-77.47" gradientUnits="userSpaceOnUse" spreadMethod="reflect">
+        <linearGradient id="0_GOBETWEEN_svg__b" x1="-1430.769" x2="-1409.955" y1="-77.47" y2="-77.47" gradientUnits="userSpaceOnUse" spreadMethod="reflect">
             <stop offset="0" stop-color="#ffd285"/>
             <stop offset=".232" stop-color="#ffcd79"/>
             <stop offset=".616" stop-color="#ffca73"/>
             <stop offset=".808" stop-color="#ffd386"/>
             <stop offset="1" stop-color="#ffc86e"/>
         </linearGradient>
-        <linearGradient id="0_GOBETWEEN_svg__d" x1="-1215.571" x2="-1215.572" y1="-296.329" y2="165.415" gradientUnits="userSpaceOnUse">
+        <linearGradient id="0_GOBETWEEN_svg__c" x1="-1215.571" x2="-1215.572" y1="-296.329" y2="165.415" gradientUnits="userSpaceOnUse">
             <stop offset=".6" stop-color="#fff"/>
             <stop offset="1"/>
         </linearGradient>
-        <filter id="0_GOBETWEEN_svg__a" width="1.024" height="1.023" x="-.012" y="-.011" color-interpolation-filters="sRGB">
-            <feGaussianBlur stdDeviation="2.441"/>
-        </filter>
-        <filter id="0_GOBETWEEN_svg__e" width="1.176" height="1.078" x="-.088" y="-.039" color-interpolation-filters="sRGB">
+        <filter id="0_GOBETWEEN_svg__d" width="1.176" height="1.078" x="-.088" y="-.039" color-interpolation-filters="sRGB">
             <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="6"/>
             <feDiffuseLighting in="blur" lighting-color="#fff" result="diffuse" surfaceScale="4">
                 <feDistantLight azimuth="235" elevation="45"/>
@@ -26,11 +23,11 @@
             <feComposite in="lit" in2="specular" k2="1" k3="1" operator="arithmetic" result="shaded"/>
             <feComposite in="shaded" in2="SourceGraphic" operator="in"/>
         </filter>
-        <path id="0_GOBETWEEN_svg__b" d="m-1215.571-296.329-149.881 40.669-79.82 472.51 6.639 36.814 10.024 8.338h426.077l10.024-8.338 6.639-36.814-79.82-472.51z"/>
+        <path id="0_GOBETWEEN_svg__a" d="m-1215.571-296.329-149.881 40.669-79.82 472.51 6.639 36.814 10.024 8.338h426.077l10.024-8.338 6.639-36.814-79.82-472.51z"/>
     </defs>
-    <path d="m-2728.669 264.709 28.198 35.189h455.354l10.087-9.413-98.043-493.462-31.462-17.601z" filter="url(#0_GOBETWEEN_svg__a)" opacity=".5" transform="matrix(-2.0051 0 0 2.0051 -4364.078 816.662)"/>
-    <use xlink:href="#0_GOBETWEEN_svg__b" fill="url(#0_GOBETWEEN_svg__c)" transform="translate(3097.382 831.934)scale(2.0051)"/>
-    <use xlink:href="#0_GOBETWEEN_svg__b" x="315.666" y="-40.204" fill="url(#0_GOBETWEEN_svg__d)" opacity=".25" style="mix-blend-mode:overlay" transform="translate(2464.43 912.55)scale(2.0051)"/>
+    <path d="m1107.176 1347.43-56.54 70.557h-913.03l-20.225-18.874 196.586-989.44 63.084-35.292z" opacity=".5"/>
+    <use xlink:href="#0_GOBETWEEN_svg__a" fill="url(#0_GOBETWEEN_svg__b)" transform="translate(3097.382 831.934)scale(2.0051)"/>
+    <use xlink:href="#0_GOBETWEEN_svg__a" x="315.666" y="-40.204" fill="url(#0_GOBETWEEN_svg__c)" opacity=".25" style="mix-blend-mode:overlay" transform="translate(2464.43 912.55)scale(2.0051)"/>
     <path fill="#fff" d="m1099.874 1261.697-.043 21.064 20.75-16.013z" opacity=".8"/>
     <path d="m1120.582 1266.748-20.75 16.013-12.661 74.524 20.099-16.719z" opacity=".6"/>
     <g fill="#fff">
@@ -42,5 +39,5 @@
     <path d="m220.126 1261.697.043 21.064-20.75-16.013z" opacity=".6"/>
     <path d="M220.126 1261.697h879.749l-.043 21.064H220.169z" opacity=".2"/>
     <path d="m1099.831 1282.761-12.661 74.524H232.829l-12.661-74.524z" opacity=".7"/>
-    <path d="M659.626 411.385c-3.823.18-6.965 2.879-7.862 6.603-24.668 105.719-48.198 164.754-152.026 235.772-5.743 3.94-4.62 12.761 1.93 15.115 34.58 12.257 44.813 5.216 77.69 24.012 66.326 37.92 49.599 146.816 0 174.146-33.063 18.217-43.11 11.754-77.69 24.011-6.537 2.355-7.662 11.176-1.93 15.115 103.828 71.018 127.359 130.054 152.026 235.773.915 3.723 4.039 6.422 7.862 6.602h.023c4.04.128 7.61-2.63 8.537-6.602 24.663-105.719 48.222-164.76 152.14-235.773 5.748-3.935 4.615-12.747-1.93-15.1-33.352-12.047-43.248-6.34-77.735-24.107-58.506-30.141-57.809-144.42 0-173.984 34.52-17.654 44.383-12.06 77.734-24.108 6.536-2.354 7.671-11.164 1.93-15.1-103.917-71.013-127.476-130.054-152.14-235.772-.914-3.972-4.498-6.73-8.536-6.603z" enable-background="accumulate" filter="url(#0_GOBETWEEN_svg__e)" opacity=".99" overflow="visible" paint-order="stroke fill markers" transform="matrix(1.173 0 0 1.0956 -114.187 -85.417)"/>
+    <path d="M659.626 411.385c-3.823.18-6.965 2.879-7.862 6.603-24.668 105.719-48.198 164.754-152.026 235.772-5.743 3.94-4.62 12.761 1.93 15.115 34.58 12.257 44.813 5.216 77.69 24.012 66.326 37.92 49.599 146.816 0 174.146-33.063 18.217-43.11 11.754-77.69 24.011-6.537 2.355-7.662 11.176-1.93 15.115 103.828 71.018 127.359 130.054 152.026 235.773.915 3.723 4.039 6.422 7.862 6.602h.023c4.04.128 7.61-2.63 8.537-6.602 24.663-105.719 48.222-164.76 152.14-235.773 5.748-3.935 4.615-12.747-1.93-15.1-33.352-12.047-43.248-6.34-77.735-24.107-58.506-30.141-57.809-144.42 0-173.984 34.52-17.654 44.383-12.06 77.734-24.108 6.536-2.354 7.671-11.164 1.93-15.1-103.917-71.013-127.476-130.054-152.14-235.772-.914-3.972-4.498-6.73-8.536-6.603z" enable-background="accumulate" filter="url(#0_GOBETWEEN_svg__d)" opacity=".99" overflow="visible" paint-order="stroke fill markers" transform="matrix(1.173 0 0 1.0956 -114.187 -85.417)"/>
 </svg>
