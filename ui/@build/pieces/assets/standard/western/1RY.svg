@@ -1,14 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="136" height="136">
-    <defs>
-        <filter id="1RY_svg__a" width="1.118" height="1.104" x="-.041" y="-.036" color-interpolation-filters="sRGB">
-            <feGaussianBlur in="SourceAlpha" result="blur" stdDeviation=".8"/>
-            <feOffset dx="2" dy="2" in="blur" result="offset"/>
-            <feFlood flood-color="#000" flood-opacity=".5" result="shadow"/>
-            <feComposite in="shadow" in2="offset" operator="in"/>
-            <feComposite in="SourceGraphic"/>
-        </filter>
-    </defs>
-    <g stroke="#000" filter="url(#1RY_svg__a)">
+    <g stroke="#000" filter="drop-shadow(2px 2px 1px rgba(0,0,0,0.5))">
         <path fill="#e8bc5d" stroke-width="1.197" d="M107.915 113.6 68 128.13 28.085 113.6 12.745 4.457h110.51z"/>
         <g fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
             <path fill="#ce0101" stroke="#ce0101" stroke-linecap="butt" stroke-width="4.448" d="M103.242 21.155H32.756v10.108h70.486Z"/>

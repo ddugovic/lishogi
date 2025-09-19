@@ -1,18 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="136" height="136">
-    <defs>
-        <filter id="0TO_svg__a" width="1.145" height="1.12" x="-.05" y="-.042" color-interpolation-filters="sRGB">
-            <feGaussianBlur in="SourceAlpha" result="blur" stdDeviation=".8"/>
-            <feOffset dx="2" dy="2" in="blur" result="offset"/>
-            <feFlood flood-color="#000" flood-opacity=".5" result="shadow"/>
-            <feComposite in="shadow" in2="offset" operator="in"/>
-            <feComposite in="SourceGraphic"/>
-        </filter>
-    </defs>
-    <g filter="url(#0TO_svg__a)">
+    <g filter="drop-shadow(2px 2px 1px rgba(0,0,0,0.5))">
         <path fill="#c9983f" stroke="#000" stroke-width="1.197" d="m68 16.466 31.346 11.41 13.536 96.306H23.118l13.537-96.307z"/>
         <g fill="#ce0101" stroke="#ce0101">
             <path stroke-linecap="round" stroke-width="2.6" d="M60.2 77.206c-5.2 2.6-9.1 5.07-9.1 19.5h33.8c0-14.3-3.9-16.9-9.1-19.5 0-18.201-15.6-18.201-15.6 0z"/>
-            <path stroke-width="2.483" d="M58.599 68.842h18.917l-9.459-17.926Z" enable-background="accumulate"/>
+            <path stroke-width="2.483" d="M58.599 68.842h18.917l-9.459-17.926Z"/>
         </g>
     </g>
 </svg>
