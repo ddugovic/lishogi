@@ -91,9 +91,9 @@ html {
   --c-shade: #{c-light($c-font, 30%)};
   --c-warn: #{$c-brag};
   --c-warn-over: #{$c-brag-over};
-  --gote-symbol: '#{icons.$shogi-full}';
+  --gote-symbol: '#{icons.$shogi-outline}';
   --metal-shadow: #{none};
-  --sente-symbol: '#{icons.$shogi-outline}';
+  --sente-symbol: '#{icons.$shogi-full}';
   --text-shadow: #{none};
   --m-accent_alpha_neg40: #{color.adjust($c-accent,$alpha:-0.4)};
   --m-accent_alpha_neg50: #{color.adjust($c-accent,$alpha:-0.5)};

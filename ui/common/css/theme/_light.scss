@@ -76,9 +76,6 @@ $metal-shadow: 0 1px 0 white;
 $c-bg-metal-hover: color.adjust($c-bg-high, $lightness: -3%);
 $c-font-metal-hover: inherit;
 
-$sente-symbol: '#{icons.$shogi-full}';
-$gote-symbol: '#{icons.$shogi-outline}';
-
 $c-sente: $c-font-dim;
 $c-gote: $c-shade;
 $c-sente2: $c-font-clear;
