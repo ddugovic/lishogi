@@ -1,4 +1,4 @@
-package lila.fishnet
+package lila.shoginet
 
 import play.api.Configuration
 
@@ -12,7 +12,7 @@ import lila.db.dsl._
 import lila.game.Game
 
 @Module
-private class FishnetConfig(
+private class ShoginetConfig(
     @ConfigName("collection.analysis") val analysisColl: CollName,
     @ConfigName("collection.puzzle") val puzzleColl: CollName,
     @ConfigName("collection.client") val clientColl: CollName,
@@ -23,7 +23,7 @@ private class FishnetConfig(
     @ConfigName("client_min_version") val clientMinVersion: String,
 )
 
-case class FishnetColls(
+case class ShoginetColls(
     analysis: Coll,
     puzzle: Coll,
     client: Coll,
@@ -45,17 +45,17 @@ final class Env(
     system: ActorSystem,
 ) {
 
-  private val config = appConfig.get[FishnetConfig]("fishnet")(AutoConfig.loader)
+  private val config = appConfig.get[ShoginetConfig]("shoginet")(AutoConfig.loader)
 
   private val analysisColl = db(config.analysisColl)
 
-  private lazy val colls = FishnetColls(
+  private lazy val colls = ShoginetColls(
     analysis = analysisColl,
     puzzle = db(config.puzzleColl),
     client = db(config.clientColl),
   )
 
-  private lazy val repo = new FishnetRepo(
+  private lazy val repo = new ShoginetRepo(
     colls = colls,
     cacheApi = cacheApi,
   )
@@ -64,11 +64,11 @@ final class Env(
 
   private lazy val monitor: Monitor = wire[Monitor]
 
-  private lazy val evalCache = wire[FishnetEvalCache]
+  private lazy val evalCache = wire[ShoginetEvalCache]
 
   private lazy val analysisBuilder = wire[AnalysisBuilder]
 
-  private lazy val apiConfig = FishnetApi.Config(
+  private lazy val apiConfig = ShoginetApi.Config(
     offlineMode = config.offlineMode,
     analysisNodes = config.analysisNodes,
     clientVersion = new Client.ClientVersion(config.clientMinVersion),
@@ -77,7 +77,7 @@ final class Env(
   private lazy val socketExists: Game.ID => Fu[Boolean] = id =>
     Bus.ask[Boolean]("roundSocket")(lila.hub.actorApi.map.Exists(id, _))
 
-  lazy val api: FishnetApi = wire[FishnetApi]
+  lazy val api: ShoginetApi = wire[ShoginetApi]
 
   lazy val player = {
     def mk = (plies: Int) => wire[Player]
@@ -96,12 +96,12 @@ final class Env(
   system.actorOf(
     Props(new Actor {
       def receive = {
-        case lila.hub.actorApi.fishnet.AutoAnalyse(gameId) =>
+        case lila.hub.actorApi.shoginet.AutoAnalyse(gameId) =>
           analyser(
             gameId,
             Work.Sender(userId = none, postGameStudy = none, ip = none, mod = false, system = true),
           ).unit
-        case lila.hub.actorApi.fishnet.PostGameStudyRequest(userId, gameId, studyId, chapterId) =>
+        case lila.hub.actorApi.shoginet.PostGameStudyRequest(userId, gameId, studyId, chapterId) =>
           analyser
             .postGameStudy(
               gameId,
@@ -114,7 +114,7 @@ final class Env(
               ),
             )
             .unit
-        case req: lila.hub.actorApi.fishnet.StudyChapterRequest => analyser.study(req).unit
+        case req: lila.hub.actorApi.shoginet.StudyChapterRequest => analyser.study(req).unit
       }
     }),
     name = config.actorName,
@@ -126,16 +126,16 @@ final class Env(
   def cli =
     new lila.common.Cli {
       def process = {
-        case "fishnet" :: "client" :: "create" :: userId :: Nil =>
+        case "shoginet" :: "client" :: "create" :: userId :: Nil =>
           api.createClient(Client.UserId(userId.toLowerCase)) map { client =>
-            Bus.publish(lila.hub.actorApi.fishnet.NewKey(userId, client.key.value), "fishnet")
+            Bus.publish(lila.hub.actorApi.shoginet.NewKey(userId, client.key.value), "shoginet")
             s"Created key: ${(client.key.value)} for: $userId"
           }
-        case "fishnet" :: "client" :: "delete" :: key :: Nil =>
+        case "shoginet" :: "client" :: "delete" :: key :: Nil =>
           repo toKey key flatMap repo.deleteClient inject "done!"
-        case "fishnet" :: "client" :: "enable" :: key :: Nil =>
+        case "shoginet" :: "client" :: "enable" :: key :: Nil =>
           repo toKey key flatMap { repo.enableClient(_, true) } inject "done!"
-        case "fishnet" :: "client" :: "disable" :: key :: Nil => disable(key) inject "done!"
+        case "shoginet" :: "client" :: "disable" :: key :: Nil => disable(key) inject "done!"
       }
     }
 

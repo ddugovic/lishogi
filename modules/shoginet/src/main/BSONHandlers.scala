@@ -1,4 +1,4 @@
-package lila.fishnet
+package lila.shoginet
 
 import reactivemongo.api.bson._
 

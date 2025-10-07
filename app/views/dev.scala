@@ -73,7 +73,7 @@ delete lishogi database
 change asset version
 team disable foobar
 team enable foobar
-fishnet client create {username}
+shoginet client create {username}
 gdpr erase {username} forever
 patron lifetime {username}
 patron month {username}

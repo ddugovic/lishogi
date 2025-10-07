@@ -8,26 +8,20 @@ import play.api.mvc._
 
 import lila.app._
 import lila.common.HTTPRequest
-import lila.fishnet.JsonApi
-import lila.fishnet.JsonApi.readers._
-import lila.fishnet.JsonApi.writers._
-import lila.fishnet.Work
+import lila.shoginet.JsonApi
+import lila.shoginet.JsonApi.readers._
+import lila.shoginet.JsonApi.writers._
+import lila.shoginet.Work
 
-final class Fishnet(env: Env) extends LilaController(env) {
+final class Shoginet(env: Env) extends LilaController(env) {
 
-  private def api    = env.fishnet.api
-  private val logger = lila.log("fishnet")
-
-  def notSupported = Action {
-    Unauthorized(
-      "Your shoginet version is no longer supported. Please restart shoginet to upgrade. (git pull)",
-    )
-  }
+  private def api    = env.shoginet.api
+  private val logger = lila.log("shoginet")
 
   def acquire(slow: Boolean = false) =
     ClientAction[JsonApi.Request.Acquire] { _ => client =>
       api.acquire(client, slow) addEffect { jobOpt =>
-        lila.mon.fishnet.http.request(jobOpt.isDefined).increment().unit
+        lila.mon.shoginet.http.request(jobOpt.isDefined).increment().unit
       } map Right.apply
     }
 
@@ -39,7 +33,7 @@ final class Fishnet(env: Env) extends LilaController(env) {
 
   def analysis(workId: String, slow: Boolean = false, stop: Boolean = false) =
     ClientAction[JsonApi.Request.PostAnalysis] { data => client =>
-      import lila.fishnet.FishnetApi._
+      import lila.shoginet.ShoginetApi._
       def onComplete =
         if (stop) fuccess(Left(NoContent))
         else api.acquire(client, slow) map Right.apply
@@ -81,7 +75,7 @@ final class Fishnet(env: Env) extends LilaController(env) {
 
   def keyExists(key: String) =
     Action.async { _ =>
-      api keyExists lila.fishnet.Client.Key(key) map {
+      api keyExists lila.shoginet.Client.Key(key) map {
         case true  => Ok
         case false => NotFound
       }
@@ -93,7 +87,7 @@ final class Fishnet(env: Env) extends LilaController(env) {
     }
 
   private def ClientAction[A <: JsonApi.Request](
-      f: A => lila.fishnet.Client => Fu[Either[Result, Option[JsonApi.Work]]],
+      f: A => lila.shoginet.Client => Fu[Either[Result, Option[JsonApi.Work]]],
   )(implicit reads: Reads[A]) =
     Action.async(parse.tolerantJson) { req =>
       req.body

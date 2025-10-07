@@ -1,4 +1,4 @@
-package lila.fishnet
+package lila.shoginet
 
 import org.joda.time.DateTime
 

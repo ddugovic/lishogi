@@ -32,7 +32,7 @@ final class Env(
     userSpyApi: lila.security.UserSpyApi,
     playbanApi: lila.playban.PlaybanApi,
     captcher: lila.hub.actors.Captcher,
-    fishnet: lila.hub.actors.Fishnet,
+    shoginet: lila.hub.actors.Shoginet,
     settingStore: lila.memo.SettingStore.Builder,
     cacheApi: lila.memo.CacheApi,
 )(implicit

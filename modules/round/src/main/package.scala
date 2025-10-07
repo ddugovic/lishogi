@@ -11,9 +11,9 @@ package object round extends PackageObject {
 
 package round {
 
-  trait BenignError                        extends lila.base.LilaException
-  case class ClientError(message: String)  extends BenignError
-  case class FishnetError(message: String) extends BenignError
+  trait BenignError                         extends lila.base.LilaException
+  case class ClientError(message: String)   extends BenignError
+  case class ShoginetError(message: String) extends BenignError
 
   sealed trait OnTv
 

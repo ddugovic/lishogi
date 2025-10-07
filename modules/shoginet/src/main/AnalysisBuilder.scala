@@ -1,4 +1,4 @@
-package lila.fishnet
+package lila.shoginet
 
 import org.joda.time.DateTime
 
@@ -6,10 +6,10 @@ import shogi.format.usi.Usi
 
 import lila.analyse.Analysis
 import lila.analyse.Info
-import lila.fishnet.JsonApi.Request.Evaluation
+import lila.shoginet.JsonApi.Request.Evaluation
 import lila.tree.Eval
 
-final private class AnalysisBuilder(evalCache: FishnetEvalCache)(implicit
+final private class AnalysisBuilder(evalCache: ShoginetEvalCache)(implicit
     ec: scala.concurrent.ExecutionContext,
 ) {
 

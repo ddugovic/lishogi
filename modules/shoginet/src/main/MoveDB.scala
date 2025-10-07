@@ -1,4 +1,4 @@
-package lila.fishnet
+package lila.shoginet
 
 import scala.concurrent.duration._
 
@@ -9,7 +9,8 @@ import org.joda.time.DateTime
 
 import lila.common.Bus
 import lila.hub.actorApi.map.Tell
-import lila.hub.actorApi.round.FishnetPlay
+import lila.hub.actorApi.round.ShoginetPlay
+import lila.hub.actorApi.round.ShoginetPlayFallback
 
 final class MoveDB(implicit system: ActorSystem) {
 
@@ -85,7 +86,7 @@ final class MoveDB(implicit system: ActorSystem) {
               case Some(usi) =>
                 coll -= move.id
                 Monitor.move(client).unit
-                Bus.publish(Tell(move.game.id, FishnetPlay(usi, move.ply)), "roundSocket")
+                Bus.publish(Tell(move.game.id, ShoginetPlay(usi, move.ply)), "roundSocket")
               case _ =>
                 sender() ! None
                 updateOrGiveUp(move.invalid)
@@ -109,6 +110,7 @@ final class MoveDB(implicit system: ActorSystem) {
 
     def updateOrGiveUp(move: Move) =
       if (move.isOutOfTries) {
+        Bus.publish(Tell(move.game.id, ShoginetPlayFallback(move.ply)), "roundSocket")
         logger.warn(s"Give up on move $move")
         coll -= move.id
       } else if (move.hasLastTry) {

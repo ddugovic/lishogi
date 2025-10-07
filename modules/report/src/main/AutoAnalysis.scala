@@ -9,7 +9,7 @@ import lila.game.GameRepo
 
 final class AutoAnalysis(
     gameRepo: GameRepo,
-    fishnet: lila.hub.actors.Fishnet,
+    shoginet: lila.hub.actors.Shoginet,
 )(implicit
     ec: scala.concurrent.ExecutionContext,
     system: akka.actor.ActorSystem,
@@ -32,7 +32,7 @@ final class AutoAnalysis(
         )
       games foreach { game =>
         lila.mon.cheat.autoAnalysis("Report").increment()
-        fishnet ! lila.hub.actorApi.fishnet.AutoAnalyse(game.id)
+        shoginet ! lila.hub.actorApi.shoginet.AutoAnalyse(game.id)
       }
     }
 

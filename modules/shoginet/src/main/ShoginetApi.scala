@@ -1,4 +1,4 @@
-package lila.fishnet
+package lila.shoginet
 
 import scala.concurrent.duration._
 import scala.util.Failure
@@ -10,30 +10,30 @@ import reactivemongo.api.bson._
 
 import lila.common.IpAddress
 import lila.db.dsl._
-import lila.fishnet.Client.Skill
+import lila.shoginet.Client.Skill
 
-final class FishnetApi(
-    repo: FishnetRepo,
+final class ShoginetApi(
+    repo: ShoginetRepo,
     moveDb: MoveDB,
     analysisBuilder: AnalysisBuilder,
-    colls: FishnetColls,
+    colls: ShoginetColls,
     monitor: Monitor,
     sink: lila.analyse.Analyser,
     puzzles: lila.puzzle.PuzzleApi,
     socketExists: String => Fu[Boolean],
-    config: FishnetApi.Config,
+    config: ShoginetApi.Config,
 )(implicit
     ec: scala.concurrent.ExecutionContext,
     system: akka.actor.ActorSystem,
 ) {
 
   import BSONHandlers._
-  import FishnetApi._
   import JsonApi.Request.CompleteAnalysis
   import JsonApi.Request.PartialAnalysis
+  import ShoginetApi._
 
   private val workQueue =
-    new lila.hub.DuctSequencer(maxSize = 256, timeout = 5 seconds, name = "fishnetApi")
+    new lila.hub.DuctSequencer(maxSize = 256, timeout = 5 seconds, name = "shoginetApi")
 
   def keyExists(key: Client.Key) = repo.getEnabledClient(key).map(_.isDefined)
 
@@ -59,9 +59,9 @@ final class FishnetApi(
           client,
           verifiable = false,
         )
-    }).monSuccess(_.fishnet.acquire)
+    }).monSuccess(_.shoginet.acquire)
       .recover { case e: Exception =>
-        logger.error("Fishnet.acquire", e)
+        logger.error("Shoginet.acquire", e)
         none
       }
 
@@ -320,7 +320,7 @@ final class FishnetApi(
   def queuedPuzzles(userId: String): Fu[Int] =
     repo.countUserPuzzles(userId)
 
-  private[fishnet] def createClient(userId: Client.UserId): Fu[Client] = {
+  private[shoginet] def createClient(userId: Client.UserId): Fu[Client] = {
     val client = Client(
       _id = Client.makeKey,
       userId = userId,
@@ -333,7 +333,7 @@ final class FishnetApi(
   }
 }
 
-object FishnetApi {
+object ShoginetApi {
 
   import lila.base.LilaException
 

@@ -25,7 +25,7 @@ import lila.round.actorApi.round.TakebackNo
 import lila.round.actorApi.round.TooManyPlies
 
 final private class Player(
-    fishnetPlayer: lila.fishnet.Player,
+    shoginetPlayer: lila.shoginet.Player,
     gameRepo: GameRepo,
     finisher: Finisher,
     scheduleExpiration: ScheduleExpiration,
@@ -97,7 +97,7 @@ final private class Player(
 
     if (progress.game.finished) usiFinish(progress.game) dmap { progress.events ::: _ }
     else {
-      if (progress.game.playableByAi) requestFishnet(progress.game, round)
+      if (progress.game.playableByAi) requestShoginet(progress.game, round)
       if (pov.opponent.isOfferingDraw) round ! DrawNo(PlayerId(pov.player.id))
       if (pov.player.isProposingTakeback) round ! TakebackNo(PlayerId(pov.player.id))
       if (pov.player.isOfferingPause) round ! PauseNo(PlayerId(pov.player.id))
@@ -107,11 +107,11 @@ final private class Player(
     }
   }
 
-  private[round] def fishnet(game: Game, ply: Int, usi: Usi)(implicit
+  private[round] def shoginet(game: Game, ply: Int, usi: Usi)(implicit
       proxy: GameProxy,
   ): Fu[Events] = {
     if (game.playable && game.player.isAi && game.plies == ply) {
-      applyUsi(game, usi, blur = false, metrics = fishnetLag)
+      applyUsi(game, usi, blur = false, metrics = shoginetLag)
         .fold(errs => fufail(ClientError(errs.toString)), fuccess)
         .flatMap {
           case Flagged         => finisher.outOfTime(game)
@@ -126,20 +126,20 @@ final private class Player(
         }
     } else
       fufail(
-        FishnetError(
+        ShoginetError(
           s"Not AI turn move: ${usi} id: ${game.id} playable: ${game.playable} player: ${game.player} plies: ${game.playedPlies}, $ply",
         ),
       )
   }
 
-  private[round] def requestFishnet(game: Game, round: RoundDuct): Funit =
+  private[round] def requestShoginet(game: Game, round: RoundDuct): Funit =
     game.playableByAi ?? {
-      if (game.playedPlies <= fishnetPlayer.maxPlies) fishnetPlayer(game)
+      if (game.playedPlies <= shoginetPlayer.maxPlies) shoginetPlayer(game)
       else fuccess(round ! actorApi.round.ResignAi)
     }
 
-  private val fishnetLag = LagMetrics(clientLag = Centis(5).some)
-  private val botLag     = LagMetrics(clientLag = Centis(10).some)
+  private val shoginetLag = LagMetrics(clientLag = Centis(5).some)
+  private val botLag      = LagMetrics(clientLag = Centis(10).some)
 
   private def applyUsi(
       game: Game,

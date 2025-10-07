@@ -326,16 +326,16 @@ GET   /game/export/gif/thumbnail/$gameId<\w{8}>.gif           controllers.Export
 GET   /game/export/gif/$gameId<\w{8}>.gif                     controllers.Export.gif(gameId: String, color: String = "sente")
 GET   /game/export/gif/$color<sente|gote>/$gameId<\w{8}>.gif controllers.Export.gif(gameId: String, color: String)
 
-# Fishnet
-POST  /fishnet/acquire                         controllers.Fishnet.notSupported
-POST  /shoginet/acquire                        controllers.Fishnet.acquire(slow: Boolean ?= false)
-POST  /shoginet/move/$workId<\w{8}>            controllers.Fishnet.move(workId: String)
-POST  /shoginet/analysis/$workId<\w{8}>        controllers.Fishnet.analysis(workId: String, slow: Boolean ?= false, stop: Boolean ?= false)
-POST  /shoginet/puzzle/$workId<\w{8}>          controllers.Fishnet.puzzle(workId: String)
-POST  /shoginet/puzzle-verification/$workId<\w{8}> controllers.Fishnet.verifiedPuzzle(workId: String)
-POST  /shoginet/abort/$workId<\w{8}>           controllers.Fishnet.abort(workId: String)
-GET   /shoginet/key/$key<\w{8}>                controllers.Fishnet.keyExists(key: String)
-GET   /shoginet/status                         controllers.Fishnet.status
+# Shoginet
+POST  /shoginet/acquire                        controllers.Shoginet.acquire(slow: Boolean ?= false)
+POST  /shoginet/move/$workId<\w{8}>            controllers.Shoginet.move(workId: String)
+POST  /shoginet/analysis/$workId<\w{8}>        controllers.Shoginet.analysis(workId: String, slow: Boolean ?= false, stop: Boolean ?= false)
+POST  /shoginet/puzzle/$workId<\w{8}>          controllers.Shoginet.puzzle(workId: String)
+POST  /shoginet/puzzle-verification/$workId<\w{8}> controllers.Shoginet.verifiedPuzzle(workId: String)
+POST  /shoginet/abort/$workId<\w{8}>           controllers.Shoginet.abort(workId: String)
+GET   /shoginet/key/$key<\w{8}>                controllers.Shoginet.keyExists(key: String)
+GET   /shoginet/status                         controllers.Shoginet.status
+GET   /shoginet/config                         controllers.ExternalAssets.at(path = "public/shoginet", file = "config.json")
 
 # Pref
 POST  /pref/:name                             controllers.Pref.set(name: String)

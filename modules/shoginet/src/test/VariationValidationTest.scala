@@ -1,4 +1,4 @@
-package lila.fishnet
+package lila.shoginet
 
 import org.specs2.mutable._
 

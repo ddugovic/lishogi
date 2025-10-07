@@ -1,4 +1,4 @@
-package lila.fishnet
+package lila.shoginet
 
 import scala.concurrent.duration._
 
@@ -10,9 +10,9 @@ import reactivemongo.api.bson._
 import lila.db.dsl._
 
 final private class Cleaner(
-    repo: FishnetRepo,
+    repo: ShoginetRepo,
     moveDb: MoveDB,
-    colls: FishnetColls,
+    colls: ShoginetColls,
     system: akka.actor.ActorSystem,
 )(implicit
     ec: scala.concurrent.ExecutionContext,

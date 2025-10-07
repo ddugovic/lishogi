@@ -1,4 +1,4 @@
-package lila.fishnet
+package lila.shoginet
 
 import cats.data.Validated
 import cats.data.Validated.valid

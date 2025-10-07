@@ -32,9 +32,9 @@ final class Importer(env: Env) extends LilaController(env) {
             env.importer.importer(data, ctx.userId) flatMap { game =>
               (ctx.userId ?? env.game.cached.clearNbImportedByCache) >>
                 (data.analyse.isDefined && game.analysable) ?? {
-                  env.fishnet.analyser(
+                  env.shoginet.analyser(
                     game,
-                    lila.fishnet.Work.Sender(
+                    lila.shoginet.Work.Sender(
                       userId = ctx.userId,
                       postGameStudy = none,
                       ip = HTTPRequest.lastRemoteAddress(ctx.req).some,

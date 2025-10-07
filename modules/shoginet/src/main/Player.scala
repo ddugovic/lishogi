@@ -1,4 +1,4 @@
-package lila.fishnet
+package lila.shoginet
 
 import scala.concurrent.duration._
 
@@ -78,6 +78,6 @@ final class Player(
             createdAt = DateTime.now,
           ),
         )
-      else fufail(s"[fishnet] Too many moves (${game.plies}), won't play ${game.id}")
-    else fufail(s"[fishnet] invalid position on ${game.id}")
+      else fufail(s"[shoginet] Too many moves (${game.plies}), won't play ${game.id}")
+    else fufail(s"[shoginet] invalid position on ${game.id}")
 }

@@ -76,9 +76,9 @@ object HTTPRequest {
     def apply(req: RequestHeader): Boolean = userAgent(req) ?? { regex.find(_) }
   }
 
-  def isFishnet(req: RequestHeader) = req.path startsWith "/shoginet/"
+  def isShoginet(req: RequestHeader) = req.path startsWith "/shoginet/"
 
-  def isHuman(req: RequestHeader) = !isCrawler(req) && !isFishnet(req)
+  def isHuman(req: RequestHeader) = !isCrawler(req) && !isShoginet(req)
 
   def isFacebookOrTwitterBot(req: RequestHeader) =
     userAgent(req) ?? { ua =>
@@ -116,7 +116,7 @@ object HTTPRequest {
   def isEventSource(req: RequestHeader): Boolean = accepts(req) contains "text/event-stream"
 
   def isProgrammatic(req: RequestHeader) =
-    isXhr(req) || isFishnet(req) || isApi(req)
+    isXhr(req) || isShoginet(req) || isApi(req)
 
   def actionName(req: RequestHeader): String =
     req.attrs.get(Router.Attrs.HandlerDef).fold("NoHandler") { handler =>

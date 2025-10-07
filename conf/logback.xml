@@ -58,9 +58,9 @@
       <encoder><pattern>%date [%level] %message%n%xException</pattern></encoder>
     </appender>
   </logger>
-  <logger name="fishnet" level="DEBUG">
+  <logger name="shoginet" level="DEBUG">
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-      <file>${application.home}/logs/fishnet.log</file>
+      <file>${application.home}/logs/shoginet.log</file>
       <encoder><pattern>%date [%level] %message%n%xException</pattern></encoder>
     </appender>
   </logger>

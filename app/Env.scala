@@ -67,7 +67,7 @@ final class Env(
     val push: lila.push.Env,
     val perfStat: lila.perfStat.Env,
     val challenge: lila.challenge.Env,
-    val fishnet: lila.fishnet.Env,
+    val shoginet: lila.shoginet.Env,
     val study: lila.study.Env,
     val studySearch: lila.studySearch.Env,
     val learn: lila.learn.Env,
@@ -238,7 +238,7 @@ final class EnvBoot(
   lazy val push: lila.push.Env               = wire[lila.push.Env]
   lazy val perfStat: lila.perfStat.Env       = wire[lila.perfStat.Env]
   lazy val challenge: lila.challenge.Env     = wire[lila.challenge.Env]
-  lazy val fishnet: lila.fishnet.Env         = wire[lila.fishnet.Env]
+  lazy val shoginet: lila.shoginet.Env       = wire[lila.shoginet.Env]
   lazy val study: lila.study.Env             = wire[lila.study.Env]
   lazy val studySearch: lila.studySearch.Env = wire[lila.studySearch.Env]
   lazy val learn: lila.learn.Env             = wire[lila.learn.Env]

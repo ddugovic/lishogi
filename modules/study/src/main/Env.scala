@@ -26,7 +26,7 @@ final class Env(
     relationApi: lila.relation.RelationApi,
     remoteSocketApi: lila.socket.RemoteSocket,
     timeline: lila.hub.actors.Timeline,
-    fishnet: lila.hub.actors.Fishnet,
+    shoginet: lila.hub.actors.Shoginet,
     chatApi: lila.chat.ChatApi,
     mongo: lila.db.Env,
     net: lila.common.config.NetConfig,

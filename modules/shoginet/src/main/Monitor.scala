@@ -1,9 +1,9 @@
-package lila.fishnet
+package lila.shoginet
 
 import scala.concurrent.duration._
 
 final private class Monitor(
-    repo: FishnetRepo,
+    repo: ShoginetRepo,
     @scala.annotation.unused moveDb: MoveDB,
     cacheApi: lila.memo.CacheApi,
 )(implicit
@@ -18,14 +18,14 @@ final private class Monitor(
       }
   }
 
-  private val monBy = lila.mon.fishnet.analysis.by
+  private val monBy = lila.mon.shoginet.analysis.by
 
   private def sumOf[A](items: List[A])(f: A => Option[Int]) =
     items.foldLeft(0) { case (acc, a) =>
       acc + f(a).getOrElse(0)
     }
 
-  private[fishnet] def analysis(
+  private[shoginet] def analysis(
       work: Work.Analysis,
       client: Client,
       result: JsonApi.Request.CompleteAnalysis,
@@ -72,7 +72,7 @@ final private class Monitor(
 
   private def monitorClients(): Funit =
     repo.allRecentClients map { clients =>
-      import lila.mon.fishnet.client._
+      import lila.mon.shoginet.client._
 
       status(true).update(clients.count(_.enabled))
       status(false).update(clients.count(_.disabled))
@@ -94,14 +94,14 @@ final private class Monitor(
 
   private def monitorStatus(): Funit =
     statusCache.get {} map { c =>
-      lila.mon.fishnet.work("queued", "system").update(c.system.queued)
-      lila.mon.fishnet.work("queued", "user").update(c.user.queued)
-      lila.mon.fishnet.work("acquired", "system").update(c.system.acquired)
-      lila.mon.fishnet.work("acquired", "user").update(c.user.acquired)
-      lila.mon.fishnet.work("puzzles", "verifiable").update(c.puzzles.verifiable)
-      lila.mon.fishnet.work("puzzles", "candidates").update(c.puzzles.candidates)
-      lila.mon.fishnet.oldest("system").update(c.system.oldest)
-      lila.mon.fishnet.oldest("user").update(c.user.oldest)
+      lila.mon.shoginet.work("queued", "system").update(c.system.queued)
+      lila.mon.shoginet.work("queued", "user").update(c.user.queued)
+      lila.mon.shoginet.work("acquired", "system").update(c.system.acquired)
+      lila.mon.shoginet.work("acquired", "user").update(c.user.acquired)
+      lila.mon.shoginet.work("puzzles", "verifiable").update(c.puzzles.verifiable)
+      lila.mon.shoginet.work("puzzles", "candidates").update(c.puzzles.candidates)
+      lila.mon.shoginet.oldest("system").update(c.system.oldest)
+      lila.mon.shoginet.oldest("user").update(c.user.oldest)
       ()
     }
 
@@ -118,9 +118,9 @@ object Monitor {
 
   case class Status(user: StatusFor, system: StatusFor, puzzles: StatusPuzzle)
 
-  private val monResult = lila.mon.fishnet.client.result
+  private val monResult = lila.mon.shoginet.client.result
 
-  private[fishnet] def move(client: Client) = {
+  private[shoginet] def move(client: Client) = {
     monResult.success(client.userId.value).increment()
   }
 
@@ -129,13 +129,13 @@ object Monitor {
     monResult.success(client.userId.value).increment()
 
     work.acquiredAt foreach { acquiredAt =>
-      lila.mon.fishnet.queueTime(if (work.sender.system) "system" else "user").record {
+      lila.mon.shoginet.queueTime(if (work.sender.system) "system" else "user").record {
         acquiredAt.getMillis - work.createdAt.getMillis
       }
     }
   }
 
-  private[fishnet] def failure(work: Work, client: Client, e: Exception) = {
+  private[shoginet] def failure(work: Work, client: Client, e: Exception) = {
     logger.warn(
       s"Received invalid ${work.name} ${work.id} for ${work.game.id} by ${client.fullId}",
       e,
@@ -143,18 +143,18 @@ object Monitor {
     monResult.failure(client.userId.value).increment()
   }
 
-  private[fishnet] def timeout(userId: Client.UserId) =
+  private[shoginet] def timeout(userId: Client.UserId) =
     monResult.timeout(userId.value).increment()
 
-  private[fishnet] def abort(client: Client) =
+  private[shoginet] def abort(client: Client) =
     monResult.abort(client.userId.value).increment()
 
-  private[fishnet] def notFound(id: Work.Id, name: String, client: Client) = {
+  private[shoginet] def notFound(id: Work.Id, name: String, client: Client) = {
     logger.info(s"Received unknown ${name} $id by ${client.fullId}")
     monResult.notFound(client.userId.value).increment()
   }
 
-  private[fishnet] def notAcquired(work: Work, client: Client) = {
+  private[shoginet] def notAcquired(work: Work, client: Client) = {
     logger.info(
       s"Received unacquired ${work.name} ${work.id} for ${work.game.id} by ${client.fullId}. Work current tries: ${work.tries} acquired: ${work.acquired}",
     )

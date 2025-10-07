@@ -34,7 +34,7 @@ final class Round(
         if (!pov.game.started) notFound
         else
           PreventTheft(pov) {
-            pov.game.playableByAi ?? env.fishnet.player(pov.game)
+            pov.game.playableByAi ?? env.shoginet.player(pov.game)
             env.tournament.api.gameView.player(pov) flatMap { tour =>
               gameC.preloadUsers(pov.game) zip
                 (pov.game.simulId ?? env.simul.repo.find) zip
@@ -66,7 +66,7 @@ final class Round(
         if (isTheft(pov)) fuccess(theftResponse)
         else
           env.tournament.api.gameView.mobile(pov.game) flatMap { tour =>
-            pov.game.playableByAi ?? env.fishnet.player(pov.game)
+            pov.game.playableByAi ?? env.shoginet.player(pov.game)
             gameC.preloadUsers(pov.game) zip
               env.api.roundApi.player(pov, tour) zip
               getPlayerChat(pov.game, none) map { case ((_, data), chat) =>

@@ -1,4 +1,4 @@
-package lila.fishnet
+package lila.shoginet
 
 import scala.concurrent.duration._
 import scala.util.chaining._
@@ -10,10 +10,10 @@ import lila.common.Bus
 import lila.game.Game
 
 final class Analyser(
-    repo: FishnetRepo,
+    repo: ShoginetRepo,
     analysisRepo: AnalysisRepo,
     gameRepo: lila.game.GameRepo,
-    evalCache: FishnetEvalCache,
+    evalCache: ShoginetEvalCache,
     limiter: Limiter,
 )(implicit
     ec: scala.concurrent.ExecutionContext,
@@ -23,7 +23,7 @@ final class Analyser(
   val maxPlies = 225
 
   private val workQueue =
-    new lila.hub.DuctSequencer(maxSize = 256, timeout = 5 seconds, "fishnetAnalyser")
+    new lila.hub.DuctSequencer(maxSize = 256, timeout = 5 seconds, "shoginetAnalyser")
 
   def apply(game: Game, sender: Work.Sender): Fu[Boolean] =
     (game.metadata.analysed ?? analysisRepo.exists(game.id)) flatMap {
@@ -42,9 +42,9 @@ final class Analyser(
                     funit
                   }
                   case _ =>
-                    lila.mon.fishnet.analysis.requestCount("game").increment()
+                    lila.mon.shoginet.analysis.requestCount("game").increment()
                     evalCache skipPositions work.game flatMap { skipPositions =>
-                      lila.mon.fishnet.analysis.evalCacheHits.record(skipPositions.size)
+                      lila.mon.shoginet.analysis.evalCacheHits.record(skipPositions.size)
                       repo addAnalysis work.copy(skipPositions = skipPositions)
                     }
                 }
@@ -78,7 +78,7 @@ final class Analyser(
       }
     }
 
-  def study(req: lila.hub.actorApi.fishnet.StudyChapterRequest): Fu[Boolean] =
+  def study(req: lila.hub.actorApi.shoginet.StudyChapterRequest): Fu[Boolean] =
     analysisRepo exists req.chapterId flatMap {
       case true => fuFalse
       case _ => {
@@ -104,9 +104,9 @@ final class Analyser(
             workQueue {
               repo getSimilarAnalysis work flatMap {
                 _.isEmpty ?? {
-                  lila.mon.fishnet.analysis.requestCount("study").increment()
+                  lila.mon.shoginet.analysis.requestCount("study").increment()
                   evalCache skipPositions work.game flatMap { skipPositions =>
-                    lila.mon.fishnet.analysis.evalCacheHits.record(skipPositions.size)
+                    lila.mon.shoginet.analysis.evalCacheHits.record(skipPositions.size)
                     repo addAnalysis work.copy(skipPositions = skipPositions)
                   }
                 }

@@ -11,15 +11,15 @@ import shogi.format.usi.UsiCharPair
 
 import lila.analyse.Analysis
 import lila.analyse.Info
-import lila.hub.actorApi.fishnet.PostGameStudyRequest
-import lila.hub.actorApi.fishnet.StudyChapterRequest
+import lila.hub.actorApi.shoginet.PostGameStudyRequest
+import lila.hub.actorApi.shoginet.StudyChapterRequest
 import lila.tree.Node.Comment
 import lila.user.User
 
 object ServerEval {
 
   final class Requester(
-      fishnet: lila.hub.actors.Fishnet,
+      shoginet: lila.hub.actors.Shoginet,
       chapterRepo: ChapterRepo,
   )(implicit ec: scala.concurrent.ExecutionContext) {
 
@@ -33,7 +33,7 @@ object ServerEval {
           chapter.setup.gameId
             .ifTrue(chapter.isFirstGameRootChapter)
             .fold {
-              fishnet ! StudyChapterRequest(
+              shoginet ! StudyChapterRequest(
                 studyId = study.id.value,
                 chapterId = chapter.id.value,
                 initialSfen = chapter.root.sfen.some,
@@ -42,7 +42,7 @@ object ServerEval {
                 userId = userId,
               )
             } { gameId =>
-              fishnet ! PostGameStudyRequest(
+              shoginet ! PostGameStudyRequest(
                 userId = userId,
                 gameId = gameId,
                 studyId = study.id.value,

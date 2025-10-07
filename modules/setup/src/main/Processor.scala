@@ -12,7 +12,7 @@ final private[setup] class Processor(
     gameCache: lila.game.Cached,
     gameRepo: lila.game.GameRepo,
     maxPlaying: Max,
-    fishnetPlayer: lila.fishnet.Player,
+    shoginetPlayer: lila.shoginet.Player,
     onStart: lila.round.OnStart,
 )(implicit ec: scala.concurrent.ExecutionContext) {
 
@@ -20,7 +20,7 @@ final private[setup] class Processor(
     val pov = config pov ctx.me
     (gameRepo insertDenormalized pov.game) >>-
       onStart(pov.gameId) >> {
-        pov.game.player.isAi ?? fishnetPlayer(pov.game)
+        pov.game.player.isAi ?? shoginetPlayer(pov.game)
       } inject pov
   }
 
@@ -28,7 +28,7 @@ final private[setup] class Processor(
     val pov = config pov me.some
     (gameRepo insertDenormalized pov.game) >>-
       onStart(pov.gameId) >> {
-        pov.game.player.isAi ?? fishnetPlayer(pov.game)
+        pov.game.player.isAi ?? shoginetPlayer(pov.game)
       } inject pov
   }
 

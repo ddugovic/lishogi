@@ -1,4 +1,4 @@
-package lila.fishnet
+package lila.shoginet
 
 import scala.concurrent.duration._
 
@@ -8,8 +8,8 @@ import reactivemongo.api.bson._
 import lila.db.dsl._
 import lila.memo.CacheApi._
 
-final private class FishnetRepo(
-    colls: FishnetColls,
+final private class ShoginetRepo(
+    colls: ShoginetColls,
     cacheApi: lila.memo.CacheApi,
 )(implicit ec: scala.concurrent.ExecutionContext) {
 
@@ -19,7 +19,7 @@ final private class FishnetRepo(
   val puzzleColl   = colls.puzzle
   val clientColl   = colls.client
 
-  private val clientCache = cacheApi[Client.Key, Option[Client]](16, "fishnet.client") {
+  private val clientCache = cacheApi[Client.Key, Option[Client]](16, "shoginet.client") {
     _.expireAfterWrite(10 minutes)
       .buildAsyncFuture { key =>
         clientColl.one[Client](selectClient(key))
@@ -118,7 +118,7 @@ final private class FishnetRepo(
   def selectWork(id: Work.Id)       = $id(id.value)
   def selectClient(key: Client.Key) = $id(key.value)
 
-  private[fishnet] def toKey(keyOrUser: String): Fu[Client.Key] =
+  private[shoginet] def toKey(keyOrUser: String): Fu[Client.Key] =
     clientColl.primitiveOne[String](
       $or(
         "_id" $eq keyOrUser,

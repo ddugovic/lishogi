@@ -25,12 +25,13 @@ import lila.game.{ Player => GamePlayer }
 import lila.hub.Duct
 import lila.hub.actorApi.round.Abort
 import lila.hub.actorApi.round.BotPlay
-import lila.hub.actorApi.round.FishnetPlay
 import lila.hub.actorApi.round.IsOnGame
 import lila.hub.actorApi.round.PostGameStudy
 import lila.hub.actorApi.round.RematchNo
 import lila.hub.actorApi.round.RematchYes
 import lila.hub.actorApi.round.Resign
+import lila.hub.actorApi.round.ShoginetPlay
+import lila.hub.actorApi.round.ShoginetPlayFallback
 import lila.room.RoomSocket.{ Protocol => RP, _ }
 import lila.round.actorApi._
 import lila.round.actorApi.round._
@@ -136,7 +137,7 @@ final private[round] class RoundDuct(
         mightBeSimul = game.isSimul
         sentePlayer.goneWeight = senteGoneWeight
         gotePlayer.goneWeight = goteGoneWeight
-        if (game.playableByAi) player.requestFishnet(game, this)
+        if (game.playableByAi) player.requestShoginet(game, this)
       }
 
     // socket stuff
@@ -285,10 +286,24 @@ final private[round] class RoundDuct(
       p.promise.foreach(_ completeWith res)
       res
 
-    case FishnetPlay(usi, ply) =>
+    case ShoginetPlay(usi, ply) =>
       handle { game =>
-        player.fishnet(game, ply, usi)
+        player.shoginet(game, ply, usi)
       }.mon(_.round.move.time)
+
+    case ShoginetPlayFallback(ply) =>
+      handle { game =>
+        (game.playable && game.plies == ply) ?? {
+          val usiOpt = game.situation
+            .moveActorsOf(game.situation.color)
+            .flatMap(_.toUsis)
+            .headOption orElse game.situation
+            .dropActorsOf(game.situation.color)
+            .flatMap(_.toUsis)
+            .headOption
+          usiOpt ?? { usi => player.shoginet(game, ply, usi) }
+        }
+      }
 
     case Abort(playerId) =>
       handle(PlayerId(playerId)) { pov =>
@@ -563,9 +578,9 @@ final private[round] class RoundDuct(
     case e: ClientError =>
       logger.info(s"Round client error $name: ${e.getMessage}")
       lila.mon.round.error.client.increment().unit
-    case e: FishnetError =>
-      logger.info(s"Round fishnet error $name: ${e.getMessage}")
-      lila.mon.round.error.fishnet.increment().unit
+    case e: ShoginetError =>
+      logger.info(s"Round shoginet error $name: ${e.getMessage}")
+      lila.mon.round.error.shoginet.increment().unit
     case e: Exception =>
       logger.warn(s"$name: ${e.getMessage}")
       lila.mon.round.error.other.increment().unit

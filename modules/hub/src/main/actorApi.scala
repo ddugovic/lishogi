@@ -221,7 +221,7 @@ package team {
   case class TeamIdsJoinedBy(userId: String, promise: Promise[List[LightTeam.TeamID]])
 }
 
-package fishnet {
+package shoginet {
   case class AutoAnalyse(gameId: String)
   case class NewKey(userId: String, key: String)
   case class PostGameStudyRequest(
@@ -271,7 +271,8 @@ package round {
   case class TourFinishedOrDeleted(tourId: String)
   case class ArrangementDeleted(tourId: String, arrId: String)
   case class TourPlayerRemoved(tourId: String, userId: String)
-  case class FishnetPlay(usi: Usi, ply: Int)
+  case class ShoginetPlay(usi: Usi, ply: Int)
+  case class ShoginetPlayFallback(ply: Int)
   case class BotPlay(
       playerId: String,
       usi: Usi,

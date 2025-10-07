@@ -29,7 +29,7 @@ final class AssessApi(
     modApi: ModApi,
     userRepo: lila.user.UserRepo,
     reporter: lila.hub.actors.Report,
-    fishnet: lila.hub.actors.Fishnet,
+    shoginet: lila.hub.actors.Shoginet,
     gameRepo: lila.game.GameRepo,
     analysisRepo: AnalysisRepo,
 )(implicit ec: scala.concurrent.ExecutionContext) {
@@ -217,7 +217,7 @@ final class AssessApi(
     shouldAnalyse map {
       _ ?? { reason =>
         lila.mon.cheat.autoAnalysis(reason.toString).increment()
-        fishnet ! lila.hub.actorApi.fishnet.AutoAnalyse(game.id)
+        shoginet ! lila.hub.actorApi.shoginet.AutoAnalyse(game.id)
       }
     }
   }

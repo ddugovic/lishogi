@@ -131,7 +131,7 @@ export function getBestEval(evs: NodeEvals): Eval | undefined {
   if (!serverEv) return localEv;
   if (!localEv) return serverEv;
 
-  // Prefer localEv if it exceeds fishnet node limit or finds a better mate.
+  // Prefer localEv if it exceeds shoginet node limit or finds a better mate.
   if (
     localEv.nodes > serverNodes ||
     (typeof localEv.mate !== 'undefined' &&

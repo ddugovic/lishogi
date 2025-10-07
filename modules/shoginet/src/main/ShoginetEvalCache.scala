@@ -1,8 +1,8 @@
-package lila.fishnet
+package lila.shoginet
 
-import lila.fishnet.JsonApi.Request.Evaluation
+import lila.shoginet.JsonApi.Request.Evaluation
 
-final private class FishnetEvalCache(
+final private class ShoginetEvalCache(
     evalCacheApi: lila.evalCache.EvalCacheApi,
 )(implicit ec: scala.concurrent.ExecutionContext) {
 
@@ -23,7 +23,7 @@ final private class FishnetEvalCache(
               cp = pv.score.cp,
               mate = pv.score.mate,
             )
-            .invertIf((i + work.startPly) % 2 == 1), // fishnet evals are from POV
+            .invertIf((i + work.startPly) % 2 == 1), // shoginet evals are from POV
           time = none,
           nodes = eval.knodes.intNodes.some,
           nps = none,

@@ -10,7 +10,7 @@ import lila.common.config._
 final class Env(
     appConfig: Configuration,
     gameRepo: lila.game.GameRepo,
-    fishnetPlayer: lila.fishnet.Player,
+    shoginetPlayer: lila.shoginet.Player,
     onStart: lila.round.OnStart,
     gameCache: lila.game.Cached,
 )(implicit ec: scala.concurrent.ExecutionContext) {

@@ -147,10 +147,10 @@ object mon {
       val time = timer("round.move.time").withoutTags()
     }
     object error {
-      val client  = counter("round.error").withTag("from", "client")
-      val fishnet = counter("round.error").withTag("from", "fishnet")
-      val glicko  = counter("round.error").withTag("from", "glicko")
-      val other   = counter("round.error").withTag("from", "other")
+      val client   = counter("round.error").withTag("from", "client")
+      val shoginet = counter("round.error").withTag("from", "shoginet")
+      val glicko   = counter("round.error").withTag("from", "glicko")
+      val other    = counter("round.error").withTag("from", "other")
     }
     object titivate {
       val time = future("round.titivate.time")
@@ -519,10 +519,10 @@ object mon {
     }
     val googleTokenTime = timer("push.send.googleToken").withoutTags()
   }
-  object fishnet {
+  object shoginet {
     object client {
       object result {
-        private val c = counter("fishnet.client.result")
+        private val c = counter("shoginet.client.result")
         private def apply(r: String)(client: String) =
           c.withTags(tags("client" -> client, "result" -> r))
         val success     = apply("success") _
@@ -532,42 +532,42 @@ object mon {
         val notAcquired = apply("notAcquired") _
         val abort       = apply("abort") _
       }
-      def status(enabled: Boolean) = gauge("fishnet.client.status").withTag("enabled", enabled)
-      def version(v: String)       = gauge("fishnet.client.version").withTag("version", v)
-      def stockfish(v: String)     = gauge("fishnet.client.engine.stockfish").withTag("version", v)
-      def python(v: String)        = gauge("fishnet.client.python").withTag("version", v)
+      def status(enabled: Boolean) = gauge("shoginet.client.status").withTag("enabled", enabled)
+      def version(v: String)       = gauge("shoginet.client.version").withTag("version", v)
+      def stockfish(v: String)     = gauge("shoginet.client.engine.stockfish").withTag("version", v)
+      def python(v: String)        = gauge("shoginet.client.python").withTag("version", v)
     }
-    def queueTime(sender: String) = timer("fishnet.queue.db").withTag("sender", sender)
-    val acquire                   = future("fishnet.acquire")
+    def queueTime(sender: String) = timer("shoginet.queue.db").withTag("sender", sender)
+    val acquire                   = future("shoginet.acquire")
     def work(typ: String, as: String) =
-      gauge("fishnet.work").withTags(tags("type" -> typ, "for" -> as))
-    def oldest(as: String) = gauge("fishnet.oldest").withTag("for", as)
+      gauge("shoginet.work").withTags(tags("type" -> typ, "for" -> as))
+    def oldest(as: String) = gauge("shoginet.oldest").withTag("for", as)
     object move {
-      def time(client: String) = timer("fishnet.move.time").withTag("client", client)
-      val post                 = gauge("fishnet.move.post")
+      def time(client: String) = timer("shoginet.move.time").withTag("client", client)
+      val post                 = gauge("shoginet.move.post")
     }
     object analysis {
       object by {
-        def hash(client: String)    = gauge("fishnet.analysis.hash").withTag("client", client)
-        def threads(client: String) = gauge("fishnet.analysis.threads").withTag("client", client)
+        def hash(client: String)    = gauge("shoginet.analysis.hash").withTag("client", client)
+        def threads(client: String) = gauge("shoginet.analysis.threads").withTag("client", client)
         def movetime(client: String) =
-          histogram("fishnet.analysis.movetime").withTag("client", client)
-        def node(client: String)   = histogram("fishnet.analysis.node").withTag("client", client)
-        def nps(client: String)    = histogram("fishnet.analysis.nps").withTag("client", client)
-        def depth(client: String)  = histogram("fishnet.analysis.depth").withTag("client", client)
-        def pvSize(client: String) = histogram("fishnet.analysis.pvSize").withTag("client", client)
+          histogram("shoginet.analysis.movetime").withTag("client", client)
+        def node(client: String)   = histogram("shoginet.analysis.node").withTag("client", client)
+        def nps(client: String)    = histogram("shoginet.analysis.nps").withTag("client", client)
+        def depth(client: String)  = histogram("shoginet.analysis.depth").withTag("client", client)
+        def pvSize(client: String) = histogram("shoginet.analysis.pvSize").withTag("client", client)
         def pv(client: String, isLong: Boolean) =
-          counter("fishnet.analysis.pvs").withTags(tags("client" -> client, "long" -> isLong))
+          counter("shoginet.analysis.pvs").withTags(tags("client" -> client, "long" -> isLong))
         def totalMeganode(client: String) =
-          counter("fishnet.analysis.total.meganode").withTag("client", client)
+          counter("shoginet.analysis.total.meganode").withTag("client", client)
         def totalSecond(client: String) =
-          counter("fishnet.analysis.total.second").withTag("client", client)
+          counter("shoginet.analysis.total.second").withTag("client", client)
       }
-      def requestCount(tpe: String) = counter("fishnet.analysis.request").withTag("type", tpe)
-      val evalCacheHits             = histogram("fishnet.analysis.evalCacheHits").withoutTags()
+      def requestCount(tpe: String) = counter("shoginet.analysis.request").withTag("type", tpe)
+      val evalCacheHits             = histogram("shoginet.analysis.evalCacheHits").withoutTags()
     }
     object http {
-      def request(hit: Boolean) = counter("fishnet.http.acquire").withTag("hit", hit)
+      def request(hit: Boolean) = counter("shoginet.http.acquire").withTag("hit", hit)
     }
   }
   object study {

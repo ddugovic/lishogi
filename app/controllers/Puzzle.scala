@@ -338,7 +338,7 @@ final class Puzzle(
           { case (sfensStr, source) =>
             val sfens =
               augmentString(sfensStr).linesIterator.map(shogi.format.forsyth.Sfen.clean).toList
-            env.fishnet.api.addPuzzles(sfens.take(5), source, me.id) inject Redirect(
+            env.shoginet.api.addPuzzles(sfens.take(5), source, me.id) inject Redirect(
               routes.Puzzle.submitted(),
             )
           },
@@ -350,7 +350,7 @@ final class Puzzle(
       val fixed = name.map(_.trim).filter(_.nonEmpty)
       fixed.fold(fuccess(ctx.me))(env.user.repo.enabledNamed) flatMap { userOpt =>
         userOpt ?? { u =>
-          (env.puzzle.api.puzzle.submitted(u, page) zip env.fishnet.api.queuedPuzzles(
+          (env.puzzle.api.puzzle.submitted(u, page) zip env.shoginet.api.queuedPuzzles(
             u.id,
           )) dmap some
         } map { case res =>

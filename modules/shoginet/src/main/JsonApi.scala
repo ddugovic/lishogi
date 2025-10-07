@@ -1,4 +1,4 @@
-package lila.fishnet
+package lila.shoginet
 
 import play.api.libs.json._
 
@@ -12,8 +12,8 @@ import shogi.variant.Variant
 import lila.common.IpAddress
 import lila.common.Json._
 import lila.common.Maths
-import lila.fishnet.{ Work => W }
 import lila.game.FairyConversion.Kyoto
+import lila.shoginet.{ Work => W }
 import lila.tree.Eval.Cp
 import lila.tree.Eval.JsonHandlers._
 import lila.tree.Eval.Mate
@@ -21,7 +21,7 @@ import lila.tree.Eval.Mate
 object JsonApi {
 
   sealed trait Request {
-    val shoginet: Request.Fishnet
+    val shoginet: Request.Shoginet
     val yaneuraou: Request.Engine
     val fairy: Request.Engine
 
@@ -42,7 +42,7 @@ object JsonApi {
 
     sealed trait Result
 
-    case class Fishnet(
+    case class Shoginet(
         version: Client.Version,
         python: Option[Client.Python],
         apikey: Client.Key,
@@ -68,13 +68,13 @@ object JsonApi {
     }
 
     case class Acquire(
-        shoginet: Fishnet,
+        shoginet: Shoginet,
         yaneuraou: BaseEngine,
         fairy: BaseEngine,
     ) extends Request
 
     case class PostMove(
-        shoginet: Fishnet,
+        shoginet: Shoginet,
         yaneuraou: FullEngine,
         fairy: FullEngine,
         move: MoveResult,
@@ -89,7 +89,7 @@ object JsonApi {
     }
 
     case class PostAnalysis(
-        shoginet: Fishnet,
+        shoginet: Shoginet,
         yaneuraou: FullEngine,
         fairy: FullEngine,
         analysis: List[Option[Evaluation.OrSkipped]],
@@ -103,7 +103,7 @@ object JsonApi {
     }
 
     case class CompleteAnalysis(
-        shoginet: Fishnet,
+        shoginet: Shoginet,
         yaneuraou: FullEngine,
         fairy: FullEngine,
         analysis: List[Evaluation.OrSkipped],
@@ -122,7 +122,7 @@ object JsonApi {
     }
 
     case class PartialAnalysis(
-        shoginet: Fishnet,
+        shoginet: Shoginet,
         yaneuraou: FullEngine,
         fairy: FullEngine,
         analysis: List[Option[Evaluation.OrSkipped]],
@@ -161,7 +161,7 @@ object JsonApi {
     }
 
     case class PostPuzzle(
-        shoginet: Fishnet,
+        shoginet: Shoginet,
         yaneuraou: FullEngine,
         fairy: FullEngine,
         result: Boolean,
@@ -169,7 +169,7 @@ object JsonApi {
         with Result {}
 
     case class PostPuzzleVerified(
-        shoginet: Fishnet,
+        shoginet: Shoginet,
         yaneuraou: FullEngine,
         fairy: FullEngine,
         result: Option[CompletedPuzzle],
@@ -273,7 +273,7 @@ object JsonApi {
       Json.reads[Request.EngineOptions]
     implicit val BaseEngineReads: Reads[Request.BaseEngine]  = Json.reads[Request.BaseEngine]
     implicit val FullEngineReads: Reads[Request.FullEngine]  = Json.reads[Request.FullEngine]
-    implicit val FishnetReads: Reads[Request.Fishnet]        = Json.reads[Request.Fishnet]
+    implicit val ShoginetReads: Reads[Request.Shoginet]      = Json.reads[Request.Shoginet]
     implicit val AcquireReads: Reads[Request.Acquire]        = Json.reads[Request.Acquire]
     implicit val MoveResultReads: Reads[Request.MoveResult]  = Json.reads[Request.MoveResult]
     implicit val PostMoveReads: Reads[Request.PostMove]      = Json.reads[Request.PostMove]

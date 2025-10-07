@@ -1,4 +1,4 @@
-package lila.fishnet
+package lila.shoginet
 
 import scala.util.Failure
 import scala.util.Success
@@ -103,7 +103,7 @@ object Client {
         case Success(_) =>
           Failure(
             new Exception(
-              s"Version $v is no longer supported. Please restart fishnet to upgrade.",
+              s"Version $v is no longer supported. Please restart shoginet to upgrade.",
             ),
           )
         case Failure(error) => Failure(error)

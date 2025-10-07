@@ -22,9 +22,9 @@ final class Analyse(
   def requestAnalysis(id: String) =
     Auth { implicit ctx => me =>
       OptionFuResult(env.game.gameRepo game id) { game =>
-        env.fishnet.analyser(
+        env.shoginet.analyser(
           game,
-          lila.fishnet.Work.Sender(
+          lila.shoginet.Work.Sender(
             userId = me.id.some,
             postGameStudy = none,
             ip = HTTPRequest.lastRemoteAddress(ctx.req).some,
@@ -45,7 +45,7 @@ final class Analyse(
     else
       gameC.preloadUsers(pov.game) >> RedirectAtSfen(pov) {
         (env.analyse.analyser get pov.game) zip
-          (!pov.game.metadata.analysed ?? env.fishnet.api.userAnalysisExists(pov.gameId)) zip
+          (!pov.game.metadata.analysed ?? env.shoginet.api.userAnalysisExists(pov.gameId)) zip
           (pov.game.simulId ?? env.simul.repo.find) zip
           roundC.getWatcherChat(pov.game) zip
           env.bookmark.api.exists(pov.game, ctx.me) zip
