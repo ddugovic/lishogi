@@ -39,7 +39,11 @@ final class FormFactory {
     )(AiConfig.from)(_.>>)
       .verifying("invalidSfen", _.validSfen)
       .verifying("Invalid timemode", _.validTimeMode(ctx.isAuth))
-      .verifying("Can't play that time control with this variant", _.timeControlNonStandard),
+      .verifying("Can't play that time control with this variant", _.timeControlNonStandard)
+      .verifying(
+        "Bots can't challenge the highest difficulty",
+        _.validLevel(ctx.me.exists(_.isBot)),
+      ),
   )
 
   def friendFilled(sfen: Option[Sfen], variant: Option[Variant])(implicit

@@ -75,6 +75,9 @@ case class AiConfig(
 
   def timeControlNonStandard =
     variant.standard || time >= 1 || byoyomi >= 10 || increment >= 5
+
+  def validLevel(isBot: Boolean) =
+    !isBot || level < 10
 }
 
 object AiConfig extends BaseConfig {
