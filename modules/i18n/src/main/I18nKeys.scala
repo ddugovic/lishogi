@@ -678,6 +678,7 @@ object I18nKeys {
   val `background` = new I18nKey("background")
   val `light` = new I18nKey("light")
   val `dark` = new I18nKey("dark")
+  val `systemBackground` = new I18nKey("systemBackground")
   val `transparent` = new I18nKey("transparent")
   val `customTheme` = new I18nKey("customTheme")
   val `backgroundImageUrl` = new I18nKey("backgroundImageUrl")

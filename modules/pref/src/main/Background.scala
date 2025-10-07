@@ -9,13 +9,15 @@ class Background private[pref] (val key: String) {
 
 object Background {
 
-  val dark  = new Background("dark")
-  val light = new Background("light")
+  val system = new Background("system")
+  val dark   = new Background("dark")
+  val light  = new Background("light")
 
-  val default = dark
+  val default = system
 
   val all = List(
     default,
+    dark,
     light,
     new Background("transp"),
     new Background("custom"),

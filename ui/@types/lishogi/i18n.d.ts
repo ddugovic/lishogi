@@ -910,6 +910,7 @@ declare global {
     | 'background'
     | 'light'
     | 'dark'
+    | 'systemBackground'
     | 'transparent'
     | 'customTheme'
     | 'backgroundImageUrl'

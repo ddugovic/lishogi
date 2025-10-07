@@ -5,7 +5,7 @@ import { h, type VNode } from 'snabbdom';
 import { type CustomBackgroundData, colors, cssVariableName } from './custom-background';
 import { bind, type Close, header, type Open, validateUrl } from './util';
 
-type Key = 'light' | 'dark' | 'transp' | 'custom';
+type Key = 'system' | 'dark' | 'light' | 'transp' | 'custom';
 
 export interface BackgroundCtrl {
   list: Background[];
@@ -34,8 +34,9 @@ export function ctrl(
   close: Close,
 ): BackgroundCtrl {
   const list: Background[] = [
-    { key: 'light', name: i18n('light') },
+    { key: 'system', name: i18n('systemBackground') },
     { key: 'dark', name: i18n('dark') },
+    { key: 'light', name: i18n('light') },
     { key: 'transp', name: i18n('transparent') },
   ];
   if (document.body.dataset.user) list.push({ key: 'custom', name: i18n('custom') });
@@ -155,6 +156,37 @@ function applyBackground(data: BackgroundData, list: Background[]) {
     document.body.classList.add('custom-background-img');
   } else if (key !== 'custom' || !data.customBackground?.bgImg) {
     document.body.classList.remove('custom-background-img');
+  }
+
+  updateMetaThemeColor(
+    key,
+    key === 'light' || (key === 'custom' && !!data.customBackground?.light),
+  );
+}
+
+function updateMetaThemeColor(background: Key, isLight: boolean): void {
+  const existingMeta = document.querySelectorAll('meta[name="theme-color"]');
+  existingMeta.forEach(meta => {
+    meta.remove();
+  });
+
+  if (background === 'system') {
+    const lightMeta = document.createElement('meta');
+    lightMeta.name = 'theme-color';
+    lightMeta.content = '#dbd7d1';
+    lightMeta.media = '(prefers-color-scheme: light)';
+    document.head.appendChild(lightMeta);
+
+    const darkMeta = document.createElement('meta');
+    darkMeta.name = 'theme-color';
+    darkMeta.content = '#2e2a24';
+    darkMeta.media = '(prefers-color-scheme: dark)';
+    document.head.appendChild(darkMeta);
+  } else {
+    const meta = document.createElement('meta');
+    meta.name = 'theme-color';
+    meta.content = isLight ? '#dbd7d1' : '#2e2a24';
+    document.head.appendChild(meta);
   }
 }
 

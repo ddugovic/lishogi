@@ -220,7 +220,7 @@ object DataForm {
 
   val bg = Form(
     single(
-      "bg" -> text.verifying(List("light", "dark", "transp", "custom") contains _),
+      "bg" -> text.verifying(List("system", "dark", "light", "transp", "custom") contains _),
     ),
   )
 

@@ -29,8 +29,13 @@ object layout {
       metaCsp(csp getOrElse defaultCsp)
     def metaThemeColor(implicit ctx: Context): Frag =
       raw {
-        s"""<meta name="theme-color" content="${if (ctx.pref.isLightBackground) "#dbd7d1"
-          else "#2e2a24"}">"""
+        if (ctx.pref.background == "system") {
+          s"""<meta name="theme-color" content="#dbd7d1" media="(prefers-color-scheme: light)">
+      <meta name="theme-color" content="#2e2a24" media="(prefers-color-scheme: dark)">"""
+        } else {
+          s"""<meta name="theme-color" content="${if (ctx.pref.isLightBackground) "#dbd7d1"
+            else "#2e2a24"}">"""
+        }
       }
     def backgroundClass(bg: String, activeCustomBackground: Option[lila.pref.CustomBackground]) =
       activeCustomBackground

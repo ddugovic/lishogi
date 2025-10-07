@@ -24,6 +24,7 @@ ${theme !== defaultTheme ? `@use '../${theme}' as *;` : ''}
 
     const vars = themeVars[theme];
     const varKeys = Object.keys(vars).sort();
+    let varOutput = '';
 
     varKeys.forEach(name => {
       const value = vars[name];
@@ -33,14 +34,25 @@ ${theme !== defaultTheme ? `@use '../${theme}' as *;` : ''}
         themeVars[defaultTheme][name] === value
       )
         console.warn(`Redundant variable repetition: $${name}: ${value}in ${theme}`);
-      output += cssVariable(name, value);
+      varOutput += cssVariable(name, value);
     });
 
     extracted.forEach(name => {
       const v = colorFunction(name, varKeys);
-      if (v) output += cssVariable(name, v);
+      if (v) varOutput += cssVariable(name, v);
     });
-    output += '}\n\n';
+
+    output += varOutput;
+    output += '}\n';
+
+    if (theme === 'light') {
+      output += '\n';
+      output += `@media (prefers-color-scheme: ${theme}) {\n`;
+      output += '  html.system {\n';
+      output += varOutput;
+      output += '  }\n';
+      output += '}\n';
+    }
 
     await writeFile(path.join(outDir, `_${theme}-vars.scss`), output);
   }
