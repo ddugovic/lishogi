@@ -1,4 +1,5 @@
 import { clockShow, clockToPerf } from 'common/clock';
+import { useJapanese } from 'common/common';
 import { icons } from 'common/icons';
 import { bind } from 'common/snabbdom';
 import { i18n, i18nFormat, i18nPluralSame } from 'i18n';
@@ -43,11 +44,30 @@ function presetPerf(p: Preset): Perf {
   return p.timeMode == 2 ? 'correspondence' : clockToPerf(p.lim * 60, p.byo, p.inc, p.per);
 }
 
+function fullWidthNumber(n: number): string {
+  return n
+    .toString()
+    .split('')
+    .map(d => String.fromCharCode(d.charCodeAt(0) + 0xfee0))
+    .join('');
+}
+
+function presetLabel(p: Preset, perf: Perf) {
+  const ja = useJapanese();
+  return ja && !p.lim && p.byo
+    ? `${fullWidthNumber(p.byo)}秒秒読み`
+    : ja && p.lim && !p.byo
+      ? `${fullWidthNumber(p.lim)}分切れ負け`
+      : ja && p.lim && p.byo
+        ? `${fullWidthNumber(p.lim)}分切れ${fullWidthNumber(p.byo)}秒`
+        : i18nPerf(perf);
+}
+
 function presetButton(p: Preset, ctrl: LobbyController): VNode {
   const clock =
     p.timeMode == 2 ? i18nPluralSame('nbDays', p.days) : clockShow(p.lim * 60, p.byo, p.inc, p.per);
   const perf = presetPerf(p);
-  const perfName = p.ai ? `AI - ${i18nFormat('levelX', p.ai).toLowerCase()}` : i18nPerf(perf);
+  const label = p.ai ? `AI - ${i18nFormat('levelX', p.ai).toLowerCase()}` : presetLabel(p, perf);
   const isReady =
     !!p.ai ||
     (p.timeMode == 2
@@ -69,7 +89,7 @@ function presetButton(p: Preset, ctrl: LobbyController): VNode {
     },
     [
       h('div.clock', clock),
-      h('div.perf', perfName),
+      h('div.perf', label),
       isReady
         ? h('i.check-mark', {
             attrs: { 'data-icon': icons.circleFull, title: i18n('readyToPlay') },
