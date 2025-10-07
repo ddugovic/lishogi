@@ -128,7 +128,8 @@ function selectSPStart(ctrl: EditorCtrl, s: Selected): (e: MouchEvent) => void {
         color: s[0],
         role: s[1],
       };
-      ctrl.shogiground.dragNewPiece(piece, e, true);
+      if (ctrl.shogiground.state.draggable.enabled) ctrl.shogiground.dragNewPiece(piece, e, true);
+      else ctrl.shogiground.selectPiece(piece, true, true);
     }
     ctrl.redraw();
   };
@@ -140,8 +141,14 @@ function selectSPEnd(ctrl: EditorCtrl, s: Selected): (e: MouchEvent) => void {
 
     e.preventDefault();
     const pos = eventPosition(e) || ctrl.lastTouchMovePos;
-    const dragged = ctrl.shogiground.state.draggable.current?.piece as Piece | undefined;
-    ctrl.shogiground.selectPiece(null);
+    const isDraggable = ctrl.shogiground.state.draggable.enabled;
+    const dragged = (
+      isDraggable
+        ? ctrl.shogiground.state.draggable.current?.piece
+        : ctrl.shogiground.state.selectedPiece
+    ) as Piece | undefined;
+
+    if (isDraggable) ctrl.shogiground.selectPiece(null);
 
     // back to pointer if we click on selected
     if (prevSelected && compareSelected(prevSelected, s)) {
