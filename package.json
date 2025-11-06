@@ -38,10 +38,10 @@
     "ui:type-check": "pnpm -F './ui/*' -F './ui/@build/*' exec sh -c 'pwd && tsc --noEmit'",
     "ui:format": "biome format && prettier --cache --check .",
     "ui:format:fix": "biome format --write && prettier --cache --write .",
-    "i18n:lint": "pnpm -F @bin/utils run trans-lint",
+    "i18n:lint": "pnpm -F @bin/utils run trans:lint",
     "server:run": "./lila.sh",
-    "server:i18n": "pnpm -F @bin/utils run trans-dump",
-    "server:icons": "pnpm -F @bin/utils run icons-dump",
+    "server:i18n": "pnpm -F @bin/utils run trans:dump",
+    "server:icons": "pnpm -F @bin/utils run icons:dump",
     "server:modules": "pnpm -F @bin/utils run module-deps",
     "server:format": "./lila.sh 'scalafmtCheck;scalafmtSbtCheck;'",
     "server:format:fix": "./lila.sh 'scalafmtAll;scalafmtSbt;'"

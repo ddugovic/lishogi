@@ -9,10 +9,11 @@
   },
   "scripts": {
     "favicons": "./scripts/favicons.sh",
-    "sound-mp3": "./scripts/sound-mp3.sh",
-    "icons-dump": "tsx ./scripts/icons-dump.ts",
-    "trans-dump": "tsx ./scripts/trans-dump.ts",
-    "trans-lint": "./scripts/trans-lint.py ../translation/dest/*/*.xml",
+    "sound:generate": "./scripts/sound-generate.sh",
+    "sound:trim": "./scripts/sound-trim.sh",
+    "icons:dump": "tsx ./scripts/icons-dump.ts",
+    "trans:dump": "tsx ./scripts/trans-dump.ts",
+    "trans:lint": "./scripts/trans-lint.py ../translation/dest/*/*.xml",
     "module-deps": "PYTHONHASHSEED=0 ./scripts/module-deps.py"
   }
 }
