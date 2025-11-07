@@ -16,7 +16,6 @@ export interface InsightFilter {
   variant: VariantKey;
   color: Color | 'both';
   rated: 'yes' | 'no' | 'both';
-  speeds: Speed[];
   computer: 'yes' | 'no' | 'both';
   custom: InsightCustom;
 }
@@ -136,14 +135,6 @@ export const StatusObject = {
 export type StatusId = (typeof StatusObject)[keyof typeof StatusObject];
 export type StatusKey = keyof typeof StatusObject;
 
-export const speeds: Speed[] = [
-  'ultraBullet',
-  'bullet',
-  'blitz',
-  'rapid',
-  'classical',
-  'correspondence',
-];
 export const variants: VariantKey[] = [
   'standard',
   'minishogi',

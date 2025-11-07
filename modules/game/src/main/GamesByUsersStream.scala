@@ -54,8 +54,7 @@ final class GamesByUsersStream()(implicit
         "id"        -> g.id,
         "rated"     -> g.rated,
         "variant"   -> g.variant.key,
-        "speed"     -> g.speed.key,
-        "perf"      -> PerfPicker.key(g),
+        "perf"      -> g.perfKey,
         "createdAt" -> g.createdAt,
         "status"    -> g.status.id,
         "players" -> JsObject(g.players map { p =>

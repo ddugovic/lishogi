@@ -47,7 +47,7 @@ function renderHookOrSeek(hs: Hook | Seek) {
       h(
         'span',
         {
-          attrs: { 'data-icon': getPerfIcon(hs.perf || hs.variant || 'standard') },
+          attrs: { 'data-icon': getPerfIcon(hs.perf) },
         },
         isRated ? i18n('rated') : i18n('casual'),
       ),

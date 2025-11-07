@@ -120,7 +120,7 @@ object BSONHandlers {
           doc   <- r.getO[Bdoc]("schedule")
           freq  <- doc.getAsOpt[Schedule.Freq]("freq")
           speed <- doc.getAsOpt[Schedule.Speed]("speed")
-        } yield Schedule(format, freq, speed, variant, position, startsAt, conditions),
+        } yield Schedule(format, freq, speed, variant, startsAt, conditions),
         nbPlayers = r int "nbPlayers",
         createdAt = r date "createdAt",
         createdBy = r strO "createdBy" getOrElse lishogiId,
@@ -311,8 +311,8 @@ object BSONHandlers {
           rank = r int "r",
           rankRatio = r.get[LeaderboardApi.Ratio]("w"),
           freq = r intO "f" flatMap Schedule.Freq.byId,
-          speed = r intO "p" flatMap Schedule.Speed.byId,
-          perf = PerfType.byId get r.int("v") err "Invalid leaderboard perf",
+          speed = r intO "p" map Schedule.Speed.closest,
+          perf = PerfType.byId(r.int("v")) | PerfType.RealTime,
           date = r date "d",
         )
 
@@ -326,7 +326,7 @@ object BSONHandlers {
           "r"   -> o.rank,
           "w"   -> o.rankRatio,
           "f"   -> o.freq.map(_.id),
-          "p"   -> o.speed.map(_.id),
+          "p"   -> o.speed.map(_.factor),
           "v"   -> o.perf.id,
           "d"   -> w.date(o.date),
         )

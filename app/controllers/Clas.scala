@@ -184,7 +184,7 @@ final class Clas(
 
   def progress(id: String, key: String, days: Int) =
     Secure(_.Teacher) { implicit ctx => me =>
-      lila.rating.PerfType(key) ?? { perfType =>
+      lila.rating.PerfType.byKey(key) ?? { perfType =>
         WithClass(me, id) { clas =>
           env.clas.api.student.activeWithUsers(clas) flatMap { students =>
             Reasonable(clas, students, "progress") {

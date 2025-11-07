@@ -4,7 +4,6 @@ package templating
 import play.api.i18n.Lang
 
 import shogi.Mode
-import shogi.Speed
 import shogi.variant.Variant
 
 import lila.i18n.{ I18nKeys => trans }
@@ -82,16 +81,6 @@ trait SetupHelper { self: I18nHelper =>
       shogi.variant.Kyotoshogi,
       shogi.variant.Checkshogi,
     ).map(variantTuple(encode))
-
-  def translatedSpeedChoices(implicit lang: Lang) =
-    Speed.limited map { s =>
-      val minutes = ~s.range.maxOption.map(m => m / 60 + 1)
-      (
-        s.id.toString,
-        s.toString + " - " + trans.lessThanNbMinutes.pluralSameTxt(minutes),
-        none,
-      )
-    }
 
   def translatedBoardLayoutChoices(implicit lang: Lang) =
     List(

@@ -233,10 +233,7 @@ object teacherDashboard {
         label(trans.variant()),
         div(cls := "progress-choices")(
           List(
-            PerfType.Bullet,
-            PerfType.Blitz,
-            PerfType.Rapid,
-            PerfType.Classical,
+            PerfType.RealTime,
             PerfType.Correspondence,
             PerfType.Puzzle,
           ).map { pt =>

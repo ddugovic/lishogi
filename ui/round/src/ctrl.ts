@@ -396,13 +396,7 @@ export default class RoundController {
 
   replayEnabledByPref = (): boolean => {
     const d = this.data;
-    return (
-      d.pref.replay === 2 ||
-      (d.pref.replay === 1 &&
-        (d.game.speed === 'classical' ||
-          d.game.speed === 'unlimited' ||
-          d.game.speed === 'correspondence'))
-    );
+    return d.pref.replay === 2 || (d.pref.replay === 1 && !d.clock);
   };
 
   isLate = (): boolean => this.replaying() && status.playing(this.data);

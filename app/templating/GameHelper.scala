@@ -43,15 +43,14 @@ trait GameHelper {
       routes.Export.gameThumbnail(p.gameId).url,
     )
 
-  // Rapid Shogi - Dalliard vs Smith
+  // Shogi - Dalliard vs Smith
   // Chushogi - PeterFile vs FilePeter
   def titleGame(g: Game)(implicit lang: Lang) = {
-    val perf    = g.perfType ?? (_.trans)
     val variant = g.variant.standard ?? s" ${trans.shogi.txt()}"
-    s"$perf$variant - ${playerText(g.sentePlayer)} vs ${playerText(g.gotePlayer)}"
+    s"${g.perfType.trans}$variant - ${playerText(g.sentePlayer)} vs ${playerText(g.gotePlayer)}"
   }
 
-  // Beethoven played Handel - Rated Blitz Shogi (5+3) - Handel won! Click to replay, analyse, and discuss the game!
+  // Beethoven played Handel - Rated Shogi (5|3) - Handel won! Click to replay, analyse, and discuss the game!
   def describePov(pov: Pov)(implicit lang: Lang) = {
     import pov._
     val sentePlayer = playerText(game.player(shogi.Sente), withRating = false)
@@ -64,7 +63,7 @@ trait GameHelper {
       else
         List(
           modeName(game.mode),
-          game.perfType ?? (_.trans),
+          game.perfType.trans,
           game.variant.standard ?? trans.shogi.txt(),
           game.clock.map(_.config) ?? { clock => s"(${clock.show})" },
         ).filter(_.nonEmpty).mkString(" ")
@@ -284,11 +283,10 @@ trait GameHelper {
     )(shogigroundEmpty(variant, pov.color))
   }
 
-  // Casual Rapid Shogi (10|0) - Challenge from Wanderer (1500)
+  // Casual Shogi (10|0) - Challenge from Wanderer (1500)
   def challengeTitle(c: lila.challenge.Challenge)(implicit lang: Lang) = {
-    val perf    = c.perfType.trans
-    val variant = c.variant.standard ?? s" ${trans.shogi.txt()}"
-    val clock   = c.clock.map(_.config) ?? { clock => s" ${clock.show}" }
+    val perf  = c.perfType.trans
+    val clock = c.clock.map(_.config) ?? { clock => s" ${clock.show}" }
     val players =
       if (c.isOpen) trans.openChallenge.txt()
       else {
@@ -299,7 +297,7 @@ trait GameHelper {
           trans.xChallengesY.txt(challenger, s"${usernameOrId(dest.id)} (${dest.rating.show})")
         }
       }
-    s"${modeName(c.mode)} ${perf}${variant}$clock - $players"
+    s"${modeName(c.mode)} ${perf}$clock - $players"
   }
 
   def challengeOpenGraph(c: lila.challenge.Challenge)(implicit lang: Lang) =

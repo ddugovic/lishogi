@@ -34,7 +34,7 @@ final class PerfStatIndexer(
           readPreference = ReadPreference.secondaryPreferred,
         )
         .fold(PerfStat.init(user.id, perfType)) {
-          case (perfStat, game) if game.perfType.contains(perfType) =>
+          case (perfStat, game) if game.perfType == perfType =>
             Pov.ofUserId(game, user.id).fold(perfStat)(perfStat.agg)
           case (perfStat, _) => perfStat
         }
@@ -55,11 +55,9 @@ final class PerfStatIndexer(
       .void
 
   private def addPov(pov: Pov, userId: String): Funit =
-    pov.game.perfType ?? { perfType =>
-      storage.find(userId, perfType) flatMap {
-        _ ?? { perfStat =>
-          storage.update(perfStat agg pov)
-        }
+    storage.find(userId, pov.game.perfType) flatMap {
+      _ ?? { perfStat =>
+        storage.update(perfStat agg pov)
       }
     }
 }

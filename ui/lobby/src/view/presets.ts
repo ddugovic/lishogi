@@ -41,7 +41,7 @@ export function presetHooks(ctrl: LobbyController): Hooks {
 }
 
 function presetPerf(p: Preset): Perf {
-  return p.timeMode == 2 ? 'correspondence' : clockToPerf(p.lim * 60, p.byo, p.inc, p.per);
+  return p.timeMode == 2 ? 'correspondence' : 'realTime';
 }
 
 function fullWidthNumber(n: number): string {
@@ -52,15 +52,18 @@ function fullWidthNumber(n: number): string {
     .join('');
 }
 
-function presetLabel(p: Preset, perf: Perf) {
-  const ja = useJapanese();
-  return ja && !p.lim && p.byo
-    ? `${fullWidthNumber(p.byo)}秒秒読み`
-    : ja && p.lim && !p.byo
-      ? `${fullWidthNumber(p.lim)}分切れ負け`
-      : ja && p.lim && p.byo
-        ? `${fullWidthNumber(p.lim)}分切れ${fullWidthNumber(p.byo)}秒`
-        : i18nPerf(perf);
+function presetLabel(p: Preset, perf: Perf): string | undefined {
+  if (useJapanese()) {
+    return !p.lim && p.byo
+      ? `${fullWidthNumber(p.byo)}秒秒読み`
+      : p.lim && !p.byo
+        ? `${fullWidthNumber(p.lim)}分切れ負け`
+        : p.lim && p.byo
+          ? `${fullWidthNumber(p.lim)}分切れ${fullWidthNumber(p.byo)}秒`
+          : i18nPerf(perf);
+  } else if (perf !== 'realTime') {
+    return i18nPerf(perf);
+  } else return;
 }
 
 function presetButton(p: Preset, ctrl: LobbyController): VNode {

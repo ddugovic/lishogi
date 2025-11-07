@@ -4,7 +4,6 @@ import shogi.Situation
 import shogi.{ Game => ShogiGame }
 
 import lila.game.Game
-import lila.game.PerfPicker
 import lila.game.Player
 import lila.lobby.actorApi.JoinHook
 import lila.lobby.actorApi.JoinSeek
@@ -72,8 +71,8 @@ final private class Biter(
     }
 
   private def makeGame(hook: Hook, senteUser: Option[User], goteUser: Option[User]) = {
-    val clock      = hook.clock.toClock
-    val perfPicker = PerfPicker.mainOrDefault(shogi.Speed(clock.config), hook.realVariant, none)
+    val clock    = hook.clock.toClock
+    val perfType = lila.rating.PerfType.from(hook.realVariant, hasClock = true)
     Game
       .make(
         shogi = ShogiGame(
@@ -81,8 +80,8 @@ final private class Biter(
           clock = clock.some,
         ),
         initialSfen = None,
-        sentePlayer = Player.make(shogi.Sente, senteUser, perfPicker),
-        gotePlayer = Player.make(shogi.Gote, goteUser, perfPicker),
+        sentePlayer = Player.make(shogi.Sente, senteUser, perfType),
+        gotePlayer = Player.make(shogi.Gote, goteUser, perfType),
         mode = hook.realMode,
         proMode = false,
         source = lila.game.Source.Lobby,
@@ -92,7 +91,7 @@ final private class Biter(
   }
 
   private def makeGame(seek: Seek, senteUser: Option[User], goteUser: Option[User]) = {
-    val perfPicker = PerfPicker.mainOrDefault(shogi.Speed(none), seek.realVariant, seek.daysPerTurn)
+    val perfType = lila.rating.PerfType.from(seek.realVariant, hasClock = false)
     Game
       .make(
         shogi = ShogiGame(
@@ -100,8 +99,8 @@ final private class Biter(
           clock = none,
         ),
         initialSfen = None,
-        sentePlayer = Player.make(shogi.Sente, senteUser, perfPicker),
-        gotePlayer = Player.make(shogi.Gote, goteUser, perfPicker),
+        sentePlayer = Player.make(shogi.Sente, senteUser, perfType),
+        gotePlayer = Player.make(shogi.Gote, goteUser, perfType),
         mode = seek.realMode,
         proMode = false,
         source = lila.game.Source.Lobby,
@@ -122,7 +121,7 @@ final private class Biter(
       !hook.userId.??(u.blocking.contains) &&
       !hook.user.??(_.blocking).contains(u.id) &&
       hook.realRatingRange.fold(true) { range =>
-        (hook.perfType map u.ratingAt) ?? range.contains
+        range.contains(u.ratingAt(hook.perfType))
       }
     }
 
@@ -132,7 +131,7 @@ final private class Biter(
       !(user.blocking contains seek.user.id) &&
       !(seek.user.blocking contains user.id) &&
       seek.realRatingRange.fold(true) { range =>
-        (seek.perfType map user.ratingAt) ?? range.contains
+        range.contains(user.ratingAt(seek.perfType))
       }
 
   def showHookTo(hook: Hook, member: LobbySocket.Member): Boolean =

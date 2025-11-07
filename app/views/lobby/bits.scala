@@ -44,7 +44,7 @@ object bits {
               leaderboard map { l =>
                 tr(
                   td(lightUserLink(l.user)),
-                  lila.rating.PerfType(l.perfKey) map { pt =>
+                  lila.rating.PerfType.byKey(l.perfKey) map { pt =>
                     td(cls := "text", dataIcon := pt.icon)(l.rating)
                   },
                   td(ratingProgress(l.progress)),

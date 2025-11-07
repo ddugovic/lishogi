@@ -15,7 +15,6 @@ import shogi.Color
 import shogi.Gote
 import shogi.LagMetrics
 import shogi.Sente
-import shogi.Speed
 import shogi.format.usi.UciToUsi
 import shogi.format.usi.Usi
 
@@ -201,7 +200,7 @@ final class RoundSocket(
   ) >>- send(P.Out.boot)
 
   Bus.subscribeFun("tvSelect", "roundSocket", "tourStanding", "startGame", "finishGame") {
-    case TvSelect(gameId, speed, json) => send(Protocol.Out.tvSelect(gameId, speed, json))
+    case TvSelect(gameId, json) => send(Protocol.Out.tvSelect(gameId, json))
     case Tell(gameId, e @ BotConnected(color, v)) =>
       rounds.tell(gameId, e)
       send(Protocol.Out.botConnected(gameId, color, v))
@@ -255,11 +254,9 @@ object RoundSocket {
 
   def povDisconnectTimeout(pov: Pov): FiniteDuration =
     disconnectTimeout * {
-      pov.game.speed match {
-        case Speed.Classical => 3
-        case Speed.Rapid     => 2
-        case _               => 1
-      }
+      if (pov.game.isVerySlow) 3
+      else if (pov.game.isSlow) 2
+      else 1
     } / {
       pov.game.shogi.situation.materialImbalance match {
         case i if (pov.color.sente && i <= -4) || (pov.color.gote && i >= 4) => 3
@@ -383,8 +380,8 @@ object RoundSocket {
         s"r/ver $roomId $version $flags ${e.typ} ${e.data}"
       }
 
-      def tvSelect(gameId: Game.ID, speed: shogi.Speed, data: JsObject) =
-        s"tv/select $gameId ${speed.id} ${Json stringify data}"
+      def tvSelect(gameId: Game.ID, data: JsObject) =
+        s"tv/select $gameId ${Json stringify data}"
 
       def botConnected(gameId: Game.ID, color: Color, v: Boolean) =
         s"r/bot/online $gameId ${P.Out.color(color)} ${P.Out.boolean(v)}"

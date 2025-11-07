@@ -212,24 +212,3 @@ export function translateRole(role: Role): string {
       return '?';
   }
 }
-
-export function translateSpeed(speed: Speed): string {
-  switch (speed) {
-    case 'ultraBullet':
-      return i18n('ultrabullet');
-    case 'bullet':
-      return i18n('bullet');
-    case 'blitz':
-      return i18n('blitz');
-    case 'rapid':
-      return i18n('rapid');
-    case 'classical':
-      return i18n('classical');
-    case 'correspondence':
-      return i18n('correspondence');
-    case 'unlimited':
-      return i18n('unlimited');
-    default:
-      return speed || '';
-  }
-}

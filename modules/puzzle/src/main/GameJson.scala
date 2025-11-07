@@ -6,7 +6,6 @@ import play.api.libs.json._
 
 import lila.game.Game
 import lila.game.GameRepo
-import lila.game.PerfPicker
 import lila.i18n.defaultLang
 
 final private class GameJson(
@@ -54,7 +53,7 @@ final private class GameJson(
       .add("clock", game.clock.map(_.config.show))
 
   private def perfJson(game: Game) = {
-    val perfType = lila.rating.PerfType orDefault PerfPicker.key(game)
+    val perfType = game.perfType
     Json.obj(
       "icon" -> perfType.icon,
       "name" -> perfType.trans(defaultLang),

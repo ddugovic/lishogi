@@ -124,7 +124,7 @@ export function nbMoves(data: GameData, color: Color): number {
 }
 
 export function isSwitchable(data: GameData): boolean {
-  return !hasAi(data) && (!!data.simul || data.game.speed === 'correspondence');
+  return !hasAi(data) && (!!data.simul || !data.clock);
 }
 
 function bothPlayersHavePlayed(data: GameData): boolean {

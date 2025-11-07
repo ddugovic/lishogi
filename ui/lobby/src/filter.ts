@@ -69,7 +69,6 @@ export default class Filter {
       else {
         if (
           !f.variant?.includes(variant) ||
-          !f.speed?.includes((hook.s || 1).toString() /* ultrabullet = bullet */) ||
           (f.mode?.length == 1 && f.mode[0] != (hook.ra || 0).toString()) ||
           (f.increment?.length == 1 && f.increment[0] != hook.i.toString()) ||
           (f.byoyomi?.length == 1 && f.byoyomi[0] != hook.b.toString()) ||

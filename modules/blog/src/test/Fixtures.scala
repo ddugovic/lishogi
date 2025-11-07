@@ -333,7 +333,7 @@ object Fixtures {
 
 <li><a href="https://www.youtube.com/watch?v=wbxgu7M-P1E">IM John Bartholomew plays the lishogi variant bullet arena</a></li>
 
-<li><a href="https://www.youtube.com/watch?v=Czy1va4lhZg">NM Chess Network plays a lishogi blitz tournament</a></li>
+<li><a href="https://www.youtube.com/watch?v=Czy1va4lhZg">NM Chess Network plays a lishogi X tournament</a></li>
 
 <li><a href="https://www.youtube.com/watch?v=rrgrnlNEUOk">Lichess Master Atrophied explains variant rules</a></li>
 

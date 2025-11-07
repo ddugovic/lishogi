@@ -20,7 +20,8 @@ type ChartPerf = {
   color: string;
   borderDash: number[];
   symbol: PointStyle;
-  name: Perf | 'puzzle';
+  // bc
+  name: Perf | 'puzzle' | 'ultraBullet' | 'bullet' | 'blitz' | 'rapid' | 'classical';
 };
 
 type TimeButton = 'all' | '1y' | 'YTD' | '6m' | '3m' | '1m';
@@ -30,16 +31,18 @@ dayjs.extend(duration);
 dayjs.extend(dayOfYear);
 dayjs.extend(utc);
 
+const tinyDash = [1];
 const shortDash = [3];
 const noDash: number[] = [];
 const longDash = [10, 5];
 // order from RatingChartApi
 const styles: ChartPerf[] = [
-  { color: '#56B4E9', borderDash: noDash, symbol: 'circle', name: 'bullet' },
-  { color: '#0072B2', borderDash: noDash, symbol: 'rectRot', name: 'blitz' },
-  { color: '#009E73', borderDash: noDash, symbol: 'rect', name: 'rapid' },
-  { color: '#459f3b', borderDash: noDash, symbol: 'triangle', name: 'classical' },
-  { color: '#F0E442', borderDash: shortDash, symbol: 'triangle', name: 'correspondence' },
+  { color: '#56b3e942', borderDash: tinyDash, symbol: 'circle', name: 'bullet' },
+  { color: '#0071b269', borderDash: tinyDash, symbol: 'rectRot', name: 'blitz' },
+  { color: '#009e7471', borderDash: tinyDash, symbol: 'rect', name: 'rapid' },
+  { color: '#459f3b5e', borderDash: tinyDash, symbol: 'triangle', name: 'classical' },
+  { color: '#009E73', borderDash: noDash, symbol: 'rect', name: 'realTime' },
+  { color: '#F0E442', borderDash: noDash, symbol: 'triangle', name: 'correspondence' },
   { color: '#E69F00', borderDash: shortDash, symbol: 'circle', name: 'minishogi' },
   { color: '#D55E00', borderDash: shortDash, symbol: 'rectRot', name: 'chushogi' },
   { color: '#CC79A7', borderDash: shortDash, symbol: 'rect', name: 'kyotoshogi' },
@@ -136,6 +139,7 @@ function main(ratingHistoryOpts: { data: string; singlePerfName: string }): void
         },
         tooltip: {
           ...tooltipConfig,
+          displayColors: true,
           usePointStyle: true,
           yAlign: 'center',
           caretPadding: 10,

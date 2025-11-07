@@ -48,7 +48,7 @@ object index {
             hasAi,
             aiLevel,
             source,
-            perf,
+            variant,
             mode,
             turns,
             duration,

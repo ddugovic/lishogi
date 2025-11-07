@@ -15,7 +15,7 @@ case class Query(
     winner: Option[String] = None,
     loser: Option[String] = None,
     winnerColor: Option[Int] = None,
-    perf: Option[Int] = None,
+    variant: Option[Int] = None,
     source: Option[Int] = None,
     status: Option[Int] = None,
     plies: Range[Int] = Range.none,
@@ -38,7 +38,7 @@ case class Query(
       winner.nonEmpty ||
       loser.nonEmpty ||
       winnerColor.nonEmpty ||
-      perf.nonEmpty ||
+      variant.nonEmpty ||
       source.nonEmpty ||
       status.nonEmpty ||
       plies.nonEmpty ||

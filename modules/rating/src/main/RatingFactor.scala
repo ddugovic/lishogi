@@ -24,7 +24,7 @@ object RatingFactor {
     s.split(separator).toList.map(_.trim.split('=')) flatMap {
       case Array(ptk, fs) =>
         for {
-          pt <- PerfType(ptk)
+          pt <- PerfType.byKey(ptk)
           f  <- fs.toDoubleOption
         } yield pt -> RatingFactor(f)
       case _ => None

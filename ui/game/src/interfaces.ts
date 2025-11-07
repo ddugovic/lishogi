@@ -21,7 +21,6 @@ interface Game {
   startedAtPly?: number;
   startedAtStep?: number;
   source: Source;
-  speed: Speed;
   variant: Variant;
   winner?: Color;
   moveCentis?: number[];
@@ -44,7 +43,6 @@ export interface AnalyseGame {
   startedAtPly: number;
   startedAtStep: number;
   source: Source;
-  speed: Speed;
   variant: Variant;
   winner?: Color;
   moveCentis?: number[];

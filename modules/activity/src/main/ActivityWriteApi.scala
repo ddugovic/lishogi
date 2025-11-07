@@ -20,13 +20,12 @@ final class ActivityWriteApi(
     game.userIds
       .flatMap { userId =>
         for {
-          pt     <- game.perfType
           player <- game playerByUserId userId
         } yield for {
           a <- getOrCreate(userId)
           setGames = !game.isCorrespondence ?? $doc(
             ActivityFields.games -> a.games.orDefault
-              .add(pt, Score.make(game wonBy player.color, RatingProg make player)),
+              .add(game.perfType, Score.make(game wonBy player.color, RatingProg make player)),
           )
           setCorres = game.hasCorrespondenceClock ?? $doc(
             ActivityFields.corres -> a.corres.orDefault.add(GameId(game.id), false, true),

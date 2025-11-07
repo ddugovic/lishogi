@@ -2,7 +2,6 @@ import {
   type InsightFilter,
   type InsightFilterOptions,
   type InsightFilterWithoutCustom,
-  speeds,
   variants,
 } from './types';
 
@@ -12,7 +11,6 @@ export function defaultFilter(isBot: boolean): InsightFilter {
     variant: 'standard',
     color: 'both',
     rated: 'both',
-    speeds: speeds,
     computer: 'no',
     custom: {
       type: 'game',
@@ -32,6 +30,5 @@ export const allOptions: InsightFilterOptions = {
   variant: variants,
   color: ['both', 'sente', 'gote'],
   rated: ['both', 'yes', 'no'],
-  speeds: speeds,
   computer: ['both', 'yes', 'no'],
 };

@@ -1,4 +1,4 @@
-import { clockEstimateSeconds, clockToPerf } from 'common/clock';
+import { clockEstimateSeconds } from 'common/clock';
 import { debounce } from 'common/timings';
 import { idToVariant, variantToId } from 'common/variant';
 import { engineName } from 'shogi/engine-name';
@@ -176,18 +176,11 @@ export default class SetupCtrl {
   }
 
   perf(): Perf | undefined {
+    if (!this.validTime()) return;
     const v = this.variantKey();
     if (v === 'standard') {
-      if (!this.validTime()) return;
-      else if (this.isCorres()) return 'correspondence';
-      else {
-        return clockToPerf(
-          this.data.time * 60,
-          this.data.byoyomi,
-          this.data.increment,
-          this.data.periods,
-        );
-      }
+      if (this.isCorres()) return 'correspondence';
+      else return 'realTime';
     } else return v;
   }
 

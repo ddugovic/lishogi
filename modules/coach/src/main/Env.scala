@@ -30,7 +30,7 @@ final class Env(
     case lila.hub.actorApi.mod.SetPermissions(userId, permissions) =>
       api.toggleApproved(userId, permissions.has(Permission.Coach.dbKey)).unit
     case lila.game.actorApi.FinishGame(game, sente, gote) if game.rated =>
-      if (game.perfType.exists(lila.rating.PerfType.standard.contains)) {
+      if (lila.rating.PerfType.standard.contains(game.perfType)) {
         sente ?? api.setRating
         gote ?? api.setRating
       }.unit

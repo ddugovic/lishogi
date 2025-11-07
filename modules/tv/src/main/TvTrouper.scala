@@ -81,7 +81,7 @@ final private[tv] class TvTrouper(
           )
         },
       )
-      Bus.publish(lila.hub.actorApi.tv.TvSelect(game.id, game.speed, data), "tvSelect")
+      Bus.publish(lila.hub.actorApi.tv.TvSelect(game.id, data), "tvSelect")
       if (channel == Tv.Channel.Standard) {
         implicit def timeout = lila.tv.makeTimeout(100 millis)
         actorAsk(renderer.actor, actorApi.RenderFeaturedJs(game)) foreach { case html: String =>

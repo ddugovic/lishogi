@@ -6,11 +6,7 @@ export const seeks: () => Promise<Seek[]> = () => window.lishogi.xhr.json('GET',
 export const nowPlaying: () => Promise<Game[]> = () =>
   window.lishogi.xhr.json('GET', '/account/now-playing').then(o => o.nowPlaying);
 
-export function seekFromPreset(preset: Preset, opts: PresetOpts): Promise<any> {
-  const perf =
-    preset.timeMode == 2
-      ? 'correspondence'
-      : clockToPerf(preset.lim * 60, preset.byo, preset.inc, preset.per);
+  const perf = preset.timeMode == 2 ? 'correspondence' : 'realTime';
   const rating = opts.ratings?.[perf];
   const data = {
     variant: '1',

@@ -30,7 +30,7 @@ object user {
         clockIncrement,
         clockByoyomi,
         source,
-        perf,
+        variant,
         mode,
       ),
       table(

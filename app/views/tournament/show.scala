@@ -58,7 +58,7 @@ object show {
             s"${trans.duration.txt().toLowerCase}: ${tour.minutes}m. " +
             tour.winnerId.fold(trans.winnerIsNotYetDecided.txt()) { winnerId =>
               trans.xWon.txt(usernameOrId(winnerId))
-            }, // Jun 19, 2023 - Blitz Arena - 377 players, duration: 57m. Winner is not yet decided.
+            }, // Jun 19, 2023 - X Arena - 377 players, duration: 57m. Winner is not yet decided.
         )
         .some,
     )(

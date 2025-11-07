@@ -16,16 +16,14 @@ final private class RoundNotifier(
 
   def gameEnd(game: Game)(color: shogi.Color) =
     if (!game.aborted) game.player(color).userId foreach { userId =>
-      game.perfType foreach { perfType =>
-        timeline ! (Propagate(
-          TLGameEnd(
-            playerId = game fullIdOf color,
-            opponent = game.player(!color).userId,
-            win = game.winnerColor map (color ==),
-            perf = perfType.key,
-          ),
-        ) toUser userId)
-      }
+      timeline ! (Propagate(
+        TLGameEnd(
+          playerId = game fullIdOf color,
+          opponent = game.player(!color).userId,
+          win = game.winnerColor map (color ==),
+          perf = game.perfType.key,
+        ),
+      ) toUser userId)
       isUserPresent(game, userId) foreach {
         case false =>
           notifyApi.addNotification(

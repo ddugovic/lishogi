@@ -10,7 +10,6 @@ import reactivemongo.api.bson.BSONDocumentHandler
 import lila.common.EmailAddress
 import lila.common.LightUser
 import lila.common.NormalizedEmailAddress
-import lila.rating.Perf
 import lila.rating.PerfType
 
 case class User(
@@ -91,7 +90,7 @@ case class User(
 
   private def bestOf(perfTypes: List[PerfType], nb: Int) =
     perfTypes.sortBy { pt =>
-      -(perfs(pt).nb * PerfType.totalTimeRoughEstimation.get(pt).fold(0)(_.roundSeconds))
+      -(perfs(pt).nb)
     } take nb
 
   def best8Perfs: List[PerfType] = bestOf(User.firstRow, 4) ::: bestOf(User.secondRow, 4)
@@ -279,10 +278,7 @@ object User {
       User(
         id = r str id,
         username = r str username,
-        perfs = r.getO[Perfs](perfs).fold(Perfs.default) { perfs =>
-          if (userTitle has Title.BOT) perfs.copy(ultraBullet = Perf.default)
-          else perfs
-        },
+        perfs = r.getO[Perfs](perfs).getOrElse(Perfs.default),
         count = r.get[Count](count),
         enabled = r bool enabled,
         roles = ~r.getO[List[String]](roles),
@@ -329,14 +325,10 @@ object User {
 
   private val firstRow: List[PerfType] =
     List(
-      PerfType.Bullet,
-      PerfType.Blitz,
-      PerfType.Rapid,
-      PerfType.Classical,
+      PerfType.RealTime,
       PerfType.Correspondence,
     )
   private val secondRow: List[PerfType] = List(
-    PerfType.UltraBullet,
     PerfType.Minishogi,
     PerfType.Chushogi,
     PerfType.Annanshogi,

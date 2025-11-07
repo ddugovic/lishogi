@@ -8,11 +8,7 @@ export function getPerfIcon(key: string | undefined): string | undefined {
 
 const perfIcons: Record<string, string> = {
   standard: icons.standard,
-  blitz: icons.blitz,
-  ultrabullet: icons.ultraBullet,
-  bullet: icons.bullet,
-  classical: icons.classical,
-  rapid: icons.rapid,
+  realtime: icons.standard,
   correspondence: icons.correspondence,
   minishogi: icons.minishogi,
   chushogi: icons.chushogi,

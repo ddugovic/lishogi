@@ -6,9 +6,7 @@ import org.joda.time.DateTime
 
 import shogi.Clock
 import shogi.Mode
-import shogi.Speed
 
-import lila.game.PerfPicker
 import lila.rating.RatingRange
 import lila.socket.Socket.Sri
 import lila.user.User
@@ -57,9 +55,9 @@ case class Hook(
   def userId = user.map(_.id)
   def lame   = user ?? (_.lame)
 
-  lazy val perfType = PerfPicker.perfType(speed, realVariant, none)
+  lazy val perfType = lila.rating.PerfType.from(realVariant, hasClock = true)
 
-  lazy val perf: Option[LobbyPerf] = for { u <- user; pt <- perfType } yield u perfAt pt
+  lazy val perf: Option[LobbyPerf] = user.map(_.perfAt(perfType))
   def rating: Option[Int]          = perf.map(_.rating)
 
   def render: JsObject =
@@ -69,10 +67,10 @@ case class Hook(
         "sri"   -> sri,
         "clock" -> clock.show,
         "t"     -> clock.estimateTotalSeconds,
-        "s"     -> speed.id,
         "i"     -> (if (clock.incrementSeconds > 0) 1 else 0),
         "b"     -> (if (clock.byoyomiSeconds > 0) 1 else 0),
         "p"     -> (if (clock.periodsTotal > 1) 1 else 0),
+        "perf"    -> perfType.key,
       )
       .add("prov" -> perf.map(_.provisional).filter(identity))
       .add("u" -> user.map(_.username))
@@ -81,9 +79,7 @@ case class Hook(
       .add("ra" -> realMode.rated.option(1))
       .add("rr" -> (ratingRange != RatingRange.default.toString).option(ratingRange))
       .add("c" -> shogi.Color.fromName(color).map(_.name))
-      .add("perf" -> perfType.map(_.key))
 
-  private lazy val speed = Speed(clock)
 }
 
 object Hook {

@@ -72,7 +72,7 @@ final class ChallengeMaker(
       denied <- granter(
         me.some,
         opponent,
-        none,
+        tour.perfType,
         (pref: lila.pref.Pref) => pref.tourChallenge,
       )
       _   <- denied.fold(funit)(d => fufail(lila.challenge.ChallengeDenied.translated(d)))

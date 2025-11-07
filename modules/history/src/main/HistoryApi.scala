@@ -7,8 +7,6 @@ import org.joda.time.Days
 import reactivemongo.api.ReadPreference
 import reactivemongo.api.bson._
 
-import shogi.Speed
-
 import lila.db.dsl._
 import lila.game.Game
 import lila.rating.Perf
@@ -37,18 +35,13 @@ final class HistoryApi(coll: Coll, userRepo: UserRepo, cacheApi: lila.memo.Cache
   def add(user: User, game: Game, perfs: Perfs): Funit = {
     val isStd = game.variant.standard
     val changes = List(
-      isStd.option("standard"                                               -> perfs.standard),
-      game.variant.minishogi.option("minishogi"                             -> perfs.minishogi),
-      game.variant.chushogi.option("chushogi"                               -> perfs.chushogi),
-      game.variant.annanshogi.option("annanshogi"                           -> perfs.annanshogi),
-      game.variant.kyotoshogi.option("kyotoshogi"                           -> perfs.kyotoshogi),
-      game.variant.checkshogi.option("checkshogi"                           -> perfs.checkshogi),
-      (isStd && game.speed == Speed.UltraBullet).option("ultraBullet"       -> perfs.ultraBullet),
-      (isStd && game.speed == Speed.Bullet).option("bullet"                 -> perfs.bullet),
-      (isStd && game.speed == Speed.Blitz).option("blitz"                   -> perfs.blitz),
-      (isStd && game.speed == Speed.Rapid).option("rapid"                   -> perfs.rapid),
-      (isStd && game.speed == Speed.Classical).option("classical"           -> perfs.classical),
-      (isStd && game.speed == Speed.Correspondence).option("correspondence" -> perfs.correspondence),
+      game.variant.minishogi.option("minishogi"                -> perfs.minishogi),
+      game.variant.chushogi.option("chushogi"                  -> perfs.chushogi),
+      game.variant.annanshogi.option("annanshogi"              -> perfs.annanshogi),
+      game.variant.kyotoshogi.option("kyotoshogi"              -> perfs.kyotoshogi),
+      game.variant.checkshogi.option("checkshogi"              -> perfs.checkshogi),
+      (isStd && game.hasClock).option("realTime"               -> perfs.realTime),
+      (isStd && game.isCorrespondence).option("correspondence" -> perfs.correspondence),
     ).flatten.map { case (k, p) =>
       k -> p.intRating
     }

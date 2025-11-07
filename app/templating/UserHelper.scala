@@ -39,7 +39,7 @@ trait UserHelper { self: I18nHelper with StringHelper with NumberHelper with Dat
     showPerfRating(perfType, u perfs perfType)
 
   def showPerfRating(u: User, perfKey: String)(implicit lang: Lang): Option[Frag] =
-    PerfType(perfKey) map { showPerfRating(u, _) }
+    PerfType.byKey(perfKey) map { showPerfRating(u, _) }
 
   def showBestPerf(u: User)(implicit lang: Lang): Option[Frag] =
     u.perfs.bestPerf map { case (pt, perf) =>

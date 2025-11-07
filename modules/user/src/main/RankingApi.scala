@@ -8,7 +8,6 @@ import reactivemongo.api.bson._
 
 import lila.db.dsl._
 import lila.memo.CacheApi._
-import lila.rating.Glicko
 import lila.rating.Perf
 import lila.rating.PerfType
 
@@ -66,7 +65,7 @@ final class RankingApi(
     s"${userId}:${perfType.id}"
 
   private[user] def topPerf(perfId: Perf.ID, nb: Int): Fu[List[User.LightPerf]] =
-    PerfType.id2key(perfId) ?? { perfKey =>
+    PerfType.byId(perfId) ?? { perfType =>
       coll
         .find($doc("perf" -> perfId, "stable" -> (mode == play.api.Mode.Prod)))
         .sort($doc("rating" -> -1))
@@ -78,7 +77,7 @@ final class RankingApi(
               _ map { light =>
                 User.LightPerf(
                   user = light,
-                  perfKey = perfKey,
+                  perfKey = perfType.key,
                   rating = r.rating,
                   progress = ~r.prog,
                 )
@@ -91,11 +90,7 @@ final class RankingApi(
 
   private[user] def fetchLeaderboard(nb: Int): Fu[Perfs.Leaderboards] =
     for {
-      ultraBullet    <- topPerf(PerfType.UltraBullet.id, nb)
-      bullet         <- topPerf(PerfType.Bullet.id, nb)
-      blitz          <- topPerf(PerfType.Blitz.id, nb)
-      rapid          <- topPerf(PerfType.Rapid.id, nb)
-      classical      <- topPerf(PerfType.Classical.id, nb)
+      realTime       <- topPerf(PerfType.RealTime.id, nb)
       correspondence <- topPerf(PerfType.Correspondence.id, nb)
       minishogi      <- topPerf(PerfType.Minishogi.id, nb)
       chushogi       <- topPerf(PerfType.Chushogi.id, nb)
@@ -103,11 +98,7 @@ final class RankingApi(
       kyotoshogi     <- topPerf(PerfType.Kyotoshogi.id, nb)
       checkshogi     <- topPerf(PerfType.Checkshogi.id, nb)
     } yield Perfs.Leaderboards(
-      ultraBullet = ultraBullet,
-      bullet = bullet,
-      blitz = blitz,
-      rapid = rapid,
-      classical = classical,
+      realTime = realTime,
       correspondence = correspondence,
       minishogi = minishogi,
       chushogi = chushogi,
@@ -176,7 +167,7 @@ final class RankingApi(
 
     // from 600 to 2800 by Stat.group
     private def compute(perfId: Perf.ID): Fu[List[NbUsers]] =
-      lila.rating.PerfType(perfId).exists(lila.rating.PerfType.leaderboardable.contains) ?? {
+      lila.rating.PerfType.byId(perfId).exists(lila.rating.PerfType.leaderboardable.contains) ?? {
         coll
           .aggregateList(
             maxDocs = Int.MaxValue,
@@ -215,14 +206,14 @@ final class RankingApi(
 
     /* monitors cumulated ratio of players in each rating group, for a perf
      *
-     * rating.distribution.bullet.600 => 0.0003
-     * rating.distribution.bullet.800 => 0.0012
-     * rating.distribution.bullet.825 => 0.0057
-     * rating.distribution.bullet.850 => 0.0102
+     * rating.distribution.correspondence.600 => 0.0003
+     * rating.distribution.correspondence.800 => 0.0012
+     * rating.distribution.correspondence.825 => 0.0057
+     * rating.distribution.correspondence.850 => 0.0102
      * ...
-     * rating.distribution.bullet.1500 => 0.5 (hopefully)
+     * rating.distribution.correspondence.1500 => 0.5 (hopefully)
      * ...
-     * rating.distribution.bullet.2800 => 0.9997
+     * rating.distribution.correspondence.2800 => 0.9997
      */
     private def monitorRatingDistribution(perfId: Perf.ID)(nbUsersList: List[NbUsers]): Unit = {
       val total = nbUsersList.foldLeft(0)(_ + _)
@@ -230,7 +221,7 @@ final class RankingApi(
         .zip(nbUsersList)
         .foldLeft(0) { case (prev, (rating, nbUsers)) =>
           val acc = prev + nbUsers
-          PerfType(perfId) foreach { pt =>
+          PerfType.byId(perfId) foreach { pt =>
             lila.mon.rating.distribution(pt.key, rating).update(prev.toDouble / total)
           }
           acc

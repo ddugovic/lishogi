@@ -35,7 +35,6 @@ object mobile {
               h2(trans.fullFeatured()),
               ul(cls := "block")(
                 li(trans.phoneAndTablet()),
-                li(trans.bulletBlitzClassical()),
                 li(trans.correspondenceShogi()),
                 li(trans.onlineAndOfflinePlay()),
                 li(trans.tournaments()),

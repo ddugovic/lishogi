@@ -2,8 +2,7 @@ package lila.history
 
 import scala.util.Success
 
-import lila.rating.PerfType
-
+// Keep ultraBullet, bullet, blitz, rapid, classical for now - for ratinch chart
 case class History(
     standard: RatingsMap,
     minishogi: RatingsMap,
@@ -16,26 +15,28 @@ case class History(
     blitz: RatingsMap,
     rapid: RatingsMap,
     classical: RatingsMap,
+    realTime: RatingsMap,
     correspondence: RatingsMap,
     puzzle: RatingsMap,
 ) {
 
-  def apply(perfType: PerfType): RatingsMap =
-    perfType match {
-      case PerfType.Standard       => standard
-      case PerfType.Bullet         => bullet
-      case PerfType.Blitz          => blitz
-      case PerfType.Rapid          => rapid
-      case PerfType.Classical      => classical
-      case PerfType.Correspondence => correspondence
-      case PerfType.Puzzle         => puzzle
-      case PerfType.UltraBullet    => ultraBullet
-      case PerfType.Minishogi      => minishogi
-      case PerfType.Chushogi       => chushogi
-      case PerfType.Annanshogi     => annanshogi
-      case PerfType.Kyotoshogi     => kyotoshogi
-      case PerfType.Checkshogi     => checkshogi
-      case x                       => sys error s"No history for perf $x"
+  def apply(key: String): RatingsMap =
+    key.toLowerCase match {
+      case "standard"       => standard
+      case "bullet"         => bullet
+      case "blitz"          => blitz
+      case "rapid"          => rapid
+      case "classical"      => classical
+      case "realtime"       => realTime
+      case "correspondence" => correspondence
+      case "puzzle"         => puzzle
+      case "ultrabullet"    => ultraBullet
+      case "minishogi"      => minishogi
+      case "chushogi"       => chushogi
+      case "annanshogi"     => annanshogi
+      case "kyotoshogi"     => kyotoshogi
+      case "checkshogi"     => checkshogi
+      case _                => Nil
     }
 }
 
@@ -74,6 +75,7 @@ object History {
             blitz = ratingsMap("blitz"),
             rapid = ratingsMap("rapid"),
             classical = ratingsMap("classical"),
+            realTime = ratingsMap("realTime"),
             correspondence = ratingsMap("correspondence"),
             puzzle = ratingsMap("puzzle"),
           )

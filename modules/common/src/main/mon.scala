@@ -464,11 +464,10 @@ object mon {
     }
   }
   object game {
-    def finish(variant: String, speed: String, source: String, mode: String, status: String) =
+    def finish(variant: String, source: String, mode: String, status: String) =
       counter("game.finish").withTags(
         tags(
           "variant" -> variant,
-          "speed"   -> speed,
           "source"  -> source,
           "mode"    -> mode,
           "status"  -> status,

@@ -49,7 +49,7 @@ final private class TournamentScheduler(
     def orNextYear(date: DateTime) = if (date isBefore rightNow) date plusYears 1 else date
 
     val farFuture = today plusMonths 7
-    val threeDays = today plusDays 3
+    // val threeDays = today plusDays 3
 
     val birthday = new DateTime(2020, 9, 29, 12, 0, 0)
 
@@ -58,7 +58,7 @@ final private class TournamentScheduler(
       List( // legendary tournaments!
         at(birthday.withYear(today.getYear), 12) map orNextYear map { date =>
           val yo = date.getYear - 2020
-          Schedule(Format.Arena, Unique, Rapid, Standard, none, date) plan {
+          Schedule(Format.Arena, Unique, Normal, Standard, date) plan {
             _.copy(
               name = s"${date.getYear} Lishogi Anniversary",
               icon = "li-anniversary".some,
@@ -76,13 +76,12 @@ Thank you all, you rock! ありがとうございます！""",
         },
       ).flatten,
       List( // yearly tournaments!
-        secondWeekOf(FEBRUARY).withDayOfWeek(TUESDAY) -> Blitz,
-        secondWeekOf(JULY).withDayOfWeek(MONDAY)      -> Bullet,
-        secondWeekOf(OCTOBER).withDayOfWeek(THURSDAY) -> Rapid,
-        secondWeekOf(NOVEMBER).withDayOfWeek(FRIDAY)  -> Classical,
+        secondWeekOf(FEBRUARY).withDayOfWeek(TUESDAY) -> VeryFast,
+        secondWeekOf(JULY).withDayOfWeek(MONDAY)      -> Fast,
+        secondWeekOf(NOVEMBER).withDayOfWeek(FRIDAY)  -> Normal,
       ).flatMap { case (day, speed) =>
         at(day, 13) filter farFuture.isAfter map { date =>
-          Schedule(Format.Arena, Yearly, speed, Standard, none, date).plan
+          Schedule(Format.Arena, Yearly, speed, Standard, date).plan
         }
       },
       List( // yearly variant tournaments!
@@ -92,19 +91,18 @@ Thank you all, you rock! ありがとうございます！""",
         secondWeekOf(AUGUST).withDayOfWeek(WEDNESDAY)  -> Kyotoshogi,
       ).flatMap { case (day, variant) =>
         at(day, 17) filter farFuture.isAfter map { date =>
-          Schedule(Format.Arena, Yearly, Blitz, variant, none, date).plan
+          Schedule(Format.Arena, Yearly, Fast, variant, date).plan
         }
       },
       List(thisMonth, nextMonth).flatMap { month =>
         List(
           List( // monthly standard tournaments!
-            month.lastWeek.withDayOfWeek(MONDAY)    -> Bullet,
-            month.lastWeek.withDayOfWeek(WEDNESDAY) -> Blitz,
-            month.lastWeek.withDayOfWeek(THURSDAY)  -> Rapid,
-            month.lastWeek.withDayOfWeek(FRIDAY)    -> Classical,
+            month.lastWeek.withDayOfWeek(MONDAY)    -> Normal,
+            month.lastWeek.withDayOfWeek(WEDNESDAY) -> Fast,
+            month.lastWeek.withDayOfWeek(FRIDAY)    -> VeryFast,
           ).flatMap { case (day, speed) =>
             at(day, 13) map { date =>
-              Schedule(Format.Arena, Monthly, speed, Standard, none, date).plan
+              Schedule(Format.Arena, Monthly, speed, Standard, date).plan
             }
           },
           List( // monthly variant tournaments!
@@ -114,20 +112,18 @@ Thank you all, you rock! ありがとうございます！""",
             month.firstWeek.withDayOfWeek(FRIDAY)    -> Checkshogi,
           ).flatMap { case (day, variant) =>
             at(day, 17) map { date =>
-              Schedule(Format.Arena, Monthly, Blitz, variant, none, date).plan
+              Schedule(Format.Arena, Monthly, Fast, variant, date).plan
             }
           },
           List( // shield tournaments!
-            month.firstWeek.withDayOfWeek(MONDAY)    -> Bullet,
-            month.firstWeek.withDayOfWeek(WEDNESDAY) -> Blitz,
-            month.firstWeek.withDayOfWeek(THURSDAY)  -> Rapid,
-            month.firstWeek.withDayOfWeek(FRIDAY)    -> Classical,
+            month.firstWeek.withDayOfWeek(MONDAY)    -> VeryFast,
+            month.firstWeek.withDayOfWeek(WEDNESDAY) -> Fast,
+            month.firstWeek.withDayOfWeek(FRIDAY)    -> Normal,
           ).flatMap { case (day, speed) =>
             at(day, 12) map { date =>
-              Schedule(Format.Arena, Shield, speed, Standard, none, date) plan {
+              Schedule(Format.Arena, Shield, speed, Standard, date) plan {
                 _.copy(
                   icon = "li-shield".some,
-                  spotlight = Some(TournamentShield spotlight speed.toString),
                 )
               }
             }
@@ -139,28 +135,27 @@ Thank you all, you rock! ありがとうございます！""",
             month.thirdWeek.withDayOfWeek(FRIDAY)    -> Checkshogi,
           ).flatMap { case (day, variant) =>
             at(day, 16) map { date =>
-              Schedule(Format.Arena, Shield, Blitz, variant, none, date) plan {
+              Schedule(Format.Arena, Shield, Fast, variant, date) plan {
                 _.copy(
                   icon = "li-shield".some,
-                  spotlight = Some(TournamentShield spotlight variant.name),
                 )
               }
             }
           },
-          List( // weekend round-robin
-            month.firstWeek.withDayOfWeek(SATURDAY)  -> Bullet,
-            month.secondWeek.withDayOfWeek(SATURDAY) -> Blitz,
-            month.thirdWeek.withDayOfWeek(SATURDAY)  -> Rapid,
-            month.lastWeek.withDayOfWeek(SATURDAY)   -> Classical,
-          ).flatMap { case (day, speed) =>
-            at(day, 12) filter threeDays.isAfter map { date =>
-              Schedule(Format.Robin, Weekend, speed, Standard, none, date).plan {
-                _.copy(
-                  icon = "li-weekend".some,
-                )
-              }
-            }
-          },
+          // List( // weekend round-robin
+          //   month.firstWeek.withDayOfWeek(SATURDAY)  -> Fast,
+          //   month.secondWeek.withDayOfWeek(SATURDAY) -> Slow,
+          //   month.thirdWeek.withDayOfWeek(SATURDAY)  -> Fast,
+          //   month.lastWeek.withDayOfWeek(SATURDAY)   -> Slow,
+          // ).flatMap { case (day, speed) =>
+          //   at(day, 12) filter threeDays.isAfter map { date =>
+          //     Schedule(Format.Robin, Weekend, speed, Standard, date) plan {
+          //       _.copy(
+          //         icon = "li-weekend".some,
+          //       )
+          //     }
+          //   }
+          // },
         ).flatten
       },
     ).flatten filter { _.schedule.at isAfter rightNow }
@@ -174,21 +169,13 @@ Thank you all, you rock! ありがとうございます！""",
       }
       .reverse
 
-  private case class ScheduleNowWith(dbScheds: List[Tournament])
-
   private def overlaps(t: Tournament, ts: List[Tournament]): Boolean =
     t.schedule exists { s =>
       ts exists { t2 =>
         t.variant == t2.variant && (t2.schedule ?? {
-          // prevent daily && weekly on the same day
-          case s2 if s.freq.isDailyOrBetter && s2.freq.isDailyOrBetter && s.sameSpeed(s2) =>
+          case s2 if s.freq.isDailyOrBetter && s2.freq.isDailyOrBetter =>
             s sameDay s2
-          case s2 =>
-            (
-              !t.variant.standard || // overlapping non standard variant
-                s.hasMaxRating ||    // overlapping same rating limit
-                s.similarSpeed(s2)   // overlapping similar
-            ) && s.similarConditions(s2) && t.overlaps(t2)
+          case _ => t.overlaps(t2)
         })
       }
     }
@@ -201,6 +188,8 @@ Thank you all, you rock! ありがとうございます！""",
         logger.error(s"failed to schedule one: ${e.getMessage}")
         None
     }
+
+  private case class ScheduleNowWith(dbScheds: List[Tournament])
 
   def receive = {
 

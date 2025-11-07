@@ -34,7 +34,7 @@ trait TournamentHelper { self: AssetHelper with I18nHelper with DateHelper with 
           s" ti-${s.freq.key}"
         }}"
     div(cls := tourIconCls)(
-      spriteSvg("tour", tour.icon.getOrElse(s"li-${tour.perfType.key}")),
+      spriteSvg("tour", tour.icon.getOrElse(s"li-${tour.variant.key}")),
     )
   }
 

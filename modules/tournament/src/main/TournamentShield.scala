@@ -123,41 +123,29 @@ object TournamentShield {
       } yield tourSpeed == categSpeed)
       else of.toOption.has(tour.variant)
     def trans(implicit lang: Lang) = of.fold(
-      s => Schedule.Speed.trans(s),
+      s => Schedule.Speed.standardTrans(s),
       v => PerfType.byVariant(v).map(_.trans).getOrElse(key),
     )
   }
 
   object Category {
 
-    case object Bullet
+    case object VeryFastShogi
         extends Category(
-          of = Left(Schedule.Speed.Bullet),
-          icon = Icons.bullet,
+          of = Left(Schedule.Speed.VeryFast),
+          icon = Icons.standard,
         )
 
-    case object SuperBlitz
+    case object FastShogi
         extends Category(
-          of = Left(Schedule.Speed.SuperBlitz),
-          icon = Icons.blitz,
+          of = Left(Schedule.Speed.Fast),
+          icon = Icons.standard,
         )
 
-    case object Blitz
+    case object Shogi
         extends Category(
-          of = Left(Schedule.Speed.Blitz),
-          icon = Icons.blitz,
-        )
-
-    case object Rapid
-        extends Category(
-          of = Left(Schedule.Speed.Rapid),
-          icon = Icons.rapid,
-        )
-
-    case object Classical
-        extends Category(
-          of = Left(Schedule.Speed.Classical),
-          icon = Icons.classical,
+          of = Left(Schedule.Speed.Normal),
+          icon = Icons.standard,
         )
 
     case object Minishogi
@@ -165,12 +153,6 @@ object TournamentShield {
           of = Right(shogi.variant.Minishogi),
           icon = Icons.minishogi,
         )
-
-    // case object Chushogi
-    //     extends Category(
-    //       of = Right(shogi.variant.Chushogi),
-    //       icon = Icons.chushogi,
-    //     )
 
     case object Annanshogi
         extends Category(
@@ -191,13 +173,10 @@ object TournamentShield {
         )
 
     val all: List[Category] = List(
-      Bullet,
-      Blitz,
-      Rapid,
-      Classical,
-      SuperBlitz,
+      VeryFastShogi,
+      FastShogi,
+      Shogi,
       Minishogi,
-      // Chushogi,
       Annanshogi,
       Kyotoshogi,
       Checkshogi,
@@ -208,12 +187,4 @@ object TournamentShield {
     def byKey(k: String): Option[Category] = all.find(_.key == k)
   }
 
-  def spotlight(name: String) =
-    Spotlight(
-      headline = s"Battle for the $name Shield",
-      description = s"""This Shield trophy is unique.
-The winner keeps it for one month,
-then must defend it during the next $name Shield tournament!""",
-      homepageHours = 6.some,
-    )
 }

@@ -88,7 +88,7 @@ final class UserRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCont
   def enabledNamed(username: String): Fu[Option[User]] = enabledById(normalize(username))
 
   // expensive, send to secondary
-  def byIdsSortRatingNoBot(ids: Iterable[ID], nb: Int): Fu[List[User]] =
+  def byIdsSortCountWinNoBot(ids: Iterable[ID], nb: Int): Fu[List[User]] =
     coll
       .find(
         $doc(
@@ -96,7 +96,7 @@ final class UserRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCont
           F.marks $nin List(UserMark.Engine.key, UserMark.Boost.key),
         ) ++ $inIds(ids) ++ botSelect(false),
       )
-      .sort($sort desc "perfs.standard.gl.r")
+      .sort($sort desc "count.winH")
       .cursor[User](ReadPreference.secondaryPreferred)
       .list(nb)
 

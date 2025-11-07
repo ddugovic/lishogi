@@ -27,21 +27,19 @@ final class BotJsonView(
     val initialSfen = game.initialSfen.fold("startpos")(_.value)
     Json
       .obj(
-        "id"      -> game.id,
-        "variant" -> game.variant,
-        "clock"   -> game.clock.map(_.config),
-        "speed"   -> game.speed.key,
-        "perf" -> game.perfType.map { p =>
-          Json.obj("name" -> p.trans)
-        },
+        "id"          -> game.id,
+        "variant"     -> game.variant,
+        "clock"       -> game.clock.map(_.config),
+        "speed"       -> speedKeyBc(game), // backwards support
+        "perf"        -> Json.obj("name" -> game.perfType.trans),
         "rated"       -> game.rated,
         "createdAt"   -> game.createdAt,
         "sente"       -> sentePov,
-        "white"       -> sentePov,   // backwards support
+        "white"       -> sentePov,         // backwards support
         "gote"        -> gotePov,
-        "black"       -> gotePov,    // backwards support
+        "black"       -> gotePov,          // backwards support
         "initialSfen" -> initialSfen,
-        "initialFen"  -> initialSfen, // backwards support
+        "initialFen"  -> initialSfen,      // backwards support
       )
       .add(
         "fairyInitialSfen" -> (game.variant.kyotoshogi option game.initialSfen
@@ -99,6 +97,14 @@ final class BotJsonView(
       .map(_.currentClockFor(pov.color).time.millis.toInt)
       .orElse(pov.game.correspondenceClock.map(_.remainingTime(pov.color).toInt * 1000))
       .getOrElse(Int.MaxValue)
+
+  private def speedKeyBc(g: Game): String =
+    if (g.isCorrespondence) "correspondence"
+    else if (g.isVeryVeryFast) "ultraBullet"
+    else if (g.isVeryFast) "bullet"
+    else if (g.isFast) "blitz"
+    else if (g.isSlow) "rapid"
+    else "classical"
 
   implicit private val clockConfigWriter: OWrites[shogi.Clock.Config] = OWrites { c =>
     Json.obj(

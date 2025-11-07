@@ -19,7 +19,7 @@ function renderPlot(ctrl: LobbyController, hs: Hook | Seek): VNode {
   return h(`span#${hs.id}.${klass}`, {
     key: hs.id,
     attrs: {
-      'data-icon': getPerfIcon(hs.perf || hs.variant || 'standard'),
+      'data-icon': getPerfIcon(hs.perf),
       style: `bottom:${percents(bottom)};left:${percents(left)}`,
     },
     hook: {

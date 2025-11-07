@@ -3,7 +3,6 @@ package lila.setup
 import shogi.Clock
 import shogi.format.forsyth.Sfen
 
-import lila.game.PerfPicker
 import lila.rating.PerfType
 
 final case class OpenConfig(
@@ -19,7 +18,7 @@ final case class OpenConfig(
 
   def >> = (variant.key.some, clock, days, rated, sfen.map(_.value), proMode.some).some
 
-  def perfType: Option[PerfType] = PerfPicker.perfType(shogi.Speed(clock), variant, none)
+  def perfType: PerfType = PerfType.from(variant, hasClock = clock.isDefined)
 
   def validSfen =
     sfen.fold(true) { sf =>

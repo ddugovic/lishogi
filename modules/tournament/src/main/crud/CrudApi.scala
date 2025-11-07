@@ -97,7 +97,6 @@ final class CrudApi(tournamentRepo: TournamentRepo) {
           .map(Schedule.Speed.fromClock)
           .getOrElse(Schedule.Speed.Correspondence),
         variant = realVariant,
-        position = position,
         at = date,
       ).some,
       spotlight = Spotlight(

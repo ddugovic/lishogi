@@ -9,11 +9,11 @@ import shogi.variant.Variant
 import lila.common.Bus
 import lila.game.Game
 import lila.game.GameRepo
-import lila.game.PerfPicker
 import lila.hub.actorApi.timeline.Propagate
 import lila.hub.actorApi.timeline.SimulCreate
 import lila.hub.actorApi.timeline.SimulJoin
 import lila.memo.CacheApi._
+import lila.rating.PerfType
 import lila.user.User
 import lila.user.UserRepo
 
@@ -93,11 +93,7 @@ final class SimulApi(
             SimulPlayer.make(
               user,
               variant,
-              PerfPicker.mainOrDefault(
-                speed = shogi.Speed(simul.clock.config.some),
-                variant = variant,
-                daysPerTurn = none,
-              )(user.perfs),
+              user.perfs(lila.rating.PerfType.from(variant, hasClock = true)),
             ),
           )
         }
@@ -224,12 +220,10 @@ final class SimulApi(
           senteUser = hostColor.fold(host, user)
           goteUser  = hostColor.fold(user, host)
           clock     = simul.clock.shogiClockOf(hostColor)
-          perfPicker =
-            lila.game.PerfPicker.mainOrDefault(
-              shogi.Speed(clock.config),
-              pairing.player.variant,
-              none,
-            )
+          perfType = PerfType.from(
+            pairing.player.variant,
+            hasClock = true,
+          )
           game1 = Game.make(
             shogi = shogi
               .Game(
@@ -238,8 +232,8 @@ final class SimulApi(
               )
               .copy(clock = clock.start.some),
             initialSfen = simul.position,
-            sentePlayer = lila.game.Player.make(shogi.Sente, senteUser.some, perfPicker),
-            gotePlayer = lila.game.Player.make(shogi.Gote, goteUser.some, perfPicker),
+            sentePlayer = lila.game.Player.make(shogi.Sente, senteUser.some, perfType),
+            gotePlayer = lila.game.Player.make(shogi.Gote, goteUser.some, perfType),
             mode = shogi.Mode.Casual,
             proMode = ~simul.proMode,
             source = lila.game.Source.Simul,

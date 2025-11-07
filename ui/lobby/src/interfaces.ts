@@ -13,17 +13,16 @@ export interface Hook {
   sri: string;
   clock: string;
   t: number; // time
-  s: number; // speed
   i: number; // increment
   b: number; // byoyomi
   p: number; // periods
+  perf: Perf;
   prov?: boolean;
   u?: string; // username
   rating?: number;
   ra?: number; // rated
   rr?: string; // rating range
   c?: Color;
-  perf?: Perf;
   variant?: VariantKey;
   disabled?: boolean;
 }
@@ -33,10 +32,10 @@ export interface Seek {
   username: string;
   rating: number;
   mode: number; // rated (1)
+  perf: Perf;
   rr?: string;
   color?: Color;
   days?: number;
-  perf?: Perf;
   provisional?: boolean;
   variant?: VariantKey;
 }
@@ -63,7 +62,6 @@ export interface Game {
   color: Color;
   lastMove?: string;
   variant: Variant;
-  speed: string;
   perf: string;
   rated: boolean;
   hasMoved: boolean;

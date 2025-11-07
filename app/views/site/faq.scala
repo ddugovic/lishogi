@@ -76,21 +76,6 @@ object faq {
             youCanUseOpeningBookNoEngine(),
           ),
         ),
-        h2(gameplay()),
-        question(
-          "time-controls",
-          howBulletBlitzEtcDecided.txt(),
-          p(
-            basedOnGameDuration(strong(formulaOfDuration())),
-          ),
-          ul(
-            li(inferiorThanXsEqualYtimeControl(60, trans.ultrabullet())),
-            li(inferiorThanXsEqualYtimeControl(300, trans.bullet())),
-            li(inferiorThanXsEqualYtimeControl(600, trans.blitz())),
-            li(inferiorThanXsEqualYtimeControl(1500, trans.rapid())),
-            li(superiorThanXsEqualYtimeControl(1500, trans.classical())),
-          ),
-        ),
         h2(accounts()),
         question(
           "lm",

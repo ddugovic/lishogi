@@ -22,20 +22,20 @@ case class HookConfig(
 ) extends HumanConfig {
 
   def withinLimits(user: Option[User]): HookConfig =
-    (for {
-      pt <- perfType
-      me <- user
-    } yield copy(
-      ratingRange = ratingRange.withinLimits(
-        rating = me.perfs(pt).intRating,
-        delta = 400,
-        multipleOf = 50,
-      ),
-    )) | this
+    (
+      user.map { me =>
+        copy(
+          ratingRange = ratingRange.withinLimits(
+            rating = me.perfs(perfType).intRating,
+            delta = 400,
+            multipleOf = 50,
+          ),
+        )
+      }
+    ) | this
 
-  private def perfType = lila.game.PerfPicker.perfType(makeSpeed, variant, makeDaysPerTurn)
-
-  def makeSpeed = shogi.Speed(makeClock)
+  private def perfType =
+    lila.rating.PerfType.from(variant, hasClock = timeMode == TimeMode.RealTime)
 
   def >> =
     (

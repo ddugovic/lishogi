@@ -4,7 +4,6 @@ import scala.math.log10
 import scala.math.sqrt
 
 import shogi.Color
-import shogi.Speed
 
 import lila.game.Game
 
@@ -39,20 +38,18 @@ object RageSit {
       } * {
         if (loser.sente) 1 else -1
       } * {
-        if (game.speed <= Speed.Bullet) 5
-        else if (game.speed == Speed.Blitz) 10
+        if (game.isVeryVeryFast || game.isVeryFast) 5
+        else if (game.isFast) 10
         else 15
       }
     }
 
   def redeem(game: Game): Inc =
     Inc {
-      game.speed match {
-        case s if s < Speed.Bullet => 0
-        case Speed.Bullet          => scala.util.Random.nextInt(1)
-        case Speed.Blitz           => 1
-        case _                     => 2
-      }
+      if (game.isVeryVeryFast) 0
+      else if (game.isVeryFast) scala.util.Random.nextInt(1)
+      else if (game.isFast) 1
+      else 2
     }
 }
 

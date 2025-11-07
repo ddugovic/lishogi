@@ -23,10 +23,6 @@ object filter {
                 ),
               ),
             ),
-            tr(cls := "f-real_time")(
-              td(trans.timeControl()),
-              td(renderCheckboxes(form, "speed", translatedSpeedChoices)),
-            ),
             tr(cls := "inline f-real_time")(
               td(trans.byoyomi()),
               td(

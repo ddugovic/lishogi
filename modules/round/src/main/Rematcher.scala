@@ -13,7 +13,6 @@ import lila.game.AnonCookie
 import lila.game.Event
 import lila.game.Game
 import lila.game.GameRepo
-import lila.game.PerfPicker
 import lila.game.Pov
 import lila.game.Rematches
 import lila.game.Source
@@ -159,7 +158,7 @@ final private class Rematcher(
           game.opponent(color).userId.flatMap { id =>
             users.find(_.id == id)
           },
-          PerfPicker.mainOrDefault(game),
+          game.perfType,
         )
     }
 

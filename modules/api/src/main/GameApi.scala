@@ -20,7 +20,6 @@ import lila.game.CrosstableApi
 import lila.game.Game
 import lila.game.Game.{ BSONFields => G }
 import lila.game.JsonView._
-import lila.game.PerfPicker
 import lila.user.User
 
 final private[api] class GameApi(
@@ -206,8 +205,7 @@ final private[api] class GameApi(
         "initialSfen" -> g.initialSfen,
         "rated"       -> g.rated,
         "variant"     -> g.variant.key,
-        "speed"       -> g.speed.key,
-        "perf"        -> PerfPicker.key(g),
+        "perf"        -> g.perfKey,
         "createdAt"   -> g.createdAt,
         "lastMoveAt"  -> g.movedAt,
         "plies"       -> g.plies,

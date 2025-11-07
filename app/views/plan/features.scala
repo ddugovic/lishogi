@@ -93,7 +93,7 @@ object features {
           //    "Online and offline games, with 8 variants"
           //  ),
           //  tr(check)(
-          //    "Bullet, Blitz, Rapid, Classical and Correspondence chess"
+          //    "Real time and Correspondence shogi"
           //  ),
           //  tr(check)(
           //    a(href := routes.Tournament.homeDefault(1))("Arena tournaments")

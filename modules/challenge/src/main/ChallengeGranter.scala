@@ -22,7 +22,7 @@ object ChallengeDenied {
     case class RatingOutsideRange(perf: PerfType)  extends Reason
     case class RatingIsProvisional(perf: PerfType) extends Reason
     case object FriendsOnly                        extends Reason
-    case object BotUltraBullet                     extends Reason
+    case object BotTooFast                         extends Reason
     case object SelfChallenge                      extends Reason
   }
 
@@ -38,8 +38,8 @@ object ChallengeDenied {
         I18nKeys.cannotChallengeDueToProvisionalXRating.txt(perf.trans)
       case Reason.FriendsOnly =>
         I18nKeys.xOnlyAcceptsChallengesFromFriends.txt(d.dest.titleUsername)
-      case Reason.SelfChallenge  => "You cannot challenge yourself."
-      case Reason.BotUltraBullet => "Bots cannot play UltraBullet. Choose a slower time control."
+      case Reason.SelfChallenge => "You cannot challenge yourself."
+      case Reason.BotTooFast    => "Bots cannot play UltraBullet. Choose a slower time control."
     }
 }
 
@@ -55,7 +55,7 @@ final class ChallengeGranter(
   def apply(
       fromOption: Option[User],
       dest: User,
-      perfType: Option[PerfType],
+      perfType: PerfType,
       prefSelector: Pref => Int = (pref: Pref) => pref.challenge,
   )(implicit
       ec: scala.concurrent.ExecutionContext,
@@ -70,13 +70,11 @@ final class ChallengeGranter(
             case (_, _) if from.marks.engine && !dest.marks.engine => YouAreBlocked.some
             case (_, Pref.Challenge.FRIEND)                        => FriendsOnly.some
             case (_, Pref.Challenge.RATING) =>
-              perfType ?? { pt =>
-                if (from.perfs(pt).provisional || dest.perfs(pt).provisional)
-                  RatingIsProvisional(pt).some
-                else {
-                  val diff = math.abs(from.perfs(pt).intRating - dest.perfs(pt).intRating)
-                  (diff > ratingThreshold) option RatingOutsideRange(pt)
-                }
+              if (from.perfs(perfType).provisional || dest.perfs(perfType).provisional)
+                RatingIsProvisional(perfType).some
+              else {
+                val diff = math.abs(from.perfs(perfType).intRating - dest.perfs(perfType).intRating)
+                (diff > ratingThreshold) option RatingOutsideRange(perfType)
               }
             case (_, Pref.Challenge.ALWAYS) => none
             case _ if from == dest          => SelfChallenge.some
@@ -84,8 +82,9 @@ final class ChallengeGranter(
           }
       }
       .map {
-        case None if dest.isBot && perfType.has(PerfType.UltraBullet) => BotUltraBullet.some
-        case res                                                      => res
+        // todo
+        // case None if dest.isBot && perfType.has(PerfType.UltraBullet) => BotTooFast.some
+        case res => res
       }
       .map {
         _.map { ChallengeDenied(dest, _) }

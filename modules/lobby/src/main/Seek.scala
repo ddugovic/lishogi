@@ -5,9 +5,7 @@ import play.api.libs.json._
 import org.joda.time.DateTime
 
 import shogi.Mode
-import shogi.Speed
 
-import lila.game.PerfPicker
 import lila.rating.RatingRange
 import lila.user.User
 
@@ -39,16 +37,16 @@ case class Seek(
 
   private def ratingRangeCompatibleWith(s: Seek) =
     realRatingRange.fold(true) { range =>
-      s.rating ?? range.contains
+      range.contains(s.rating)
     }
 
   private def compatibilityProperties = (variant, mode, daysPerTurn)
 
   lazy val realRatingRange: Option[RatingRange] = RatingRange noneIfDefault ratingRange
 
-  def perf = perfType map user.perfAt
+  def perf = user.perfAt(perfType)
 
-  def rating = perf.map(_.rating)
+  def rating = perf.rating
 
   def render: JsObject =
     Json
@@ -57,6 +55,7 @@ case class Seek(
         "username" -> user.username,
         "rating"   -> rating,
         "mode"     -> realMode.id,
+        "perf"     -> perfType.key,
       )
       .add(
         "color",
@@ -65,10 +64,9 @@ case class Seek(
       .add("days", daysPerTurn)
       .add("rr" -> (ratingRange != RatingRange.default.toString).option(ratingRange))
       .add("variant" -> (!realVariant.standard).option(realVariant.key))
-      .add("perf", perfType.map(_.key))
-      .add("provisional" -> perf.map(_.provisional).filter(identity))
+      .add("provisional" -> perf.provisional)
 
-  lazy val perfType = PerfPicker.perfType(Speed.Correspondence, realVariant, daysPerTurn)
+  lazy val perfType = lila.rating.PerfType.from(realVariant, hasClock = false)
 }
 
 object Seek {

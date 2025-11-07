@@ -7,6 +7,7 @@ import reactivemongo.api.ReadPreference
 
 import shogi.variant.Variant
 
+import lila.common.Icons
 import lila.db.dsl._
 import lila.memo.CacheApi._
 import lila.user.User
@@ -67,7 +68,7 @@ object Revolution {
       variant: Variant,
       tourId: Tournament.ID,
   ) {
-    val icon = lila.rating.PerfType iconByVariant variant
+    val icon = lila.rating.PerfType.byVariant(variant).fold(Icons.standard)(_.icon)
   }
 
   type PerOwner = Map[User.ID, List[Award]]

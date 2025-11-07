@@ -56,13 +56,8 @@ object leaderboard {
         div(cls := "page-menu__content box box-pad")(
           h1(trans.tournamentWinners()),
           div(cls := "tournament-leaderboards")(
-            freqWinners(winners.bullet, PerfType.Bullet),
-            freqWinners(winners.blitz, PerfType.Blitz),
-            freqWinners(winners.rapid, PerfType.Rapid),
-            freqWinners(winners.classical, PerfType.Classical),
+            freqWinners(winners.realTime, PerfType.RealTime),
             freqWinners(winners.correspondence, PerfType.Correspondence),
-            freqWinners(winners.superblitz, PerfType.Blitz, "S-"), // will be removed
-            freqWinners(winners.hyperrapid, PerfType.Rapid, "H-"), // will be removed
             lila.tournament.WinnersApi.variants.map { v =>
               PerfType.byVariant(v).map { pt =>
                 winners.variants.get(pt.key).map { w =>

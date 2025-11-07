@@ -88,7 +88,7 @@ object mini {
         frag(
           gameSfen(pov, ctx.me),
           div(cls := "upt__game-legend")(
-            i(dataIcon := pov.game.perfType.map(_.icon), cls := "text")(
+            i(dataIcon := pov.game.perfType.icon, cls := "text")(
               pov.game.clock.map(_.config.show),
             ),
             playerText(pov.opponent, withRating = true),

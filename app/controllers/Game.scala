@@ -95,7 +95,8 @@ final class Game(
             until = getLong("until", req) map { new DateTime(_) },
             max = getInt("max", req) map (_ atLeast 1),
             rated = getBoolOpt("rated", req),
-            perfType = (~get("perfType", req) split "," flatMap { lila.rating.PerfType(_) }).toSet,
+            perfType =
+              (~get("perfType", req) split "," flatMap { lila.rating.PerfType.byKey(_) }).toSet,
             color = get("color", req) flatMap shogi.Color.fromName,
             analysed = getBoolOpt("analysed", req),
             ongoing = getBool("ongoing", req),

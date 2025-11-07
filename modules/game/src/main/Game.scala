@@ -9,7 +9,6 @@ import shogi.Color.Gote
 import shogi.Color.Sente
 import shogi.Handicap
 import shogi.Mode
-import shogi.Speed
 import shogi.Status
 import shogi.format.forsyth.Sfen
 import shogi.format.usi.Usi
@@ -19,7 +18,6 @@ import shogi.{ Game => ShogiGame }
 import lila.common.Sequence
 import lila.db.ByteArray
 import lila.rating.PerfType
-import lila.rating.PerfType.Classical
 import lila.user.User
 
 case class Game(
@@ -110,7 +108,6 @@ case class Game(
   def isTourOrSimul = isTournament || isSimul
   def isStandalone  = !isTourOrSimul
   def isMandatory   = (isTournament && !isArrangement) || isSimul
-  def isClassical   = perfType contains Classical
 
   def hasChat = !isTournament && !isSimul && nonAi
 
@@ -343,10 +340,21 @@ case class Game(
   def playableCorrespondenceClock: Option[CorrespondenceClock] =
     playable ?? correspondenceClock
 
-  def speed = Speed(shogi.clock.map(_.config))
+  // UltraBullet
+  def isVeryVeryFast = estimateClockTotalTime.exists(_ < 60)
+  // Bullet
+  def isVeryFast = estimateClockTotalTime.exists(ets => ets >= 60 && ets < 300)
+  // Blitz
+  def isFast = estimateClockTotalTime.exists(ets => ets >= 300 && ets < 600)
+  // Rapid
+  def isSlow = estimateClockTotalTime.exists(ets => ets >= 600 && ets < 1500)
+  // Classical and beyond
+  def isVerySlow = estimateClockTotalTime.exists(ets => ets >= 1500)
 
-  def perfKey  = PerfPicker.key(this)
-  def perfType = PerfType(perfKey)
+  def isCorrespondence = perfType == PerfType.Correspondence
+
+  def perfKey  = perfType.key
+  def perfType = PerfType.from(variant, hasClock)
 
   def started = status >= Status.Started
 
@@ -457,7 +465,7 @@ case class Game(
 
   def resignable      = playable && !abortable
   def drawable        = playable && !abortable
-  def forceResignable = resignable && nonAi && !fromFriend && hasClock
+  def forceResignable = resignable && nonAi && !fromFriend && hasClock && !isVerySlow
 
   def finish(status: Status, winner: Option[Color]) =
     copy(
@@ -538,8 +546,6 @@ case class Game(
   private def outoftimeCorrespondence: Boolean =
     playableCorrespondenceClock ?? { _ outoftime turnColor }
 
-  def isCorrespondence = speed == Speed.Correspondence
-
   def isSwitchable = nonAi && (isCorrespondence || isSimul)
 
   def hasClock = clock.isDefined
@@ -552,7 +558,7 @@ case class Game(
 
   def correspondenceGiveTime = Progress(this, copy(movedAt = DateTime.now))
 
-  def estimateClockTotalTime = clock.map(_.estimateTotalSeconds)
+  lazy val estimateClockTotalTime = clock.map(_.estimateTotalSeconds)
 
   def estimateTotalTime =
     estimateClockTotalTime orElse
@@ -560,22 +566,11 @@ case class Game(
 
   def timeForFirstMove: Centis =
     Centis ofSeconds {
-      import Speed._
-      if (isTournament && !isArrangement) speed match {
-        case UltraBullet => 11
-        case Bullet      => 16
-        case Blitz       => 21
-        case Rapid       => 25
-        case _           => 30
-      }
-      else
-        speed match {
-          case UltraBullet => 15
-          case Bullet      => 20
-          case Blitz       => 25
-          case Rapid       => 30
-          case _           => 35
-        }
+      (if (isVeryVeryFast) 15
+       else if (isVeryFast) 20
+       else if (isFast) 25
+       else if (isSlow) 30
+       else 35) - ((isTournament && !isArrangement) ?? 5)
     }
 
   def expirable =
@@ -754,20 +749,19 @@ object Game {
   val idRegex         = """[\w-]{8}""".r
   def validId(id: ID) = idRegex matches id
 
-  private val boardApiRatedMinClock = shogi.Clock.Config(20 * 60, 0, 0, 0)
+  private val boardApiRatedMinClock  = shogi.Clock.Config(15 * 60, 0, 0, 0)
+  private val boardApiCasualMinClock = shogi.Clock.Config(5 * 60, 0, 0, 0)
 
   def isBoardCompatible(game: Game): Boolean =
     game.clock.fold(true) { c =>
       isBoardCompatible(c.config, game.mode)
     }
-
   def isBoardCompatible(clock: Clock.Config, mode: Mode): Boolean =
     if (mode.rated) clock.estimateTotalTime >= boardApiRatedMinClock.estimateTotalTime
-    else shogi.Speed(clock) >= Speed.Rapid
+    else clock.estimateTotalTime >= boardApiCasualMinClock.estimateTotalTime
 
   def isBotCompatible(game: Game): Boolean =
-    (game.hasAi || game.source.contains(Source.Friend)) && isBotCompatible(game.speed)
-  def isBotCompatible(speed: Speed): Boolean = speed >= Speed.Bullet
+    (game.hasAi || game.source.contains(Source.Friend)) && !game.isVeryVeryFast
 
   def isBoardOrBotCompatible(game: Game) =
     isBoardCompatible(game) || isBotCompatible(game)

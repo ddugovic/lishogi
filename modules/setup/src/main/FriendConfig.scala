@@ -3,7 +3,6 @@ package lila.setup
 import shogi.Mode
 import shogi.format.forsyth.Sfen
 
-import lila.game.PerfPicker
 import lila.lobby.Color
 import lila.rating.PerfType
 
@@ -40,8 +39,8 @@ case class FriendConfig(
 
   def isPersistent = timeMode == TimeMode.Unlimited || timeMode == TimeMode.Correspondence
 
-  def perfType: Option[PerfType] =
-    PerfPicker.perfType(shogi.Speed(makeClock), variant, makeDaysPerTurn)
+  def perfType: PerfType =
+    lila.rating.PerfType.from(variant, hasClock = timeMode == TimeMode.RealTime)
 }
 
 object FriendConfig extends BaseHumanConfig {
@@ -60,7 +59,7 @@ object FriendConfig extends BaseHumanConfig {
       pm: Option[Boolean],
   ) =
     new FriendConfig(
-      variant = shogi.variant.Variant(v) err "Invalid game variant " + v,
+      variant = shogi.variant.Variant(v) err s"Invalid game variant $v",
       timeMode = TimeMode(tm) err s"Invalid time mode $tm",
       time = t,
       increment = i,
@@ -68,7 +67,7 @@ object FriendConfig extends BaseHumanConfig {
       periods = p,
       days = d,
       mode = m.fold(Mode.default)(Mode.orDefault),
-      color = Color(c) err "Invalid color " + c,
+      color = Color(c) err s"Invalid color $c",
       sfen = sfen map Sfen.apply,
       proMode = ~pm,
     )

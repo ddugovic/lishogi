@@ -5,7 +5,7 @@ private[gameSearch] object Fields {
   val status        = "s"
   val plies         = "t"
   val rated         = "r"
-  val perf          = "p"
+  val variant       = "p" // previously perf
   val uids          = "u"
   val winner        = "w"
   val loser         = "o"

@@ -28,15 +28,14 @@ final private class Joiner(
             shogi
               .Game(c.initialSfen, c.variant)
               .withClock(c.clock.map(_.config.toClock))
-          val perfPicker = (perfs: lila.user.Perfs) => perfs(c.perfType)
           val game = Game
             .make(
               shogi = shogiGame,
               initialSfen = c.initialSfen,
               sentePlayer =
-                Player.make(shogi.Sente, c.finalColor.fold(challengerUser, destUser), perfPicker),
+                Player.make(shogi.Sente, c.finalColor.fold(challengerUser, destUser), c.perfType),
               gotePlayer =
-                Player.make(shogi.Gote, c.finalColor.fold(destUser, challengerUser), perfPicker),
+                Player.make(shogi.Gote, c.finalColor.fold(destUser, challengerUser), c.perfType),
               mode = if (c.initialSfen.isDefined) Mode.Casual else c.mode,
               proMode = c.proMode,
               source = if (c.tourInfo.isDefined) Source.Tournament else Source.Friend,

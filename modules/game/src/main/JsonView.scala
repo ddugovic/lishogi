@@ -18,8 +18,7 @@ final class JsonView(rematches: Rematches) {
       .obj(
         "id"            -> game.id,
         "variant"       -> game.variant,
-        "speed"         -> game.speed.key,
-        "perf"          -> PerfPicker.key(game),
+        "perf"          -> game.perfKey,
         "rated"         -> game.rated,
         "initialSfen"   -> (game.initialSfen | game.variant.initialSfen),
         "sfen"          -> game.shogi.toSfen,
@@ -55,8 +54,7 @@ final class JsonView(rematches: Rematches) {
           "key"  -> pov.game.variant.key,
           "name" -> pov.game.variant.name,
         ),
-        "speed"    -> pov.game.speed.key,
-        "perf"     -> lila.game.PerfPicker.key(pov.game),
+        "perf"     -> pov.game.perfKey,
         "rated"    -> pov.game.rated,
         "hasMoved" -> pov.hasMoved,
         "opponent" -> Json

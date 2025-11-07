@@ -9,7 +9,6 @@ import org.joda.time.Duration
 import org.joda.time.Interval
 
 import shogi.Mode
-import shogi.Speed
 import shogi.format.forsyth.Sfen
 
 import lila.common.Animal
@@ -106,19 +105,11 @@ case class Tournament(
 
   def overlaps(other: Tournament) = interval overlaps other.interval
 
-  def similarTo(other: Tournament) =
-    (schedule, other.schedule) match {
-      case (Some(s1), Some(s2)) if s1 similarTo s2 => true
-      case _                                       => false
-    }
-
   def popular = nbPlayers > 3
 
   def maxPlayersOrDefault = maxPlayers.getOrElse(Format.maxPlayers(format))
 
-  def speed = timeControl.clock.map(Speed.apply).getOrElse(Speed.Correspondence)
-
-  def perfType: PerfType = PerfType(variant, speed)
+  def perfType: PerfType = PerfType.from(variant, hasClock = !isCorrespondence)
 
   def isCorrespondence = timeControl.days.isDefined
 
@@ -216,7 +207,7 @@ object Tournament {
       createdAt = DateTime.now,
       nbPlayers = 0,
       variant = sched.variant,
-      position = sched.position,
+      position = none,
       mode = Mode.Rated,
       proMode = false,
       conditions = sched.conditions,

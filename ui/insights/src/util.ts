@@ -1,4 +1,4 @@
-import { speeds, variants } from './types';
+import { variants } from './types';
 
 export function toPercentage(n: number, total: number): number {
   return total ? +((n / total) * 100).toFixed(2) : 0;
@@ -10,8 +10,4 @@ export function fixed(n: number | undefined, digits = 2): number {
 
 export function idFromVariant(variant: VariantKey): number {
   return variants.indexOf(variant) + 1;
-}
-
-export function idFromSpeed(speed: Speed): number {
-  return speeds.indexOf(speed);
 }

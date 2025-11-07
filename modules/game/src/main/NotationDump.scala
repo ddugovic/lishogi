@@ -101,7 +101,7 @@ final class NotationDump(
     )
 
   private def eventOf(game: Game) = {
-    val perf = game.perfType.fold("Standard")(_.trans(lila.i18n.defaultLang))
+    val perf = game.perfType.trans(lila.i18n.defaultLang)
     game.tournamentId.map { id =>
       s"${game.mode} $perf tournament https://lishogi.org/tournament/$id"
     } orElse game.simulId.map { id =>

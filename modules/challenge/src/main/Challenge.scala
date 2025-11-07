@@ -4,11 +4,9 @@ import org.joda.time.DateTime
 
 import shogi.Color
 import shogi.Mode
-import shogi.Speed
 import shogi.format.forsyth.Sfen
 import shogi.variant.Variant
 
-import lila.game.PerfPicker
 import lila.rating.PerfType
 import lila.user.User
 
@@ -87,8 +85,6 @@ case class Challenge(
       destUser = toRegistered(variant, timeControl)(u).some,
     )
 
-  def speed = speedOf(timeControl)
-
   def isOpen = ~open
 
   def tournamentId  = tourInfo.map(_.tournamentId)
@@ -154,23 +150,14 @@ object Challenge {
 
   case class TournamentInfo(tournamentId: String, arrangementId: String, withName: Boolean)
 
-  private def speedOf(timeControl: TimeControl) =
-    timeControl match {
-      case TimeControl.Clock(config) => Speed(config)
-      case _                         => Speed.Correspondence
-    }
-
   private def perfTypeOf(variant: Variant, timeControl: TimeControl): PerfType =
-    PerfPicker
-      .perfType(
-        speedOf(timeControl),
-        variant,
-        timeControl match {
-          case TimeControl.Correspondence(d) => d.some
-          case _                             => none
-        },
-      )
-      .|(PerfType.Correspondence)
+    PerfType.from(
+      variant,
+      hasClock = timeControl match {
+        case _: TimeControl.Clock => true
+        case _                    => false
+      },
+    )
 
   def toRegistered(variant: Variant, timeControl: TimeControl)(u: User) =
     Challenger.Registered(u.id, Rating(u.perfs(perfTypeOf(variant, timeControl))))

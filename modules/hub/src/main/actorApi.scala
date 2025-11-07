@@ -204,7 +204,7 @@ package game {
 }
 
 package tv {
-  case class TvSelect(gameId: String, speed: shogi.Speed, data: JsObject)
+  case class TvSelect(gameId: String, data: JsObject)
 }
 
 package notify {

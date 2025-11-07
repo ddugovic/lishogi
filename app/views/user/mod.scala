@@ -436,9 +436,7 @@ object mod {
                   pag.pov(result).map { p =>
                     a(href := routes.Round.watcher(p.gameId, p.color.name))(
                       p.game.isTournament option iconTag(Icons.trophy),
-                      p.game.perfType.map { pt =>
-                        iconTag(pt.icon)
-                      },
+                      iconTag(p.game.perfType.icon),
                       shortClockName(p.game.clock.map(_.config)),
                     )
                   },

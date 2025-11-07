@@ -138,7 +138,6 @@ final private class Finisher(
       .finish(
         variant = game.variant.key,
         source = game.source.fold("unknown")(_.name),
-        speed = game.speed.name,
         mode = game.mode.name,
         status = status.name,
       )

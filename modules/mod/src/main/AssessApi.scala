@@ -155,8 +155,8 @@ final class AssessApi(
 
     def winnerGreatProgress(player: Player): Boolean = {
       game.winner ?? (player ==)
-    } && game.perfType ?? { perfType =>
-      player.color.fold(sente, gote).perfs(perfType).progress >= 100
+    } && {
+      player.color.fold(sente, gote).perfs(game.perfType).progress >= 100
     }
 
     def noFastCoefVariation(player: Player): Option[Float] =
@@ -165,11 +165,7 @@ final class AssessApi(
       )
 
     def winnerUserOption = game.winnerColor.map(_.fold(sente, gote))
-    def winnerNbGames =
-      for {
-        user     <- winnerUserOption
-        perfType <- game.perfType
-      } yield user.perfs(perfType).nb
+    def winnerNbGames    = winnerUserOption.map(_.perfs(game.perfType).nb)
 
     def suspCoefVariation(c: Color) = {
       val x = noFastCoefVariation(game player c)
@@ -201,8 +197,8 @@ final class AssessApi(
           // gote has consistent move times
           else if (goteSuspCoefVariation.isDefined && randomPercent(70))
             goteSuspCoefVariation.map(_ => GoteMoveTime)
-          // don't analyse half of other bullet games
-          else if (game.speed == shogi.Speed.Bullet && randomPercent(50)) none
+          // don't analyse half of other very fast games
+          else if (game.isVeryFast && randomPercent(50)) none
           // someone blurs a lot
           else if (game.players exists manyBlurs) Blurs.some
           // the winner shows a great rating progress

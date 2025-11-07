@@ -1,7 +1,6 @@
 package lila.setup
 
 import shogi.Clock
-import shogi.Speed
 import shogi.format.forsyth.Sfen
 import shogi.variant.Variant
 import shogi.{ Game => ShogiGame }
@@ -45,7 +44,7 @@ private[setup] trait Config {
 
   def validSpeed(isBot: Boolean) =
     !isBot || makeClock.fold(true) { c =>
-      Speed(c) >= Speed.Bullet
+      c.estimateTotalSeconds >= 60
     }
 
   def clockHasTime = time + increment + byoyomi > 0
@@ -92,8 +91,6 @@ trait BaseConfig {
   )
   val aiVariants =
     List(shogi.variant.Standard.id, shogi.variant.Minishogi.id, shogi.variant.Kyotoshogi.id)
-
-  val speeds = Speed.all.map(_.id)
 
   private val timeMin             = 0
   private val timeMax             = 180

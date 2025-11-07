@@ -49,10 +49,7 @@ final class RatingChartApi(
         Json.toJson {
           import lila.rating.PerfType._
           List(
-            Bullet,
-            Blitz,
-            Rapid,
-            Classical,
+            RealTime,
             Correspondence,
             Minishogi,
             Chushogi,
@@ -60,11 +57,16 @@ final class RatingChartApi(
             Kyotoshogi,
             Checkshogi,
             Puzzle,
-            UltraBullet,
-          ) map { pt =>
+          ).map(_.key) ::: List(
+            "ultraBullet",
+            "bullet",
+            "blitz",
+            "rapid",
+            "classical",
+          ) map { key =>
             Json.obj(
-              "name"   -> pt.trans(lila.i18n.defaultLang),
-              "points" -> ratingsMapToJson(user, history(pt)),
+              "name"   -> key,
+              "points" -> ratingsMapToJson(user, history(key)),
             )
           }
         }

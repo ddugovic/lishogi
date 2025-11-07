@@ -28,21 +28,8 @@ declare global {
     japanese: string;
   }
 
-  type Speed =
-    | 'ultraBullet'
-    | 'bullet'
-    | 'blitz'
-    | 'rapid'
-    | 'classical'
-    | 'correspondence'
-    | 'unlimited';
-
   type Perf =
-    | 'ultraBullet'
-    | 'bullet'
-    | 'blitz'
-    | 'rapid'
-    | 'classical'
+    | 'realTime'
     | 'correspondence'
     | 'minishogi'
     | 'chushogi'

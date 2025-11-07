@@ -46,11 +46,7 @@ object list {
           div(cls := "community__leaders")(
             h2(trans.leaderboard()),
             div(cls := "leaderboards")(
-              userTopPerf(leaderboards.bullet, PerfType.Bullet),
-              userTopPerf(leaderboards.blitz, PerfType.Blitz),
-              userTopPerf(leaderboards.rapid, PerfType.Rapid),
-              userTopPerf(leaderboards.classical, PerfType.Classical),
-              userTopPerf(leaderboards.ultraBullet, PerfType.UltraBullet),
+              userTopPerf(leaderboards.realTime, PerfType.RealTime),
               userTopPerf(leaderboards.correspondence, PerfType.Correspondence),
               userTopActive(nbAllTime, trans.activePlayers(), icon = Icons.challenge.some),
               tournamentWinners(tourneyWinners),

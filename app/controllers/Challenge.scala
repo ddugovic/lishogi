@@ -206,7 +206,7 @@ final class Challenge(
                     case None                       => Redirect(routes.Challenge.show(c.id)).fuccess
                     case Some(dest) if ctx.is(dest) => Redirect(routes.Challenge.show(c.id)).fuccess
                     case Some(dest) =>
-                      env.challenge.granter(ctx.me, dest, c.perfType.some) flatMap {
+                      env.challenge.granter(ctx.me, dest, c.perfType) flatMap {
                         case Some(denied) =>
                           showChallenge(c, lila.challenge.ChallengeDenied.translated(denied).some)
                         case None =>

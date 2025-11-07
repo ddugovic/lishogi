@@ -43,7 +43,7 @@ final class JsonView(
       .obj(
         "color" -> p.color.name,
       )
-      .add("user" -> user.map { userJsonView.minimal(_, g.perfType) })
+      .add("user" -> user.map { userJsonView.minimal(_, g.perfType.some) })
       .add("rating" -> p.rating)
       .add("ratingDiff" -> p.ratingDiff)
       .add("provisional" -> p.provisional)
@@ -144,7 +144,7 @@ final class JsonView(
         "color" -> p.color.name,
         "name"  -> p.name,
       )
-      .add("user" -> user.map { userJsonView.minimal(_, g.perfType) })
+      .add("user" -> user.map { userJsonView.minimal(_, g.perfType.some) })
       .add("ai" -> p.aiLevel)
       .add("aiCode" -> p.aiCode)
       .add("rating" -> p.rating)

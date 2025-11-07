@@ -279,11 +279,7 @@ final class User(
               OWrites[UserModel.LightPerf](env.user.jsonView.lightPerfIsOnline)
             Ok(
               Json.obj(
-                "bullet"         -> leaderboards.bullet,
-                "blitz"          -> leaderboards.blitz,
-                "rapid"          -> leaderboards.rapid,
-                "classical"      -> leaderboards.classical,
-                "ultraBullet"    -> leaderboards.ultraBullet,
+                "realTime"       -> leaderboards.realTime,
                 "correspondence" -> leaderboards.correspondence,
                 "minishogi"      -> leaderboards.minishogi,
                 "chushogi"       -> leaderboards.chushogi,
@@ -299,7 +295,7 @@ final class User(
 
   def topNb(nb: Int, perfKey: String) =
     Open { implicit ctx =>
-      PerfType(perfKey) ?? { perfType =>
+      PerfType.byKey(perfKey) ?? { perfType =>
         env.user.cached.top200Perf get perfType.id dmap {
           _ take (nb atLeast 1 atMost 200)
         } flatMap { users =>
@@ -487,7 +483,7 @@ final class User(
       OptionFuResult(env.user.repo named username) { u =>
         if ((u.disabled || (u.lame && !ctx.is(u))) && !isGranted(_.UserSpy)) notFound
         else
-          PerfType(perfKey).fold(notFound) { perfType =>
+          PerfType.byKey(perfKey).fold(notFound) { perfType =>
             for {
               ranks       <- env.user.cached rankingsOf u.id
               oldPerfStat <- env.perfStat.get(u, perfType)

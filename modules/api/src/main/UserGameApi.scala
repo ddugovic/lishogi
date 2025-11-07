@@ -7,7 +7,6 @@ import lila.common.Json.jodaWrites
 import lila.common.LightUser
 import lila.common.paginator.Paginator
 import lila.game.Game
-import lila.game.PerfPicker
 import lila.user.User
 
 final class UserGameApi(
@@ -39,8 +38,7 @@ final class UserGameApi(
         "id"        -> g.id,
         "rated"     -> g.rated,
         "variant"   -> g.variant,
-        "speed"     -> g.speed.key,
-        "perf"      -> PerfPicker.key(g),
+        "perf"      -> g.perfKey,
         "timestamp" -> g.createdAt,
         "plies"     -> g.plies,
         "status"    -> g.status,

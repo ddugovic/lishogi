@@ -2,25 +2,17 @@ package lila.user
 
 import org.joda.time.DateTime
 
-import shogi.Speed
-
 import lila.db.BSON
-import lila.rating.Glicko
 import lila.rating.Perf
 import lila.rating.PerfType
 
 case class Perfs(
-    standard: Perf,
     minishogi: Perf,
     chushogi: Perf,
     annanshogi: Perf,
     kyotoshogi: Perf,
     checkshogi: Perf,
-    ultraBullet: Perf,
-    bullet: Perf,
-    blitz: Perf,
-    rapid: Perf,
-    classical: Perf,
+    realTime: Perf,
     correspondence: Perf,
     puzzle: Perf,
     storm: Perf.Storm,
@@ -29,17 +21,12 @@ case class Perfs(
 
   def perfs =
     List(
-      "standard"       -> standard,
       "minishogi"      -> minishogi,
       "chushogi"       -> chushogi,
       "annanshogi"     -> annanshogi,
       "kyotoshogi"     -> kyotoshogi,
       "checkshogi"     -> checkshogi,
-      "ultraBullet"    -> ultraBullet,
-      "bullet"         -> bullet,
-      "blitz"          -> blitz,
-      "rapid"          -> rapid,
-      "classical"      -> classical,
+      "realTime"       -> realTime,
       "correspondence" -> correspondence,
       "puzzle"         -> puzzle,
     )
@@ -74,7 +61,7 @@ case class Perfs(
 
   def bestRatingIn(types: List[PerfType]): Int = {
     val ps = types map apply match {
-      case Nil => List(standard)
+      case Nil => List(realTime)
       case x   => x
     }
     val minNb = ps.foldLeft(0)(_ + _.nb) / 10
@@ -96,17 +83,13 @@ case class Perfs(
     }
 
   lazy val perfsMap: Map[String, Perf] = Map(
+    "realTime"       -> realTime,
+    "correspondence" -> correspondence,
     "minishogi"      -> minishogi,
     "chushogi"       -> chushogi,
     "annanshogi"     -> annanshogi,
     "kyotoshogi"     -> kyotoshogi,
     "checkshogi"     -> checkshogi,
-    "ultraBullet"    -> ultraBullet,
-    "bullet"         -> bullet,
-    "blitz"          -> blitz,
-    "rapid"          -> rapid,
-    "classical"      -> classical,
-    "correspondence" -> correspondence,
     "puzzle"         -> puzzle,
   )
 
@@ -116,18 +99,13 @@ case class Perfs(
 
   def apply(perfType: PerfType): Perf =
     perfType match {
-      case PerfType.Standard       => standard
+      case PerfType.RealTime       => realTime
+      case PerfType.Correspondence => correspondence
       case PerfType.Minishogi      => minishogi
       case PerfType.Chushogi       => chushogi
       case PerfType.Annanshogi     => annanshogi
       case PerfType.Kyotoshogi     => kyotoshogi
       case PerfType.Checkshogi     => checkshogi
-      case PerfType.UltraBullet    => ultraBullet
-      case PerfType.Bullet         => bullet
-      case PerfType.Blitz          => blitz
-      case PerfType.Rapid          => rapid
-      case PerfType.Classical      => classical
-      case PerfType.Correspondence => correspondence
       case PerfType.Puzzle         => puzzle
     }
 
@@ -135,27 +113,6 @@ case class Perfs(
     perfs map { case (name, perf) =>
       s"$name:${perf.intRating}"
     } mkString ", "
-
-  def updateStandard =
-    copy(
-      standard = {
-        val subs = List(bullet, blitz, rapid, classical, correspondence)
-        subs.maxBy(_.latest.fold(0L)(_.getMillis)).latest.fold(standard) { date =>
-          val nb = subs.map(_.nb).sum
-          val glicko = Glicko(
-            rating = subs.map(s => s.glicko.rating * (s.nb / nb.toDouble)).sum,
-            deviation = subs.map(s => s.glicko.deviation * (s.nb / nb.toDouble)).sum,
-            volatility = subs.map(s => s.glicko.volatility * (s.nb / nb.toDouble)).sum,
-          )
-          Perf(
-            glicko = glicko,
-            nb = nb,
-            recent = Nil,
-            latest = date.some,
-          )
-        }
-      },
-    )
 
   def latest: Option[DateTime] =
     perfsMap.values.flatMap(_.latest).foldLeft(none[DateTime]) {
@@ -169,43 +126,29 @@ case object Perfs {
 
   val default = {
     val p = Perf.default
-    Perfs(p, p, p, p, p, p, p, p, p, p, p, p, p, Perf.Storm.default, Perf.AiLevels.default)
+    Perfs(
+      minishogi = p,
+      chushogi = p,
+      annanshogi = p,
+      kyotoshogi = p,
+      checkshogi = p,
+      realTime = p,
+      correspondence = p,
+      puzzle = p,
+      storm = Perf.Storm.default,
+      aiLevels = Perf.AiLevels.default,
+    )
   }
 
   val defaultManaged = {
     val managed       = Perf.defaultManaged
     val managedPuzzle = Perf.defaultManagedPuzzle
     default.copy(
-      standard = managed,
-      bullet = managed,
-      blitz = managed,
-      rapid = managed,
-      classical = managed,
+      realTime = managed,
       correspondence = managed,
       puzzle = managedPuzzle,
     )
   }
-
-  def variantLens(variant: shogi.variant.Variant): Option[Perfs => Perf] =
-    variant match {
-      case shogi.variant.Standard   => Some(_.standard)
-      case shogi.variant.Minishogi  => Some(_.minishogi)
-      case shogi.variant.Chushogi   => Some(_.chushogi)
-      case shogi.variant.Annanshogi => Some(_.annanshogi)
-      case shogi.variant.Kyotoshogi => Some(_.kyotoshogi)
-      case shogi.variant.Checkshogi => Some(_.checkshogi)
-      case _                        => none
-    }
-
-  def speedLens(speed: Speed): Perfs => Perf =
-    speed match {
-      case Speed.Bullet         => perfs => perfs.bullet
-      case Speed.Blitz          => perfs => perfs.blitz
-      case Speed.Rapid          => perfs => perfs.rapid
-      case Speed.Classical      => perfs => perfs.classical
-      case Speed.Correspondence => perfs => perfs.correspondence
-      case Speed.UltraBullet    => perfs => perfs.ultraBullet
-    }
 
   val perfsBSONHandler = new BSON[Perfs] {
 
@@ -214,17 +157,12 @@ case object Perfs {
     def reads(r: BSON.Reader): Perfs = {
       @inline def perf(key: String) = r.getO[Perf](key) getOrElse Perf.default
       Perfs(
-        standard = perf("standard"),
         minishogi = perf("minishogi"),
         chushogi = perf("chushogi"),
         annanshogi = perf("annanshogi"),
         kyotoshogi = perf("kyotoshogi"),
         checkshogi = perf("checkshogi"),
-        ultraBullet = perf("ultraBullet"),
-        bullet = perf("bullet"),
-        blitz = perf("blitz"),
-        rapid = perf("rapid"),
-        classical = perf("classical"),
+        realTime = perf("realTime"),
         correspondence = perf("correspondence"),
         puzzle = perf("puzzle"),
         storm = r.getO[Perf.Storm]("storm") getOrElse Perf.Storm.default,
@@ -236,17 +174,12 @@ case object Perfs {
 
     def writes(w: BSON.Writer, o: Perfs) =
       reactivemongo.api.bson.BSONDocument(
-        "standard"       -> notNew(o.standard),
         "minishogi"      -> notNew(o.minishogi),
         "chushogi"       -> notNew(o.chushogi),
         "annanshogi"     -> notNew(o.annanshogi),
         "kyotoshogi"     -> notNew(o.kyotoshogi),
         "checkshogi"     -> notNew(o.checkshogi),
-        "ultraBullet"    -> notNew(o.ultraBullet),
-        "bullet"         -> notNew(o.bullet),
-        "blitz"          -> notNew(o.blitz),
-        "rapid"          -> notNew(o.rapid),
-        "classical"      -> notNew(o.classical),
+        "realTime"       -> notNew(o.realTime),
         "correspondence" -> notNew(o.correspondence),
         "puzzle"         -> notNew(o.puzzle),
         "storm"          -> (o.storm.nonEmpty option o.storm),
@@ -255,11 +188,7 @@ case object Perfs {
   }
 
   case class Leaderboards(
-      ultraBullet: List[User.LightPerf],
-      bullet: List[User.LightPerf],
-      blitz: List[User.LightPerf],
-      rapid: List[User.LightPerf],
-      classical: List[User.LightPerf],
+      realTime: List[User.LightPerf],
       correspondence: List[User.LightPerf],
       minishogi: List[User.LightPerf],
       chushogi: List[User.LightPerf],

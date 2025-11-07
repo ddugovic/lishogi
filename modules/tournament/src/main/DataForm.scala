@@ -228,9 +228,6 @@ private[tournament] case class TournamentSetup(
     .orElse(minutes)
     .getOrElse(DataForm.minutesDefault)
 
-  def speed =
-    timeControlSetup.clock.fold[shogi.Speed](shogi.Speed.Correspondence)(shogi.Speed.apply)
-
   def validPosition = position.fold(true) { sfen =>
     sfen.toSituation(realVariant).exists(_.playable(strict = true, withImpasse = true))
   }

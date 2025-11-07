@@ -64,7 +64,6 @@ const gameDomain = [
   ['color', i18n('insights:color')],
   ['outcomes', i18n('insights:outcomes')],
   ['status', i18n('search:result')],
-  ['speed', i18n('insights:speed')],
   ['rated', i18n('rated')],
   ['weekday', i18n('insights:weekday')],
   ['timeOfDay', i18n('insights:timeOfDay')],

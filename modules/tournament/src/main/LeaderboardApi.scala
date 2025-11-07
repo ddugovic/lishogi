@@ -56,7 +56,7 @@ final class LeaderboardApi(
         ChartData {
           aggs
             .flatMap { agg =>
-              PerfType.byId get agg._id map {
+              PerfType.byId(agg._id) map {
                 _ -> ChartData.PerfResult(
                   nb = agg.nb,
                   points = ChartData.Ints(agg.points),

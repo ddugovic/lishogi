@@ -2,7 +2,6 @@ package lila.simul
 
 import org.joda.time.DateTime
 
-import shogi.Speed
 import shogi.format.forsyth.Sfen
 import shogi.variant.Variant
 
@@ -115,13 +114,9 @@ case class Simul(
 
   def gameIds = pairings.map(_.gameId)
 
-  def perfTypes: List[lila.rating.PerfType] =
-    variants.flatMap { variant =>
-      lila.game.PerfPicker.perfType(
-        speed = Speed(clock.config.some),
-        variant = variant,
-        daysPerTurn = none,
-      )
+  def perfTypes: List[PerfType] =
+    variants map { variant =>
+      PerfType.from(variant, hasClock = true)
     }
 
   def applicantRatio = s"${applicants.count(_.accepted)}/${applicants.size}"
@@ -172,13 +167,12 @@ object Simul {
       clock = clock,
       hostId = host.id,
       hostRating = host.perfs.bestRatingIn {
-        variants.flatMap { variant =>
-          lila.game.PerfPicker.perfType(
-            speed = Speed(clock.config.some),
+        variants.map { variant =>
+          PerfType.from(
             variant = variant,
-            daysPerTurn = none,
+            hasClock = true,
           )
-        } ::: List(PerfType.Blitz, PerfType.Rapid, PerfType.Classical)
+        } ::: List(PerfType.RealTime)
       },
       hostGameId = none,
       createdAt = DateTime.now,

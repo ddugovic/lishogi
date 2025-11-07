@@ -19,7 +19,6 @@ import lila.db.dsl._
 import lila.game.Game
 import lila.game.JsonView._
 import lila.game.NotationDump.WithFlags
-import lila.game.PerfPicker
 import lila.game.Query
 import lila.team.GameTeams
 import lila.tournament.Tournament
@@ -257,8 +256,7 @@ final class GameApiV2(
         "id"         -> g.id,
         "rated"      -> g.rated,
         "variant"    -> g.variant.key,
-        "speed"      -> g.speed.key,
-        "perf"       -> PerfPicker.key(g),
+        "perf"       -> g.perfKey,
         "createdAt"  -> g.createdAt,
         "lastMoveAt" -> g.movedAt,
         "status"     -> g.status.name,
@@ -344,7 +342,7 @@ object GameApiV2 {
   ) extends Config {
     def postFilter(g: Game) =
       rated.fold(true)(g.rated ==) && {
-        perfType.isEmpty || g.perfType.exists(perfType.contains)
+        perfType.isEmpty || perfType.contains(g.perfType)
       } && color.fold(true) { c =>
         g.player(c).userId has user.id
       } && analysed.fold(true)(g.metadata.analysed ==)

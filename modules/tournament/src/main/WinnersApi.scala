@@ -13,7 +13,6 @@ import shogi.variant.Variant
 
 import lila.db.dsl._
 import lila.tournament.Schedule.Freq
-import lila.tournament.Schedule.Speed
 
 case class Winner(
     tourId: String,
@@ -41,25 +40,20 @@ case class FreqWinners(
 }
 
 case class AllWinners(
-    bullet: FreqWinners,
-    blitz: FreqWinners,
-    rapid: FreqWinners,
-    classical: FreqWinners,
+    realTime: FreqWinners,
     correspondence: FreqWinners,
-    superblitz: FreqWinners, // to be deprecated
-    hyperrapid: FreqWinners, // to be deprecated
     variants: Map[String, FreqWinners],
 ) {
 
   lazy val top: List[Winner] = List(
-    List(bullet, blitz, rapid, classical, correspondence, superblitz, hyperrapid).flatMap(_.top),
+    List(realTime, correspondence).flatMap(_.top),
     WinnersApi.variants.flatMap { v =>
       variants get v.key flatMap (_.top)
     },
   ).flatten
 
   def userIds =
-    List(bullet, blitz, rapid, classical, correspondence, superblitz, hyperrapid).flatMap(
+    List(realTime, correspondence).flatMap(
       _.userIds,
     ) :::
       variants.values.toList.flatMap(_.userIds)
@@ -107,12 +101,13 @@ final class WinnersApi(
       .cursor[Tournament](ReadPreference.secondaryPreferred)
       .list(Int.MaxValue)
 
-  private def firstStandardWinner(tours: List[Tournament], speed: Speed): Option[Winner] =
+  private def firstStandardWinner(
+      tours: List[Tournament],
+      isCorrespondence: Boolean,
+  ): Option[Winner] =
     tours
       .find { t =>
-        t.variant.standard && t.schedule.fold(t.perfType == Speed.toPerfType(speed))(
-          _.speed == speed,
-        )
+        t.variant.standard && t.isCorrespondence == isCorrespondence
       }
       .flatMap(_.winner)
 
@@ -129,20 +124,15 @@ final class WinnersApi(
       monthlies <- fetchScheduled(Freq.Monthly, sinceDays(3 * 30))
       custom    <- fetchCustom(sinceDays(2 * 7))
     } yield {
-      def standardFreqWinners(speed: Speed): FreqWinners =
+      def standardFreqWinners(isCorrespondence: Boolean): FreqWinners =
         FreqWinners(
-          yearly = firstStandardWinner(yearlies, speed),
-          monthly = firstStandardWinner(monthlies, speed),
-          custom = firstStandardWinner(custom, speed),
+          yearly = firstStandardWinner(yearlies, isCorrespondence),
+          monthly = firstStandardWinner(monthlies, isCorrespondence),
+          custom = firstStandardWinner(custom, isCorrespondence),
         )
       AllWinners(
-        bullet = standardFreqWinners(Speed.Bullet),
-        blitz = standardFreqWinners(Speed.Blitz),
-        rapid = standardFreqWinners(Speed.Rapid),
-        classical = standardFreqWinners(Speed.Classical),
-        correspondence = standardFreqWinners(Speed.Correspondence),
-        superblitz = standardFreqWinners(Speed.SuperBlitz), // bc
-        hyperrapid = standardFreqWinners(Speed.HyperRapid), // bc
+        realTime = standardFreqWinners(isCorrespondence = false),
+        correspondence = standardFreqWinners(isCorrespondence = true),
         variants = WinnersApi.variants.view.map { v =>
           v.key -> FreqWinners(
             yearly = firstVariantWinner(yearlies, v),

@@ -17,20 +17,6 @@ export function clockShow(
   } else return inc ? base : `${base}|0`;
 }
 
-export function clockToPerf(
-  lim: number,
-  byo: number | undefined,
-  inc: number | undefined,
-  per: number | undefined,
-): Perf {
-  const timeSum = clockEstimateSeconds(lim, byo, inc, per);
-  if (timeSum < 60) return 'ultraBullet';
-  else if (timeSum < 300) return 'bullet';
-  else if (timeSum < 599) return 'blitz';
-  else if (timeSum < 1500) return 'rapid';
-  else return 'classical';
-}
-
 export function clockEstimateSeconds(
   lim: number,
   byo: number | undefined,

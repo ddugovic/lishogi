@@ -8,7 +8,7 @@ import {
   tabs,
   variants,
 } from './types';
-import { idFromSpeed, idFromVariant } from './util';
+import { idFromVariant } from './util';
 
 export default class InsightCtrl {
   userId: string;
@@ -87,11 +87,6 @@ export default class InsightCtrl {
       if (val) {
         if (key === 'since') val = Number.parseInt(val);
         else if (key === 'variant') val = variants[(Number.parseInt(val) || 1) - 1];
-        else if (key === 'speeds')
-          val = val
-            .split('')
-            .map((n: string) => Number.parseInt(n))
-            .filter((n: number) => !isNaN(n));
         val = val || flt[key] || df[key];
         if (key !== 'custom') {
           const opt = filterOptions(key);
@@ -152,8 +147,6 @@ export default class InsightCtrl {
     if (this.filter.color !== df.color) params.color = this.filter.color;
     if (this.filter.rated !== df.rated) params.rated = this.filter.rated;
     if (this.filter.computer !== df.computer) params.computer = this.filter.computer;
-    if (this.filter.speeds.length < df.speeds.length)
-      params.speeds = this.filter.speeds.map((s: Speed) => idFromSpeed(s)).join('');
 
     if (tab === 'custom') {
       params.customType = this.filter.custom.type;

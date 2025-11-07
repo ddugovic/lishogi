@@ -57,9 +57,8 @@ final private class PuzzleTrustApi(colls: PuzzleColls)(implicit
   // 1500 = 0
   // 1800 = 1
   // 3000 = 5
-  private def ratingBonus(user: User) = user.perfs.standard.glicko.establishedIntRating.?? {
-    rating =>
-      (rating - 1500) / 300
+  private def ratingBonus(user: User) = {
+    (user.perfs.bestStandardRating - 1500) / 300
   } atLeast 0
 
   private def patronBonus(user: User) = (~user.planMonths * 5) atMost 20

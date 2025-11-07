@@ -38,14 +38,10 @@ object bits {
     )(shogigroundEmpty(variant, color))
 
   def gameIcon(game: Game): String =
-    game.perfType match {
-      case _ if game.initialSfen.isDefined   => Icons.position
-      case _ if game.imported                => Icons.uploadCloud
-      case Some(p) if !game.variant.standard => p.icon
-      case _ if game.hasAi                   => Icons.cogs
-      case Some(p)                           => p.icon
-      case _                                 => Icons.chartLine
-    }
+    if (game.initialSfen.isDefined) Icons.position
+    else if (game.imported) Icons.uploadCloud
+    else if (game.hasAi) Icons.cogs
+    else game.perfType.icon
 
   def sides(
       pov: Pov,
@@ -86,7 +82,7 @@ object bits {
       )
     else
       perfType match {
-        case Some(pt) => span(title := pt.desc)(pt.trans)
+        case Some(pt) => span(pt.trans)
         case _        => variantName(variant)
       }
   }

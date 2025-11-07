@@ -1,10 +1,8 @@
 package lila.setup
 
 import shogi.Clock
-import shogi.Speed
 import shogi.format.forsyth.Sfen
 
-import lila.game.PerfPicker
 import lila.lobby.Color
 import lila.rating.PerfType
 
@@ -33,7 +31,7 @@ final case class ApiConfig(
       acceptByToken,
     ).some
 
-  def perfType: Option[PerfType] = PerfPicker.perfType(shogi.Speed(clock), variant, days)
+  def perfType: PerfType = PerfType.from(variant, hasClock = clock.isDefined)
 
   def validSfen =
     sfen.fold(true) { sf =>
@@ -43,7 +41,7 @@ final case class ApiConfig(
 
   def validSpeed(isBot: Boolean) =
     !isBot || clock.fold(true) { c =>
-      Speed(c) >= Speed.Bullet
+      c.estimateTotalSeconds >= 60
     }
 
   def mode = shogi.Mode(rated)

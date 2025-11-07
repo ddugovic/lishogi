@@ -46,7 +46,7 @@ trait ShogiHelper { self: I18nHelper =>
       case shogi.variant.Annanshogi => trans.annanshogi.txt()
       case shogi.variant.Kyotoshogi => trans.kyotoshogi.txt()
       case shogi.variant.Checkshogi => trans.checkshogi.txt()
-      case _                        => trans.standard.txt()
+      case _                        => trans.shogi.txt()
     }
 
   def variantDescription(v: shogi.variant.Variant)(implicit lang: Lang): String =

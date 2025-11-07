@@ -3,7 +3,6 @@ package lila.evaluation
 import org.joda.time.DateTime
 
 import shogi.Color
-import shogi.Speed
 
 import lila.analyse.Accuracy
 import lila.analyse.Analysis
@@ -18,11 +17,9 @@ case class Assessible(analysed: Analysed, color: Color) {
   import analysed._
 
   lazy val suspiciousErrorRate: Boolean =
-    listAverage(Accuracy.diffsList(Pov(game, color), analysis)) < (game.speed match {
-      case Speed.Bullet => 30
-      case Speed.Blitz  => 25
-      case _            => 20
-    })
+    listAverage(Accuracy.diffsList(Pov(game, color), analysis)) < (if (game.isVeryFast) 30
+                                                                   else if (game.isFast) 25
+                                                                   else 20)
 
   lazy val alwaysHasAdvantage: Boolean =
     !analysis.infos.exists { info =>
@@ -129,12 +126,11 @@ case class Assessible(analysed: Analysed, color: Color) {
   lazy val mtSd: Int  = listDeviation(~game.moveTimes(color) map (_.roundTenths)).toInt
   lazy val blurs: Int = game.playerBlurPercent(color)
 
-  lazy val tcFactor: Double = game.speed match {
-    case Speed.Bullet | Speed.Blitz => 1.25
-    case Speed.Rapid                => 1.0
-    case Speed.Classical            => 0.6
-    case _                          => 1.0
-  }
+  lazy val tcFactor: Double =
+    if (game.isVeryFast || game.isFast) 1.25
+    else if (game.isSlow) 1.0
+    else if (game.isVerySlow) 0.6
+    else 1.0
 
   def playerAssessment: PlayerAssessment =
     PlayerAssessment(

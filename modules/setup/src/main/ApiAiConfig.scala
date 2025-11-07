@@ -38,24 +38,24 @@ final case class ApiAiConfig(
     else if (daysO.isDefined) TimeMode.Correspondence
     else TimeMode.Unlimited
 
+// identical to aiconfig?
   def game(user: Option[User]) =
     makeGame pipe { shogiGame =>
-      val perfPicker = lila.game.PerfPicker.mainOrDefault(
-        shogi.Speed(shogiGame.clock.map(_.config)),
+      val perfType = lila.rating.PerfType.from(
         shogiGame.variant,
-        makeDaysPerTurn,
+        hasClock = timeMode == TimeMode.RealTime,
       )
       Game
         .make(
           shogi = shogiGame,
           initialSfen = sfen,
           sentePlayer = creatorColor.fold(
-            Player.make(shogi.Sente, user, perfPicker),
+            Player.make(shogi.Sente, user, perfType),
             Player.make(shogi.Sente, EngineConfig(sfen, shogiGame.variant, level).some),
           ),
           gotePlayer = creatorColor.fold(
             Player.make(shogi.Gote, EngineConfig(sfen, shogiGame.variant, level).some),
-            Player.make(shogi.Gote, user, perfPicker),
+            Player.make(shogi.Gote, user, perfType),
           ),
           mode = shogi.Mode.Casual,
           proMode = false,
