@@ -1,14 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="498.898" height="544.252" viewBox="0 0 1320 1440">
     <defs>
-        <linearGradient id="0GI_svg__a" x1="-1430.769" x2="-1409.955" y1="-77.47" y2="-77.47" gradientUnits="userSpaceOnUse" spreadMethod="reflect">
+        <linearGradient id="0GI_svg__a" x1="0" x2="-1410" y1="0" y2="0" gradientUnits="userSpaceOnUse" spreadMethod="reflect">
             <stop offset="0" stop-color="#ffd285"/>
-            <stop offset=".232" stop-color="#ffcd79"/>
-            <stop offset=".616" stop-color="#ffca73"/>
-            <stop offset=".808" stop-color="#ffd386"/>
+            <stop offset=".2" stop-color="#ffcd79"/>
+            <stop offset=".6" stop-color="#ffca73"/>
+            <stop offset=".8" stop-color="#ffd386"/>
             <stop offset="1" stop-color="#ffc86e"/>
         </linearGradient>
-        <linearGradient id="0GI_svg__b" x1="-899.905" x2="-899.906" y1="-344.262" y2="125.211" gradientUnits="userSpaceOnUse">
-            <stop offset=".597" stop-color="#fff"/>
+        <linearGradient id="0GI_svg__b" x1="0" x2="0" y1="-344" y2="125" gradientUnits="userSpaceOnUse">
+            <stop offset=".6" stop-color="#fff"/>
             <stop offset="1"/>
         </linearGradient>
         <clipPath id="0GI_svg__c">
