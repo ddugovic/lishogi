@@ -44,8 +44,8 @@ final class JsonView(isOnline: lila.socket.IsOnline) {
       .add("disabled" -> u.disabled)
       .add("tosViolation" -> u.lame)
       .add("language" -> u.lang)
-      .add("profile" -> u.profile.flatMap(_.country).map { country =>
-        Json.obj("country" -> country)
+      .add("profile" -> u.profile.flatMap(_.countryInfo).map { c =>
+        Json.obj("country" -> c.code)
       })
       .add("patron" -> u.isPatron)
 

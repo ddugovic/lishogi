@@ -21,23 +21,19 @@ export async function copyLocalPackage(packageName: string, baseDistFolder: stri
 
 export async function copyVendorPackage(
   packageName: string,
-  fileNames: string[],
-  baseDistFolder: string,
+  entries: string[],
+  baseDistDir: string,
 ): Promise<void> {
   const nameNoScope = stripScope(packageName);
   const packagePath = path.join(dirname, 'node_modules', packageName);
+  const destBase = path.join(baseDistDir, nameNoScope);
 
-  await fs.mkdir(path.join(baseDistFolder, nameNoScope), { recursive: true });
+  await fs.mkdir(destBase, { recursive: true });
 
-  for (const fileName of fileNames) {
-    const sourceFilePath = path.join(packagePath, fileName);
-    const destinationFilePath = path.join(
-      path.join(baseDistFolder, nameNoScope),
-      path.basename(fileName),
-    );
-
-    await fs.copyFile(sourceFilePath, destinationFilePath);
-
-    console.log(`Copied ${packageName}`);
+  for (const entry of entries) {
+    const src = path.join(packagePath, entry);
+    const dest = path.join(destBase, path.basename(entry));
+    await fs.cp(src, dest, { recursive: true });
+    console.log(`Copied ${packageName}: ${entry}`);
   }
 }

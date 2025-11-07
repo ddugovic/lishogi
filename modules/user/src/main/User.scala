@@ -43,7 +43,13 @@ case class User(
   override def toString =
     s"User $username(${perfs.bestRating}) games:${count.game}${marks.troll ?? " troll"}${marks.engine ?? " engine"}"
 
-  def light = LightUser(id = id, name = username, title = title.map(_.value), isPatron = isPatron)
+  def light = LightUser(
+    id = id,
+    name = username,
+    title = title.map(_.value),
+    isPatron = isPatron,
+    countryCode = countryInfo.map(_.code),
+  )
 
   def realNameOrUsername = profileOrDefault.nonEmptyRealName | username
 
@@ -65,6 +71,10 @@ case class User(
     }
 
   def profileOrDefault = profile | Profile.default
+
+  def countryInfo = profileOrDefault.countryInfo
+
+  def flagCode = profile.flatMap(_.flagCode)
 
   def hasGames = count.game > 0
 

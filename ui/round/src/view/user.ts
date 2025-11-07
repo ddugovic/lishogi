@@ -29,6 +29,8 @@ export function userHtml(ctrl: RoundController, player: Player, position: Positi
 
   if (user) {
     const connecting = !player.onGame && ctrl.firstSeconds && user.online;
+    const countryNode = user.profile?.country ? flagImage(user.profile.country) : undefined;
+    const mainUserNodes = [user.username, countryNode];
     return h(
       `div.ruser-${position}.ruser.user-link`,
       {
@@ -67,17 +69,11 @@ export function userHtml(ctrl: RoundController, player: Player, position: Positi
               target: ctrl.isPlaying() ? '_blank' : '_self',
             },
           },
-          user.title
-            ? [
-                h(
-                  'span.title',
-                  user.title == 'BOT' ? { attrs: { 'data-bot': true } } : {},
-                  user.title,
-                ),
-                ' ',
-                user.username,
-              ]
-            : [user.username],
+          [
+            user.title == 'BOT' ? h('span.bot-tag', 'BOT ') : undefined,
+            rank ? rankTag(rank) : undefined,
+            ...mainUserNodes,
+          ],
         ),
         rating ? h('rating', rating + (player.provisional ? '?' : '')) : null,
         ratingDiff,

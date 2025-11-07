@@ -40,7 +40,7 @@ final class LightUserApi(
     name = "user.light",
     initialCapacity = 2048,
     compute = id => repo.coll.one[LightUser]($id(id), projection.some),
-    default = id => LightUser(id, id, None, false).some,
+    default = id => LightUser(id, id, none, false, none).some,
     strategy = Syncache.WaitAfterUptime(8 millis),
     expireAfter = Syncache.ExpireAfterWrite(20 minutes),
   )
@@ -58,6 +58,8 @@ private object LightUserApi {
             name = doc.string(F.username) err "LightUser username missing",
             title = doc.string(F.title),
             isPatron = ~doc.child(F.plan).flatMap(_.getAsOpt[Boolean]("active")),
+            countryCode =
+              doc.child(F.profile).flatMap(_.getAsOpt[String]("country")).filter(_.nonEmpty),
           ),
         )
     }

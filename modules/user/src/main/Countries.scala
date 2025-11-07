@@ -84,6 +84,7 @@ object Countries {
     C("ER", "Eritrea"),
     C("ES", "Spain"),
     C("ET", "Ethiopia"),
+    C("EU", "European Union"),
     C("FI", "Finland"),
     C("FJ", "Fiji"),
     C("FK", "Falkland Islands"),
@@ -132,7 +133,7 @@ object Countries {
     C("JE", "Jersey"),
     C("JM", "Jamaica"),
     C("JO", "Jordan"),
-    C("JP", "Japan"),
+    C("JP", "Japan (日本)"),
     C("KE", "Kenya"),
     C("KG", "Kyrgyzstan"),
     C("KH", "Cambodia"),
@@ -269,15 +270,7 @@ object Countries {
     C("ZA", "South Africa"),
     C("ZM", "Zambia"),
     C("ZW", "Zimbabwe"),
-  ).sortBy(_.name) ::: List(
-    // whatever
-    C("EU", "European Union"),
-    C("_united-nations", "United Nations"),
-    C("_rainbow", "Rainbow"),
-    C("_pirate", "Pirate"),
-    C("_earth", "Earth"),
-    C("_lishogi", "Lishogi"),
-  )
+  ).sortBy(_.name)
 
   val allPairs = all map { c =>
     c.code -> c.name
