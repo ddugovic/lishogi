@@ -8,12 +8,12 @@ import lila.db.dsl._
 object BSONHandlers {
 
   implicit val perfTypeIdIso: Iso.IntIso[PerfType] = Iso.int[PerfType](
-    from = id => PerfType.byId get id err s"Invalid perf type id $id",
+    from = id => PerfType.byId(id).getOrElse(PerfType.RealTime),
     to = pt => pt.id,
   )
 
   implicit val perfTypeKeyIso: Iso.StringIso[PerfType] = Iso.string[PerfType](
-    from = key => PerfType(key) err s"Invalid perf type key $key",
+    from = key => PerfType.byKey(key).getOrElse(PerfType.RealTime),
     to = pt => pt.key,
   )
 

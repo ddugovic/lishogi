@@ -23,7 +23,7 @@ final class I18n(env: Env) extends LilaController(env) {
         .fold(
           _ => notFound,
           code => {
-            val lang = toLang(code) err "Universe is collapsing"
+            val lang = toLang(code).getOrElse(lila.i18n.defaultLang)
             ctx.me.filterNot(_.lang contains lang.code).?? {
               env.user.repo.setLang(_, lang)
             } >> negotiate(
