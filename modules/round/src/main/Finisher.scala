@@ -206,8 +206,10 @@ final private class Finisher(
     }
 
   private def updateAiLevels(game: Game, user: User): Funit =
-    (game.aiLevel.filter(level => user.perfs.aiLevels(game.variant).fold(true)(_ < level))) ?? {
-      level =>
-        userRepo.setPerfAiLevel(user.id, game.variant, level).void
+    !game.fromPosition ?? {
+      (game.aiLevel.filter(level => user.perfs.aiLevels(game.variant).fold(true)(_ < level))) ?? {
+        level =>
+          userRepo.setPerfAiLevel(user.id, game.variant, level).void
+      }
     }
 }
