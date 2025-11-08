@@ -109,10 +109,6 @@ object pref {
               displayBoardResizeHandle(),
               radios(form("display.resizeHandle"), translatedBoardResizeHandleChoices),
             ),
-            setting(
-              blindfoldShogi(),
-              radios(form("display.blindfold"), translatedBlindfoldChoices),
-            ),
           ),
           categFieldset(PrefCateg.ShogiClock, categ)(
             setting(

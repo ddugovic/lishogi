@@ -30,7 +30,6 @@ object DataForm {
         "boardLayout"        -> checkedNumber(Pref.BoardLayout.choices),
         "zen"                -> optional(booleanNumber),
         "resizeHandle"       -> optional(checkedNumber(Pref.ResizeHandle.choices)),
-        "blindfold"          -> checkedNumber(Pref.Blindfold.choices),
       )(DisplayData.apply)(DisplayData.unapply),
       "behavior" -> mapping(
         "moveEvent"     -> optional(checkedNumber(Pref.MoveEvent.choices)),
@@ -70,7 +69,6 @@ object DataForm {
       boardLayout: Int,
       zen: Option[Int],
       resizeHandle: Option[Int],
-      blindfold: Int,
   )
 
   case class BehaviorData(
@@ -116,7 +114,6 @@ object DataForm {
         dropDestination = display.dropDestination == 1,
         replay = display.replay,
         colorName = display.colorName,
-        blindfold = display.blindfold,
         challenge = challenge,
         tourChallenge = tourChallenge,
         message = message,
@@ -153,7 +150,6 @@ object DataForm {
           handsBackground = if (pref.handsBackground) 1 else 0,
           replay = pref.replay,
           colorName = pref.colorName,
-          blindfold = pref.blindfold,
           zen = pref.zen.some,
           resizeHandle = pref.resizeHandle.some,
         ),

@@ -78,7 +78,7 @@ object mini {
         momentFromNowOnce(u.createdAt),
         (u.lameOrTroll || u.disabled) option span(cls := "upt__mod__marks")(mod.userMarks(u, None)),
       ),
-      (!ctx.pref.isBlindfold) ?? playing map { pov =>
+      playing map { pov =>
         frag(
           gameSfen(pov, ctx.me),
           div(cls := "upt__game-legend")(

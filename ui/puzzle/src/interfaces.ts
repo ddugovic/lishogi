@@ -136,7 +136,6 @@ interface PuzzlePrefs {
   animation: {
     duration: number;
   };
-  blindfold: boolean;
   resizeHandle: number;
   keyboardMove: boolean;
 }

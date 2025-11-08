@@ -118,7 +118,6 @@ export interface ApiEnd {
 
 interface Pref {
   animationDuration: number;
-  blindfold: boolean;
   clockSound: boolean;
   clockAudible: 0 | 1;
   clockTenths: 0 | 1 | 2;

@@ -7,14 +7,14 @@ import shogi.Pos
 import shogi.Situation
 import shogi.variant.Variant
 
-import lila.api.Context
 import lila.app.ui.ScalatagsTemplate._
 import lila.game.Pov
 
 trait ShogigroundHelper {
 
-  def shogiground(sit: Situation, orient: Color, @scala.annotation.unused lastUsi: List[Pos] = Nil)(
-      implicit ctx: Context,
+  def shogiground(
+      sit: Situation,
+      orient: Color,
   ): Frag =
     sgWrap(sit.variant, orient) {
       frag(
@@ -33,14 +33,12 @@ trait ShogigroundHelper {
                 orient.fold(sit.variant.numberOfFiles - p.file.index - 1, p.file.index) * scale
               def y(p: Pos) =
                 orient.fold(p.rank.index, sit.variant.numberOfRanks - p.rank.index - 1) * scale
-              if (ctx.pref.isBlindfold) ""
-              else
-                sit.board.pieces.map { case (pos, piece) =>
-                  val klass = s"${piece.color.name} ${piece.role.name}"
-                  s"""<piece class="$klass" style="transform: translate(${x(pos)}%, ${y(
-                      pos,
-                    )}%) scale(0.5)"></piece>"""
-                } mkString ""
+              sit.board.pieces.map { case (pos, piece) =>
+                val klass = s"${piece.color.name} ${piece.role.name}"
+                s"""<piece class="$klass" style="transform: translate(${x(pos)}%, ${y(
+                    pos,
+                  )}%) scale(0.5)"></piece>"""
+              } mkString ""
             }
           },
         ),
@@ -53,11 +51,10 @@ trait ShogigroundHelper {
       )
     }
 
-  def shogiground(pov: Pov)(implicit ctx: Context): Frag =
+  def shogiground(pov: Pov): Frag =
     shogiground(
       sit = pov.game.situation,
       orient = pov.color,
-      lastUsi = ~pov.game.history.lastUsi.map(_.positions),
     )
 
   def shogigroundEmpty(variant: Variant, orient: Color) =

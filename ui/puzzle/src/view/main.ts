@@ -89,7 +89,7 @@ export default function (ctrl: Controller): VNode {
         theme(ctrl),
       ]),
       h(
-        `div.puzzle__board.main-board${ctrl.pref.blindfold ? '.blindfold' : ''}`,
+        'div.puzzle__board.main-board',
         {
           hook:
             'ontouchstart' in window || window.lishogi.storage.get('scrollMoves') == '0'

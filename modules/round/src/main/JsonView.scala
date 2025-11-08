@@ -103,12 +103,11 @@ final class JsonView(
                 .add("clockSound" -> pref.clockSound)
                 .add("confirmResign" -> (!nvui && pref.confirmResign == Pref.ConfirmResign.YES))
                 .add("keyboardMove" -> (!nvui && pref.keyboardMove == Pref.KeyboardMove.YES))
-                .add("blindfold" -> pref.isBlindfold)
                 .add("highlightLastDests" -> pref.highlightLastDests)
                 .add("highlightCheck" -> pref.highlightCheck)
                 .add("squareOverlay" -> pref.squareOverlay)
-                .add("destination" -> (pref.destination && !pref.isBlindfold))
-                .add("dropDestination" -> (pref.dropDestination && !pref.isBlindfold))
+                .add("destination" -> pref.destination)
+                .add("dropDestination" -> pref.dropDestination)
                 .add("enablePremove" -> pref.premove)
                 .add("submitMove" -> {
                   import Pref.SubmitMove._
@@ -195,8 +194,8 @@ final class JsonView(
                 .add("highlightLastDests" -> pref.highlightLastDests)
                 .add("highlightCheck" -> pref.highlightCheck)
                 .add("squareOverlay" -> pref.squareOverlay)
-                .add("destination" -> (pref.destination && !pref.isBlindfold))
-                .add("dropDestination" -> (pref.dropDestination && !pref.isBlindfold)),
+                .add("destination" -> pref.destination)
+                .add("dropDestination" -> pref.dropDestination),
               "evalPut" -> JsBoolean(me.??(evalCache.shouldPut)),
             )
             .add("evalPut" -> me.??(evalCache.shouldPut))
@@ -258,8 +257,8 @@ final class JsonView(
           .add("highlightLastDests" -> pref.highlightLastDests)
           .add("highlightCheck" -> pref.highlightCheck)
           .add("squareOverlay" -> pref.squareOverlay)
-          .add("destination" -> (pref.destination && !pref.isBlindfold))
-          .add("dropDestination" -> (pref.dropDestination && !pref.isBlindfold)),
+          .add("destination" -> pref.destination)
+          .add("dropDestination" -> pref.dropDestination),
         "path"         -> pov.game.plies,
         "userAnalysis" -> true,
       )

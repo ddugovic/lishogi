@@ -210,9 +210,4 @@ trait SetupHelper { self: I18nHelper =>
       (Pref.ResizeHandle.ALWAYS, trans.always.txt()),
     )
 
-  def translatedBlindfoldChoices(implicit lang: Lang) =
-    List(
-      Pref.Blindfold.NO  -> trans.no.txt(),
-      Pref.Blindfold.YES -> trans.yes.txt(),
-    )
 }

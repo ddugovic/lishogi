@@ -12,7 +12,6 @@ case class Pref(
     kyoPieceSet: String,
     soundSet: String,
     clockSoundSet: String,
-    blindfold: Int,
     takeback: Int,
     moretime: Int,
     clockAudible: Int,
@@ -122,8 +121,6 @@ case class Pref(
       case _                => 250
     }
 
-  def isBlindfold = blindfold == Pref.Blindfold.YES
-
   def customThemeOrDefault = customTheme | CustomTheme.default
 
   def isUsingThickGrid = thickGrid == ThickGrid.YES
@@ -199,13 +196,6 @@ object Pref {
       CLICK,
       DRAG,
       BOTH,
-    )
-  }
-
-  object Blindfold extends BooleanPref {
-    override val choices = Seq(
-      NO,
-      YES,
     )
   }
 
@@ -403,7 +393,6 @@ object Pref {
     kyoPieceSet = KyoPieceSet.default.key,
     soundSet = SoundSet.default.key,
     clockSoundSet = ClockSoundSet.default.key,
-    blindfold = Blindfold.NO,
     takeback = Takeback.ALWAYS,
     moretime = Moretime.ALWAYS,
     clockSound = true,

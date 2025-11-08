@@ -20,7 +20,6 @@ object JsonView {
       "soundSet"           -> p.soundSet,
       "clockSoundSet"      -> p.clockSoundSet,
       "notation"           -> p.notation,
-      "blindfold"          -> p.blindfold,
       "takeback"           -> p.takeback,
       "moretime"           -> p.moretime,
       "clockAudible"       -> p.clockAudible,

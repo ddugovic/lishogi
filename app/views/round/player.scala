@@ -86,7 +86,6 @@ object player {
             div(
               cls := List(
                 "round__now-playing" -> true,
-                "blindfold"          -> ctx.pref.isBlindfold,
               ),
             )(bits.others(playing, simul)),
         ),

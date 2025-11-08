@@ -21,7 +21,7 @@ export function main(ctrl: RoundController): VNode {
         },
         [
           h(
-            `div.round__app__board.main-board.v-${d.game.variant.key}${ctrl.data.pref.blindfold ? '.blindfold' : ''}`,
+            `div.round__app__board.main-board.v-${d.game.variant.key}`,
             {
               hook:
                 hasTouchEvents || window.lishogi.storage.get('scrollMoves') == '0'
