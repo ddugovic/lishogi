@@ -13,6 +13,7 @@ case class Bookmark(game: lila.game.Game, user: lila.user.User)
 final class BookmarkApi(
     coll: Coll,
     gameRepo: GameRepo,
+    gameProxyRepo: lila.round.GameProxyRepo,
     paginator: PaginatorBuilder,
 )(implicit ec: scala.concurrent.ExecutionContext) {
 
@@ -20,7 +21,7 @@ final class BookmarkApi(
     coll exists selectId(gameId, userId)
 
   def exists(game: Game, user: User): Fu[Boolean] =
-    if (game.bookmarks > 0) exists(game.id, user.id)
+    if (game.hasBookmarks) exists(game.id, user.id)
     else fuFalse
 
   def exists(game: Game, user: Option[User]): Fu[Boolean] =
@@ -28,7 +29,7 @@ final class BookmarkApi(
 
   def filterGameIdsBookmarkedBy(games: Seq[Game], user: Option[User]): Fu[Set[Game.ID]] =
     user ?? { u =>
-      val candidateIds = games collect { case g if g.bookmarks > 0 => g.id }
+      val candidateIds = games collect { case g if g.hasBookmarks => g.id }
       candidateIds.nonEmpty ??
         coll.secondaryPreferred
           .distinctEasy[Game.ID, Set]("g", userIdQuery(u.id) ++ $doc("g" $in candidateIds))
@@ -44,7 +45,10 @@ final class BookmarkApi(
     exists(gameId, userId) flatMap { e =>
       (if (e) remove(gameId, userId) else add(gameId, userId, DateTime.now)) inject !e
     } flatMap { bookmarked =>
-      gameRepo.incBookmarks(gameId, if (bookmarked) 1 else -1)
+      val inc = if (bookmarked) 1 else -1
+      gameRepo.incBookmarks(gameId, inc) >> gameProxyRepo.updateIfPresent(gameId)(
+        _.incBookmarks(inc),
+      )
     }
 
   def countByUser(user: User): Fu[Int] = coll.countSel(userIdQuery(user.id))
