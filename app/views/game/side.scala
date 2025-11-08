@@ -132,7 +132,7 @@ object side {
           )
         },
         tour ?? { t =>
-          t.tour.isArena option
+          (t.tour.isArena && (t.tour.isStarted || t.tour.isRecentlyFinished)) option
             st.section(cls := "game__tournament-clock")(
               div(cls := "clock", dataTime := t.tour.secondsToFinish)(
                 div(cls := "time")(t.tour.clockStatus),
