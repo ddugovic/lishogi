@@ -73,6 +73,14 @@ final class Main(
       }
     }
 
+  def ranks =
+    Open { implicit ctx =>
+      pageHit
+      fuccess {
+        html.site.ranks()
+      }
+    }
+
   def jslog(id: String) =
     Open { ctx =>
       env.round.selfReport(

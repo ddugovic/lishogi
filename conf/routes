@@ -655,6 +655,8 @@ POST  /event/manager                   controllers.Event.create
 GET   /captcha/$id<\w{8}>              controllers.Main.captchaCheck(id: String)
 GET   /developers                      controllers.Main.webmasters
 GET   /lag                             controllers.Main.lag
+GET   /rating-ranks                    controllers.Main.ranks
+
 
 # Dev
 GET   /dev/cli                         controllers.Dev.cli
