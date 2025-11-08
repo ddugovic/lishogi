@@ -76,6 +76,7 @@ function userMod($zone: any): void {
 
   makeReady('form.xhr', (el: HTMLFormElement) => {
     $(el).on('submit', () => {
+      $(el).find('button').toggleClass('active');
       $(el).addClass('ready').find('input').prop('disabled', true);
       window.lishogi.xhr.formToXhr(el).then(html => {
         $zone.find('.mz-section--actions').replaceWith(html);

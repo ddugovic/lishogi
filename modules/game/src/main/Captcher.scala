@@ -79,7 +79,6 @@ final private class Captcher(gameRepo: GameRepo)(implicit ec: scala.concurrent.E
     private def solve(game: ShogiGame): Option[Captcha.Solutions] =
       game.situation
         .moveActorsOf(game.situation.color)
-        .view
         .flatMap { case moveActor =>
           moveActor.toUsis filter { usi =>
             game.situation(usi).toOption.fold(false)(_.checkmate)

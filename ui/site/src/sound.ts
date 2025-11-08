@@ -58,8 +58,6 @@ export function createSound(): SoundI {
     const cur = state.sounds.get(path);
     if (cur) return cur;
 
-    // console.log(['ogg', 'mp3'].map(ext => `${state.baseUrl}/${ext}/${path}.${ext}`));
-
     const howl = new window.Howl({
       src: ['ogg', 'mp3'].map(ext => `${state.baseUrl}/${ext}/${path}.${ext}`),
     });
@@ -105,13 +103,15 @@ export function createSound(): SoundI {
     }
 
     window.Howler.volume(volume());
-    const howl = loadSound(name, categ, set);
 
-    if (window.Howler.ctx?.state === 'suspended') {
-      window.Howler.ctx.resume().then(() => {
-        howl?.play();
-      });
-    } else howl?.play();
+    const howl = loadSound(name, categ, set);
+    if (howl) {
+      if (window.Howler.ctx?.state === 'suspended') {
+        window.Howler.ctx.resume().then(() => {
+          howl.play();
+        });
+      } else howl.play();
+    } else console.warn('Howl not found', name, categ, set);
   }
 
   function move(capture?: boolean): void {

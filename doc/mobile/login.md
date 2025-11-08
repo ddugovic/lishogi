@@ -30,7 +30,7 @@ Set-Cookie: lila2="3b5cc8c80f0af258a31dc4fd1b5381cabe7388c7-sessionId=80q7V5stkK
     {
       "id": "abcdefgh1234",
       "variant": "standard",
-      "speed": "blitz",
+      "speed": "correspondence",
       "perf": "standard",
       "rated": true,
       "opponent": {

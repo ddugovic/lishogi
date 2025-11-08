@@ -20,7 +20,7 @@ export function boot(
   let chat: ChatCtrl | undefined;
   if (data.tournament) $('body').data('tournament-id', data.tournament.id);
 
-  // not ideal - flashed blue board
+  // not ideal - flashes blue/grey board
   const bodyCls = document.body.classList;
   if ((data.game.isProMode && bodyCls.contains('blue')) || bodyCls.contains('gray')) {
     bodyCls.remove('blue', 'grey');

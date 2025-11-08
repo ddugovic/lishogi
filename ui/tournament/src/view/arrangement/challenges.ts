@@ -46,7 +46,8 @@ function renderChallenges(ctrl: TournamentController, inC: Challenge[], outC: Ch
 function renderChallenge(ctrl: TournamentController, c: Challenge, dir: 'in' | 'out'): MaybeVNode {
   const isIn = dir === 'in';
 
-  const a = ctrl.findOrCreateArrangement(c.tourInfo?.arrId!);
+  const arrId = c.tourInfo?.arrId;
+  const a = arrId ? ctrl.findOrCreateArrangement(arrId) : undefined;
 
   if (!a) return;
   const players = [

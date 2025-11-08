@@ -70,7 +70,7 @@ case class Hook(
         "i"     -> (if (clock.incrementSeconds > 0) 1 else 0),
         "b"     -> (if (clock.byoyomiSeconds > 0) 1 else 0),
         "p"     -> (if (clock.periodsTotal > 1) 1 else 0),
-        "perf"    -> perfType.key,
+        "perf"  -> perfType.key,
       )
       .add("prov" -> perf.map(_.provisional).filter(identity))
       .add("u" -> user.map(_.username))

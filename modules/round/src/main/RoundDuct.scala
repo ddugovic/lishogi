@@ -294,6 +294,7 @@ final private[round] class RoundDuct(
     case ShoginetPlayFallback(ply) =>
       handle { game =>
         (game.playable && game.plies == ply) ?? {
+          logger.warn(s"Shoginet play fallback: ${game.shogi.toSfen}")
           val usiOpt = game.situation
             .moveActorsOf(game.situation.color)
             .flatMap(_.toUsis)

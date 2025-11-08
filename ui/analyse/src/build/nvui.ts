@@ -184,7 +184,9 @@ function onSubmit(
   $input: JQuery<HTMLInputElement>,
 ) {
   return () => {
-    let input = $input.val()?.trim()!;
+    let input = $input.val()?.trim();
+    if (!input) return;
+
     if (isShortCommand(input)) input = `/${input}`;
     if (input[0] === '/') onCommand(ctrl, notify, input.slice(1), style());
     else {

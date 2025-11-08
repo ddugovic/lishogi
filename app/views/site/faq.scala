@@ -22,7 +22,7 @@ object faq {
 
   def apply()(implicit ctx: Context) =
     help.layout(
-      title = trans.faq.frequentlyAskedQuestions.txt(),
+      title = frequentlyAskedQuestions.txt(),
       active = "faq",
       moreCss = cssTag("misc.faq"),
     ) {
@@ -130,7 +130,7 @@ object faq {
           ),
           ol(
             li(havePlayedMoreThanThirtyGamesInThatRating()),
-            li(havePlayedARatedGameAtLeastOneWeekAgo()),
+            li(havePlayedARatedGameAtLeastOneMonthAgo()),
             li(
               ratingDeviationLowerThanXinShogiYinVariants(
                 lila.rating.Glicko.standardRankableDeviation,
