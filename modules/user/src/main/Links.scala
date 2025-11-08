@@ -30,21 +30,25 @@ object Link {
   }
 
   object Site {
-    case object Twitter              extends Site("Twitter", List("twitter.com"))
+    case object Twitter              extends Site("Twitter", List("twitter.com", "x.com"))
     case object Facebook             extends Site("Facebook", List("facebook.com"))
+    case object Instagram            extends Site("Instagram", List("instagram.com"))
     case object YouTube              extends Site("YouTube", List("youtube.com"))
     case object Twitch               extends Site("Twitch", List("twitch.tv"))
     case object GitHub               extends Site("GitHub", List("github.com"))
     case object VKontakte            extends Site("VKontakte", List("vk.com"))
+    case object EightOneDojo         extends Site("81Dojo", List("81dojo.com"))
     case class Other(domain: String) extends Site(domain, List(domain))
 
     val allKnown: List[Site] = List(
       Twitter,
       Facebook,
+      Instagram,
       YouTube,
       Twitch,
       GitHub,
       VKontakte,
+      EightOneDojo,
     )
   }
 }
