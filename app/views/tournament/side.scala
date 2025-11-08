@@ -118,7 +118,7 @@ object side {
           p(
             trans.fromPosition.txt(),
             separator,
-            views.html.base.bits.sfenAnalysisLink(sfen),
+            views.html.base.bits.sfenAnalysisLink(tour.variant, sfen),
           )
         },
         (tour.hasArrangements && ctx.pref.tourChallenge != lila.pref.Pref.Challenge.ALWAYS) option a(

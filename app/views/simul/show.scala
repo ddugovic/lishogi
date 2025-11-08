@@ -41,8 +41,10 @@ object show {
         ),
       ),
     ) {
-      val handicap = (for {
-        variant <- sim.variants.headOption.ifFalse(sim.variantRich)
+      val variantOpt    = sim.variants.headOption.ifTrue(sim.variants.size == 1)
+      val variantForced = variantOpt.getOrElse(shogi.variant.Standard)
+      val handicapOpt = (for {
+        variant <- variantOpt
         sfen    <- sim.position
         handicap <- shogi.Handicap.allByVariant
           .get(variant)
@@ -79,26 +81,26 @@ object show {
               br,
               trans.hostColorX(sim.hostColor match {
                 case Some(color) => {
-                  if (handicap.isDefined) handicapColorName(color)
+                  if (handicapOpt.isDefined) handicapColorName(color)
                   else standardColorName(color)
                 }
                 case _ => trans.randomColor()
               }),
-              handicap map { h =>
+              handicapOpt map { h =>
                 frag(
                   br,
                   strong(h.japanese),
                   " ",
                   h.english,
                   " - ",
-                  views.html.base.bits.sfenAnalysisLink(h.sfen),
+                  views.html.base.bits.sfenAnalysisLink(variantForced, h.sfen),
                 )
               } orElse sim.position.map { sfen =>
                 frag(
                   br,
                   trans.fromPosition(),
                   " - ",
-                  views.html.base.bits.sfenAnalysisLink(sfen),
+                  views.html.base.bits.sfenAnalysisLink(variantForced, sfen),
                 )
               },
             ),

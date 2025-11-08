@@ -78,7 +78,7 @@ object side {
                       separator,
                       (if (game.rated) trans.rated else trans.casual).txt(),
                       separator,
-                      bits.variantLink(game.variant),
+                      bits.variantLink(game.variant, none),
                       game.isProMode option frag(
                         br,
                         small(cls := "text", dataIcon := Icons.crown)(trans.proMode()),

@@ -34,7 +34,7 @@ object widgets {
                       trans.importedByX(showUsernameById(uid.some, None, false))
                     } getOrElse span("IMPORT"),
                     separator,
-                    bits.variantLink(g.variant),
+                    bits.variantLink(g.variant, none),
                   )
                 else
                   frag(

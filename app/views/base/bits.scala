@@ -4,6 +4,7 @@ import controllers.routes
 import play.api.i18n.Lang
 
 import shogi.format.forsyth.Sfen
+import shogi.variant.Variant
 
 import lila.app.ui.ScalatagsTemplate._
 
@@ -43,6 +44,8 @@ z-index: 99;
       a(href := "https://discord.gg/YFtpMGg3rR", rel := "nofollow")("Discord"),
     )
 
-  def sfenAnalysisLink(sfen: Sfen)(implicit lang: Lang) =
-    a(href := routes.UserAnalysis.parseArg(sfen.value.replace(" ", "_")))(trans.analysis())
+  def sfenAnalysisLink(variant: Variant, sfen: Sfen)(implicit lang: Lang) =
+    a(href := routes.UserAnalysis.parseArg(s"${variant.key}/${sfen.value.replace(" ", "_")}"))(
+      trans.analysis(),
+    )
 }
