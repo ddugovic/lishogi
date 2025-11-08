@@ -7,7 +7,7 @@
   "devDependencies": {
     "@types/howler": "^2.2.12",
     "@types/yaireo__tagify": "^4.27.0",
-    "chart.js": "^4.5.0",
+    "chart.js": "^4.5.1",
     "flatpickr": "^4.6.13",
     "shogiground": "catalog:",
     "shogiops": "catalog:"

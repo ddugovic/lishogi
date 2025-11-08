@@ -5,7 +5,7 @@
   "type": "module",
   "dependencies": {
     "@badrap/result": "catalog:",
-    "@yaireo/tagify": "^4.35.3",
+    "@yaireo/tagify": "^4.35.5",
     "breakpoint-sass": "catalog:",
     "ceval": "workspace:*",
     "chat": "workspace:*",

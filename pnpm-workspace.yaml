@@ -7,7 +7,7 @@ catalog:
   breakpoint-sass: github:WandererXII/breakpoint#4.x
   shogiground: ^0.10.3
   shogiops: ^0.19.0
-  snabbdom: ^3.6.2
+  snabbdom: ^3.6.3
 
 onlyBuiltDependencies:
   - esbuild

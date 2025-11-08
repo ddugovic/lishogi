@@ -5,7 +5,7 @@
   "type": "module",
   "dependencies": {
     "@build/helpers": "workspace:*",
-    "@yaireo/tagify": "^4.35.3",
+    "@yaireo/tagify": "^4.35.5",
     "balloon-css": "^1.2.0",
     "country-flag-icons": "^1.5.21",
     "fairy-stockfish-nnue.wasm": "1.1.8",
