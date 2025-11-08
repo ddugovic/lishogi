@@ -150,9 +150,9 @@ object home {
           ),
         ),
         featured map { g =>
+          val pov = Pov first g
           a(cls := "lobby__tv", href := routes.Tv.index)(
-            gameSfen(Pov first g, ctx.me, withLink = false, tv = true),
-            views.html.game.bits.vstext(Pov first g),
+            views.html.game.bits.miniWrap(pov, gameSfen(pov, ctx.me, withLink = false, tv = true)),
           )
         },
         puzzle map { p =>

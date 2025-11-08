@@ -141,14 +141,16 @@ object activity {
         subTag(
           povs.map { pov =>
             frag(
-              a(cls := "glpt", href := routes.Round.watcher(pov.gameId, pov.color.name))("Game"),
-              " vs ",
-              playerLink(
-                pov.opponent,
-                withRating = true,
-                withDiff = false,
-                withOnline = true,
-                link = true,
+              a(cls := "glpt", href := routes.Round.watcher(pov.gameId, pov.color.name))(
+                trans.gameAgainstX(
+                  showPlayer(
+                    pov.opponent,
+                    withRating = false,
+                    withDiff = false,
+                    withOnline = false,
+                    withLink = true,
+                  ),
+                ),
               ),
               br,
             )
@@ -175,14 +177,16 @@ object activity {
                   case Some(false) => trans.defeat()
                   case _           => trans.draw()
                 },
-              ),
-              " vs ",
-              playerLink(
-                pov.opponent,
-                withRating = true,
-                withDiff = false,
-                withOnline = true,
-                link = true,
+                " - ",
+                trans.gameAgainstX(
+                  showPlayer(
+                    pov.opponent,
+                    withRating = false,
+                    withDiff = false,
+                    withOnline = false,
+                    withLink = true,
+                  ),
+                ),
               ),
               br,
             )
@@ -200,7 +204,7 @@ object activity {
             if (in) trans.activity.gainedNbFollowers.pluralSame(f.actualNb)
             else trans.activity.followedNbPlayers.pluralSame(f.actualNb),
             subTag(
-              fragList(f.ids.map(id => userIdLink(id.some))),
+              fragList(f.ids.map(id => showUsernameById(id.some))),
               f.nb.map { nb =>
                 frag(" and ", nb - maxSubEntries, " more")
               },
@@ -224,7 +228,7 @@ object activity {
                   a(href := routes.Simul.show(s.id))(
                     s.name,
                     " simul by ",
-                    userIdLink(s.hostId.some),
+                    showUsernameById(s.hostId.some),
                   ),
                   scoreFrag(Score(s.wins, s.losses, s.draws, none)),
                 )
@@ -319,7 +323,7 @@ object activity {
   private def ratingProgFrag(r: RatingProg) =
     ratingTag(
       r.after.value,
-      ratingProgress(r.diff),
+      showRatingProgress(r.diff),
     )
 
   private def scoreStr(tag: String, p: Int, name: lila.i18n.I18nKey)(implicit ctx: Context) =

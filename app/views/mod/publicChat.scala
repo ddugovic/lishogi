@@ -30,10 +30,9 @@ object publicChat {
                   div(cls := "chat")(
                     chat.lines.filter(_.isVisible).map { line =>
                       div(cls := "line")(
-                        userIdLink(
+                        showUsernameById(
                           line.author.toLowerCase.some,
                           withOnline = false,
-                          withTitle = false,
                         ),
                         " ",
                         richText(line.text),
@@ -52,10 +51,9 @@ object publicChat {
                     div(cls := "chat")(
                       chat.lines.filter(_.isVisible).map { line =>
                         div(cls := "line")(
-                          userIdLink(
+                          showUsernameById(
                             line.author.toLowerCase.some,
                             withOnline = false,
-                            withTitle = false,
                           ),
                           " ",
                           richText(line.text),

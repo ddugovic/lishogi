@@ -10,12 +10,13 @@ import lila.common.LightUser
 import lila.i18n.{ I18nKeys => trans }
 import lila.rating.Perf
 import lila.rating.PerfType
-import lila.user.Title
+import lila.rating.Rank
 import lila.user.User
 
-trait UserHelper { self: I18nHelper with StringHelper with NumberHelper with DateHelper =>
+trait UserHelper {
+  self: AssetHelper with I18nHelper with StringHelper with NumberHelper with DateHelper =>
 
-  def ratingProgress(progress: Int): Option[Frag] =
+  def showRatingProgress(progress: Int): Option[Frag] =
     if (progress > 0) goodTag(cls := "rp")(progress).some
     else if (progress < 0) badTag(cls := "rp")(math.abs(progress)).some
     else none
@@ -57,189 +58,138 @@ trait UserHelper { self: I18nHelper with StringHelper with NumberHelper with Dat
       case d          => badTag(s"−${-d}")
     }
 
-  def lightUser = env.user.lightUserSync
+  def botTag = span(cls := "bot-tag")(lila.user.Title.BOT.value, nbsp)
 
-  def usernameOrId(userId: String) = lightUser(userId).fold(userId)(_.titleName)
-  def usernameOrAnon(userId: Option[String]) =
-    userId.flatMap(lightUser).fold(User.anonymous)(_.titleName)
+  def rankTag(perf: Perf, withUnknown: Boolean = false)(implicit lang: Lang): Option[Frag] =
+    Rank
+      .fromPerf(perf)
+      .map(rankTag)
+      .orElse(
+        withUnknown option span(cls := "rank-tag unknown")("?", nbsp),
+      )
+  def rankTag(rating: Int)(implicit lang: Lang): Frag =
+    rankTag(Rank.fromRating(rating))
+  def rankTag(rank: Rank)(implicit lang: Lang): Frag =
+    span(cls := s"rank-tag r-${rank.enName}")(rank.trans, nbsp)
+
+  def lightUser                   = env.user.lightUserSync
+  def isOnline(userId: String)    = env.socket isOnline userId
+  def isStreaming(userId: String) = env.streamer.liveStreamApi isStreaming userId
 
   def anonSpan(implicit lang: Lang): Frag =
     span(cls := "anon")(trans.anonymousUser())
 
-  def isOnline(userId: String) = env.socket isOnline userId
+  def usernameOrId(userId: String) = lightUser(userId).fold(userId)(_.name)
 
-  def isStreaming(userId: String) = env.streamer.liveStreamApi isStreaming userId
-
-  def userIdLink(
+  def showUsernameById(
       userIdOption: Option[String],
-      cssClass: Option[String] = None,
+      rating: Option[Int] = none,
       withOnline: Boolean = true,
-      withTitle: Boolean = true,
-      truncate: Option[Int] = None,
-      params: String = "",
-      modIcon: Boolean = false,
+      withPowerTip: Boolean = true,
+      withFlag: Boolean = true,
+      withLink: Boolean = true,
+      withModLink: Boolean = false,
+      withModIcon: Boolean = false,
   )(implicit lang: Lang): Frag =
     userIdOption.flatMap(lightUser).fold[Frag](anonSpan) { user =>
-      userIdNameLink(
-        userId = user.id,
-        username = user.name,
-        isPatron = user.isPatron,
-        title = withTitle ?? user.title map Title.apply,
-        cssClass = cssClass,
+      showUsernameLight(
+        user,
+        rating = rating,
         withOnline = withOnline,
-        truncate = truncate,
-        params = params,
-        modIcon = modIcon,
+        withPowerTip = withPowerTip,
+        withFlag = withFlag,
+        withLink = withLink,
+        withModLink = withModLink,
+        withModIcon = withModIcon,
       )
     }
 
-  def lightUserLink(
+  def showUsernameLight(
       user: LightUser,
-      cssClass: Option[String] = None,
+      rating: Option[Int] = none,
       withOnline: Boolean = true,
-      withTitle: Boolean = true,
-      truncate: Option[Int] = None,
-      params: String = "",
+      withPowerTip: Boolean = true,
+      withFlag: Boolean = true,
+      withLink: Boolean = true,
+      withModLink: Boolean = false,
+      withModIcon: Boolean = false,
   )(implicit lang: Lang): Tag =
-    userIdNameLink(
-      userId = user.id,
+    renderUsername(
       username = user.name,
       isPatron = user.isPatron,
-      title = withTitle ?? user.title map Title.apply,
-      cssClass = cssClass,
+      isBot = user.isBot,
+      rating = rating,
+      flag = user.countryCode,
       withOnline = withOnline,
-      truncate = truncate,
-      params = params,
-      modIcon = false,
+      withPowerTip = withPowerTip,
+      withFlag = withFlag,
+      withLink = withLink,
+      withModLink = withModLink,
+      withModIcon = withModIcon,
     )
 
-  def userIdLink(
-      userId: String,
-      cssClass: Option[String],
-  )(implicit lang: Lang): Frag = userIdLink(userId.some, cssClass)
+  def showUsername(
+      user: User,
+      rating: Option[Int] = none,
+      withOnline: Boolean = true,
+      withPowerTip: Boolean = true,
+      withFlag: Boolean = true,
+      withLink: Boolean = true,
+      withModLink: Boolean = false,
+      withModIcon: Boolean = false,
+  )(implicit lang: Lang): Tag =
+    renderUsername(
+      username = user.username,
+      isPatron = user.isPatron,
+      isBot = user.isBot,
+      rating = rating,
+      flag = user.flagCode,
+      withOnline = withOnline,
+      withPowerTip = withPowerTip,
+      withFlag = withFlag,
+      withLink = withLink,
+      withModLink = withModLink,
+      withModIcon = withModIcon,
+    )
 
-  def titleTag(title: Option[Title]): Option[Frag] =
-    title map { t =>
-      frag(
-        span(
-          cls      := s"title${(t == Title.BOT) ?? " data-bot"}",
-          st.title := Title.titleName(t),
-        )(t),
-        nbsp,
-      )
-    }
-  def titleTag(lu: LightUser): Frag = titleTag(lu.title map Title.apply)
-
-  private def userIdNameLink(
-      userId: String,
+  private def renderUsername(
       username: String,
       isPatron: Boolean,
-      cssClass: Option[String],
+      isBot: Boolean,
+      rating: Option[Int],
+      flag: Option[String],
       withOnline: Boolean,
-      truncate: Option[Int],
-      title: Option[Title],
-      params: String,
-      modIcon: Boolean,
-  )(implicit lang: Lang): Tag =
-    a(
-      cls  := userClass(userId, cssClass, withOnline),
-      href := userUrl(username, params = params),
-    )(
-      withOnline ?? (if (modIcon) moderatorIcon else lineIcon(isPatron)),
-      titleTag(title),
-      truncate.fold(username)(username.take),
-    )
-
-  def userLink(
-      user: User,
-      cssClass: Option[String] = None,
-      withOnline: Boolean = true,
-      withPowerTip: Boolean = true,
-      withTitle: Boolean = true,
-      withBestRating: Boolean = false,
-      withPerfRating: Option[PerfType] = None,
-      name: Option[Frag] = None,
-      params: String = "",
-  )(implicit lang: Lang): Tag =
-    a(
-      cls  := userClass(user.id, cssClass, withOnline, withPowerTip),
-      href := userUrl(user.username, params),
-    )(
-      withOnline ?? lineIcon(user),
-      withTitle option titleTag(user.title),
-      name | user.username,
-      userRating(user, withPerfRating, withBestRating),
-    )
-
-  def userSpan(
-      user: User,
-      cssClass: Option[String] = None,
-      withOnline: Boolean = true,
-      withPowerTip: Boolean = true,
-      withTitle: Boolean = true,
-      withBestRating: Boolean = false,
-      withPerfRating: Option[PerfType] = None,
-      name: Option[Frag] = None,
-  )(implicit lang: Lang): Frag =
-    span(
-      cls      := userClass(user.id, cssClass, withOnline, withPowerTip),
-      dataHref := userUrl(user.username),
-    )(
-      withOnline ?? lineIcon(user),
-      withTitle option titleTag(user.title),
-      name | user.username,
-      userRating(user, withPerfRating, withBestRating),
-    )
-
-  def userIdSpanMini(userId: String, withOnline: Boolean = false, modIcon: Boolean = false)(implicit
-      lang: Lang,
-  ): Frag = {
-    val user = lightUser(userId)
-    val name = user.fold(userId)(_.name)
-    span(
-      cls      := userClass(userId, none, withOnline),
-      dataHref := userUrl(name),
-    )(
-      withOnline ?? { if (modIcon) moderatorIcon else lineIcon(user) },
-      user.??(u => titleTag(u.title map Title.apply)),
-      name,
+      withPowerTip: Boolean,
+      withFlag: Boolean,
+      withLink: Boolean,
+      withModLink: Boolean,
+      withModIcon: Boolean,
+  )(implicit lang: Lang): Tag = {
+    val userCls = userClass(username, withOnline, withPowerTip)
+    val tag =
+      if (withLink) a(cls := userCls, href     := userUrl(username, mod = withModLink))
+      else span(cls       := userCls, dataHref := userUrl(username, mod = withModLink))
+    tag(
+      withOnline ?? (if (withModIcon) moderatorIcon else lineIcon(isPatron)),
+      if (isBot) botTag.some
+      else rating.map(rankTag),
+      username,
+      flag.ifTrue(withFlag).map(flagImage),
     )
   }
 
-  private def renderRating(perf: Perf): Frag =
-    frag(
-      " (",
-      perf.intRating,
-      perf.provisional option "?",
-      ")",
-    )
-
-  private def userRating(
-      user: User,
-      withPerfRating: Option[PerfType],
-      withBestRating: Boolean,
-  ): Frag =
-    withPerfRating match {
-      case Some(perfType) => renderRating(user.perfs(perfType))
-      case _ if withBestRating =>
-        user.perfs.bestPerf ?? { case (_, perf) =>
-          renderRating(perf)
-        }
-      case _ => ""
-    }
-
-  private def userUrl(username: String, params: String = "") =
-    s"""${routes.User.show(username)}$params"""
+  def userUrl(username: String, mod: Boolean) =
+    s"""${routes.User.show(username)}${mod ?? "?mod"}"""
 
   protected def userClass(
-      userId: String,
-      cssClass: Option[String],
+      username: String,
       withOnline: Boolean,
       withPowerTip: Boolean = true,
   ): List[(String, Boolean)] =
-    (withOnline ?? List((if (isOnline(userId)) "online" else "offline") -> true)) ::: List(
+    (withOnline ?? List(
+      (if (isOnline(User.normalize(username))) "online" else "offline") -> true,
+    )) ::: List(
       "user-link" -> true,
-      ~cssClass   -> cssClass.isDefined,
       "ulpt"      -> withPowerTip,
     )
 
@@ -282,9 +232,6 @@ trait UserHelper { self: I18nHelper with StringHelper with NumberHelper with Dat
   val moderatorIcon: Frag = i(cls := "line moderator", title := "Lishogi Mod")
   private def lineIcon(patron: Boolean)(implicit lang: Lang): Frag =
     if (patron) patronIcon else lineIcon
-  private def lineIcon(user: Option[LightUser])(implicit lang: Lang): Frag = lineIcon(
-    user.??(_.isPatron),
-  )
   def lineIcon(user: LightUser)(implicit lang: Lang): Frag = lineIcon(user.isPatron)
   def lineIcon(user: User)(implicit lang: Lang): Frag      = lineIcon(user.isPatron)
 }

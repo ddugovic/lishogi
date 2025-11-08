@@ -79,13 +79,13 @@ final class GameApiV2(
 
   private val fileR = """[\s,]""".r
   def filename(game: Game, configInput: Config): Fu[String] =
-    gameLightUsers(game) map { case (wu, bu) =>
+    gameLightUsers(game) map { case (su, gu) =>
       java.net.URLEncoder.encode(
         fileR.replaceAllIn(
           "lishogi_game_%s_%s_vs_%s_%s.%s".format(
             Tag.UTCDate.format.print(game.createdAt),
-            notationDump.dumper.player(game.sentePlayer, wu),
-            notationDump.dumper.player(game.gotePlayer, bu),
+            notationDump.dumper.player(game.sentePlayer, su, lila.i18n.defaultLang),
+            notationDump.dumper.player(game.gotePlayer, gu, lila.i18n.defaultLang),
             game.id,
             fileType(configInput),
           ),

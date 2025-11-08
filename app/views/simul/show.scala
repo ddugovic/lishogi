@@ -102,7 +102,7 @@ object show {
                 )
               },
             ),
-            trans.by(userIdLink(sim.hostId.some)),
+            trans.by(showUsernameById(sim.hostId.some)),
             team map { t =>
               frag(
                 br,

@@ -29,12 +29,12 @@ object log {
             tbody(
               logs.map { log =>
                 tr(cls := log.action)(
-                  td(userIdLink(log.mod.some), br, momentFromNow(log.date)),
+                  td(showUsernameById(log.mod.some), br, momentFromNow(log.date)),
                   td(
                     log.showAction.capitalize,
                     " ",
                     log.user.map { u =>
-                      userIdLink(u.some, params = "?mod")
+                      showUsernameById(u.some, withModLink = true)
                     },
                   ),
                   td(log.details),

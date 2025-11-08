@@ -93,6 +93,10 @@ main.robin {
               font-size: 0.9em;
               opacity: 0.9;
             }
+
+            .user-link:hover {
+              color: theme.$c-link-over;
+            }
           }
         }
       }

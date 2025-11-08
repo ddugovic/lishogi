@@ -1,9 +1,9 @@
 import { icons } from 'common/icons';
+import { flagImage } from 'common/snabbdom';
 import type { Player } from 'game/interfaces';
 import { i18n, i18nFormat } from 'i18n';
-import { colorName } from 'shogi/color-name';
 import { engineNameFromCode } from 'shogi/engine-name';
-import { isHandicap } from 'shogiops/handicaps';
+import { rankFromRating, rankTag } from 'shogi/rank';
 import { h, type VNode } from 'snabbdom';
 import type RoundController from '../ctrl';
 import type { Position } from '../interfaces';
@@ -13,6 +13,7 @@ export function userHtml(ctrl: RoundController, player: Player, position: Positi
   const user = player.user;
   const perf = user ? user.perfs[d.game.perf] : null;
   const rating = player.rating ? player.rating : perf?.rating;
+  const rank = !player.provisional && rating ? rankFromRating(rating) : undefined;
   const rd = player.ratingDiff;
   const ratingDiff =
     rd === 0
@@ -22,10 +23,6 @@ export function userHtml(ctrl: RoundController, player: Player, position: Positi
         : rd && rd < 0
           ? h('bad', `−${-rd}`)
           : undefined;
-  const handicap = isHandicap({
-    rules: ctrl.data.game.variant.key,
-    sfen: ctrl.data.game.initialSfen,
-  });
 
   if (user) {
     const connecting = !player.onGame && ctrl.firstSeconds && user.online;
@@ -37,20 +34,11 @@ export function userHtml(ctrl: RoundController, player: Player, position: Positi
         class: {
           online: player.onGame,
           offline: !player.onGame,
-          long: user.username.length > 16,
+          long: (user.title?.length || 0) + user.username.length > 15,
           connecting,
         },
       },
       [
-        h(
-          `div.color-icon.${player.color}`,
-          {
-            attrs: {
-              title: colorName(player.color, handicap),
-            },
-          },
-          [],
-        ),
         h(`i.line${user.patron ? '.patron' : ''}`, {
           attrs: {
             title: connecting
@@ -99,15 +87,6 @@ export function userHtml(ctrl: RoundController, player: Player, position: Positi
       },
     },
     [
-      h(
-        `div.color-icon.${player.color}`,
-        {
-          attrs: {
-            title: colorName(player.color, handicap),
-          },
-        },
-        [],
-      ),
       h('i.line', {
         attrs: {
           title: connecting

@@ -54,9 +54,13 @@
       margin-right: 0.5em;
     }
 
-    rating span,
+    .perf-cnt,
     .rank {
-      font-size: 0.9em;
+      font-size: 0.85em;
+    }
+
+    .perf-cnt {
+      margin-left: 0.35em;
     }
 
     i {
@@ -103,9 +107,8 @@
   }
 
   strong {
-    color: theme.$c-font-dim;
     font-weight: bold;
-    font-size: 1.2em;
+    font-size: 1.3em;
   }
 
   @include breakpoint.breakpoint(media-queries.$mq-not-medium) {
@@ -114,9 +117,8 @@
     }
 
     .perf-item > i,
-    h3,
-    rating .rp,
-    rating span {
+    .perf-item > span > span,
+    h3 {
       display: none;
     }
   }
@@ -126,13 +128,14 @@
     grid-template-columns: repeat(auto-fit, minmax(15ch, 1fr));
 
     br,
+    rating .rp,
+    rating .perf-rating,
     .rank {
       display: none;
     }
 
     .perf-item {
       display: flex;
-      justify-content: center;
 
       &::before {
         opacity: 0.8;

@@ -25,27 +25,17 @@
   &__info {
     @extend %flex-column;
 
-    height: 83px;
+    min-height: 80px;
     padding: 4px 5px 4px 2px;
     border-bottom: theme.$border;
     overflow: hidden;
+    justify-content: space-between;
 
     &__top {
       @extend %flex-between;
 
       .left {
         @extend %flex-center-nowrap;
-      }
-
-      &__country {
-        @extend %flex-center;
-
-        margin-left: 0.5em;
-        font-size: 0.9em;
-
-        img {
-          margin-right: 0.3em;
-        }
       }
 
       .user-link {
@@ -63,6 +53,7 @@
       @extend %flex-between;
 
       margin-top: 3px;
+      justify-content: flex-start;
 
       > span {
         flex: 0 0 25%;
@@ -84,8 +75,8 @@
   &__score {
     display: block;
     font-size: 1rem;
-    line-height: 1.5rem;
-    text-align: center;
+    padding: 0.2em 0.5em;
+    color: theme.$c-font;
   }
 
   &__actions.btn-rack {
@@ -109,16 +100,12 @@
     @extend %flex-between;
 
     white-space: nowrap;
+    padding: 0.2em 0.5em;
 
     &__marks {
       padding: 3px 5px;
       background: theme.$c-bad;
       color: theme.$c-bad-over;
-    }
-
-    span {
-      padding: 0.2em 0.5em;
-      margin: 0;
     }
   }
 

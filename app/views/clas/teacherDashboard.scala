@@ -32,7 +32,7 @@ object teacherDashboard {
           a(cls := active.active("wall"), href := routes.Clas.wall(c.id.value))("News"),
           a(
             cls  := active.active("progress"),
-            href := routes.Clas.progress(c.id.value, PerfType.Blitz.key, 7),
+            href := routes.Clas.progress(c.id.value, PerfType.RealTime.key, 7),
           )(trans.clas.progress()),
           a(cls := active.active("edit"), href := routes.Clas.edit(c.id.value))(trans.edit()),
           a(cls := active.active("students"), href := routes.Clas.students(c.id.value))(
@@ -91,7 +91,7 @@ object teacherDashboard {
               tbody(
                 invites.map { i =>
                   tr(
-                    td(userIdLink(i.userId.some)),
+                    td(showUsernameById(i.userId.some)),
                     td(i.realName),
                     td(
                       if (i.accepted has false) "Declined" else "Pending",
@@ -169,7 +169,7 @@ object teacherDashboard {
                     user.perfs(progress.perfType).showRatingProvisional,
                   ),
                   td(dataSort := prog.ratingProgress)(
-                    ratingProgress(prog.ratingProgress) | trans.clas.na.txt(),
+                    showRatingProgress(prog.ratingProgress) | trans.clas.na.txt(),
                   ),
                   td(prog.nb),
                   if (progress.isPuzzle) td(dataSort := prog.winRate)(prog.winRate, "%")
@@ -297,16 +297,12 @@ object teacherDashboard {
       ),
     )
 
-  private def studentTd(c: Clas, s: Student.WithUser)(implicit ctx: Context) =
+  private def studentTd(c: Clas, s: Student.WithUser) =
     td(
       a(href := routes.Clas.studentShow(c.id.value, s.user.username))(
-        userSpan(
-          s.user,
-          name = span(
-            s.user.username,
-            em(s.student.realName),
-          ).some,
-          withTitle = false,
+        span(
+          s.user.username,
+          em(s.student.realName),
         ),
       ),
     )

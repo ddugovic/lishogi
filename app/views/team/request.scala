@@ -62,8 +62,8 @@ object request {
       tbody(
         requests.map { request =>
           tr(
-            if (t.isEmpty) td(userLink(request.user), " ", teamLink(request.team))
-            else td(userLink(request.user)),
+            if (t.isEmpty) td(showUsername(request.user), " ", teamLink(request.team))
+            else td(showUsername(request.user)),
             td(richText(request.message)),
             td(momentFromNow(request.date)),
             td(cls := "process")(

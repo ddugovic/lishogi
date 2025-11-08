@@ -67,7 +67,7 @@ object side {
             shieldOwner map { owner =>
               p(cls := "defender")(
                 s"${trans.arena.defender.txt()}:",
-                userIdLink(owner.value.some),
+                showUsernameById(owner.value.some),
               )
             },
           )
@@ -106,7 +106,7 @@ object side {
         tour.proMode option div(cls := "text", dataIcon := Icons.crown)(
           trans.proMode(),
         ),
-        !tour.isScheduled option frag(trans.by(userIdLink(tour.createdBy.some)), br),
+        !tour.isScheduled option frag(trans.by(showUsernameById(tour.createdBy.some)), br),
         frag(
           absClientDateTime(
             tour.startsAt,

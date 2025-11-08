@@ -130,9 +130,9 @@ final class ModApi(
             lightUserApi.invalidate(user.id)
         }
         case Some(t) =>
-          Title.names.get(t) ?? { tFull =>
+          Title.all.contains(t) ?? {
             userRepo.addTitle(user.id, t) >>
-              logApi.addTitle(mod, user.id, s"$t ($tFull)") >>-
+              logApi.addTitle(mod, user.id, t.value) >>-
               lightUserApi.invalidate(user.id)
           }
       }

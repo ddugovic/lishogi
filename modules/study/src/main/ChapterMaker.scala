@@ -153,11 +153,11 @@ final private class ChapterMaker(
     for {
       tags <- notationDump.tags(
         game,
-        shogi.format.Tag(_.TimeControl, game.clock.fold("")(_.config.show)),
+        isCsa = false,
       )
       name <- {
         if (data.isDefaultName)
-          Namer.gameVsText(game, withRatings = false)(
+          Namer.gameVsText(game, withRanks = false)(
             lightUser.async,
             lila.i18n.defaultLang,
           ) dmap Chapter.Name.apply

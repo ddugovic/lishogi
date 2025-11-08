@@ -508,7 +508,7 @@ final class StudyApi(
               val comment = Comment(
                 id = Comment.Id.make,
                 text = text,
-                by = Comment.Author.User(author.id, author.titleName),
+                by = Comment.Author.User(author.id, author.name),
               )
               doSetComment(study, Position(chapter, position.path), comment, who)
             }

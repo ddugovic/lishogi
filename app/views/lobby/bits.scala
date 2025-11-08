@@ -43,11 +43,11 @@ object bits {
             tbody(
               leaderboard map { l =>
                 tr(
-                  td(lightUserLink(l.user)),
+                  td(showUsernameLight(l.user, rating = l.rating.some)),
                   lila.rating.PerfType.byKey(l.perfKey) map { pt =>
                     td(cls := "text", dataIcon := pt.icon)(l.rating)
                   },
-                  td(ratingProgress(l.progress)),
+                  td(showRatingProgress(l.progress)),
                 )
               },
             ),
@@ -65,7 +65,7 @@ object bits {
               tournamentWinners take 12 map { w =>
                 val name = w.trans
                 tr(
-                  td(userIdLink(w.userId.some)),
+                  td(showUsernameById(w.userId.some)),
                   td(
                     a(
                       cls   := "tourname",
@@ -135,7 +135,7 @@ object bits {
         span(cls := "more")(trans.more(), " »"),
       ),
       ctx.noKid option div(cls := "lobby__box__content")(
-        views.html.forum.post recent posts,
+        views.html.forum.post.recent(posts),
       ),
     )
 

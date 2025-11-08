@@ -33,7 +33,7 @@ object shields {
                   ),
                   ol(awards.map { aw =>
                     li(
-                      userIdLink(aw.owner.value.some),
+                      showUsernameById(aw.owner.value.some),
                       a(href := routes.Tournament.show(aw.tourId))(showDate(aw.date)),
                     )
                   }),
@@ -63,7 +63,7 @@ object shields {
           ol(awards.map { aw =>
             li(
               span(cls := "shield-trophy")(categ.icon),
-              userIdLink(aw.owner.value.some),
+              showUsernameById(aw.owner.value.some),
               a(href := routes.Tournament.show(aw.tourId))(showDate(aw.date)),
             )
           }),

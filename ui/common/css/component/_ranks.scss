@@ -1,0 +1,59 @@
+@use '../theme/generated/theme';
+
+.rank-tag {
+  font-weight: bold;
+  letter-spacing: -0.5px;
+  white-space: nowrap;
+}
+
+.unknown {
+  color: theme.$c-font-dim;
+  opacity: 0.8;
+}
+
+/* 10–15 kyu */
+.r-15-kyu,
+.r-14-kyu,
+.r-13-kyu,
+.r-12-kyu,
+.r-11-kyu,
+.r-10-kyu {
+  color: theme.$c-font-dim;
+}
+
+/* 9–1 kyu */
+.r-9-kyu,
+.r-8-kyu,
+.r-7-kyu {
+  color: theme.$c-clas;
+}
+
+.r-6-kyu,
+.r-5-kyu,
+.r-4-kyu {
+  color: theme.$c-primary-clear;
+}
+
+.r-3-kyu,
+.r-2-kyu,
+.r-1-kyu {
+  color: theme.$c-secondary-clear;
+}
+
+/* Dan ranks */
+.r-1-Dan,
+.r-2-Dan,
+.r-3-Dan {
+  color: theme.$c-brag;
+}
+
+.r-4-Dan,
+.r-5-Dan,
+.r-6-Dan {
+  color: theme.$c-red;
+}
+
+.r-7-Dan,
+.r-8-Dan {
+  color: theme.$c-font-clearer;
+}

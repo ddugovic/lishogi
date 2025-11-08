@@ -29,14 +29,15 @@ object theirs {
               h1(
                 if (c.isOpen) trans.openChallenge.txt()
                 else
-                  user.fold[Frag](anonSpan)(u =>
+                  user.fold[Frag](anonSpan) { u =>
+                    val perf = u.perfs(c.perfType)
                     frag(
-                      userLink(u),
+                      showUsername(u, rating = perf.established option perf.intRating),
                       " (",
-                      u.perfs(c.perfType).glicko.display,
+                      perf.glicko.display,
                       ")",
-                    ),
-                  ),
+                    )
+                  },
               ),
               bits.details(c, false),
               c.initialSfen.map { sfen =>

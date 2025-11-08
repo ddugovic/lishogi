@@ -15,7 +15,7 @@ object bits {
   def followers(u: User, pag: Paginator[Related], nbFollowing: Int)(implicit ctx: Context) =
     layout(s"${u.username} - ${trans.nbFollowers.pluralSameTxt(pag.nbResults)}")(
       div(cls := "box__top")(
-        h1(userLink(u, withOnline = false)),
+        h1(showUsername(u, withOnline = false)),
         div(cls := "actions")(
           trans.nbFollowers.pluralSame(pag.nbResults),
           " ",
@@ -32,7 +32,7 @@ object bits {
   def following(u: User, pag: Paginator[Related], nbFollowers: Int)(implicit ctx: Context) =
     layout(s"${u.username} - ${trans.nbFollowing.pluralSameTxt(pag.nbResults)}")(
       div(cls := "box__top")(
-        h1(userLink(u, withOnline = false)),
+        h1(showUsername(u, withOnline = false)),
         div(cls := "actions")(
           trans.nbFollowing.pluralSame(pag.nbResults),
           " ",
@@ -49,7 +49,7 @@ object bits {
   def blocks(u: User, pag: Paginator[Related])(implicit ctx: Context) =
     layout(s"${u.username} - ${trans.blocks.pluralSameTxt(pag.nbResults)}")(
       div(cls := "box__top")(
-        h1(userLink(u, withOnline = false)),
+        h1(showUsername(u, withOnline = false)),
         div(cls := "actions")(
           trans.blocks.pluralSame(pag.nbResults),
         ),
@@ -73,7 +73,7 @@ object bits {
           pagerNextTable(pager, np => addQueryParameter(call.url, "page", np)),
           pager.currentPageResults.map { r =>
             tr(cls := "paginated")(
-              td(userLink(r.user)),
+              td(showUsername(r.user)),
               td(showBestPerf(r.user)),
               td(trans.nbGames.pluralSame(r.user.count.game)),
               td(

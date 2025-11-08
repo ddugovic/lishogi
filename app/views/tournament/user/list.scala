@@ -25,7 +25,7 @@ object list {
           thead(
             tr(
               th(cls := "count")(count),
-              th(h1(userLink(u, withOnline = true), " - ", trans.tournaments())),
+              th(h1(showUsername(u, withOnline = true), " - ", trans.tournaments())),
               th(trans.games()),
               th(trans.points()),
               th(trans.rank()),

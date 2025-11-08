@@ -9,20 +9,22 @@ import lila.app.ui.ScalatagsTemplate._
 import lila.game.Game
 import lila.game.Player
 import lila.game.Pov
-import lila.user.Title
 
 object bits {
 
-  def featuredJs(pov: Pov): Frag =
+  def miniWrap(pov: Pov, gameFrag: Frag)(implicit lang: Lang): Frag =
     frag(
-      gameSfenNoCtx(pov, tv = true),
-      vstext(pov)(lila.i18n.defaultLang),
+      miniPlayer(pov.opponent),
+      gameFrag,
+      miniPlayer(pov.player),
     )
+
+  def featuredJs(pov: Pov): Frag =
+    miniWrap(pov, gameSfenNoCtx(pov, tv = true))(lila.i18n.defaultLang)
 
   def mini(pov: Pov)(implicit ctx: Context): Frag =
     a(href := gameLink(pov, ctx.me))(
-      gameSfen(pov, ctx.me, withLink = false),
-      vstext(pov),
+      miniWrap(pov, gameSfen(pov, ctx.me, withLink = false)),
     )
 
   def miniBoard(
@@ -60,7 +62,7 @@ object bits {
 
   def variantLink(
       variant: shogi.variant.Variant,
-      perfType: Option[lila.rating.PerfType] = None,
+      perfType: Option[lila.rating.PerfType],
   )(implicit lang: Lang): Frag = {
     def link(
         href: String,
@@ -87,39 +89,16 @@ object bits {
       }
   }
 
-  private def playerTitle(player: Player) =
-    player.userId.flatMap(lightUser).flatMap(_.title) map Title.apply map { t =>
-      span(cls := "title", dataBot(t), title := Title titleName t)(t.value)
-    }
-
-  def vstext(pov: Pov)(implicit lang: Lang): Frag =
-    span(cls := "vstext")(
-      span(cls := "vstext__pl user-link")(
-        playerUsername(pov.player, withRating = false, withTitle = false),
-        br,
-        playerTitle(pov.player) map { t =>
-          frag(t, " ")
-        },
-        pov.player.rating.map(_.toString).orElse(pov.player.engineConfig.map(engineLevel)),
-        pov.player.provisional option "?",
-      ),
-      pov.game.clock map { c =>
-        span(cls := "vstext__clock")(shortClockName(c.config))
-      } orElse {
-        pov.game.daysPerTurn map { days =>
-          span(cls := "vstext__clock")(
-            if (days == 1) trans.oneDay() else trans.nbDays.pluralSame(days),
-          )
-        }
-      },
-      span(cls := "vstext__op user-link")(
-        playerUsername(pov.opponent, withRating = false, withTitle = false),
-        br,
-        pov.opponent.rating.map(_.toString).orElse(pov.opponent.engineConfig.map(engineLevel)),
-        pov.opponent.provisional option "?",
-        playerTitle(pov.opponent) map { t =>
-          frag(" ", t)
-        },
+  private def miniPlayer(player: Player)(implicit lang: Lang): Frag =
+    div(cls := "mini-player user-link")(
+      showPlayer(
+        player,
+        withOnline = false,
+        withLink = false,
+        withPowerTip = false,
+        withRating = false,
+        withDiff = false,
       ),
     )
+
 }

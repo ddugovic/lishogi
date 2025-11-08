@@ -102,9 +102,9 @@ object NotationImport {
     notation tags "annotator" map { a =>
       val lowered = a.toLowerCase
       contributors.find { c =>
-        c.name == lowered || c.titleName == lowered || lowered.endsWith(s"/${c.id}")
+        lowered.split(" ").contains(c.id) || lowered.endsWith(s"/${c.id}")
       } map { c =>
-        Comment.Author.User(c.id, c.titleName)
+        Comment.Author.User(c.id, c.name)
       } getOrElse Comment.Author.External(a)
     }
 

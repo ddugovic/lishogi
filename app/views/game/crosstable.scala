@@ -49,7 +49,7 @@ object crosstable {
         )
       },
       div(cls := "crosstable__users")(ct.users.toList.map { u =>
-        userIdLink(u.id.some, withOnline = false)
+        showUsernameById(u.id.some, withOnline = false)
       }),
       div(cls := "crosstable__score", title := trans.lifetimeScore.txt())(ct.users.toList.map { u =>
         span(cls := ct.users.winnerId.map(w => if (w == u.id) "win" else "loss"))(

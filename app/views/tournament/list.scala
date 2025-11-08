@@ -63,7 +63,7 @@ object list {
       span(
         t.winnerId.isDefined option frag(
           i(cls := "text winner", dataIcon := Icons.trophy),
-          userIdLink(t.winnerId, withOnline = false),
+          showUsernameById(t.winnerId, withOnline = false),
         ),
       ),
       span(

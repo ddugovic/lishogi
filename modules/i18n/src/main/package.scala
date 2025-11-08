@@ -13,6 +13,7 @@ package object i18n extends PackageObject {
   private[i18n] def logger = lila.log("i18n")
 
   val enLang      = Lang("en", "GB")
+  val jaLang      = Lang("ja", "JP")
   val defaultLang = enLang
 
   // just language if possible, script code for chinese

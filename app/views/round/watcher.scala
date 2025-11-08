@@ -38,7 +38,7 @@ object watcher {
 
     bits.layout(
       variant = pov.game.variant,
-      title = gameVsText(pov.game, withRatings = true),
+      title = gameVsText(pov.game, withRanks = true),
       moreJs = frag(
         ctx.blind option roundNvuiTag,
         moduleJsTag(
@@ -70,7 +70,7 @@ object watcher {
   ) =
     bits.layout(
       variant = pov.game.variant,
-      title = gameVsText(pov.game, withRatings = true),
+      title = gameVsText(pov.game, withRanks = true),
       openGraph = povOpenGraph(pov).some,
       shogiground = false,
     )(

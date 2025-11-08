@@ -36,12 +36,12 @@ final class GifExport(
           .withBody(
             Json.obj(
               "black" -> Namer
-                .playerTextBlocking(pov.game.sentePlayer, withRating = true)(
+                .playerTextBlocking(pov.game.sentePlayer, withRank = false)(
                   lightUserApi.sync,
                   lila.i18n.defaultLang,
                 ),
               "white" -> Namer
-                .playerTextBlocking(pov.game.gotePlayer, withRating = true)(
+                .playerTextBlocking(pov.game.gotePlayer, withRank = false)(
                   lightUserApi.sync,
                   lila.i18n.defaultLang,
                 ),
@@ -65,11 +65,11 @@ final class GifExport(
     if (Game.gifVariants.contains(game.variant)) {
       val query = List(
         "sfen" -> game.shogi.toSfen.value,
-        "black" -> Namer.playerTextBlocking(game.sentePlayer, withRating = true)(
+        "black" -> Namer.playerTextBlocking(game.sentePlayer, withRank = false)(
           lightUserApi.sync,
           lila.i18n.defaultLang,
         ),
-        "white" -> Namer.playerTextBlocking(game.gotePlayer, withRating = true)(
+        "white" -> Namer.playerTextBlocking(game.gotePlayer, withRank = false)(
           lightUserApi.sync,
           lila.i18n.defaultLang,
         ),

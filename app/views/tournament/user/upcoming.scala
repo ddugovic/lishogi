@@ -25,7 +25,9 @@ object upcoming {
             thead(
               tr(
                 th(cls := "count")(pager.nbResults),
-                th(colspan := 2)(h1(userLink(user, withOnline = true), " upcoming tournaments")),
+                th(colspan := 2)(
+                  h1(showUsername(user, withOnline = true), " upcoming tournaments"),
+                ),
                 th(trans.players()),
               ),
             ),

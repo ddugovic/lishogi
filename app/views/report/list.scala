@@ -33,7 +33,7 @@ object list {
                   reportScore(r.score),
                   strong(r.reason.name.capitalize),
                   br,
-                  userLink(sus.user, params = "?mod"),
+                  showUsername(sus.user, withModLink = true),
                   br,
                   p(cls := "perfs")(showBestPerfs(sus.user, 2)),
                   views.html.user.mod.userMarks(sus.user, none),
@@ -44,7 +44,7 @@ object list {
                       span(cls := "head")(
                         reportScore(atom.score),
                         " ",
-                        userIdLink(atom.by.value.some),
+                        showUsernameById(atom.by.value.some),
                         " ",
                         momentFromNowOnce(atom.at),
                       ),
@@ -79,7 +79,7 @@ object list {
                     case Some(inquiry) =>
                       frag(
                         "Open by ",
-                        userIdLink(inquiry.mod.some),
+                        showUsernameById(inquiry.mod.some),
                       )
                   },
                 ),

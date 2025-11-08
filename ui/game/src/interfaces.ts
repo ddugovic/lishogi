@@ -173,6 +173,9 @@ interface PlayerUser {
   perfs: {
     [key: string]: Perf;
   };
+  profile?: {
+    country: string;
+  };
 }
 
 interface Perf {

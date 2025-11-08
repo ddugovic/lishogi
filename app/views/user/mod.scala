@@ -170,7 +170,7 @@ object mod {
         postForm(cls := "fide_title", action := routes.Mod.setTitle(u.username))(
           form3.select(
             lila.user.DataForm.title.fill(u.title.map(_.value))("title"),
-            lila.user.Title.acronyms.map(t => t -> t),
+            lila.user.Title.all.map(t => t.value -> t.value),
             "".some,
           ),
         )
@@ -259,7 +259,7 @@ object mod {
           ul(
             history.map { e =>
               li(
-                userIdLink(e.mod.some, withTitle = false),
+                showUsernameById(e.mod.some),
                 " ",
                 b(e.showAction),
                 " ",
@@ -301,7 +301,7 @@ object mod {
             postForm(action := routes.Report.inquiry(r.id))(
               submitButton(reportScore(r.score), " ", strong(r.reason.name)),
               " ",
-              userIdLink(r.user.some),
+              showUsernameById(r.user.some),
               " ",
               momentFromNowServer(atom.at),
               ": ",
@@ -322,7 +322,7 @@ object mod {
               r.bestAtoms(3).map { atom =>
                 div(cls := "atom")(
                   "By ",
-                  userIdLink(atom.by.value.some),
+                  showUsernameById(atom.by.value.some),
                   " ",
                   momentFromNowServer(atom.at),
                   ": ",
@@ -428,7 +428,7 @@ object mod {
                   a(href := routes.Round.watcher(result.gameId, result.color.name))(
                     pag.pov(result) match {
                       case None    => result.gameId
-                      case Some(p) => playerUsername(p.opponent)
+                      case Some(p) => span(showPlayer(p.opponent, withOnline = false))
                     },
                   ),
                 ),
@@ -533,7 +533,9 @@ object mod {
               cls      := (o == u) option "same",
             )(
               if (dox || o == u)
-                td(dataSort := o.id)(userLink(o, withBestRating = true, params = "?mod"))
+                td(dataSort := o.id)(
+                  frag(showUsername(o, withModLink = true), s" (${o.perfs.bestRating})"),
+                )
               else td,
               if (dox) td(othersWithEmail emailValueOf o)
               else td,

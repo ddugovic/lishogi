@@ -3,7 +3,7 @@ import { getPerfIcon } from 'common/perf-icons';
 import { bind } from 'common/snabbdom';
 import { i18n, i18nPluralSame } from 'i18n';
 import { i18nPerf } from 'i18n/perf';
-import { i18nVariant } from 'i18n/variant';
+import { rankFromRating, rankTag } from 'shogi/rank';
 import { h, type VNode } from 'snabbdom';
 import type LobbyController from '../../ctrl';
 import * as hookRepo from '../../hook-repo';
@@ -17,6 +17,8 @@ function renderHookOrSeek(hs: Hook | Seek) {
   const disabled = isHook(hs) && !!hs.disabled;
   const username = isHook(hs) ? hs.u : hs.username;
   const isRated = isHook(hs) ? hs.ra : hs.mode === 1;
+  const provisionalRating = isHook(hs) ? hs.prov : hs.provisional;
+  const rank = hs.rating && !provisionalRating ? rankFromRating(hs.rating) : undefined;
   return h(
     `tr.hook.${act}`,
     {
@@ -33,16 +35,16 @@ function renderHookOrSeek(hs: Hook | Seek) {
     },
     tds([
       h(`span.is.is2.color-icon.${(isHook(hs) ? hs.c : hs.color) || 'random'}`),
-      hs.rating
+      hs.rating && username
         ? h(
             'span.ulink.ulpt',
             {
               attrs: { 'data-href': `/@/${username}` },
             },
-            username,
+            [rank ? rankTag(rank) : undefined, username],
           )
         : h('span.anon', i18n('anonymousUser')),
-      (hs.rating ? hs.rating : '-') + ((isHook(hs) ? hs.prov : hs.provisional) ? '?' : ''),
+      (hs.rating ? hs.rating : '-') + (provisionalRating ? '?' : ''),
       isHook(hs) ? hs.clock : hs.days ? i18nPluralSame('nbDays', hs.days) : '∞',
       h(
         'span',

@@ -18,7 +18,7 @@ object chart {
     ) {
       div(cls := "tournament-stats")(
         div(cls := "box__pad")(
-          h1(userLink(user, withOnline = true), " tournament stats"),
+          h1(showUsername(user, withOnline = true), " tournament stats"),
           p(
             "The rank avg is a percentage of your ranking. Lower is better.",
             br,

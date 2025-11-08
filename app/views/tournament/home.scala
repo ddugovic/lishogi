@@ -43,7 +43,7 @@ object home {
               winners.top.map { w =>
                 val name = w.trans
                 div(
-                  userIdLink(w.userId.some, withOnline = false),
+                  showUsernameById(w.userId.some, withOnline = false),
                   a(
                     cls      := "tourname text",
                     title    := name,

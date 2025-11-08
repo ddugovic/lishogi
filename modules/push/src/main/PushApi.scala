@@ -192,7 +192,7 @@ final private class PushApi(
               t other sender,
               _.message,
               PushApi.Data(
-                title = sender.titleName,
+                title = sender.name,
                 body = shorten(t.lastMsg.text, 57 - 3, "..."),
                 stacking = Stacking.NewMessage,
                 payload = Json.obj(
@@ -218,7 +218,7 @@ final private class PushApi(
               dest.id,
               _.challenge.create,
               PushApi.Data(
-                title = s"${lightChallenger.titleName} (${challenger.rating.show}) challenges you!",
+                title = s"${lightChallenger.name} (${challenger.rating.show}) challenges you!",
                 body = describeChallenge(c),
                 stacking = Stacking.ChallengeCreate,
                 payload = Json.obj(
@@ -242,7 +242,7 @@ final private class PushApi(
           challenger.id,
           _.challenge.accept,
           PushApi.Data(
-            title = s"${lightJoiner.fold("Anonymous")(_.titleName)} accepts your challenge!",
+            title = s"${lightJoiner.fold("Anonymous")(_.name)} accepts your challenge!",
             body = describeChallenge(c),
             stacking = Stacking.ChallengeAccept,
             payload = Json.obj(

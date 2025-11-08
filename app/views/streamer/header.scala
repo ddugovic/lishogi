@@ -15,7 +15,6 @@ object header {
       bits.pic(s.streamer, s.user),
       div(cls := "overview")(
         h1(dataIcon := Icons.mic)(
-          titleTag(s.user.title),
           s.streamer.name,
         ),
         s.streamer.headline.map(_.value).map { d =>

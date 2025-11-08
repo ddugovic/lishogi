@@ -33,7 +33,7 @@ object mine {
               bits.details(c, true),
               c.destUserId.map { destId =>
                 div(cls := "waiting")(
-                  userIdLink(destId.some, cssClass = "target".some),
+                  showUsernameById(destId.some),
                   span(trans.waitingForOpponent()),
                   i(cls := "ddloader"),
                 )

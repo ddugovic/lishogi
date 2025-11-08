@@ -37,7 +37,7 @@ object index {
           h2(newPatrons()),
           div(cls := "list")(
             recentIds.map { userId =>
-              div(userIdLink(userId.some))
+              div(showUsernameById(userId.some))
             },
           ),
         ),
@@ -238,7 +238,7 @@ object index {
               h2(celebratedPatrons()),
               div(cls := "list")(
                 bestIds.map { userId =>
-                  div(userIdLink(userId.some))
+                  div(showUsernameById(userId.some))
                 },
               ),
             ),

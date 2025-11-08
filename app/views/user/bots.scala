@@ -28,7 +28,7 @@ object bots {
             tbody(
               users.sortBy(-_.playTime.??(_.total)) map { u =>
                 tr(
-                  td(userLink(u)),
+                  td(showUsername(u)),
                   u.profile
                     .ifTrue(ctx.noKid)
                     .ifTrue(!u.marks.troll || ctx.is(u))

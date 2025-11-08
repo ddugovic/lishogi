@@ -18,14 +18,14 @@
       @extend %flex-center;
     }
 
-    .author {
+    .author .user-link {
       color: theme.$c-font-dim;
       font-weight: bold;
       font-size: 1.1em;
       margin-right: 1rem;
     }
 
-    a.author--op {
+    .author--op .user-link {
       @extend %box-radius;
 
       padding: 0.2em;

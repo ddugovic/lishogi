@@ -23,19 +23,28 @@ trait ForumHelper { self: UserHelper with StringHelper with HasEnv =>
 
   def authorName(post: Post)(implicit lang: Lang) =
     post.userId match {
-      case Some(userId) => userIdSpanMini(userId, withOnline = true, modIcon = ~post.modIcon)
-      case None         => anonSpan
+      case Some(userId) =>
+        showUsernameById(
+          userId.some,
+          withLink = false,
+          withOnline = true,
+          withModIcon = ~post.modIcon,
+        )
+      case None => anonSpan
     }
 
   def authorLink(
       post: Post,
-      cssClass: Option[String] = None,
       withOnline: Boolean = true,
-      modIcon: Boolean = false,
+      withModIcon: Boolean = false,
   )(implicit lang: Lang): Frag =
     if (post.erased) span(cls := "author")("<erased>")
     else
       post.userId.fold(anonSpan) { userId =>
-        userIdLink(userId.some, cssClass = cssClass, withOnline = withOnline, modIcon = modIcon)
+        showUsernameById(
+          userId.some,
+          withOnline = withOnline,
+          withModIcon = withModIcon,
+        )
       }
 }

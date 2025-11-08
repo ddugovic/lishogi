@@ -27,7 +27,7 @@ object post {
             span(cls := "post_topic")(shorten(p.topicName, 30)),
             span(cls := "post_text")(shorten(p.text, 70)),
           ),
-          userIdLink(p.userId, withOnline = false),
+          showUsernameById(p.userId, withOnline = false, withPowerTip = false),
         )
       },
     )
@@ -42,11 +42,10 @@ object post {
   )(implicit ctx: Context) = {
     st.article(cls := List("forum-post" -> true, "erased" -> post.erased), id := post.number)(
       div(cls := "forum-post__metas")(
-        div(
+        div(cls := s"author${(topic.userId == post.userId) ?? " author--op"}")(
           authorLink(
             post = post,
-            cssClass = s"author${(topic.userId == post.userId) ?? " author--op"}".some,
-            modIcon = ~post.modIcon,
+            withModIcon = ~post.modIcon,
           ),
           a(href := url)(
             post.updatedAt

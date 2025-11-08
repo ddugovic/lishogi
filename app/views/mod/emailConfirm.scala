@@ -53,7 +53,7 @@ this.setSelectionRange(this.value.length, this.value.length);
               ),
               tbody(
                 tr(
-                  td(userLink(u, withBestRating = true, params = "?mod")),
+                  td(showUsername(u, withModLink = true), s" (${u.perfs.bestRating})"),
                   td(email.fold("-")(_.value)),
                   td(u.count.game.localize),
                   td(

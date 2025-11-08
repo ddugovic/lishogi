@@ -59,7 +59,7 @@ object submitted {
                   )
                 else
                   frag(
-                    p(strong(s"Found ${pager.nbResults} puzzles", userLink(u))),
+                    p(strong(s"Found ${pager.nbResults} puzzles", showUsername(u))),
                     p(strong(s"Found ${~count} puzzles in queue")),
                     div(cls := "puzzle-of-player__pager infinite-scroll")(
                       pager.currentPageResults.map { puzzle =>

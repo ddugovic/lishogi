@@ -123,7 +123,7 @@ object teamBattle {
                 td(index + 1),
                 td(
                   (index < tour.teamBattle.??(_.nbLeaders)) option iconTag(Icons.crown),
-                  userIdLink(player.userId.some),
+                  showUsernameById(player.userId.some),
                 ),
                 td(player.score),
                 td(player.performance),

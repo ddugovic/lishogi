@@ -12,7 +12,7 @@ object leaderboard {
 
   private def freqWinner(w: lila.tournament.Winner)(implicit lang: Lang) =
     li(
-      userIdLink(w.userId.some),
+      showUsernameById(w.userId.some),
       a(
         cls   := "tourname",
         title := showDate(w.date),

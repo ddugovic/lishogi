@@ -28,7 +28,7 @@ object form {
           form3.group(form("username"), trans.user(), klass = "field_to") { f =>
             reqUser
               .map { user =>
-                frag(userLink(user), form3.hidden(f, user.id.some))
+                frag(showUsername(user), form3.hidden(f, user.id.some))
               }
               .getOrElse {
                 div(form3.input(f, klass = "user-autocomplete")(dataTag := "span"))

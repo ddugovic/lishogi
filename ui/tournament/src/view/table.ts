@@ -1,5 +1,6 @@
 import { icons } from 'common/icons';
 import { bind } from 'common/snabbdom';
+import { rankFromRating, rankTag } from 'shogi/rank';
 import { opposite } from 'shogiground/util';
 import { h, type VNode } from 'snabbdom';
 import type TournamentController from '../ctrl';
@@ -41,7 +42,11 @@ function featured(f: Featured): VNode {
 }
 
 function duelPlayerMeta(p: DuelPlayer) {
-  return [h('em.rank', `#${p.k}`), p.t ? h('em.title', p.t) : null, h('em.rating', `${p.r}`)];
+  return h('em.rank', `#${p.k}`);
+}
+function duelPlayerName(p: DuelPlayer) {
+  const r = rankFromRating(p.r);
+  return h('strong', [rankTag(r), p.n]);
 }
 
 function renderDuel(battle?: TeamBattle, duelTeams?: DuelTeams) {
@@ -59,8 +64,8 @@ function renderDuel(battle?: TeamBattle, duelTeams?: DuelTeams) {
               [0, 1].map(i => teamName(battle, duelTeams[d.p[i].n.toLowerCase()])),
             )
           : undefined,
-        h('line.a', [h('strong', d.p[0].n), h('span', duelPlayerMeta(d.p[1]).reverse())]),
-        h('line.b', [h('span', duelPlayerMeta(d.p[0])), h('strong', d.p[1].n)]),
+        h('line.a', [duelPlayerName(d.p[0]), h('span', duelPlayerMeta(d.p[1]))]),
+        h('line.b', [h('span', duelPlayerMeta(d.p[0])), duelPlayerName(d.p[1])]),
       ],
     );
 }

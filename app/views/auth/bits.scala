@@ -83,7 +83,7 @@ object bits {
           case Some(false) => h1(cls := "is-red text", dataIcon := Icons.cancel)
           case _           => h1
         })(
-          userLink(u, withOnline = false),
+          showUsername(u, withOnline = false),
           " - ",
           trans.changePassword(),
         ),

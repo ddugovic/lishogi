@@ -75,7 +75,7 @@ object appeal2 {
                     submitButton("Open")(cls := "button button-green button-thin"),
                   ),
               )
-            case Some(Inquiry(mod, _)) => frag(userIdLink(mod.some), " is handling this.")
+            case Some(Inquiry(mod, _)) => frag(showUsernameById(mod.some), " is handling this.")
           },
         ),
       )
@@ -101,7 +101,7 @@ object appeal2 {
           appeals.map { appeal =>
             tr(cls := List("new" -> appeal.isOpen))(
               td(
-                userIdLink(appeal.id.some),
+                showUsernameById(appeal.id.some),
               ),
               td(appeal.msgs.lastOption map { msg =>
                 msg.text
@@ -109,7 +109,7 @@ object appeal2 {
               td(
                 a(href := routes.Appeal.show(appeal.id), cls := "button button-metal")("View"),
                 inquiries.get(appeal.id) map { i =>
-                  frag(userIdLink(i.mod.some), " is handling this")
+                  frag(showUsernameById(i.mod.some), " is handling this")
                 },
               ),
             )
@@ -138,7 +138,7 @@ object appeal2 {
     frag(
       h1(
         if (appeal.isOpen) "Ongoing appeal" else "Closed appeal",
-        asMod option frag(" : ", userIdLink(appeal.id.some)),
+        asMod option frag(" : ", showUsernameById(appeal.id.some)),
       ),
       standardFlash(),
       !asMod option renderHelp,
@@ -195,7 +195,7 @@ object appeal2 {
     )
 
   private def renderUser(appeal: Appeal, userId: User.ID)(implicit lang: Lang) =
-    userIdLink((if (appeal isAbout userId) userId else User.lishogiId).some)
+    showUsernameById((if (appeal isAbout userId) userId else User.lishogiId).some)
 
   private def renderForm(form: Form[_], action: String, isNew: Boolean)(implicit ctx: Context) =
     postForm(st.action := action)(

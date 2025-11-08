@@ -22,7 +22,6 @@ final class NoteApi(
     coll: Coll,
 )(implicit
     ec: scala.concurrent.ExecutionContext,
-    ws: play.api.libs.ws.WSClient,
 ) {
 
   import reactivemongo.api.bson._
@@ -58,7 +57,7 @@ final class NoteApi(
       .cursor[Note]()
       .list(50)
 
-  def write(to: User, text: String, from: User, modOnly: Boolean, dox: Boolean) = {
+  def write(to: User, text: String, from: User, modOnly: Boolean, dox: Boolean): Funit = {
 
     val note = Note(
       _id = lila.common.ThreadLocalRandom nextString 8,
@@ -66,11 +65,11 @@ final class NoteApi(
       to = to.id,
       text = text,
       mod = modOnly,
-      dox = modOnly && (dox || Title.fromUrl.toJSAId(text).isDefined),
+      dox = modOnly && (dox || Title.containsShogiOrJpId(text)),
       date = DateTime.now,
     )
 
-    coll.insert.one(note) >>-
+    coll.insert.one(note).void >>-
       lila.common.Bus.publish(
         lila.hub.actorApi.user.Note(
           from = from.username,
@@ -80,10 +79,7 @@ final class NoteApi(
         ),
         "userNote",
       )
-  } >> {
-    modOnly ?? Title.fromUrl(text) flatMap {
-      _ ?? { userRepo.addTitle(to.id, _) }
-    }
+
   }
 
   def lishogiWrite(to: User, text: String) =

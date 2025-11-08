@@ -13,7 +13,10 @@ object bits {
   def communityMenu(active: String)(implicit ctx: Context) =
     st.nav(cls := "page-menu__menu subnav")(
       a(cls := active.active("leaderboard"), href := routes.User.list)(trans.leaderboard()),
-      a(cls := active.active("ratings"), href := routes.Stat.ratingDistribution("blitz"))(
+      a(
+        cls  := active.active("ratings"),
+        href := routes.Stat.ratingDistribution(lila.rating.PerfType.RealTime.key),
+      )(
         trans.ratingStats(),
       ),
       a(cls := active.active("tournament"), href := routes.Tournament.leaderboard)(
@@ -27,7 +30,7 @@ object bits {
 
   def miniClosed(u: User)(implicit ctx: Context) =
     frag(
-      div(cls := "title")(userLink(u, withPowerTip = false)),
+      div(cls := "title")(showUsername(u, withPowerTip = false)),
       div(style := "padding: 20px 8px; text-align: center")(trans.settings.thisAccountIsClosed()),
     )
 

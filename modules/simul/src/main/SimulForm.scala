@@ -39,7 +39,7 @@ object SimulForm {
   val colors       = List("sente", "random", "gote")
   val colorDefault = "gote"
 
-  private def nameType(host: User) =
+  private def nameType =
     cleanText.verifying(
       Constraints minLength 2,
       Constraints maxLength 40,
@@ -52,23 +52,10 @@ object SimulForm {
           validation.Invalid(validation.ValidationError("Must not contain \"lishogi\""))
         else validation.Valid
       },
-      Constraint[String] { (t: String) =>
-        if (
-          t.toUpperCase.split(' ').exists { word =>
-            lila.user.Title.all.exists { case (title, name) =>
-              !host.title.has(title) && {
-                title.value == word || name.toUpperCase == word
-              }
-            }
-          }
-        )
-          validation.Invalid(validation.ValidationError("Must not contain a title"))
-        else validation.Valid
-      },
     )
 
   def create(host: User) =
-    baseForm(host) fill Setup(
+    baseForm fill Setup(
       name = host.titleUsername,
       clockTime = clockTimeDefault,
       clockIncrement = clockIncrementDefault,
@@ -83,8 +70,8 @@ object SimulForm {
       estimatedStartAt = none,
       team = none,
     )
-  def edit(host: User, simul: Simul) =
-    baseForm(host) fill Setup(
+  def edit(simul: Simul) =
+    baseForm fill Setup(
       name = simul.name,
       clockTime = simul.clock.config.limitInMinutes.toInt,
       clockIncrement = simul.clock.config.increment.roundSeconds,
@@ -100,10 +87,10 @@ object SimulForm {
       team = simul.team,
     )
 
-  private def baseForm(host: User) =
+  private def baseForm =
     Form(
       mapping(
-        "name"           -> nameType(host),
+        "name"           -> nameType,
         "clockTime"      -> numberIn(clockTimeChoices),
         "clockIncrement" -> numberIn(clockIncrementChoices),
         "clockByoyomi"   -> numberIn(clockByoyomiChoices),

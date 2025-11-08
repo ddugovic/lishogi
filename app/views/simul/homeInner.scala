@@ -104,7 +104,7 @@ object homeInner {
 
   private def simHost(sim: lila.simul.Simul)(implicit lang: Lang) =
     td(cls := "host")(
-      userIdLink(sim.hostId.some, withOnline = false),
+      showUsernameById(sim.hostId.some, withOnline = false),
       br,
       strong(sim.hostRating),
     )

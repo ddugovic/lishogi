@@ -48,7 +48,7 @@ object ofPlayer {
                   )
                 else
                   frag(
-                    p(strong(trans.puzzle.fromXGamesFound((pager.nbResults), userLink(u)))),
+                    p(strong(trans.puzzle.fromXGamesFound((pager.nbResults), showUsername(u)))),
                     div(cls := "puzzle-of-player__pager infinite-scroll")(
                       pager.currentPageResults.map { puzzle =>
                         div(cls := "puzzle-of-player__puzzle")(

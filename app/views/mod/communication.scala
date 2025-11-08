@@ -31,7 +31,7 @@ object communication {
     ) {
       main(id := "communication", cls := "box box-pad")(
         h1(
-          div(cls := "title")(userLink(u), " communications"),
+          div(cls := "title")(showUsername(u), " communications"),
           div(cls := "actions")(
             a(
               cls  := "button button-empty mod-zone-toggle",
@@ -59,7 +59,7 @@ object communication {
           div(cls := "history")(
             history.map { e =>
               div(
-                userIdLink(e.mod.some),
+                showUsernameById(e.mod.some),
                 " ",
                 b(e.showAction),
                 " ",
@@ -78,7 +78,7 @@ object communication {
             notes.map { note =>
               (isGranted(_.Doxing) || !note.dox) option
                 div(
-                  userIdLink(note.from.some),
+                  showUsernameById(note.from.some),
                   " ",
                   momentFromNowOnce(note.date),
                   ": ",
@@ -123,7 +123,7 @@ object communication {
                   ),
                   title := pov.game.fromFriend.option("Friend game"),
                 )(
-                  usernameOrAnon(pov.opponent.userId),
+                  pov.opponent.userId.fold(anonSpan)(usernameOrId),
                   " – ",
                   momentFromNowOnce(pov.game.movedAt),
                 ),
@@ -135,10 +135,9 @@ object communication {
                         "author" -> (line.author.toLowerCase == u.id),
                       ),
                     )(
-                      userIdLink(
+                      showUsernameById(
                         line.author.toLowerCase.some,
                         withOnline = false,
-                        withTitle = false,
                       ),
                       nbsp,
                       richText(line.text),
@@ -152,7 +151,7 @@ object communication {
             h2("Recent inbox messages"),
             convos.map { convo =>
               div(cls := "thread")(
-                p(cls := "title")(strong(lightUserLink(convo.contact))),
+                p(cls := "title")(strong(showUsernameLight(convo.contact))),
                 table(cls := "slist")(
                   tbody(
                     convo.msgs.reverse.map { msg =>

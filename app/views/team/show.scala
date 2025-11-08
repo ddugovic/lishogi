@@ -77,7 +77,7 @@ object show {
                 teamLeaders.pluralSame(t.leaders.size),
                 ": ",
                 fragList(t.leaders.toList.map { l =>
-                  userIdLink(l.some)
+                  showUsernameById(l.some)
                 }),
               ),
             ),
@@ -158,7 +158,7 @@ object show {
                 div(cls := "userlist infinitescroll")(
                   pagerNext(members, np => routes.Team.show(t.id, np).url),
                   members.currentPageResults.map { member =>
-                    div(cls := "paginated")(lightUserLink(member))
+                    div(cls := "paginated")(showUsernameLight(member))
                   },
                 ),
               ),

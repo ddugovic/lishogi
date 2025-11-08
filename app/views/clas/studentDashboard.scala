@@ -44,14 +44,10 @@ object studentDashboard {
           teachers.map { user =>
             tr(
               td(
-                userLink(
+                showUsername(
                   user,
-                  name = span(
-                    strong(user.username),
-                    user.profile.flatMap(_.nonEmptyRealName) map { em(_) },
-                  ).some,
-                  withTitle = false,
                 ),
+                user.profile.flatMap(_.nonEmptyRealName) map { name => em(s" (${name})") },
               ),
               td(
                 user.seenAt.map { seen =>
@@ -83,14 +79,10 @@ object studentDashboard {
           case Student.WithUser(student, user) =>
             tr(
               td(
-                userLink(
+                showUsername(
                   user,
-                  name = span(
-                    strong(user.username),
-                    em(student.realName),
-                  ).some,
-                  withTitle = false,
                 ),
+                em(s" (${student.realName})"),
               ),
               td(dataSort := user.perfs.bestRating, cls := "rating")(cls := "rating")(
                 user.best3Perfs.map {

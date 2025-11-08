@@ -105,7 +105,7 @@ object edit extends Context.ToLang {
                   log.nonEmpty option ul(
                     log.map { e =>
                       li(
-                        userIdLink(e.mod.some, withTitle = false),
+                        showUsernameById(e.mod.some),
                         " ",
                         b(e.showAction),
                         " ",
@@ -123,7 +123,11 @@ object edit extends Context.ToLang {
                   notes.nonEmpty option ul(
                     notes.map { note =>
                       li(
-                        p(cls := "meta")(userIdLink(note.from.some), " ", momentFromNow(note.date)),
+                        p(cls := "meta")(
+                          showUsernameById(note.from.some),
+                          " ",
+                          momentFromNow(note.date),
+                        ),
                         p(cls := "text")(richText(note.text)),
                       )
                     },
@@ -136,7 +140,7 @@ object edit extends Context.ToLang {
                   same.nonEmpty option table(cls := "slist")(
                     same.map { s =>
                       tr(
-                        td(userIdLink(s.userId.some)),
+                        td(showUsernameById(s.userId.some)),
                         td(s.name),
                         td(
                           s.twitch.map(t => a(href := s"https://twitch.tv/${t.userId}")(t.userId)),

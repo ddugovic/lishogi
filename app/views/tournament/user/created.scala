@@ -30,7 +30,7 @@ object created {
             thead(
               tr(
                 th(cls := "count")(pager.nbResults),
-                th(h1(userLink(user, withOnline = true), " - ", trans.tournaments())),
+                th(h1(showUsername(user, withOnline = true), " - ", trans.tournaments())),
                 th(trans.search.date()),
                 th(trans.players()),
               ),

@@ -95,7 +95,7 @@ object side {
               ),
               game.notationImport.flatMap(_.user).map { importedBy =>
                 small(
-                  trans.importedByX(userIdLink(importedBy.some, None, false)),
+                  trans.importedByX(showUsernameById(importedBy.some, None, false)),
                 )
               },
             ),
@@ -104,7 +104,7 @@ object side {
             game.players.map { p =>
               frag(
                 div(cls := s"player color-icon is ${p.color.name} text")(
-                  playerLink(p, withOnline = false, withDiff = true, withBerserk = true),
+                  showPlayer(p, withOnline = false, withDiff = true, withBerserk = true),
                   tour.flatMap(_.teamVs).map(_.teams(p.color)) map {
                     teamLink(_, false)(cls := "team")
                   },

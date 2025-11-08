@@ -1,5 +1,7 @@
 package lila.game
 
+import play.api.i18n.Lang
+
 import org.joda.time.DateTime
 
 import shogi.Centis
@@ -26,17 +28,14 @@ final class NotationDump(
   def apply(
       game: Game,
       flags: WithFlags,
-      teams: Option[Color.Map[String]] = None,
+      @scala.annotation.unused teams: Option[Color.Map[String]] = None,
   ): Fu[Notation] = {
+    val isCsa = flags.csa && game.variant.standard
     val tagsFuture =
       if (flags.tags)
         tags(
           game,
-          if (flags.csa && game.variant.standard)
-            Tag.timeControlCsa(game.clock.map(_.config))
-          else
-            Tag.timeControlKif(game.clock.map(_.config)),
-          teams = teams,
+          isCsa = isCsa,
         )
       else fuccess(Tags(Nil))
     tagsFuture map { ts =>
@@ -63,7 +62,7 @@ final class NotationDump(
         )
       }
       val terminationMove =
-        if (flags.csa && game.variant.standard)
+        if (isCsa)
           Csa.createTerminationStep(
             game.status,
             game.winnerColor.fold(false)(_ == game.turnColor),
@@ -73,7 +72,7 @@ final class NotationDump(
         else
           Kif.createTerminationStep(game.status, game.winnerColor.fold(false)(_ == game.turnColor))
       val notation =
-        if (flags.csa && game.variant.standard)
+        if (isCsa)
           Csa(moves, game.initialSfen, shogi.format.Initial.empty, ts)
         else Kif(moves, game.initialSfen, game.variant, shogi.format.Initial.empty, ts)
       if (game.finished) {
@@ -95,10 +94,8 @@ final class NotationDump(
   private def gameLightUsers(game: Game): Fu[(Option[LightUser], Option[LightUser])] =
     (game.sentePlayer.userId ?? lightUserApi.async) zip (game.gotePlayer.userId ?? lightUserApi.async)
 
-  def player(p: Player, u: Option[LightUser]) =
-    p.engineConfig.fold(u.fold(p.name | lila.user.User.anonymous)(_.name))(ec =>
-      s"${ec.engine.fullName} level ${ec.level}",
-    )
+  def player(p: Player, uOpt: Option[LightUser], lang: Lang) =
+    Namer.playerTextUser(p, uOpt)(lang)
 
   private def eventOf(game: Game) = {
     val perf = game.perfType.trans(lila.i18n.defaultLang)
@@ -116,17 +113,17 @@ final class NotationDump(
 
   def tags(
       game: Game,
-      timeControlTag: Tag,
-      @scala.annotation.unused teams: Option[Color.Map[String]] = None,
+      isCsa: Boolean,
   ): Fu[Tags] =
     gameLightUsers(game) map { case (sente, gote) =>
       Tags {
+        val lang     = if (isCsa) lila.i18n.enLang else lila.i18n.jaLang
         val imported = game.notationImport flatMap { _.parseNotation }
 
         List(
           Tag(_.Site, gameUrl(game.id)),
-          Tag(_.Sente, player(game.sentePlayer, sente)),
-          Tag(_.Gote, player(game.gotePlayer, gote)),
+          Tag(_.Sente, player(game.sentePlayer, sente, lang)),
+          Tag(_.Gote, player(game.gotePlayer, gote, lang)),
           Tag(
             _.Event,
             imported.flatMap(_.tags(_.Event)) | { if (game.imported) "Import" else eventOf(game) },
@@ -144,7 +141,10 @@ final class NotationDump(
             List(
               Tag(_.Start, dateAndTime(game.createdAt)),
               Tag(_.End, dateAndTime(game.movedAt)),
-              timeControlTag,
+              if (isCsa)
+                Tag.timeControlCsa(game.clock.map(_.config))
+              else
+                Tag.timeControlKif(game.clock.map(_.config)),
             )
           }
         }

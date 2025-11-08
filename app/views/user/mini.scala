@@ -22,24 +22,21 @@ object mini {
       div(cls := "upt__info")(
         div(cls := "upt__info__top")(
           div(cls := "left")(
-            userLink(u, withPowerTip = false),
-            u.profileOrDefault.countryInfo map { c =>
-              val hasRoomForNameText = u.username.size + c.shortName.size < 20
-              span(
-                cls   := "upt__info__top__country",
-                title := (!hasRoomForNameText).option(c.name),
-              )(
-                img(cls := "flag", src := staticUrl(s"images/flags/${c.code}.png")),
-                hasRoomForNameText option c.shortName,
-              )
-            },
+            showUsername(u, withPowerTip = false),
+            u.title
+              .ifTrue(u.noBot)
+              .map(t => frag(" - ", span(cls := "official-title")(lila.user.Title.trans(t)))),
           ),
           ping map bits.signalBars,
         ),
         if (u.lame && !ctx.me.has(u) && !isGranted(_.UserSpy))
           div(cls := "upt__info__warning")(trans.thisAccountViolatedTos())
         else
-          div(cls := "upt__info__ratings")(u.best8Perfs map { showPerfRating(u, _) }),
+          div(cls := "upt__info__ratings")(u.best8Perfs map { pt =>
+            span(cls := "text", dataIcon := pt.icon)(
+              rankTag(u.perfs(pt), withUnknown = true),
+            )
+          }),
       ),
       ctx.userId map { myId =>
         frag(
@@ -77,11 +74,8 @@ object mini {
         )
       },
       isGranted(_.UserSpy) option div(cls := "upt__mod")(
-        span(
-          trans.nbGames.plural(u.count.game, u.count.game.localize),
-          " ",
-          momentFromNowOnce(u.createdAt),
-        ),
+        trans.nbGames.plural(u.count.game, u.count.game.localize),
+        momentFromNowOnce(u.createdAt),
         (u.lameOrTroll || u.disabled) option span(cls := "upt__mod__marks")(mod.userMarks(u, None)),
       ),
       (!ctx.pref.isBlindfold) ?? playing map { pov =>
@@ -91,7 +85,7 @@ object mini {
             i(dataIcon := pov.game.perfType.icon, cls := "text")(
               pov.game.clock.map(_.config.show),
             ),
-            playerText(pov.opponent, withRating = true),
+            playerText(pov.opponent, withRank = true),
           ),
         )
       },

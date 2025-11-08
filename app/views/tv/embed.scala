@@ -22,7 +22,6 @@ object embed {
       dataStreamUrl := routes.Tv.feed,
       div(id := "featured-game", cls := "embedded", title := "lishogi.org TV")(
         gameSfenNoCtx(pov, tv = true, blank = true),
-        views.html.game.bits.vstext(pov)(config.lang),
       ),
     )
 

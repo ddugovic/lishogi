@@ -130,7 +130,7 @@ object search {
         users.map { case lila.user.User.WithEmails(u, emails) =>
           tr(
             td(
-              userLink(u, withBestRating = true, params = "?mod"),
+              showUsername(u, withModLink = true),
               (isGranted(_.Doxing) && isGranted(_.SetEmail)) option
                 email(emails.list.map(_.value).mkString(", ")),
             ),

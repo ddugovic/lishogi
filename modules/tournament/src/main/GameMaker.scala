@@ -51,8 +51,8 @@ final class GameMaker(
       duelStore.add(
         tour = tour,
         game = game,
-        p1 = (usernameOf(pairing.user1) -> ~game.sentePlayer.rating),
-        p2 = (usernameOf(pairing.user2) -> ~game.gotePlayer.rating),
+        p1 = (usernameOf(pairing.user1) -> ~game.sentePlayer.stableRating),
+        p2 = (usernameOf(pairing.user2) -> ~game.gotePlayer.stableRating),
         ranking = ranking,
       )
     } inject game

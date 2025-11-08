@@ -61,7 +61,7 @@ object side {
         div(cls := s"game__meta__players orientation-${pov.color.name}")(
           game.players.map { p =>
             div(cls := s"player color-icon is ${p.color.name} text")(
-              playerLink(p, withOnline = false, withDiff = true, withBerserk = true),
+              showPlayer(p, withOnline = false, withDiff = true, withBerserk = true),
             )
           },
         ),

@@ -24,11 +24,11 @@ object side {
       val isPuzzle = perfType == lila.rating.PerfType.Puzzle
       a(
         dataIcon := perfType.icon,
-        title    := perfType.desc,
         cls := List(
-          "perf-item" -> true,
-          "empty"     -> perf.isEmpty,
-          "active"    -> active.has(perfType),
+          "perf-item"   -> true,
+          "perf-puzzle" -> isPuzzle,
+          "empty"       -> perf.isEmpty,
+          "active"      -> active.has(perfType),
         ),
         href := {
           if (isPuzzle) ctx.is(u) option routes.Puzzle.dashboard(30, "home").url
@@ -36,15 +36,21 @@ object side {
         },
         span(
           h3(perfType.trans),
-          st.rating(
-            strong(
-              perf.glicko.intRating,
-              perf.provisional option "?",
+          !isPuzzle option strong(cls := "perf-rank")(
+            rankTag(perf, withUnknown = true),
+          ),
+          div(cls := "perf-meta")(
+            st.rating(
+              span(cls := "perf-rating")(
+                span(cls := "perf-rating-int")(
+                  perf.glicko.intRating,
+                  perf.provisional option "?",
+                ),
+                " ",
+                showRatingProgress(perf.progress),
+              ),
             ),
-            " ",
-            ratingProgress(perf.progress),
-            " ",
-            span(
+            span(cls := "perf-cnt")(
               if (perfType.key == "puzzle") trans.nbPuzzles.plural(perf.nb, perf.nb.localize)
               else trans.nbGames.plural(perf.nb, perf.nb.localize),
             ),
@@ -71,7 +77,7 @@ object side {
         showNonEmptyPerf(u.perfs.checkshogi, PerfType.Checkshogi),
         br,
         u.noBot option showPerf(u.perfs.puzzle, PerfType.Puzzle),
-        u.noBot option showStorm(u.perfs.storm, u),
+        (u.noBot && u.perfs.storm.nonEmpty) option showStorm(u.perfs.storm, u),
         u.noBot option br,
         u.perfs.aiLevels.standard.ifTrue(u.noBot).map(l => aiLevel(l, shogi.variant.Standard)),
         u.perfs.aiLevels.minishogi.ifTrue(u.noBot).map(l => aiLevel(l, shogi.variant.Minishogi)),
@@ -92,11 +98,10 @@ object side {
         h3("Storm"),
         st.rating(
           strong(storm.score),
-          storm.nonEmpty option frag(
-            " ",
-            span(trans.storm.xRuns.plural(storm.runs, storm.runs.localize)),
-          ),
         ),
+      ),
+      span(cls := "perf-cnt")(
+        span(trans.storm.xRuns.plural(storm.runs, storm.runs.localize)),
       ),
       iconTag(Icons.play),
     )

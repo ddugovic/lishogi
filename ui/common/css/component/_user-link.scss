@@ -1,4 +1,5 @@
 @use '../abstract/extends';
+@use '../abstract/mixins';
 @use '../abstract/icons';
 @use '../theme/generated/theme';
 
@@ -50,16 +51,35 @@
     }
   }
 
-  .title {
-    color: theme.$c-brag;
-    font-weight: bold;
-
-    &[data-bot] {
-      color: theme.$c-bot;
-    }
+  img.flag {
+    height: 1em;
+    margin-left: 0.3em;
   }
+}
+
+.bot-tag,
+.engine-lvl {
+  font-weight: bold;
+  color: theme.$c-bot;
 }
 
 a.user-link:hover {
   color: theme.$c-link;
+}
+
+img.flag {
+  @include mixins.light-theme {
+    @extend %box-shadow;
+  }
+
+  user-select: none;
+  vertical-align: middle;
+  transform: translateY(-0.06em);
+  border: theme.$border;
+}
+
+body.no-flags {
+  img.flag {
+    display: none !important;
+  }
 }

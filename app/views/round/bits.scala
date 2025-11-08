@@ -57,25 +57,16 @@ object bits {
       views.html.chat.members,
       isGranted(_.ViewBlurs) option div(cls := "round__mod")(
         game.players.filter(p => game.playerBlurPercent(p.color) > 30) map { p =>
-          div(
-            playerLink(
+          div(cls := s"is color-icon ${p.color.name}")(
+            showPlayer(
               p,
-              cssClass = s"is color-icon ${p.color.name}".some,
               withOnline = false,
-              mod = true,
+              withModLink = true,
             ),
             s" ${p.blurs.nb}/${game.playerMoves(p.color)} blurs ",
             strong(game.playerBlurPercent(p.color), "%"),
           )
         },
-        // game.players flatMap { p => p.holdAlert.map(p ->) } map {
-        //   case (p, h) => div(
-        //     playerLink(p, cssClass = s"is color-icon ${p.color.name}".some, mod = true, withOnline = false),
-        //     "hold alert",
-        //     br,
-        //     s"(ply: ${h.ply}, mean: ${h.mean} ms, SD: ${h.sd})"
-        //   )
-        // }
       ),
     )
 
@@ -111,7 +102,7 @@ object bits {
             a(href := routes.Round.player(pov.fullId), cls := pov.isMyTurn.option("my_turn"))(
               gameSfen(pov, ctx.me, withLink = false, withTitle = false, withLive = false),
               span(cls := "meta")(
-                playerText(pov.opponent, withRating = false),
+                playerText(pov.opponent),
                 span(cls := "indicator")(
                   if (pov.isMyTurn)
                     pov.remainingSeconds.fold[Frag](trans.yourTurn())(secondsFromNow(_, true))
@@ -155,11 +146,11 @@ object bits {
       div(cls := "round__app__table"),
       div(cls := "ruser ruser-top user-link")(
         i(cls := "line"),
-        a(cls := "text")(playerText(pov.opponent)),
+        a(cls := "text")(playerText(pov.opponent, withRank = true)),
       ),
       div(cls := "ruser ruser-bottom user-link")(
         i(cls := "line"),
-        a(cls := "text")(playerText(pov.player)),
+        a(cls := "text")(playerText(pov.player, withRank = true)),
       ),
       div(cls := "rclock rclock-top preload")(div(cls := "clock-byo")(nbsp)),
       div(cls := "rclock rclock-bottom preload")(div(cls := "clock-byo")(nbsp)),

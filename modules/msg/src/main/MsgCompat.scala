@@ -39,7 +39,7 @@ final class MsgCompat(
               val user = lightUserApi.sync(t other me) | LightUser.fallback(t other me)
               Json.obj(
                 "id"        -> user.id,
-                "author"    -> user.titleName,
+                "author"    -> user.name,
                 "name"      -> t.lastMsg.text,
                 "updatedAt" -> t.lastMsg.date,
                 "isUnread"  -> t.lastMsg.unreadBy(me.id),

@@ -38,7 +38,7 @@ object list {
             h2(trans.onlinePlayers()),
             ol(cls := "user-top")(online map { u =>
               li(
-                userLink(u),
+                showUsername(u),
                 showBestPerf(u),
               )
             }),
@@ -69,7 +69,7 @@ object list {
       ol(winners take 10 map { w =>
         val name = w.trans
         li(
-          userIdLink(w.userId.some),
+          showUsernameById(w.userId.some),
           a(cls := "tourname", title := name, href := routes.Tournament.show(w.tourId))(
             name,
           ),
@@ -84,7 +84,7 @@ object list {
       ),
       ol(users map { l =>
         li(
-          lightUserLink(l.user),
+          showUsernameLight(l.user, rating = l.rating.some),
           l.rating,
         )
       }),
@@ -97,7 +97,7 @@ object list {
       h2(cls := "text", dataIcon := icon)(hTitle),
       ol(users map { u =>
         li(
-          lightUserLink(u.user),
+          showUsernameLight(u.user),
           span(title := trans.gamesPlayed.txt())(s"#${u.count.localize}"),
         )
       }),

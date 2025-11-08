@@ -13,6 +13,7 @@
     "common": "workspace:*",
     "i18n": "workspace:*",
     "shogiops": "catalog:",
-    "shogiground": "catalog:"
+    "shogiground": "catalog:",
+    "snabbdom": "catalog:"
   }
 }

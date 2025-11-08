@@ -1,5 +1,6 @@
 package lila.user
 
+import play.api.i18n.Lang
 import play.api.libs.json.Writes
 
 import reactivemongo.api.bson.BSONHandler
@@ -17,87 +18,42 @@ object Title {
   val LM  = Title("LM")
   val BOT = Title("BOT")
 
-  val all = Seq(
-    Title("PRO")  -> "プロ棋士 - Professional",
-    Title("BgM")  -> "棒玉名人 - Bougyoku Master",
-    Title("プロ")   -> "プロ棋士 - Professional",
-    Title("九段")   -> "9th dan",
-    Title("八段")   -> "8th dan",
-    Title("七段")   -> "7th dan",
-    Title("六段")   -> "6th dan",
-    Title("五段")   -> "5th dan",
-    Title("四段")   -> "4th dan",
-    Title("三段")   -> "3rd dan",
-    Title("二段")   -> "2nd dan",
-    Title("初段")   -> "1st dan",
-    Title("１級")   -> "1st kyu",
-    Title("２級")   -> "2nd kyu",
-    Title("３級")   -> "3rd kyu",
-    Title("LP")   -> "女流棋士 - Ladies Pro",
-    Title("女流")   -> "女流棋士 - Ladies Pro",
-    Title("女流五段") -> "Ladies 5th dan",
-    Title("女流四段") -> "Ladies 4th dan",
-    Title("女流三段") -> "Ladies 3rd dan",
-    Title("女流二段") -> "Ladies 2nd dan",
-    Title("女流初段") -> "Ladies 1st dan",
-    Title("女流１級") -> "Ladies 1st kyu",
-    Title("女流２級") -> "Ladies 2nd kyu",
-    Title("女流３級") -> "Ladies 3rd kyu",
-    LM            -> "Lishogi Master",
-    BOT           -> "Shogi Robot",
+  val all = List(
+    Title("PRO"),
+    Title("LP"),
+    LM,
+    BOT,
   )
 
-  val names          = all.toMap
-  lazy val fromNames = all.map(_.swap).toMap
-
-  val acronyms = all.map { case (Title(a), _) => a }
-
-  def titleName(title: Title): String = names.getOrElse(title, title.value)
-
-  def get(str: String): Option[Title]      = Title(str.toUpperCase).some filter names.contains
-  def get(strs: List[String]): List[Title] = strs flatMap { get(_) }
-
-  object fromUrl {
-
-    // https://www.shogi.or.jp/player/pro/93.html
-    private val JSAProProfileUrlRegex =
-      """(?:https?://)?www\.shogi\.or\.jp/player/pro/(\d+).html""".r
-    private val JSAProProfileTitleRegex = """(.[段級])""".r.unanchored
-
-    // https://www.shogi.or.jp/player/lady/59.html
-    private val JSALadyProfileUrlRegex =
-      """(?:https?://)?www\.shogi\.or\.jp/player/lady/(\d+).html""".r
-    private val JSALadyProfileTitleRegex = """(女流.[段級])""".r.unanchored
-
-    import play.api.libs.ws.WSClient
-
-    def toJSAId(url: String): Option[Int] =
-      url.trim match {
-        case JSAProProfileUrlRegex(id) => id.toIntOption
-        case _                         => none
-      }
-
-    def toJSALadyId(url: String): Option[Int] =
-      url.trim match {
-        case JSALadyProfileUrlRegex(id) => id.toIntOption
-        case _                          => none
-      }
-
-    def apply(url: String)(implicit ws: WSClient): Fu[Option[Title]] = {
-      toJSAId(url) ?? fromJSAProProfile
-      toJSALadyId(url) ?? fromJSALadyProfile
-    }
-
-    private def fromJSAProProfile(id: Int)(implicit ws: WSClient): Fu[Option[Title]] = {
-      ws.url(s"""https://www.shogi.or.jp/player/pro/$id.html""").get().dmap(_.body) dmap {
-        case JSAProProfileTitleRegex(name) => Title.fromNames get name
-      }
-    }
-
-    private def fromJSALadyProfile(id: Int)(implicit ws: WSClient): Fu[Option[Title]] = {
-      ws.url(s"""https://www.shogi.or.jp/player/lady/$id.html""").get().dmap(_.body) dmap {
-        case JSALadyProfileTitleRegex(name) => Title.fromNames get name
-      }
-    }
+  private def englishName(title: Title): String = title.value match {
+    case "PRO" => "Professional"
+    case "LP"  => "Ladies Pro"
+    case "LM"  => "Lishogi Master"
+    case "BOT" => "Shogi Robot"
+    case _     => title.value
   }
+
+  private def japaneseName(title: Title): String = title.value match {
+    case "PRO" => "プロ棋士"
+    case "LP"  => "女流棋士"
+    case "LM"  => "Lishogi マスター"
+    case "BOT" => "将棋ロボット"
+    case _     => title.value
+  }
+
+  def trans(title: Title)(implicit lang: Lang) =
+    if (lang.language == "ja") japaneseName(title) else englishName(title)
+
+  def containsShogiOrJpId(str: String): Boolean =
+    JSAProProfileUrlRegex.findFirstIn(str).nonEmpty ||
+      JSALadyProfileUrlRegex.findFirstIn(str).nonEmpty
+
+  // https://www.shogi.or.jp/player/pro/93.html
+  private val JSAProProfileUrlRegex =
+    """(?:https?://)?www\.shogi\.or\.jp/player/pro/(\d+).html""".r
+
+  // https://www.shogi.or.jp/player/lady/59.html
+  private val JSALadyProfileUrlRegex =
+    """(?:https?://)?www\.shogi\.or\.jp/player/lady/(\d+).html""".r
+
 }

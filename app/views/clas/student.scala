@@ -95,7 +95,7 @@ object student {
         p(
           trans.clas.invitedToXByY(
             a(href := routes.Clas.show(clas.id.value))(clas.name),
-            userIdLink(s.student.created.by.some, withOnline = false),
+            showUsernameById(s.student.created.by.some, withOnline = false),
           ),
           " ",
           momentFromNowOnce(s.student.created.at),
@@ -151,7 +151,7 @@ object student {
         flashMessage(cls := "student-add__created")(
           strong(
             trans.clas.lishogiProfileXCreatedForY(
-              userIdLink(student.userId.some, withOnline = false),
+              showUsernameById(student.userId.some, withOnline = false),
               student.realName,
             ),
             p(trans.clas.makeSureToCopy()),

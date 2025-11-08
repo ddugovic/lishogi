@@ -31,7 +31,7 @@ object widgets {
                 if (g.imported)
                   frag(
                     g.notationImport.flatMap(_.user) map { uid =>
-                      trans.importedByX(userIdLink(uid.some, None, false))
+                      trans.importedByX(showUsernameById(uid.some, None, false))
                     } getOrElse span("IMPORT"),
                     separator,
                     bits.variantLink(g.variant),
@@ -80,15 +80,17 @@ object widgets {
               },
             ),
           ),
-          if (g.playedPlies > 0)
-            div(cls := "moves-count")(
-              span(trans.nbMoves.pluralSame(g.playedPlies)),
-            )
-          else frag(br, br),
-          g.metadata.analysed option
-            div(cls := "metadata text", dataIcon := Icons.barChart)(
-              trans.computerAnalysisAvailable(),
-            ),
+          div(
+            if (g.playedPlies > 0)
+              div(cls := "moves-count")(
+                span(trans.nbMoves.pluralSame(g.playedPlies)),
+              )
+            else frag(br, br),
+            g.metadata.analysed option
+              div(cls := "metadata text", dataIcon := Icons.barChart)(
+                trans.computerAnalysisAvailable(),
+              ),
+          ),
         ),
       )
     }
@@ -113,7 +115,11 @@ object widgets {
     div(cls := s"player ${player.color.name}")(
       player.playerUser map { playerUser =>
         frag(
-          userIdLink(playerUser.id.some, withOnline = false),
+          showUsernameById(
+            playerUser.id.some,
+            rating = player.stableRating,
+            withOnline = false,
+          ),
           br,
           player.berserk option berserkIconSpan,
           playerUser.rating,
@@ -124,11 +130,7 @@ object widgets {
         )
       } getOrElse {
         player.engineConfig map { ec =>
-          frag(
-            span(engineName(ec)),
-            br,
-            engineLevel(ec),
-          )
+          engineSpan(ec)
         } getOrElse {
           (player.nameSplit.fold[Frag](anonSpan) { case (name, rating) =>
             frag(

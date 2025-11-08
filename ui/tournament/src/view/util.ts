@@ -3,6 +3,7 @@ import { initOneWithState } from 'common/mini-board';
 import { numberFormat } from 'common/number';
 import { bind, dataIcon, type MaybeVNode, type MaybeVNodes, proverb } from 'common/snabbdom';
 import { i18n } from 'i18n';
+import { rankFromRating, rankTag } from 'shogi/rank';
 import { h, type VNode } from 'snabbdom';
 import type TournamentController from '../ctrl';
 import type { Arrangement, BasePlayer, Featured } from '../interfaces';
@@ -34,8 +35,12 @@ export function ratio2percent(r: number): string {
   return `${Math.round(100 * r)}%`;
 }
 
-export function playerName(p: { name: string; title?: string } | undefined): MaybeVNodes {
-  return p?.title ? [h('span.title', p.title), ` ${p.name}`] : [p?.name || '?'];
+export function playerName(
+  p: { name: string; rating?: number; provisional?: boolean } | undefined,
+): MaybeVNodes {
+  return p?.rating && !p.provisional
+    ? [rankTag(rankFromRating(p.rating)), p.name]
+    : [p?.name || '?'];
 }
 
 export function player(

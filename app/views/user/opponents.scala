@@ -23,7 +23,7 @@ object opponents {
         tbody(
           if (sugs.nonEmpty) sugs.map { r =>
             tr(
-              td(userLink(r.user)),
+              td(showUsername(r.user)),
               td(showBestPerf(r.user)),
               td(
                 r.nbGames.filter(_ > 0).map { nbGames =>

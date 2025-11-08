@@ -23,12 +23,19 @@ object header {
     frag(
       div(cls := "box__top user-show__header")(
         h1(cls := s"user-link ${if (isOnline(u.id)) "online" else "offline"}")(
-          if (u.isPatron)
-            frag(
-              a(href := routes.Plan.index)(patronIcon),
-              userSpan(u, withPowerTip = false, withOnline = false),
-            )
-          else userSpan(u, withPowerTip = false),
+          frag(
+            u.isPatron option a(href := routes.Plan.index)(patronIcon),
+            showUsername(
+              u,
+              withLink = false,
+              withOnline = false,
+              withPowerTip = false,
+              withFlag = false,
+            ),
+            u.title
+              .ifTrue(u.noBot)
+              .map(t => frag(" - ", span(cls := "official-title")(lila.user.Title.trans(t)))),
+          ),
         ),
         div(
           cls := List(
@@ -157,7 +164,7 @@ object header {
             div(cls := "note")(
               p(cls := "note__text")(richText(note.text)),
               p(cls := "note__meta")(
-                userIdLink(note.from.some),
+                showUsernameById(note.from.some),
                 br,
                 note.dox option "dox ",
                 momentFromNow(note.date),
@@ -199,7 +206,7 @@ object header {
                 (ctx.noKid && (!u.marks.troll || ctx.is(u))) option frag(
                   profile.countryInfo.map { c =>
                     span(cls := "country")(
-                      img(cls := "flag", src := staticUrl(s"images/flags/${c.code}.png")),
+                      flagImage(c.code),
                     )
                   },
                   profile.nonEmptyRealName map { name =>

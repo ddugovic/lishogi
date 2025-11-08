@@ -19,16 +19,19 @@ import lila.game.Player
 import lila.game.Pov
 import lila.i18n.defaultLang
 import lila.i18n.{ I18nKeys => trans }
-import lila.user.Title
 import lila.user.User
 
 trait GameHelper {
-  self: I18nHelper with UserHelper with StringHelper with ShogigroundHelper with ShogiHelper =>
+  self: I18nHelper
+    with AssetHelper
+    with UserHelper
+    with StringHelper
+    with ShogigroundHelper
+    with ShogiHelper =>
 
   private val dataLive = attr("data-live")
 
   def netBaseUrl: String
-  def cdnUrl(path: String): String
 
   def povOpenGraph(pov: Pov)(implicit lang: Lang) =
     lila.app.ui.OpenGraph(
@@ -53,8 +56,8 @@ trait GameHelper {
   // Beethoven played Handel - Rated Shogi (5|3) - Handel won! Click to replay, analyse, and discuss the game!
   def describePov(pov: Pov)(implicit lang: Lang) = {
     import pov._
-    val sentePlayer = playerText(game.player(shogi.Sente), withRating = false)
-    val gotePlayer  = playerText(game.player(shogi.Gote), withRating = false)
+    val sentePlayer = playerText(game.player(shogi.Sente), withRank = false)
+    val gotePlayer  = playerText(game.player(shogi.Gote), withRank = false)
     val players =
       if (game.finishedOrAborted) trans.xPlayedY.txt(sentePlayer, gotePlayer)
       else trans.xIsPlayingY.txt(sentePlayer, gotePlayer)
@@ -90,90 +93,65 @@ trait GameHelper {
   @inline def mainVariantClass(v: Variant): String =
     s"main-v-${v.key}"
 
-  def engineName(ec: lila.game.EngineConfig)(implicit lang: Lang): String =
-    Namer.engineName(ec)
+  def engineSpan(ec: lila.game.EngineConfig)(implicit lang: Lang): Tag =
+    span(cls := "engine")(
+      span(cls := "engine-lvl")(
+        Namer.engineLevel(ec),
+        nbsp,
+      ),
+      Namer.engineName(ec),
+    )
 
-  def engineLevel(ec: lila.game.EngineConfig)(implicit lang: Lang): String =
-    Namer.engineLevel(ec)
+  def playerText(player: Player, withRank: Boolean = false)(implicit lang: Lang) =
+    Namer.playerTextBlocking(player, withRank = withRank)(lightUser, lang)
 
-  def engineText(ec: lila.game.EngineConfig, withLevel: Boolean = true)(implicit
-      lang: Lang,
-  ): String =
-    Namer.engineText(ec, withLevel)
-
-  def playerUsername(player: Player, withRating: Boolean = true, withTitle: Boolean = true)(implicit
-      lang: Lang,
-  ): Frag =
-    player.engineConfig.fold[Frag](
-      player.userId.flatMap(lightUser).fold[Frag](anonSpan) { user =>
-        val title = user.title ifTrue withTitle map { t =>
-          frag(
-            span(
-              cls := "title",
-              (Title(t) == Title.BOT) option dataBotAttr,
-              st.title := Title titleName Title(t),
-            )(t),
-            " ",
-          )
-        }
-        if (withRating) frag(title, user.name, " ", "(", lila.game.Namer ratingString player, ")")
-        else frag(title, user.name)
-      },
-    ) { ec =>
-      if (withRating) frag(engineName(ec), " ", "(", engineLevel(ec).toLowerCase, ")")
-      else engineName(ec)
-    }
-
-  def playerText(player: Player, withRating: Boolean = false)(implicit lang: Lang) =
-    Namer.playerTextBlocking(player, withRating)(lightUser, lang)
-
-  def gameVsText(game: Game, withRatings: Boolean = false)(implicit lang: Lang): String =
-    Namer.gameVsTextBlocking(game, withRatings)(lightUser, lang)
+  def gameVsText(game: Game, withRanks: Boolean = false)(implicit lang: Lang): String =
+    Namer.gameVsTextBlocking(game, withRanks = withRanks)(lightUser, lang)
 
   val berserkIconSpan = i(dataIcon := Icons.berserk, cls := "berserk")
 
-  def playerLink(
+  def ratingString(p: Player) =
+    p.rating.map(r => s" ($r${if (p.provisional) "?" else ""}) ")
+
+  def showPlayer(
       player: Player,
-      cssClass: Option[String] = None,
-      withOnline: Boolean = true,
+      withRank: Boolean = true,
       withRating: Boolean = true,
       withDiff: Boolean = true,
-      engine: Boolean = false,
+      withOnline: Boolean = true,
+      withPowerTip: Boolean = true,
+      withFlag: Boolean = true,
+      withLink: Boolean = true,
+      withModLink: Boolean = false,
       withBerserk: Boolean = false,
-      mod: Boolean = false,
-      link: Boolean = true,
-  )(implicit lang: Lang): Frag = {
-    val statusIcon = (withBerserk && player.berserk) option berserkIconSpan
-    player.userId.flatMap(lightUser) match {
-      case None =>
-        val klass = cssClass.??(" " + _)
-        span(cls := s"user-link$klass")(
-          (player.engineConfig, player.name) match {
-            case (Some(ec), _)   => engineText(ec, withRating)
-            case (_, Some(name)) => name
-            case _               => anonSpan
-          },
-          statusIcon,
+  )(implicit lang: Lang): Tag = {
+    player.userId
+      .flatMap(lightUser)
+      .fold {
+        span(cls := "user-link")(
+          player.engineConfig
+            .fold(player.name.map(span(_)).getOrElse(anonSpan))(ec => engineSpan(ec)),
         )
-      case Some(user) =>
-        frag(
-          (if (link) a else span) (
-            cls  := userClass(user.id, cssClass, withOnline),
-            href := s"${routes.User show user.name}${if (mod) "?mod" else ""}",
-          )(
-            withOnline option frag(lineIcon(user), " "),
-            playerUsername(player, withRating),
-            (player.ratingDiff ifTrue withDiff) map { d =>
-              frag(" ", showRatingDiff(d))
-            },
-            engine option span(
-              cls   := "tos_violation",
-              title := trans.thisAccountViolatedTos.txt(),
-            ),
+      } { user =>
+        val userCls = userClass(user.name, withOnline, withPowerTip)
+        val tag =
+          if (withLink) a(cls := userCls, href     := userUrl(user.name, mod = withModLink))
+          else span(cls       := userCls, dataHref := userUrl(user.name, mod = withModLink))
+
+        span(
+          tag(
+            withOnline ?? lineIcon(user),
+            if (user.isBot) botTag
+            else
+              withRank ?? player.stableRating.map(r => rankTag(lila.rating.Rank.fromRating(r))),
+            span(cls := "name")(user.name),
+            user.countryCode.ifTrue(withFlag).map(c => flagImage(c)),
           ),
-          statusIcon,
+          withRating ?? ratingString(player),
+          player.ratingDiff.ifTrue(withDiff).map(showRatingDiff),
+          (withBerserk && player.berserk) option berserkIconSpan,
         )
-    }
+      }
   }
 
   def gameEndStatus(game: Game)(implicit ctx: Context): String =
@@ -212,8 +190,8 @@ trait GameHelper {
     }
 
   private def gameTitle(game: Game, color: Color)(implicit lang: Lang): String = {
-    val u1 = playerText(game player color, withRating = true)
-    val u2 = playerText(game opponent color, withRating = true)
+    val u1 = playerText(game player color, withRank = true)
+    val u2 = playerText(game opponent color, withRank = true)
     val clock = game.clock ?? { c =>
       " - " + c.config.show
     }

@@ -33,7 +33,7 @@ object table {
             tbody(
               users.map { user =>
                 tr(
-                  td(userLink(user)),
+                  td(showUsername(user)),
                   td(
                     a(href := routes.Mod.permissions(user.username))(
                       lila.security.Permission(user.roles).map(_.name) mkString ", ",

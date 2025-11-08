@@ -77,7 +77,7 @@ object storm {
         div(cls := "storm-dashboard__high box box-pad")(
           h1(
             !ctx.is(user) option frag(
-              userLink(user),
+              showUsername(user),
               " - ",
             ),
             "Tsume Storm - ",

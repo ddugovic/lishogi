@@ -37,7 +37,7 @@ object inquiry {
           div(cls := "atom")(
             h3(
               reportScore(atom.score),
-              userIdLink(atom.by.value.some, withOnline = false),
+              showUsernameById(atom.by.value.some, withOnline = false),
               " for ",
               strong(r.reason.name),
               " ",
@@ -50,7 +50,7 @@ object inquiry {
 
     def renderNote(r: lila.user.Note) =
       (!r.dox || isGranted(_.Doxing)) option div(cls := "doc note")(
-        h3("by ", userIdLink(r.from.some, withOnline = false), ", ", momentFromNow(r.date)),
+        h3("by ", showUsernameById(r.from.some, withOnline = false), ", ", momentFromNow(r.date)),
         p(richText(r.text)),
       )
 
@@ -67,7 +67,7 @@ object inquiry {
     div(id := "inquiry")(
       i(title := "Costello the Inquiry Octopus", cls := "costello"),
       div(cls := "meat")(
-        userLink(in.user, withBestRating = true, params = "?mod"),
+        showUsername(in.user, withModLink = true),
         div(cls := "docs reports")(
           div(cls := "expendable")(
             in.allReports.map(renderReport),
@@ -87,7 +87,7 @@ object inquiry {
             ul(
               in.history.map { e =>
                 li(
-                  userIdLink(e.mod.some, withOnline = false),
+                  showUsernameById(e.mod.some, withOnline = false),
                   " ",
                   b(e.showAction),
                   " ",

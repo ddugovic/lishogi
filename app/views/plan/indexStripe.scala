@@ -22,7 +22,7 @@ object indexStripe {
     ) {
       main(cls := "box box-pad plan")(
         h1(
-          userLink(me),
+          showUsername(me),
           " - ",
           if (patron.isLifetime) strong(lifetimePatron())
           else patronForMonths(me.plan.months),

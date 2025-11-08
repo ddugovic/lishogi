@@ -3,7 +3,6 @@ package lila.user
 import scala.concurrent.duration._
 
 import play.api.Configuration
-import play.api.libs.ws.WSClient
 
 import akka.actor._
 import com.softwaremill.macwire._
@@ -34,7 +33,6 @@ final class Env(
 )(implicit
     ec: scala.concurrent.ExecutionContext,
     system: ActorSystem,
-    ws: WSClient,
 ) {
 
   private val config = appConfig.get[UserConfig]("user")(AutoConfig.loader)

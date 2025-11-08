@@ -7,9 +7,8 @@ case class LightUser(
     name: String,
     title: Option[String],
     isPatron: Boolean,
+    countryCode: Option[String],
 ) {
-
-  def titleName = title.fold(name)(_ + " " + name)
 
   def isBot = title has "BOT"
 }
@@ -27,13 +26,15 @@ object LightUser {
       .obj("name" -> u.name)
       .add("title" -> u.title)
       .add("patron" -> u.isPatron)
+      .add("country" -> u.countryCode)
 
   def fallback(name: String) =
     LightUser(
       id = name.toLowerCase,
       name = name,
-      title = None,
+      title = none,
       isPatron = false,
+      countryCode = none,
     )
 
   final class Getter(f: UserID => Fu[Option[LightUser]]) extends (UserID => Fu[Option[LightUser]]) {

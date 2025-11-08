@@ -13,7 +13,7 @@ export function filter(ctrl: InsightCtrl): VNode {
     h(
       'h2.title-username',
       { class: { small: ctrl.username.length > 11 } },
-      h('a.user-link.ulpt', { attrs: { href: `/@/${ctrl.userId}` } }, ctrl.username),
+      h('a.user-link', { attrs: { href: `/@/${ctrl.userId}` } }, ctrl.username),
     ),
     h(
       'div.filter-toggle',

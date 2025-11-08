@@ -107,9 +107,9 @@ final private class StudyMaker(
     for {
       tags <- notationDump.tags(
         pov.game,
-        shogi.format.Tag(_.TimeControl, pov.game.clock.fold("")(_.config.show)),
+        isCsa = false,
       )
-      name <- Namer.gameVsText(pov.game, withRatings = false)(
+      name <- Namer.gameVsText(pov.game, withRanks = false)(
         lightUserApi.async,
         lila.i18n.defaultLang,
       )

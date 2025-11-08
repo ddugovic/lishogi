@@ -65,11 +65,6 @@
     max-width: 60%;
   }
 
-  .title {
-    color: theme.$c-brag;
-    font-weight: bold;
-  }
-
   .rank {
     @extend %box-radius;
 
@@ -78,12 +73,12 @@
     color: theme.$c-brag-over;
   }
 
-  .b .title,
+  .b .rank-tag,
   .b .rank {
     margin-right: 0.3em;
   }
 
-  .a .title,
+  .a .rank-tag,
   .a .rank {
     margin-left: 0.3em;
   }

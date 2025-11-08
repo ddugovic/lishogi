@@ -66,7 +66,7 @@ object categ {
                 momentFromNow(post.createdAt),
               ),
               br,
-              authorLink(post, modIcon = ~post.modIcon),
+              authorLink(post, withModIcon = ~post.modIcon),
             )
           },
         ),

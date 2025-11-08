@@ -49,7 +49,7 @@ object gamify {
                   h.date.getMonthOfYear == 12 option yearHeader(h.date.getYear),
                   tr(
                     th(h.date.monthOfYear.getAsText),
-                    th(userIdLink(h.champion.modId.some, withOnline = false)),
+                    th(showUsernameById(h.champion.modId.some, withOnline = false)),
                     td(cls := "score")(h.champion.score.localize),
                     td(h.champion.action.localize),
                     td(h.champion.report.localize),
@@ -92,7 +92,7 @@ object gamify {
                 leaderboards(period).zipWithIndex.map { case (m, i) =>
                   tr(
                     th(i + 1),
-                    th(userIdLink(m.modId.some, withOnline = false)),
+                    th(showUsernameById(m.modId.some, withOnline = false)),
                     td(m.action.localize),
                     td(m.report.localize),
                     td(cls := "score")(m.score.localize),
@@ -118,7 +118,7 @@ object gamify {
       h2("Mod of the ", period.name),
       champ.map { m =>
         frag(
-          userIdLink(m.modId.some, withOnline = false),
+          showUsernameById(m.modId.some, withOnline = false),
           table(
             tbody(
               tr(

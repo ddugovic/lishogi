@@ -32,9 +32,9 @@ object top {
             users.zipWithIndex.map { case (u, i) =>
               tr(
                 td(i + 1),
-                td(lightUserLink(u.user)),
+                td(showUsernameLight(u.user, rating = u.rating.some)),
                 td(u.rating),
-                td(ratingProgress(u.progress)),
+                td(showRatingProgress(u.progress)),
               )
             },
           ),

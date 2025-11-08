@@ -83,5 +83,29 @@
         flex: 1 1 auto;
       }
     }
+
+    .normal-table {
+      @extend %box-neat-force;
+
+      min-width: 60%;
+
+      tr {
+        background-color: theme.$c-bg-zebra;
+
+        &:nth-child(even) {
+          background-color: theme.$c-bg-zebra2;
+        }
+      }
+
+      th {
+        font-weight: bold;
+        padding: 1rem;
+        border-bottom: theme.$border;
+      }
+
+      td {
+        padding: 0.4rem 0.6rem;
+      }
+    }
   }
 }

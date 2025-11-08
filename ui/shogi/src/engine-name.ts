@@ -52,3 +52,27 @@ function isStandardMaterial(sfen: Sfen): boolean {
     board.role('king').intersect(board.color('sente')).size() === 1
   );
 }
+
+const ENGINE_NAME_TO_CODE: Record<string, EngineCode> = {
+  yaneuraou: EngineCode.YaneuraOu,
+  やねうら王: EngineCode.YaneuraOu,
+  やねうらおう: EngineCode.YaneuraOu,
+  fairy: EngineCode.Fairy,
+  'fairy-stockfish': EngineCode.Fairy,
+};
+
+export function engineFromName(input: string): { code: EngineCode; level?: number } | undefined {
+  if (!input) return;
+
+  const lower = input.toLowerCase();
+
+  const entry = Object.entries(ENGINE_NAME_TO_CODE).find(([name]) => lower.includes(name));
+  if (!entry) return;
+
+  const [, code] = entry;
+
+  const m = input.match(/(?:level|レベル)\s*([0-9]+)/i);
+  const level = m ? Number(m[1]) : undefined;
+
+  return { code, level };
+}

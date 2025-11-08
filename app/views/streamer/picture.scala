@@ -19,7 +19,7 @@ object picture {
       moreJs = jsTag("misc.streamer-form"),
     ) {
       main(cls := "streamer-picture small-page box")(
-        h1(xStreamerPicture(userLink(s.user))),
+        h1(xStreamerPicture(showUsername(s.user))),
         div(cls := "picture_wrap")(bits.pic(s.streamer, s.user, 250)),
         div(cls := "forms")(
           error.map { badTag(_) },

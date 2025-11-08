@@ -1,0 +1,18 @@
+@use '../abstract/extends';
+@use '../theme/generated/theme';
+
+.mini-player {
+  @extend %flex-between-nowrap, %nowrap-hidden;
+
+  color: theme.$c-font;
+  font-weight: bold;
+  justify-content: center;
+
+  &:first-child {
+    padding: 0.3em 0.6em 0.1em 0.6em;
+  }
+
+  &:last-child {
+    padding: 0.1em 0.6em 0.3em 0.6em;
+  }
+}

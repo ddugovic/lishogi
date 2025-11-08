@@ -23,7 +23,7 @@ object invite {
         p(c.desc),
         br,
         br,
-        p("You have been invited by ", userIdLink(invite.created.by.some), "."),
+        p("You have been invited by ", showUsernameById(invite.created.by.some), "."),
         br,
         br,
         invite.accepted.map {

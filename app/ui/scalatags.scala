@@ -57,10 +57,6 @@ trait ScalatagsSnippets extends Cap {
   val badTag                                 = tag("bad")
   val timeTag                                = tag("time")
 
-  def dataBot(title: lila.user.Title): Modifier =
-    if (title == lila.user.Title.BOT) dataBotAttr
-    else emptyModifier
-
   def pagerNext(pager: lila.common.paginator.Paginator[_], url: Int => String): Option[Frag] =
     pager.nextPage.map { np =>
       div(cls := "pager none")(a(rel := "next", href := url(np))("Next"))

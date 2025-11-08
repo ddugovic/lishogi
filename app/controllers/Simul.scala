@@ -184,7 +184,7 @@ final class Simul(
     Auth { implicit ctx => me =>
       WithEditableSimul(id) { simul =>
         apiC.teamsIBelongTo(me) map { teams =>
-          Ok(html.simul.form.edit(forms.edit(me, simul), teams, simul))
+          Ok(html.simul.form.edit(forms.edit(simul), teams, simul))
         }
       }
     }
@@ -194,7 +194,7 @@ final class Simul(
       WithEditableSimul(id) { simul =>
         implicit val req = ctx.body
         forms
-          .edit(me, simul)
+          .edit(simul)
           .bindFromRequest()
           .fold(
             err =>

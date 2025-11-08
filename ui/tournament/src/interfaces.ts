@@ -230,7 +230,7 @@ export interface Duel {
 export interface DuelPlayer {
   n: string; // name
   r: number; // rating
-  k: number; // rank
+  k: number; // rank (tournament)
   t?: string; // title
 }
 
