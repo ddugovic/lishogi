@@ -1,6 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import dedent from 'dedent';
+import { specialDasher } from './special.js';
 import type { PieceSet, RoleDict } from './types.js';
 import {
   categorizePieceSets,
@@ -170,5 +171,7 @@ export function standard(sourceDir: string, destDir: string): void {
     const cls = pieceSetNameCls[pieceSet.name];
     if (cls) dasher.push(dasherWrapCss(cls[0], pieceSet, 'standard'));
   }
+  dasher.push(...specialDasher('standard', sourceDir));
+
   fs.writeFileSync(path.join(destDir, 'lishogi.dasher.css'), dasher.join('\n'));
 }

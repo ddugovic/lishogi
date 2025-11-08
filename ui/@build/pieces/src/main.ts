@@ -3,6 +3,7 @@ import * as path from 'node:path';
 import { getRootDir } from '@build/helpers/workspace-packages';
 import { chushogi } from './chushogi.js';
 import { kyotoshogi } from './kyotoshogi.js';
+import { special } from './special.js';
 import { standard } from './standard.js';
 import type { PieceSetVariant } from './types.js';
 import { variants } from './util.js';
@@ -27,6 +28,7 @@ async function main() {
 
     variants.forEach(v => {
       build(v);
+      special(v, assetsDir, baseDestDir);
     });
 
     process.exit(0);

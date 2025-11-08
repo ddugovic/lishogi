@@ -68,6 +68,8 @@ object PieceSet extends PieceSetBase {
     new PieceSet("doubutsu", "Doubutsu"),
     new PieceSet("logy_games", "Logy Games"),
     new PieceSet("western", "Western"),
+    new PieceSet("blank", "Blank", pro = true),
+    new PieceSet("invisible", "Invisible", pro = true),
   )
 
 }
@@ -85,6 +87,8 @@ object ChuPieceSet extends PieceSetBase {
     new PieceSet("intl_bnw", "International - black and white"),
     new PieceSet("firi", "Firi"),
     new PieceSet("mnemonic", "Mnemonic"),
+    new PieceSet("blank", "Blank", pro = true),
+    new PieceSet("invisible", "Invisible", pro = true),
   )
 
 }
@@ -104,6 +108,8 @@ object KyoPieceSet extends PieceSetBase {
     new PieceSet("doubutsu", "Doubutsu"),
     new PieceSet("joyful", "Joyful"),
     new PieceSet("logy_games", "Logy Games"),
+    new PieceSet("blank", "Blank", pro = true),
+    new PieceSet("invisible", "Invisible", pro = true),
   )
 
 }

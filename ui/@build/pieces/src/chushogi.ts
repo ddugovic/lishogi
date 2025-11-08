@@ -1,6 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import dedent from 'dedent';
+import { specialDasher } from './special.js';
 import type { PieceSet } from './types.js';
 import {
   categorizePieceSets,
@@ -228,5 +229,7 @@ export function chushogi(sourceDir: string, destDir: string): void {
     const cls = pieceSetNameCls[pieceSet.name];
     if (cls) dasher.push(dasherWrapCss(cls, pieceSet, 'chushogi'));
   }
+  dasher.push(...specialDasher('chushogi', sourceDir));
+
   fs.writeFileSync(path.join(destDir, 'lishogi.dasher.css'), dasher.join('\n'));
 }
