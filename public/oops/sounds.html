@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sound Set Tester</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+          sans-serif;
+        background: #1a1a1a;
+        color: #e0e0e0;
+        padding: 20px;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        color: #fff;
+        margin-bottom: 30px;
+        font-size: 2em;
+      }
+
+      .category {
+        background: #2a2a2a;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 30px;
+      }
+
+      .category-title {
+        color: #4a9eff;
+        font-size: 1.5em;
+        margin-bottom: 20px;
+        text-transform: capitalize;
+      }
+
+      .soundset {
+        background: #333;
+        border-radius: 6px;
+        padding: 15px;
+        margin-bottom: 15px;
+      }
+
+      .soundset-title {
+        color: #6ec06e;
+        font-size: 1.2em;
+        margin-bottom: 12px;
+        font-weight: 600;
+      }
+
+      .sound-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 10px;
+      }
+
+      .sound-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #3a3a3a;
+        padding: 8px 12px;
+        border-radius: 4px;
+      }
+
+      .play-btn {
+        background: #4a9eff;
+        border: none;
+        color: white;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        transition: background 0.2s;
+        flex-shrink: 0;
+      }
+
+      .play-btn:hover {
+        background: #3a8eef;
+      }
+
+      .play-btn:active {
+        background: #2a7edf;
+      }
+
+      .play-btn.playing {
+        background: #6ec06e;
+      }
+
+      .sound-name {
+        color: #e0e0e0;
+        font-size: 0.9em;
+      }
+
+      .error {
+        color: #ff6b6b;
+        font-size: 0.85em;
+        margin-top: 10px;
+      }
+
+      .path-info {
+        background: #222;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        font-family: monospace;
+        font-size: 0.9em;
+        color: #888;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Sound Set Tester</h1>
+      <div class="path-info">Sound path format: <span id="pathFormat"></span></div>
+      <div id="soundCategories"></div>
+    </div>
+
+    <script>
+      const SOUND_BASE_PATH = '/assets/sound/ogg';
+
+      const soundData = {
+        system: {
+          sets: ['shogi', 'shogialt', 'chess', 'nes', 'sfx'],
+          files: [
+            'berserk.ogg',
+            'capture.ogg',
+            'confirmation.ogg',
+            'defeat.ogg',
+            'draw.ogg',
+            'error.ogg',
+            'generic-notify.ogg',
+            'move.ogg',
+            'new-challenge.ogg',
+            'new-pm.ogg',
+            'tournament-1.ogg',
+            'tournament-2.ogg',
+            'tournament-3.ogg',
+            'tournament-other.ogg',
+            'victory.ogg',
+          ],
+        },
+        clock: {
+          sets: [
+            'chisei_mazawa',
+            'sakura_ajisai',
+            'ippan_dansei',
+            'shougi_sennin',
+            'eigo',
+            'robot_en',
+            'robot_ja',
+          ],
+          files: [
+            '1.ogg',
+            '2.ogg',
+            '3.ogg',
+            '4.ogg',
+            '5.ogg',
+            '6.ogg',
+            '7.ogg',
+            '8.ogg',
+            '9.ogg',
+            '10.ogg',
+            '10s.ogg',
+            '20s.ogg',
+            '30s.ogg',
+            '40s.ogg',
+            '50s.ogg',
+            'byoyomi.ogg',
+            'low-time.ogg',
+          ],
+        },
+      };
+
+      let currentAudio = null;
+      let currentButton = null;
+      const audioCache = {};
+      const loadingStatus = {};
+
+      function getSoundPath(category, set, file) {
+        return `${SOUND_BASE_PATH}/${category}/${set}/${file}`;
+      }
+
+      function preloadAllSounds() {
+        console.log('Starting sound preload...');
+        let totalSounds = 0;
+        let loadedSounds = 0;
+        let failedSounds = 0;
+
+        for (const [category, data] of Object.entries(soundData)) {
+          for (const set of data.sets) {
+            for (const file of data.files) {
+              totalSounds++;
+              const path = getSoundPath(category, set, file);
+              const cacheKey = `${category}-${set}-${file}`;
+
+              loadingStatus[cacheKey] = 'loading';
+
+              const audio = new Audio();
+              audio.preload = 'auto';
+
+              audio.addEventListener(
+                'canplaythrough',
+                () => {
+                  loadedSounds++;
+                  loadingStatus[cacheKey] = 'loaded';
+                  audioCache[cacheKey] = audio;
+                  console.log(
+                    `✅ Loaded: ${category}/${set}/${file} (${loadedSounds}/${totalSounds})`,
+                  );
+
+                  if (loadedSounds + failedSounds === totalSounds) {
+                    console.log(
+                      `🎉 Preload complete: ${loadedSounds} loaded, ${failedSounds} failed`,
+                    );
+                  }
+                },
+                { once: true },
+              );
+
+              audio.addEventListener(
+                'error',
+                (e) => {
+                  failedSounds++;
+                  loadingStatus[cacheKey] = 'error';
+                  console.error(`❌ Failed to load: ${category}/${set}/${file}`);
+                  console.error(`   Path: ${path}`);
+                  console.error(`   Error:`, e);
+
+                  if (loadedSounds + failedSounds === totalSounds) {
+                    console.log(
+                      `🎉 Preload complete: ${loadedSounds} loaded, ${failedSounds} failed`,
+                    );
+                  }
+                },
+                { once: true },
+              );
+
+              audio.src = path;
+            }
+          }
+        }
+      }
+
+      function playSound(category, set, file, btn) {
+        const cacheKey = `${category}-${set}-${file}`;
+
+        // Stop current audio if playing
+        if (currentAudio) {
+          currentAudio.pause();
+          currentAudio.currentTime = 0;
+          if (currentButton) {
+            currentButton.classList.remove('playing');
+            currentButton.innerHTML = '▶';
+          }
+        }
+
+        // Check if sound is loaded
+        if (loadingStatus[cacheKey] === 'error') {
+          btn.innerHTML = '✕';
+          btn.style.background = '#ff6b6b';
+          setTimeout(() => {
+            btn.innerHTML = '▶';
+            btn.style.background = '';
+          }, 1000);
+          return;
+        }
+
+        let audio = audioCache[cacheKey];
+        if (!audio) {
+          console.warn('Sound not loaded yet:', cacheKey);
+          const path = getSoundPath(category, set, file);
+          audio = new Audio();
+          audio.src = path;
+          audioCache[cacheKey] = audio
+        }
+
+        currentAudio = audio;
+        currentButton = btn;
+
+        btn.classList.add('playing');
+        btn.innerHTML = '⏸';
+
+        audio.currentTime = 0;
+        audio.play().catch((err) => {
+          console.error('Error playing sound:', err);
+          btn.innerHTML = '✕';
+          btn.style.background = '#ff6b6b';
+          setTimeout(() => {
+            btn.innerHTML = '▶';
+            btn.style.background = '';
+            btn.classList.remove('playing');
+          }, 1000);
+        });
+
+        audio.onended = () => {
+          btn.classList.remove('playing');
+          btn.innerHTML = '▶';
+          currentAudio = null;
+          currentButton = null;
+        };
+      }
+
+      function renderSoundTester() {
+        const container = document.getElementById('soundCategories');
+        document.getElementById('pathFormat').textContent =
+          `${SOUND_BASE_PATH}/{category}/{set}/{file}`;
+
+        for (const [category, data] of Object.entries(soundData)) {
+          const categoryDiv = document.createElement('div');
+          categoryDiv.className = 'category';
+
+          const categoryTitle = document.createElement('h2');
+          categoryTitle.className = 'category-title';
+          categoryTitle.textContent = `${category} sounds`;
+          categoryDiv.appendChild(categoryTitle);
+
+          for (const set of data.sets) {
+            const setDiv = document.createElement('div');
+            setDiv.className = 'soundset';
+
+            const setTitle = document.createElement('h3');
+            setTitle.className = 'soundset-title';
+            setTitle.textContent = set;
+            setDiv.appendChild(setTitle);
+
+            const soundList = document.createElement('div');
+            soundList.className = 'sound-list';
+
+            for (const file of data.files) {
+              const soundItem = document.createElement('div');
+              soundItem.className = 'sound-item';
+
+              const playBtn = document.createElement('button');
+              playBtn.className = 'play-btn';
+              playBtn.innerHTML = '▶';
+              playBtn.onclick = () => playSound(category, set, file, playBtn);
+
+              const soundName = document.createElement('span');
+              soundName.className = 'sound-name';
+              soundName.textContent = file;
+
+              soundItem.appendChild(playBtn);
+              soundItem.appendChild(soundName);
+              soundList.appendChild(soundItem);
+            }
+
+            setDiv.appendChild(soundList);
+            categoryDiv.appendChild(setDiv);
+          }
+
+          container.appendChild(categoryDiv);
+        }
+      }
+
+      // Initialize
+      renderSoundTester();
+      // preloadAllSounds();
+    </script>
+  </body>
+</html>
