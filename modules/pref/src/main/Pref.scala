@@ -42,6 +42,7 @@ case class Pref(
     thickGrid: Int,
     keyboardMove: Int,
     zen: Int,
+    noFlags: Int,
     moveEvent: Int,
     notation: Int,
     resizeHandle: Int,
@@ -130,6 +131,8 @@ case class Pref(
   def customBackgroundOrDefault = customBackground | CustomBackground.default
 
   def isZen = zen == Zen.YES
+
+  def wantsNoFlags = noFlags == NoFlags.YES
 }
 
 object Pref {
@@ -379,6 +382,8 @@ object Pref {
 
   object Zen extends BooleanPref
 
+  object NoFlags extends BooleanPref
+
   def create(id: String) = default.copy(_id = id)
 
   lazy val default = Pref(
@@ -423,6 +428,7 @@ object Pref {
     thickGrid = ThickGrid.NO,
     keyboardMove = KeyboardMove.NO,
     zen = Zen.NO,
+    noFlags = NoFlags.NO,
     moveEvent = MoveEvent.BOTH,
     notation = Notations.western.index,
     resizeHandle = ResizeHandle.INITIAL,

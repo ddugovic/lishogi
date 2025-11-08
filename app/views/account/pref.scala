@@ -106,6 +106,10 @@ object pref {
               radios(form("display.zen"), booleanChoices),
             ),
             setting(
+              "No flags",
+              radios(form("display.noFlags"), booleanChoices),
+            ),
+            setting(
               displayBoardResizeHandle(),
               radios(form("display.resizeHandle"), translatedBoardResizeHandleChoices),
             ),

@@ -322,6 +322,7 @@ object layout {
             "clear-hands"                       -> ctx.pref.clearHands,
             "hands-background"                  -> ctx.pref.handsBackground,
             "no-touch"                          -> !ctx.pref.squareOverlay,
+            "no-flags"                          -> ctx.pref.wantsNoFlags,
             "zen"                               -> ctx.pref.isZen,
             "blind-mode"                        -> ctx.blind,
             "kid"                               -> ctx.kid,
