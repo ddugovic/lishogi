@@ -143,7 +143,8 @@ function gridWidthSelection(ctrl: CustomThemeCtrl, name: string, options: string
 }
 
 function makeColorPicker(key: Key, ctrl: CustomThemeCtrl, vnode: VNode) {
-  const move = (color: any) => {
+  const move = (e: any) => {
+    const color = e.detail.color;
     const hexColor = color.toHex8String();
     const prevColor = ctrl.data[key] as string;
     if (hexColor === prevColor) return;
