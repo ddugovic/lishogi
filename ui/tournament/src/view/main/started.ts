@@ -27,9 +27,12 @@ function joinTheGame(gameId: string) {
 }
 
 function notice(ctrl: TournamentController): VNode {
-  return tour.willBePaired(ctrl)
-    ? h('div.tour__notice', i18nFormat('standByX', ctrl.data.me.username))
-    : h('div.tour__notice.closed', i18n('tournamentPairingsAreNowClosed'));
+  if (tour.willBePaired(ctrl)) {
+    const isPairing = ctrl.data.standing.players.filter(p => !p.withdraw).length > 1;
+    return h('div.tour__notice', [
+      isPairing ? i18nFormat('standByX', ctrl.data.me.username) : i18n('waitingForPlayersToPair'),
+    ]);
+  } else return h('div.tour__notice.closed', i18n('tournamentPairingsAreNowClosed'));
 }
 
 const name = 'started';
