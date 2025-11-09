@@ -40,7 +40,6 @@
     }
 
     .user-link {
-      padding-left: -1em;
       font-weight: bold;
       color: theme.$c-font-dim;
     }
@@ -97,7 +96,6 @@
   &__winners,
   &__tournaments,
   &__studies,
-  &__forum,
   &__description {
     .lobby__box__top {
       border-bottom: theme.$border;
@@ -105,13 +103,13 @@
   }
 
   // maybe some colors could look nice
-  &__leaderboard h2::before {
-    color: theme.$c-red;
-  }
+  // &__leaderboard h2::before {
+  //   color: theme.$c-red;
+  // }
 
-  &__winners h2::before {
-    color: theme.$c-brag;
-  }
+  // &__winners h2::before {
+  //   color: theme.$c-brag;
+  // }
 
   // &__tournaments h2::before {
   //   color: theme.$c-brag;

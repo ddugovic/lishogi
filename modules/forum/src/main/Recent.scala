@@ -51,7 +51,7 @@ final class Recent(
 
   private def parseLangs(langStr: String) = langStr.split(",").toList.filter(_.nonEmpty)
 
-  private val nb: Int = 10
+  private val nb: Int = 8
   private def fetch(key: String): Fu[List[MiniForumPost]] =
     (key.split(";").toList match {
       case langs :: categs => postRepo.recentInCategs(nb)(categs, parseLangs(langs))
