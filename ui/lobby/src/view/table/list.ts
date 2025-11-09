@@ -9,27 +9,31 @@ import type LobbyController from '../../ctrl';
 import * as hookRepo from '../../hook-repo';
 import type { Hook, Seek } from '../../interfaces';
 import * as seekRepo from '../../seek-repo';
-import { action, isHook } from '../../util';
+import { isHook } from '../../util';
 import { tds } from '../util';
 
-function renderHookOrSeek(hs: Hook | Seek) {
-  const act = action(hs);
+function renderHookOrSeek(hs: Hook | Seek, isAnon: boolean) {
   const disabled = isHook(hs) && !!hs.disabled;
   const username = isHook(hs) ? hs.u : hs.username;
   const isRated = isHook(hs) ? hs.ra : hs.mode === 1;
   const provisionalRating = isHook(hs) ? hs.prov : hs.provisional;
   const rank = hs.rating && !provisionalRating ? rankFromRating(hs.rating) : undefined;
+  const title = disabled
+    ? ''
+    : hs.action === 'join'
+      ? `${i18n('joinTheGame')} | ${i18nPerf(hs.perf)}`
+      : hs.action === 'unjoinable'
+        ? isAnon
+          ? i18n('registeredJoinTheGame')
+          : i18n('outsideYourRating')
+        : i18n('cancel');
   return h(
-    `tr.hook.${act}`,
+    `tr.hook.${hs.action}`,
     {
       key: hs.id,
       class: { disabled },
       attrs: {
-        title: disabled
-          ? ''
-          : act === 'join'
-            ? `${i18n('joinTheGame')} | ${(hs.perf ? i18nPerf(hs.perf) : undefined) || i18nVariant(hs.variant || 'standard')}`
-            : i18n('cancel'),
+        title,
         'data-id': hs.id,
       },
     },
@@ -40,6 +44,10 @@ function renderHookOrSeek(hs: Hook | Seek) {
             'span.ulink.ulpt',
             {
               attrs: { 'data-href': `/@/${username}` },
+              class: {
+                long: username.length > 15,
+                veryLong: username.length > 18,
+              },
             },
             [rank ? rankTag(rank) : undefined, username],
           )
@@ -58,11 +66,19 @@ function renderHookOrSeek(hs: Hook | Seek) {
 }
 
 function isStandard(value: boolean) {
-  return (hs: Hook | Seek) => !hs.variant === value;
+  return (hs: Hook | Seek) => (hs.variant === 'standard') === value;
 }
 
 function isMine(hs: Hook | Seek) {
-  return action(hs) === 'cancel';
+  return hs.action === 'cancel';
+}
+
+function isJoinable(hs: Hook | Seek) {
+  return hs.action === 'join';
+}
+
+function isNotJoinable(hs: Hook | Seek) {
+  return !isJoinable(hs);
 }
 
 function isNotMine(hs: Hook | Seek) {
@@ -80,25 +96,35 @@ export function toggle(ctrl: LobbyController): VNode {
 export function render(
   tab: 'seeks' | 'real_time',
   ctrl: LobbyController,
-  allHs: Seek[] | Hook[],
+  allHS: Seek[] | Hook[],
 ): VNode {
-  const mine = allHs.filter(isMine);
-  const render = (hs: Hook | Seek) => renderHookOrSeek(hs);
-  const standards = allHs.filter(isNotMine).filter(isStandard(true));
-  const variants = allHs.filter(isNotMine).filter(isStandard(false));
+  const sort = (hss: Seek[] | Hook[]) => {
+    if (tab === 'seeks') seekRepo.sort(ctrl, hss as Seek[]);
+    else hookRepo.sort(ctrl, hss as Hook[]);
+  };
 
-  if (tab === 'seeks') {
-    seekRepo.sort(ctrl, mine as Seek[]);
-    seekRepo.sort(ctrl, standards as Seek[]);
-    seekRepo.sort(ctrl, variants as Seek[]);
-  } else {
-    hookRepo.sort(ctrl, mine as Hook[]);
-    hookRepo.sort(ctrl, standards as Hook[]);
-    hookRepo.sort(ctrl, variants as Hook[]);
-  }
+  const mine = allHS.filter(isMine);
+  const notMine = allHS.filter(isNotMine);
+
+  const standards = notMine.filter(isStandard(true));
+  const standardsJoinable = standards.filter(isJoinable);
+  const standardsNotJoinable = standards.filter(isNotJoinable);
+
+  const variants = notMine.filter(isStandard(false));
+  const variantsJoinable = variants.filter(isJoinable);
+  const variantsNotJoinable = variants.filter(isNotJoinable);
+
+  sort(mine as Seek[]);
+  sort(standardsJoinable as Seek[]);
+  sort(standardsNotJoinable as Seek[]);
+  sort(variantsJoinable as Seek[]);
+  sort(variantsNotJoinable as Seek[]);
+
+  const render = (hs: Hook | Seek) => renderHookOrSeek(hs, ctrl.isAnon);
 
   const renderedHss = [
-    ...standards.map(render),
+    ...standardsJoinable.map(render),
+    ...standardsNotJoinable.map(render),
     variants.length
       ? h(
           'tr.variants',
@@ -116,15 +142,16 @@ export function render(
           ],
         )
       : null,
-    ...variants.map(render),
+    ...variantsJoinable.map(render),
+    ...variantsNotJoinable.map(render),
   ];
-  if (mine) renderedHss.unshift(...mine.map(m => render(m)));
+  if (mine) renderedHss.unshift(...mine.map(render));
   return h('table.hooks__list', [
     h(
       'thead',
       h('tr', [
-        h('th'),
-        h('th', i18n('player')),
+        h('th'), // color icon
+        h('th'), // player name
         h(
           'th',
           {

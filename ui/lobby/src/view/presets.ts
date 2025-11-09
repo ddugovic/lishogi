@@ -1,9 +1,10 @@
-import { clockShow, clockToPerf } from 'common/clock';
+import { clockShow } from 'common/clock';
 import { useJapanese } from 'common/common';
 import { icons } from 'common/icons';
 import { bind } from 'common/snabbdom';
 import { i18n, i18nFormat, i18nPluralSame } from 'i18n';
 import { i18nPerf } from 'i18n/perf';
+import { colonSymbol } from 'i18n/util';
 import { engineName } from 'shogi/engine-name';
 import { type Hooks, h, type VNode, type VNodes } from 'snabbdom';
 import type LobbyController from '../ctrl';
@@ -13,14 +14,47 @@ export function render(ctrl: LobbyController): VNodes {
   return ctrl.allPresets
     .map(p => presetButton(p, ctrl))
     .concat(
-      h(
-        'div.custom',
-        {
-          attrs: { 'data-id': 'custom' },
-        },
-        i18n('custom'),
-      ),
+      h('div.preset-configs', [
+        h('div.slider-wrap', [
+          h('div.label', [
+            i18n('ratingRange'),
+            colonSymbol(),
+            h('strong', `${ctrl.presetOpts.ratingDiff()}`),
+          ]),
+          slider(ctrl, allRatingDiffs),
+        ]),
+      ]),
     );
+}
+
+const minRatingDiff = 100;
+const allRatingDiffs: number[] = Array.from(Array(10 - 1), (_, i) => minRatingDiff + i * 50);
+function slider(ctrl: LobbyController, options: number[]): VNode {
+  return h('input.slider', {
+    attrs: {
+      id: 'preset-rating-diff',
+      type: 'range',
+      min: 0,
+      max: options.length - 1,
+      step: 1,
+      disabled: false,
+    },
+    hook: {
+      insert: vnode => {
+        const el = vnode.elm as HTMLInputElement;
+        const prop = ctrl.presetOpts.ratingDiff;
+        const propValue = Number.parseInt(prop());
+        const index = options.findIndex(n => n == propValue);
+        el.value = index.toString();
+        el.addEventListener('input', () => {
+          const value = options[Number.parseInt(el.value)];
+          prop(value);
+          ctrl.redraw();
+        });
+        el.addEventListener('mouseout', () => el.blur());
+      },
+    },
+  });
 }
 
 export function presetHooks(ctrl: LobbyController): Hooks {
@@ -104,8 +138,8 @@ function presetButton(p: Preset, ctrl: LobbyController): VNode {
 
 function isSameSeek(p: Preset, s: Seek, ctrl: LobbyController): boolean {
   return (
+    s.variant === 'standard' &&
     s.days === p.days &&
-    !s.variant &&
     s.mode === 1 &&
     ctrl.data.me &&
     s.username !== ctrl.data.me.username &&
@@ -115,9 +149,9 @@ function isSameSeek(p: Preset, s: Seek, ctrl: LobbyController): boolean {
 
 function isSameHook(h: Hook, clk: string, perf: Perf, ctrl: LobbyController): boolean {
   return (
+    h.variant === 'standard' &&
     h.clock === clk &&
     (h.ra === 1 || ctrl.isAnon) &&
-    !h.variant &&
     h.sri !== window.lishogi.sri &&
     ratingInRange(perf, h.rr, h.rating, ctrl.presetOpts)
   );
@@ -138,7 +172,8 @@ function ratingInRange(
       myRating >= parsed[0] &&
       myRating <= parsed[1] &&
       (!theirRating ||
-        (theirRating >= myRating - opts.ratingDiff && theirRating <= myRating + opts.ratingDiff))
+        (theirRating >= myRating - Number.parseInt(opts.ratingDiff()) &&
+          theirRating <= myRating + Number.parseInt(opts.ratingDiff())))
     );
   } else return true;
 }

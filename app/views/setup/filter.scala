@@ -61,12 +61,22 @@ object filter {
                 ),
               ),
             ),
+            tr(cls := "inline")(
+              td(trans.gamesOutsideYourRatingRange()),
+              td(
+                renderCheckboxes(
+                  form,
+                  "outsideRange",
+                  translatedBooleanYesFilterChoice,
+                ),
+              ),
+            ),
           ),
         ),
         div(cls := "actions")(
           submitButton(
             cls      := "button button-empty button-red text reset",
-            dataIcon := Icons.forbidden,
+            dataIcon := Icons.reload,
           )(
             trans.reset(),
           ),

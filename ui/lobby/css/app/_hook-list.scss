@@ -3,6 +3,7 @@
 @use 'pkg:common/theme';
 
 .hooks__list {
+  table-layout: fixed;
   width: 100%;
 
   tr {
@@ -27,6 +28,16 @@
       }
     }
 
+    &.unjoinable {
+      opacity: 0.4;
+
+      td {
+        cursor: default;
+        background: transparent;
+        border-color: transparent;
+      }
+    }
+
     &.join:hover td {
       background: theme.$m-accent_alpha_neg40;
       color: theme.$c-accent-over;
@@ -34,7 +45,7 @@
 
     &.variants td {
       text-align: center;
-      padding: 4px 0;
+      padding: 6px 0;
       background: none;
       text-transform: uppercase;
       letter-spacing: 3px;
@@ -45,9 +56,32 @@
   th {
     @extend %roboto;
 
-    padding: 1em;
+    padding: 1em 0;
+
+    $color-icon-width: 35px;
+
+    &:first-child {
+      width: $color-icon-width;
+    }
+
+    &:nth-child(2) {
+      width: 35%;
+    }
+
+    &:nth-child(3) {
+      width: 20%;
+    }
+
+    &:nth-child(4) {
+      width: 20%;
+    }
+
+    &:nth-child(5) {
+      width: 22%;
+    }
 
     &.sortable {
+      position: relative;
       cursor: pointer;
       padding-left: 0;
     }
@@ -57,10 +91,20 @@
       font-weight: normal;
     }
 
-    &.sortable .is::before {
-      opacity: 0;
-      margin-right: 3px;
-      content: icons.$down;
+    &.sortable .is {
+      position: absolute;
+      left: -1.2em;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      top: 0;
+
+      &::before {
+        opacity: 0.15;
+        margin-right: 3px;
+        font-size: 1em;
+        content: icons.$down;
+      }
     }
 
     &.sortable.reverse .is::before {
@@ -77,15 +121,17 @@
   }
 
   td {
+    @extend %nowrap-ellipsis;
+
     word-break: break-all;
     overflow: hidden;
-    padding: 0.5em 0.7em;
+    padding: 0.5em 0;
     border-bottom: theme.$border;
     cursor: pointer;
     background: theme.$m-bg-box_alpha_neg50;
 
     &:first-child {
-      width: 16px;
+      padding: 0.5em 0 0.5em 0.7em;
     }
 
     &:first-child ::before {
@@ -97,6 +143,14 @@
       margin-right: 8px;
       line-height: 0.9;
       font-size: 1.6em;
+    }
+
+    .long {
+      font-size: 0.9em;
+    }
+
+    .very-long {
+      font-size: 0.8em;
     }
   }
 

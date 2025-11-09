@@ -132,7 +132,7 @@ final private class LobbyTrouper(
     case Resync => socket ! HookIds(HookRepo.vector.map(_.id))
 
     case HookSub(member, true) =>
-      socket ! AllHooksFor(member, HookRepo.vector.filter { biter.showHookTo(_, member) })
+      socket ! AllHooksFor(member, HookRepo.vector.filter { biter.canSee(_, member) })
   }
 
   private def NoPlayban(user: Option[LobbyUser])(f: => Unit): Unit = {

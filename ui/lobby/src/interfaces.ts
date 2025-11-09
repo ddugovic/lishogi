@@ -1,8 +1,10 @@
+import type { StoredProp } from 'common/storage';
 import type { EngineCode } from 'shogi/engine-name';
 
 export type Sort = 'rating' | 'time' | 'rating-reverse' | 'time-reverse';
 export type Mode = 'list' | 'chart';
 export type Tab = 'presets' | 'real_time' | 'seeks' | 'now_playing';
+type Action = 'cancel' | 'join' | 'unjoinable';
 
 interface Untyped {
   [key: string]: any;
@@ -23,8 +25,9 @@ export interface Hook {
   ra?: number; // rated
   rr?: string; // rating range
   c?: Color;
-  variant?: VariantKey;
+  variant: VariantKey; // default set in hook-repo
   disabled?: boolean;
+  action: Action; // set in hook-repo
 }
 
 export interface Seek {
@@ -37,7 +40,8 @@ export interface Seek {
   color?: Color;
   days?: number;
   provisional?: boolean;
-  variant?: VariantKey;
+  variant: VariantKey; // default set in seek-repo
+  action: Action; // set in seek-repo
 }
 
 export type RatingsRecord = Record<Perf, { rating: number; clueless?: boolean } | undefined>;
@@ -94,5 +98,5 @@ export interface PresetOpts {
   isNewPlayer: boolean;
   aiLevel?: number;
   ratings?: RatingsRecord;
-  ratingDiff: number;
+  ratingDiff: StoredProp<number>;
 }

@@ -32,10 +32,10 @@ final class SeekApi(
       .cursor[Seek]()
 
   private val cache = cacheApi[CacheKey, List[Seek]](2, "lobby.seek.list") {
-    _.refreshAfterWrite(5 seconds)
+    _.refreshAfterWrite(6 seconds)
       .buildAsyncFuture {
         case ForAnon => allCursor.list(maxPerPage.value)
-        case ForUser => allCursor.list(maxHard.value + 100)
+        case ForUser => allCursor.list(maxHard.value)
       }
   }
 
@@ -53,13 +53,10 @@ final class SeekApi(
 
   def forUser(user: LobbyUser): Fu[List[Seek]] =
     cache get ForUser map { seeks =>
-      val filtered = seeks.filter { seek =>
-        seek.user.id == user.id || biter.canJoin(seek, user)
-      }
-      noDupsFor(user, filtered) take maxHard.value
+      noDupsFor(user, seeks.filter(biter.canSee(_, user)))
     }
 
-  private def noDupsFor(user: LobbyUser, seeks: List[Seek]) =
+  private def noDupsFor(user: LobbyUser, seeks: List[Seek]): List[Seek] =
     seeks
       .foldLeft(List.empty[Seek] -> Set.empty[String]) {
         case ((res, h), seek) if seek.user.id == user.id => (seek :: res, h)
@@ -71,6 +68,9 @@ final class SeekApi(
               seek.mode,
               seek.color,
               seek.user.id,
+              seek.realRatingRange.fold(true) { range =>
+                range.contains(user.ratingAt(seek.perfType))
+              },
             ) mkString ","
           if (h contains seekH) (res, h)
           else (seek :: res, h + seekH)

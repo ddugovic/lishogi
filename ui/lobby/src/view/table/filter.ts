@@ -32,22 +32,29 @@ function initialize(ctrl: LobbyController, el: HTMLElement) {
     ctrl.filter.open = false;
     ctrl.redraw();
   });
+
+  window.lishogi.mousetrap.bind('esc', () => {
+    if (ctrl.filter.open) {
+      ctrl.filter.open = false;
+      ctrl.redraw();
+    }
+  });
 }
 
 export function toggle(ctrl: LobbyController, nbFiltered: number): VNode {
   const filter = ctrl.filter;
-  const hasFiltered = nbFiltered > 0;
+  const hasFiltered = !filter.open && nbFiltered > 0;
   return h(
     'i.toggle.toggle-filter',
     {
-      class: { gamesFiltered: hasFiltered, active: filter.open },
+      class: { 'games-filtered': hasFiltered, active: filter.open },
       hook: bind('mousedown', filter.toggle, ctrl.redraw),
       attrs: {
-        'data-icon': filter.open ? icons.cancel : icons.gear,
-        title: i18n('filterGames'),
+        'data-icon': filter.open ? icons.cancel : icons.filter,
+        title: hasFiltered ? `${i18n('filterGames')}: ${nbFiltered}` : i18n('close'),
       },
     },
-    hasFiltered && !filter.open ? h('i.unread', nbFiltered < 10 ? nbFiltered : '9+') : undefined,
+    hasFiltered ? h('small', nbFiltered < 10 ? nbFiltered : '9+') : undefined,
   );
 }
 

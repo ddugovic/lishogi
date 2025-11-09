@@ -110,30 +110,40 @@ final private class Biter(
       .start
   }
 
-  // do not auto join users with anons
-  def canAutoJoin(hook: Hook, user: Option[LobbyUser]): Boolean =
-    user.isDefined == hook.isAuth && canJoin(hook, user)
+  // HOOKS
+
+  def canSee(hook: Hook, user: Option[LobbyUser]): Boolean =
+    user.fold(true) { u =>
+      u.lame == hook.lame &&
+      !hook.userId.??(u.blocking.contains) &&
+      !hook.user.??(_.blocking).contains(u.id)
+    }
+
+  def canSee(hook: Hook, member: LobbySocket.Member): Boolean =
+    hook.sri == member.sri || canSee(hook, member.user)
 
   def canJoin(hook: Hook, user: Option[LobbyUser]): Boolean =
-    (user.isDefined || !hook.isAuth) && user.fold(true) { u =>
-      u.lame == hook.lame &&
+    canSee(hook, user) && (user.isDefined || !hook.isAuth) && user.fold(true) { u =>
       !hook.userId.contains(u.id) &&
-      !hook.userId.??(u.blocking.contains) &&
-      !hook.user.??(_.blocking).contains(u.id) &&
       hook.realRatingRange.fold(true) { range =>
         range.contains(u.ratingAt(hook.perfType))
       }
     }
 
-  def canJoin(seek: Seek, user: LobbyUser): Boolean =
-    seek.user.id != user.id &&
-      (seek.realMode.casual || user.lame == seek.user.lame) &&
-      !(user.blocking contains seek.user.id) &&
-      !(seek.user.blocking contains user.id) &&
-      seek.realRatingRange.fold(true) { range =>
-        range.contains(user.ratingAt(seek.perfType))
-      }
+  // do not auto join users with anons
+  def canAutoJoin(hook: Hook, user: Option[LobbyUser]): Boolean =
+    user.isDefined == hook.isAuth && canJoin(hook, user)
 
-  def showHookTo(hook: Hook, member: LobbySocket.Member): Boolean =
-    hook.sri == member.sri || canJoin(hook, member.user)
+  // SEEKS
+
+  def canSee(seek: Seek, user: LobbyUser): Boolean =
+    seek.user.id == user.id || ((seek.realMode.casual || user.lame == seek.user.lame) &&
+      !(user.blocking contains seek.user.id) &&
+      !(seek.user.blocking contains user.id))
+
+  def canJoin(seek: Seek, user: LobbyUser): Boolean =
+    seek.user.id != user.id && canSee(seek, user) && seek.realRatingRange.fold(true) { range =>
+      range.contains(user.ratingAt(seek.perfType))
+    }
+
 }

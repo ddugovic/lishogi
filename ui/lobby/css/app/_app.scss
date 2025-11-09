@@ -1,9 +1,11 @@
+@use 'pkg:breakpoint-sass' as breakpoint;
 @use 'pkg:common/abstract/extends';
+@use 'pkg:common/abstract/media-queries';
+@use 'pkg:common/abstract/mixins';
+@use 'pkg:common/theme';
 @use 'preset';
 @use 'hook-chart';
 @use 'hook-list';
-@use 'pkg:common/abstract/mixins';
-@use 'pkg:common/theme';
 @use '../local';
 
 .lobby__app {
@@ -32,23 +34,34 @@
 
     &.lseeks,
     &.lreal_time {
-      background: transparent;
-
-      &:has(.hook__filters) {
-        background: theme.$c-bg-box;
-      }
+      background: theme.$c-bg-box;
+      isolation: isolate;
 
       &::before {
         display: flex;
         align-items: center;
         justify-content: center;
         color: theme.$c-bg-zebra;
-        font-size: 32rem;
+        font-size: 16rem;
         position: absolute;
         width: 100%;
         height: 100%;
         background: theme.$c-bg-box;
+        overflow: hidden;
         z-index: -1;
+      }
+
+      @include mixins.light-theme {
+        &::before {
+          color: theme.$c-font-dimmer;
+          opacity: 0.4;
+        }
+      }
+
+      @include breakpoint.breakpoint(media-queries.$mq-xx-small) {
+        &::before {
+          font-size: 25rem;
+        }
       }
     }
   }
@@ -81,18 +94,13 @@
     }
   }
 
-  .gamesFiltered {
+  .games-filtered {
     color: theme.$c-accent;
 
     @include mixins.transition;
 
     &:hover {
       color: theme.$c-accent-dim;
-    }
-
-    i {
-      margin-left: 0.2rem;
-      font-size: 11px;
     }
   }
 }

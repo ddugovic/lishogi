@@ -60,6 +60,26 @@
         opacity: 0.9;
       }
     }
+
+    &.preset-configs {
+      font-size: 0.6em;
+      cursor: default;
+      overflow: hidden;
+
+      &:hover {
+        background: theme.$c-bg-action;
+        color: theme.$c-font-clear;
+      }
+
+      .slider-wrap {
+        justify-content: center;
+        align-items: center;
+
+        .label {
+          text-align: center;
+        }
+      }
+    }
   }
 
   .active {

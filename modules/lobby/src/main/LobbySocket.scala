@@ -74,7 +74,7 @@ final class LobbySocket(
         send(
           P.Out.tellSris(
             hookSubscriberSris diff idleSris filter { sri =>
-              members get sri exists { biter.showHookTo(hook, _) }
+              members get sri exists { biter.canSee(hook, _) }
             } map Sri.apply,
             makeMessage("had", hook.render),
           ),

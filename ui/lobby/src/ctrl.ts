@@ -1,4 +1,5 @@
 import { loadChushogiPieceSprite, loadKyotoshogiPieceSprite } from 'common/assets';
+import { storedProp } from 'common/storage';
 import throttle from 'common/throttle';
 import { wsOnOpen } from 'common/ws';
 import Filter from './filter';
@@ -11,7 +12,6 @@ import type {
   Preset,
   PresetOpts,
   RatingsRecord,
-  Seek,
   Sort,
   Tab,
 } from './interfaces';
@@ -19,7 +19,6 @@ import * as seekRepo from './seek-repo';
 import SetupCtrl from './setup/ctrl';
 import LobbySocket from './socket';
 import { make as makeStores, type Stores } from './store';
-import { action } from './util';
 import variantConfirm from './variant';
 import * as xhr from './xhr';
 
@@ -59,16 +58,21 @@ export default class LobbyController {
     this.isBot = opts.data.me?.isBot;
     this.isAnon = !opts.data.me;
     this.ratings = opts.data.me?.ratings;
+
     this.presetOpts = {
       isAnon: this.isAnon,
       isNewPlayer: !!opts.data.me?.isNewPlayer,
       aiLevel: opts.data.me?.aiLevel && Number.parseInt(opts.data.me.aiLevel),
       ratings: opts.data.me?.ratings,
-      ratingDiff: 300,
+      ratingDiff: storedProp('presetRatingDiff', 250),
     };
-    this.filter = new Filter(li.storage.make('lobby.filter2'), this);
+    this.filter = new Filter(li.storage.make('lobby.filter4'), this);
     this.setupCtrl = new SetupCtrl(this);
     this.initAllPresets();
+
+    this.data.seeks.forEach(s => {
+      seekRepo.init(this, s);
+    });
 
     this.socket = new LobbySocket(opts.socketSend, this);
 
@@ -200,36 +204,34 @@ export default class LobbyController {
 
   clickHook = (id: string): void => {
     const hook = hookRepo.find(this, id);
-    if (!hook || hook.disabled || this.stepping || this.redirecting) return;
-    const act = action(hook);
-    if (act === 'cancel' || variantConfirm(hook.variant || 'standard'))
-      this.socket.send(act, hook.id);
+    if (!hook || hook.disabled || hook.action === 'unjoinable' || this.stepping || this.redirecting)
+      return;
+    if (hook.action === 'cancel') {
+      hook.disabled = true;
+      this.redraw();
+    }
+    if (hook.action === 'cancel' || variantConfirm(hook.variant))
+      this.socket.send(hook.action, hook.id);
   };
 
   clickSeek = (id: string): void => {
     const seek = seekRepo.find(this, id);
-    if (!seek || this.redirecting) return;
-    const act = action(seek);
+    if (!seek || seek.action === 'unjoinable' || this.redirecting) return;
+
     if (this.isAnon) window.location.href = '/signup';
-    else if (act === 'cancel' || variantConfirm(seek.variant || 'standard'))
-      this.socket.send(`${act}Seek`, seek.id);
+    else if (seek.action === 'cancel' || variantConfirm(seek.variant))
+      this.socket.send(`${seek.action}Seek`, seek.id);
   };
 
   seeksNow: () => void = throttle(200, () =>
-    setTimeout(() => xhr.seeks().then(this.setSeeks), 100),
+    setTimeout(() => xhr.seeks().then(seeks => seekRepo.setSeeks(this, seeks)), 100),
   );
   seeksEventually: () => void = throttle(7000, () =>
-    setTimeout(() => xhr.seeks().then(this.setSeeks), 200),
+    setTimeout(() => xhr.seeks().then(seeks => seekRepo.setSeeks(this, seeks)), 200),
   );
 
-  setSeeks = (seeks: Seek[]): void => {
-    this.reloadSeeks = false;
-    this.data.seeks = seeks;
-    this.redraw();
-  };
-
   clickPreset = (preset: Preset): void => {
-    xhr.seekFromPreset(preset, this.presetOpts);
+    xhr.setupFromPreset(preset, this.presetOpts);
     if (preset.ai) {
       this.setRedirecting();
     } else {

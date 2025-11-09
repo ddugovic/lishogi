@@ -33,7 +33,7 @@ final class Env(
     archiveColl = db(CollName("seek_archive")),
     maxPerPage = MaxPerPage(13),
     maxPerUser = Max(5),
-    maxHard = Max(150),
+    maxHard = Max(255),
   )
 
   lazy val seekApi = wire[SeekApi]

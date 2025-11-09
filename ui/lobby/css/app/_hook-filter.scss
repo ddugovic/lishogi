@@ -9,7 +9,7 @@
   display: block;
 
   td {
-    padding: 0.5em 0;
+    padding: 1em 0;
   }
 
   td:first-child {
@@ -22,6 +22,7 @@
   .checkable {
     padding: 4.3px 0;
     margin-right: 2rem;
+    min-width: 25%;
 
     label,
     input {
