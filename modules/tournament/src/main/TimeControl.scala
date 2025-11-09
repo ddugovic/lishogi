@@ -46,7 +46,7 @@ object TimeControl {
     val timeControlDefault = RealTime.id
 
     val clockTimes: Seq[Double] = Seq(0d, 1 / 4d, 1 / 2d, 3 / 4d, 1d, 3 / 2d) ++ {
-      (2 to 7 by 1) ++ (10 to 30 by 5) ++ (40 to 60 by 10)
+      (2 to 7 by 1) ++ (10 to 30 by 5) ++ (40 to 60 by 10) ++ (75 to 180 by 15)
     }.map(_.toDouble)
     val clockTimeDefault = 10d
 
