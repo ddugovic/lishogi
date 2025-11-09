@@ -1,5 +1,6 @@
 import { requestIdleCallbackWithFallback } from 'common/common';
 import { icons } from 'common/icons';
+import { modalJs } from 'common/modal';
 import notify from 'common/notification';
 import { wsIsReady, wsLastVersionTime, wsOnOpen } from 'common/ws';
 import * as game from 'game';
@@ -665,6 +666,17 @@ export default class RoundController {
     if (o.ratingDiff) {
       d.player.ratingDiff = o.ratingDiff[d.player.color];
       d.opponent.ratingDiff = o.ratingDiff[d.opponent.color];
+      if (!d.simul) {
+        modalJs({
+          content: `
+          <div class="rank-change">
+          <div class="title">
+            You ranked up!
+          </div>
+          <div class="rank-change-title">1-kyu</div>
+        </div>`,
+        });
+      }
     }
     if (!d.player.spectator && d.game.plies > 1)
       li.sound.play(o.winner ? (d.player.color === o.winner ? 'victory' : 'defeat') : 'draw');
