@@ -165,28 +165,23 @@ function applyBackground(data: BackgroundData, list: Background[]) {
 }
 
 function updateMetaThemeColor(background: Key, isLight: boolean): void {
-  const existingMeta = document.querySelectorAll('meta[name="theme-color"]');
-  existingMeta.forEach(meta => {
+  document.querySelectorAll('meta[name="theme-color"]').forEach(meta => {
     meta.remove();
   });
 
-  if (background === 'system') {
-    const lightMeta = document.createElement('meta');
-    lightMeta.name = 'theme-color';
-    lightMeta.content = '#dbd7d1';
-    lightMeta.media = '(prefers-color-scheme: light)';
-    document.head.appendChild(lightMeta);
-
-    const darkMeta = document.createElement('meta');
-    darkMeta.name = 'theme-color';
-    darkMeta.content = '#2e2a24';
-    darkMeta.media = '(prefers-color-scheme: dark)';
-    document.head.appendChild(darkMeta);
-  } else {
+  const createMeta = (scheme: 'dark' | 'light', media?: string) => {
     const meta = document.createElement('meta');
     meta.name = 'theme-color';
-    meta.content = isLight ? '#dbd7d1' : '#2e2a24';
+    meta.content = scheme === 'light' ? '#dbd7d1' : '#2e2a24';
+    if (media) meta.media = media;
     document.head.appendChild(meta);
+  };
+
+  if (background === 'system') {
+    createMeta('light', '(prefers-color-scheme: light)');
+    createMeta('dark', '(prefers-color-scheme: dark)');
+  } else {
+    createMeta(isLight ? 'light' : 'dark');
   }
 }
 
