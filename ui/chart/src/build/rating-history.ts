@@ -1,9 +1,12 @@
 import type { ChartConfiguration, ChartDataset, Point, PointStyle } from 'chart.js';
 import zoomPlugin from 'chartjs-plugin-zoom';
+import { capitalize } from 'common/string';
 import dayjs from 'dayjs';
 import dayOfYear from 'dayjs/plugin/dayOfYear';
 import duration from 'dayjs/plugin/duration';
 import utc from 'dayjs/plugin/utc';
+import { i18n } from 'i18n';
+import { i18nPerf } from 'i18n/perf';
 import { borderColor, fontClearColor, fontFamily, tooltipConfig } from '../common';
 import type { PerfRatingHistory } from '../interface';
 
@@ -11,7 +14,7 @@ window.Chart.register(zoomPlugin);
 
 interface Opts {
   data: PerfRatingHistory[];
-  singlePerfName?: string;
+  singlePerfKey?: string;
 }
 
 type TsAndRating = { ts: number; rating: number };
@@ -41,34 +44,34 @@ const styles: ChartPerf[] = [
   { color: '#0071b269', borderDash: tinyDash, symbol: 'rectRot', name: 'blitz' },
   { color: '#009e7471', borderDash: tinyDash, symbol: 'rect', name: 'rapid' },
   { color: '#459f3b5e', borderDash: tinyDash, symbol: 'triangle', name: 'classical' },
+  { color: '#009E73', borderDash: longDash, symbol: 'triangle', name: 'ultraBullet' },
   { color: '#009E73', borderDash: noDash, symbol: 'rect', name: 'realTime' },
-  { color: '#F0E442', borderDash: noDash, symbol: 'triangle', name: 'correspondence' },
-  { color: '#E69F00', borderDash: shortDash, symbol: 'circle', name: 'minishogi' },
-  { color: '#D55E00', borderDash: shortDash, symbol: 'rectRot', name: 'chushogi' },
-  { color: '#CC79A7', borderDash: shortDash, symbol: 'rect', name: 'kyotoshogi' },
+  { color: '#F0E442', borderDash: noDash, symbol: 'rect', name: 'correspondence' },
+  { color: '#E69F00', borderDash: shortDash, symbol: 'triangle', name: 'minishogi' },
+  { color: '#D55E00', borderDash: shortDash, symbol: 'triangle', name: 'chushogi' },
+  { color: '#CC79A7', borderDash: shortDash, symbol: 'triangle', name: 'kyotoshogi' },
   { color: '#DF5353', borderDash: shortDash, symbol: 'triangle', name: 'annanshogi' },
   { color: '#66558C', borderDash: shortDash, symbol: 'triangle', name: 'checkshogi' },
-  { color: '#0072B2', borderDash: longDash, symbol: 'triangle', name: 'puzzle' },
-  { color: '#009E73', borderDash: longDash, symbol: 'triangle', name: 'ultraBullet' },
+  { color: '#0072B2', borderDash: longDash, symbol: 'rect', name: 'puzzle' },
 ];
 
 const oneDay = 24 * 60 * 60 * 1000;
 
 const dateFormat = (d: Date) => d.toLocaleDateString();
 
-function main(ratingHistoryOpts: { data: string; singlePerfName: string }): void {
+function main(ratingHistoryOpts: { data: string; singlePerfKey: string }): void {
   $('.spinner').remove();
 
   const $el = $('canvas.rating-history');
   const data = JSON.parse(ratingHistoryOpts.data) as PerfRatingHistory[];
-  const singlePerfName = ratingHistoryOpts.singlePerfName;
+  const singlePerfKey = ratingHistoryOpts.singlePerfKey;
 
-  const singlePerfIndex = data.findIndex(x => x.name === singlePerfName);
-  if (singlePerfName && !data[singlePerfIndex]?.points.length) {
+  const singlePerfIndex = data.findIndex(x => x.name === singlePerfKey);
+  if (singlePerfKey && !data[singlePerfIndex]?.points.length) {
     $el.hide();
     return;
   }
-  const allData = makeDatasets(1, { data, singlePerfName }, singlePerfIndex);
+  const allData = makeDatasets(1, { data, singlePerfKey }, singlePerfIndex);
   const startDate = allData.startDate;
   const endDate = allData.endDate;
   const threeMonthsAgo = endDate.subtract(3, 'M');
@@ -190,13 +193,17 @@ function main(ratingHistoryOpts: { data: string; singlePerfName: string }): void
   chart.zoomScale('x', { min: initial.valueOf(), max: endDate.valueOf() });
 }
 
-function makeDatasets(step: number, { data, singlePerfName }: Opts, singlePerfIndex: number) {
+function makeDatasets(step: number, opts: Opts, singlePerfIndex: number) {
+  const singlePerfKey = opts.singlePerfKey;
+  const data = opts.data;
+
   const indexFilter = (_p: ChartPerf | PerfRatingHistory, i: number) =>
-    !singlePerfName || i === singlePerfIndex;
+    !singlePerfKey || i === singlePerfIndex;
   const minMax = (d: PerfRatingHistory) => [
     getDate(d.points[0]),
     getDate(d.points[d.points.length - 1]),
   ];
+
   const filteredData = data.filter(indexFilter);
   const dates = filteredData
     .filter(p => p.points.length)
@@ -207,23 +214,30 @@ function makeDatasets(step: number, { data, singlePerfName }: Opts, singlePerfIn
     }, [] as number[]);
   let startDate = dayjs.utc(Math.min(...dates));
   let endDate = dayjs.utc(Math.max(...dates));
-  const ds: ChartDataset<'line'>[] = filteredData.map((serie, i) => {
+  const ds: ChartDataset<'line'>[] = filteredData.map(serie => {
     const originalDatesAndRatings = serie.points.map(r => ({
       ts: getDate(r),
       rating: r[3],
     }));
-    const perfStyle = styles.filter(indexFilter)[i];
-    const data = smoothDates(originalDatesAndRatings, step, startDate.valueOf());
+    let perfStyle = styles.find(p => p.name == serie.name);
+    if (!perfStyle) {
+      console.warn('Perf style not found:', serie.name);
+      perfStyle = styles[0];
+    }
+
+    const trans = serie.name === 'puzzle' ? i18n('puzzles') : i18nPerf(serie.name);
+
+    const smoothData = smoothDates(originalDatesAndRatings, step, startDate.valueOf());
     return {
       indexAxis: 'x',
       type: 'line',
-      label: serie.name,
+      label: trans || capitalize(serie.name),
       borderColor: perfStyle.color,
       hoverBorderColor: fontClearColor(),
       backgroundColor: perfStyle.color,
-      pointRadius: data.length === 1 ? 3 : 0,
+      pointRadius: smoothData.length === 1 ? 3 : 0,
       pointHoverRadius: 6,
-      data: data,
+      data: smoothData,
       pointStyle: perfStyle.symbol,
       borderWidth: 2,
       tension: 0,

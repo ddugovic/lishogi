@@ -36,7 +36,7 @@ object perfStat {
             moduleJsTag(
               "chart.rating-history",
               Json
-                .obj("data" -> rc, "singlePerfName" -> s"${perfType.trans(lila.i18n.defaultLang)}"),
+                .obj("data" -> rc, "singlePerfKey" -> perfType.key),
             ),
           )
         },
@@ -56,8 +56,8 @@ object perfStat {
                 dataIcon := perfType.icon,
                 href     := s"${routes.User.games(u.username, "search")}?perf=${perfType.id}",
               )(viewTheGames()),
-              bits.perfTrophies(u, rankMap.view.filterKeys(perfType.==).toMap),
             ),
+            bits.perfTrophies(u, rankMap.view.filterKeys(perfType.==).toMap),
           ),
           ratingChart.isDefined option bits.ratingHistoryContainer,
           div(cls := "box__pad perf-stat__content")(
