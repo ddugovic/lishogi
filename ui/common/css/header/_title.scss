@@ -19,10 +19,6 @@
     display: inline-flex;
     font-size: 28px;
     margin-right: 0.15em;
-
-    &::before {
-      content: icons.$cc1;
-    }
   }
 
   span {

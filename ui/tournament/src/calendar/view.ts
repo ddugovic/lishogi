@@ -40,7 +40,7 @@ function renderTournament(tour: Tournament, day: Date) {
           insert: vnode => {
             (vnode.elm as HTMLElement).innerHTML = svgSprite(
               'tour',
-              tour.icon || `li-${tour.perf.key}`,
+              tour.icon || `li-${tour.variant.key}`,
             );
           },
         },

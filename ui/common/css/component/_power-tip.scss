@@ -36,6 +36,7 @@
 
       .left {
         @extend %flex-center-nowrap;
+        white-space: pre;
       }
 
       .user-link {
