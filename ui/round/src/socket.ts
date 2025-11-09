@@ -1,4 +1,5 @@
 import { loadCssPath } from 'common/assets';
+import { icons } from 'common/icons';
 import { modalJs } from 'common/modal';
 import notify from 'common/notification';
 import throttle from 'common/throttle';
@@ -165,12 +166,12 @@ export function make(send: Socket.Send, ctrl: RoundController): RoundSocket {
     simulEnd(simul: Simul) {
       loadCssPath('misc.modal');
       modalJs({
-        content: `<div class="simul-complete">
+        content: `
+        <div class="simul-complete">
           <div class="title">
             ${i18n('simulComplete')}
           </div>
-          <div data-icon="f">
-          </div>
+          <div data-icon="${icons.people}"></div>
           <a class="button" href="/simul/${simul.id}">
             ${i18n('backToSimul')}
           </a>
