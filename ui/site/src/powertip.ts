@@ -26,7 +26,8 @@ const uptA = (url: string, icon: string) =>
   `<a class="btn-rack__btn" href="${url}" data-icon="${icon}"></a>`;
 
 const userPowertip = (el: HTMLElement, pos?: any) => {
-  pos = pos || el.getAttribute('data-pt-pos') || (inCrosstable(el) ? 'n' : 's');
+  pos = pos || el.getAttribute('data-pt-pos') || (inCrosstable(el) ? 'n' : undefined);
+
   $(el)
     .removeClass('ulpt')
     .powerTip({
@@ -63,7 +64,7 @@ function gamePowertip(el: HTMLElement) {
     .removeClass('glpt')
     .powerTip({
       intentPollInterval: 200,
-      placement: inCrosstable(el) ? 'n' : 'w',
+      placement: inCrosstable(el) ? 'n' : undefined,
       smartPlacement: true,
       mouseOnToPopup: true,
       closeDelay: 100,
@@ -92,8 +93,12 @@ export const powertip: any = {
   mouseover(e: Event) {
     const t = e.target as HTMLElement;
     const cl = t.classList;
+
     if (cl.contains('ulpt')) powerTipWith(t, e, userPowertip);
     else if (cl.contains('glpt')) powerTipWith(t, e, gamePowertip);
+
+    const p = t.parentElement;
+    if (p?.classList?.contains('ulpt')) powerTipWith(p, e, userPowertip);
   },
   manualGameIn(parent: HTMLElement) {
     onIdleForAll(parent, '.glpt', gamePowertip);
