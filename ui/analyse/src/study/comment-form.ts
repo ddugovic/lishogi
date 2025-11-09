@@ -55,13 +55,13 @@ export function view(root: AnalyseCtrl): VNode {
     const el = vnode.elm as HTMLInputElement;
     const newKey = current.chapterId + current.path;
 
-    if (old?.data!.path !== newKey) {
+    if (old?.data && old.data.path !== newKey) {
       const mine = (current.node.comments || []).find(
         (c: any) => c.by?.id && c.by.id === ctrl.root.opts.userId,
       );
       el.value = mine ? mine.text : '';
     }
-    vnode.data!.path = newKey;
+    if (vnode.data) vnode.data.path = newKey;
 
     if (ctrl.opening()) {
       requestAnimationFrame(() => el.focus());

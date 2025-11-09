@@ -49,7 +49,6 @@
     'side'
     'acpl'
     'under'
-    'chat'
     'uchat';
 
   --meta-height: auto;
@@ -98,13 +97,12 @@
     grid-template-columns:
       var(--col2-uniboard-main-size)
       variables.$block-gap uniboard.$col2-uniboard-table;
-    grid-template-rows: fit-content(0) uniboard.$col2-uniboard-controls;
+    grid-template-rows: fit-content(0) uniboard.$col2-uniboard-controls auto 1fr;
     grid-template-areas:
       'board      gauge tools'
       'under      .     controls'
       'under      .     acpl'
       'under      .     side'
-      'chat       .     side'
       'uchat      .     side';
     grid-row-gap: 0;
 
@@ -128,10 +126,9 @@
       uniboard.$col3-uniboard-side variables.$block-gap var(--col3-uniboard-main-size)
       variables.$block-gap
       uniboard.$col3-uniboard-table;
-    grid-template-rows: local.$meta-height local.$chat-height uniboard.$col3-uniboard-controls auto;
+    grid-template-rows: local.$meta-height uniboard.$col3-uniboard-controls auto;
     grid-template-areas:
       'side    . board gauge tools'
-      'chat    . board gauge tools'
       'uchat   . under .     controls'
       'uchat   . under .     acpl';
 

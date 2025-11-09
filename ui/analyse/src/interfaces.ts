@@ -64,6 +64,8 @@ export interface AnalyseOpts {
   tagTypes?: string;
   practice?: StudyPracticeData;
   $side?: JQuery;
+  $meta?: JQuery; // separated to prevent chat layout shift
+  $streamers?: JQuery;
   $underboard?: JQuery;
   chat: any;
   socketVersion: number;

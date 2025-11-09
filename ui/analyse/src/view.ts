@@ -22,7 +22,6 @@ import * as control from './control';
 import type AnalyseCtrl from './ctrl';
 import forecastView from './forecast/forecast-view';
 import { view as forkView } from './fork';
-import * as gridHacks from './grid-hacks';
 import * as shogiground from './ground';
 import type { ConcealOf } from './interfaces';
 import { view as keyboardView } from './keyboard';
@@ -370,7 +369,7 @@ export default function (ctrl: AnalyseCtrl): VNode {
     `main.sb-insert.analyse.main-v-${ctrl.data.game.variant.key}`, // sb-insert - to force snabbdom to call insert
     {
       hook: {
-        insert: vn => {
+        insert: () => {
           forceInnerCoords(ctrl, needsInnerCoords);
           if (!!playerBars != $('body').hasClass('header-margin')) {
             requestAnimationFrame(() => {
@@ -378,7 +377,6 @@ export default function (ctrl: AnalyseCtrl): VNode {
               ctrl.redraw();
             });
           }
-          gridHacks.start(vn.elm as HTMLElement);
         },
         update(_, _2) {
           forceInnerCoords(ctrl, needsInnerCoords);
@@ -472,37 +470,52 @@ export default function (ctrl: AnalyseCtrl): VNode {
                   $(elm).append($('.streamers').clone().removeClass('none'));
                 }),
               },
-              ctrl.studyPractice
-                ? [studyPracticeView.side(study!)]
-                : study
-                  ? [studyView.side(study)]
-                  : [
-                      ctrl.forecast ? forecastView(ctrl, ctrl.forecast) : null,
-                      !ctrl.synthetic && playable(ctrl.data)
-                        ? h(
-                            'div.back-to-game',
-                            h(
-                              'a.button.button-empty.text',
-                              {
-                                attrs: {
-                                  href: router.game(ctrl.data, ctrl.data.player.color),
-                                  'data-icon': icons.back,
-                                },
+              (study
+                ? [studyView.side(study)]
+                : [
+                    ctrl.forecast ? forecastView(ctrl, ctrl.forecast) : null,
+                    !ctrl.synthetic && playable(ctrl.data)
+                      ? h(
+                          'div.back-to-game',
+                          h(
+                            'a.button.button-empty.text',
+                            {
+                              attrs: {
+                                href: router.game(ctrl.data, ctrl.data.player.color),
+                                'data-icon': icons.back,
                               },
-                              i18n('backToGame'),
-                            ),
-                          )
-                        : null,
-                    ],
+                            },
+                            i18n('backToGame'),
+                          ),
+                        )
+                      : null,
+                  ]
+              ).concat(
+                ctrl.opts.$meta
+                  ? h('div.meta', {
+                      hook: onInsert(el => {
+                        $(el).replaceWith(ctrl.opts.$meta!);
+                      }),
+                    })
+                  : null,
+                ctrl.opts.$streamers
+                  ? h('div.context-streamer', {
+                      hook: onInsert(el => {
+                        $(el).replaceWith(ctrl.opts.$streamers!);
+                      }),
+                    })
+                  : null,
+                ctrl.opts.chat
+                  ? h('section.mchat', {
+                      hook: onInsert(_ => {
+                        if (ctrl.opts.chat.instance) ctrl.opts.chat.instance.destroy();
+                        ctrl.opts.chat.parseMoves = true;
+                        ctrl.opts.chat.instance = makeChat(ctrl.opts.chat);
+                      }),
+                    })
+                  : null,
+              ),
             ),
-      ctrl.opts.chat &&
-        h('section.mchat', {
-          hook: onInsert(_ => {
-            if (ctrl.opts.chat.instance) ctrl.opts.chat.instance.destroy();
-            ctrl.opts.chat.parseMoves = true;
-            ctrl.opts.chat.instance = makeChat(ctrl.opts.chat);
-          }),
-        }),
       ctrl.embed ? null : chatMembers(),
     ],
   );

@@ -86,8 +86,8 @@ object replay {
                 backToGame = backToGame,
                 bookmarked = bookmarked,
               ),
+            chatOption.map(_ => views.html.chat.frag),
           ),
-          chatOption.map(_ => views.html.chat.frag),
           div(cls := s"analyse__board main-board ${variantClass(pov.game.variant)}")(
             shogigroundEmpty(pov.game.variant, pov.color),
           ),
@@ -216,6 +216,7 @@ object replay {
                 ),
               ),
               div(cls := "analyse__acpl"),
+              views.html.chat.members,
             ),
         ),
       ),

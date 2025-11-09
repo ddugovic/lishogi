@@ -7,7 +7,8 @@ export function replay(opts: AnalyseOpts, start: (opts: AnalyseOpts) => AnalyseC
 
   const data = opts.data;
 
-  opts.$side = $('.analyse__side').clone();
+  opts.$meta = $('.analyse__side .game__meta').clone();
+  opts.$streamers = $('.analyse__side .context-streamer').clone();
   opts.$underboard = $('.analyse__underboard').clone();
   opts.initialPly = 'url';
 

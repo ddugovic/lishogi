@@ -120,7 +120,6 @@ export function view(ctrl: StudyCtrl): VNode {
           });
           vnode.data!.li = {};
           update(vnode);
-          window.lishogi.pubsub.emit('chat.resize');
         },
         postpatch(old, vnode) {
           vnode.data!.li = old.data!.li;

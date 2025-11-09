@@ -2,7 +2,8 @@
 @use 'local';
 
 .analyse__side {
-  align-self: start;
+  display: flex;
+  flex-direction: column;
 
   .back-to-game {
     margin-top: 2em;
@@ -15,5 +16,9 @@
     .button {
       margin: 0 auto;
     }
+  }
+
+  .mchat {
+    flex: 1 1 0;
   }
 }
