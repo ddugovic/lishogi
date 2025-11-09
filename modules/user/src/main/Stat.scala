@@ -3,6 +3,7 @@ package lila.user
 object Stat {
 
   val minRating = lila.rating.Glicko.minRating
+  val maxRating = 2800
   val group     = 25
 
   def percentile(ratings: List[Int], rating: Int): (Int, Int) =

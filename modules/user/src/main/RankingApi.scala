@@ -23,11 +23,6 @@ final class RankingApi(
   import RankingApi._
   implicit private val rankingBSONHandler: BSONDocumentHandler[Ranking] = Macros.handler[Ranking]
 
-  def save(user: User, perfType: Option[PerfType], perfs: Perfs): Funit =
-    perfType ?? { pt =>
-      save(user, pt, perfs(pt))
-    }
-
   def save(user: User, perfType: PerfType, perf: Perf): Funit =
     (user.rankable && perf.nb >= 2) ?? coll.update
       .one(
@@ -107,7 +102,7 @@ final class RankingApi(
       checkshogi = checkshogi,
     )
 
-  object weeklyStableRanking {
+  object monthlyStableRanking {
 
     private type Rank = Int
 
@@ -198,7 +193,7 @@ final class RankingApi(
                 } yield rating -> nb
               }
               .to(Map)
-            (Glicko.minRating to 2800 by Stat.group).map { r =>
+            (Stat.minRating to Stat.maxRating by Stat.group).map { r =>
               hash.getOrElse(r, 0)
             }.toList
           } addEffect monitorRatingDistribution(perfId) _
@@ -217,7 +212,7 @@ final class RankingApi(
      */
     private def monitorRatingDistribution(perfId: Perf.ID)(nbUsersList: List[NbUsers]): Unit = {
       val total = nbUsersList.foldLeft(0)(_ + _)
-      (Stat.minRating to 2800 by Stat.group).toList
+      (Stat.minRating to Stat.maxRating by Stat.group).toList
         .zip(nbUsersList)
         .foldLeft(0) { case (prev, (rating, nbUsers)) =>
           val acc = prev + nbUsers
