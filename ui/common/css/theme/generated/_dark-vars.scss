@@ -80,7 +80,7 @@ html {
   --c-primary-over: #{#fff};
   --c-red: #{hsl(0deg, 60%, 50%)};
   --c-secondary: #{hsl(88deg, 62%, 37%)};
-  --c-secondary-clear: #{c-whiter($c-secondary, 25%)};
+  --c-secondary-clear: #{c-whiter($c-secondary, 23%)};
   --c-secondary-dim: #{c-blacker($c-secondary, 20%)};
   --c-secondary-dimmer: #{c-blacker($c-secondary, 40%)};
   --c-secondary-over: #{#fff};
