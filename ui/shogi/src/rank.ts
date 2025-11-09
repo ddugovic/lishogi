@@ -53,7 +53,7 @@ export function rankFromRating(rating: number): Rank {
   );
 }
 
-function rankName(rank: Rank): string {
+export function rankName(rank: Rank): string {
   return useJapanese() ? rank.jaName : rank.enName;
 }
 

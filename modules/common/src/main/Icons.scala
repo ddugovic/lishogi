@@ -102,7 +102,8 @@ object Icons {
   val trophy = "\uF162"
   val up = "\uF164"
   val upRight = "\uF163"
-  val uploadCloud = "\uF165"
-  val view = "\uF166"
-  val warning = "\uF167"
+  val upgrade = "\uF165"
+  val uploadCloud = "\uF166"
+  val view = "\uF167"
+  val warning = "\uF168"
 }

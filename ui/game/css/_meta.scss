@@ -127,3 +127,24 @@
     padding: 1rem;
   }
 }
+
+.rank-change {
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+  min-width: 200px;
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  div[data-icon] {
+    font-size: 5rem;
+    padding-top: 1rem;
+  }
+
+  .rank-tag {
+    font-size: 3rem;
+    letter-spacing: 2px;
+  }
+}

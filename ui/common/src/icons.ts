@@ -101,7 +101,8 @@ export const icons = {
   trophy: '\uF162',
   up: '\uF164',
   upRight: '\uF163',
-  uploadCloud: '\uF165',
-  view: '\uF166',
-  warning: '\uF167',
+  upgrade: '\uF165',
+  uploadCloud: '\uF166',
+  view: '\uF167',
+  warning: '\uF168',
 } as const;

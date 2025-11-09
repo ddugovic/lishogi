@@ -6,6 +6,7 @@ import shogi.Color
 
 import lila.game.Game
 import lila.game.GameRepo
+import lila.game.Provisionals
 import lila.game.RatingDiffs
 import lila.history.HistoryApi
 import lila.rating.Glicko
@@ -27,46 +28,54 @@ final class PerfsUpdater(
     ratingFactors: () => RatingFactors,
 )(implicit ec: scala.concurrent.ExecutionContext) {
 
-  def save(game: Game, sente: User, gote: User): Fu[Option[RatingDiffs]] =
+  def save(game: Game, sente: User, gote: User): Fu[Option[(RatingDiffs, Provisionals)]] =
     botFarming(game) flatMap {
       case true => fuccess(none)
       case _ =>
         (game.rated && game.finished && game.accountable && !sente.lame && !gote.lame) ?? {
-          val perfType = game.perfType
-          val ratingsW = mkRatings(sente.perfs)
-          val ratingsB = mkRatings(gote.perfs)
-          val result   = resultOf(game)
+          val perfType     = game.perfType
+          val ratingsSente = mkRatings(sente.perfs)
+          val ratingsGote  = mkRatings(gote.perfs)
+          val result       = resultOf(game)
           perfType match {
             case PT.Checkshogi =>
-              updateRatings(ratingsW.checkshogi, ratingsB.checkshogi, result)
+              updateRatings(ratingsSente.checkshogi, ratingsGote.checkshogi, result)
             case PT.Kyotoshogi =>
-              updateRatings(ratingsW.kyotoshogi, ratingsB.kyotoshogi, result)
+              updateRatings(ratingsSente.kyotoshogi, ratingsGote.kyotoshogi, result)
             case PT.Annanshogi =>
-              updateRatings(ratingsW.annanshogi, ratingsB.annanshogi, result)
+              updateRatings(ratingsSente.annanshogi, ratingsGote.annanshogi, result)
             case PT.Chushogi =>
-              updateRatings(ratingsW.chushogi, ratingsB.chushogi, result)
+              updateRatings(ratingsSente.chushogi, ratingsGote.chushogi, result)
             case PT.Minishogi =>
-              updateRatings(ratingsW.minishogi, ratingsB.minishogi, result)
+              updateRatings(ratingsSente.minishogi, ratingsGote.minishogi, result)
             case PT.Correspondence =>
-              updateRatings(ratingsW.correspondence, ratingsB.correspondence, result)
+              updateRatings(ratingsSente.correspondence, ratingsGote.correspondence, result)
             case PT.RealTime =>
-              updateRatings(ratingsW.realTime, ratingsB.realTime, result)
+              updateRatings(ratingsSente.realTime, ratingsGote.realTime, result)
             case _ =>
           }
-          val perfsW                      = mkPerfs(ratingsW, sente -> gote, game)
-          val perfsB                      = mkPerfs(ratingsB, gote -> sente, game)
-          def intRatingLens(perfs: Perfs) = perfs(perfType).glicko.intRating
+          val perfsSente                          = mkPerfs(ratingsSente, sente -> gote, game)
+          val perfsGote                           = mkPerfs(ratingsGote, gote -> sente, game)
+          def provisionalRatingLens(perfs: Perfs) = perfs(perfType).glicko.provisional
+          def intRatingLens(perfs: Perfs)         = perfs(perfType).glicko.intRating
           val ratingDiffs = Color.Map(
-            intRatingLens(perfsW) - intRatingLens(sente.perfs),
-            intRatingLens(perfsB) - intRatingLens(gote.perfs),
+            intRatingLens(perfsSente) - intRatingLens(sente.perfs),
+            intRatingLens(perfsGote) - intRatingLens(gote.perfs),
+          )
+          val provisionals = Color.Map(
+            provisionalRatingLens(perfsSente),
+            provisionalRatingLens(perfsGote),
           )
           gameRepo.setRatingDiffs(game.id, ratingDiffs) zip
-            userRepo.setPerfs(sente, perfsW, sente.perfs) zip
-            userRepo.setPerfs(gote, perfsB, gote.perfs) zip
-            historyApi.add(sente, game, perfsW) zip
-            historyApi.add(gote, game, perfsB) zip
-            rankingApi.save(sente, perfType, perfsW(perfType)) zip
-            rankingApi.save(gote, perfType, perfsB(perfType)) inject ratingDiffs.some
+            userRepo.setPerfs(sente, perfsSente, sente.perfs) zip
+            userRepo.setPerfs(gote, perfsGote, gote.perfs) zip
+            historyApi.add(sente, game, perfsSente) zip
+            historyApi.add(gote, game, perfsGote) zip
+            rankingApi.save(sente, perfType, perfsSente(perfType)) zip
+            rankingApi.save(gote, perfType, perfsGote(perfType)) inject (
+              ratingDiffs,
+              provisionals,
+            ).some
         }
     }
 

@@ -9,6 +9,7 @@ import lila.common.Uptime
 import lila.game.Game
 import lila.game.GameRepo
 import lila.game.Pov
+import lila.game.Provisionals
 import lila.game.RatingDiffs
 import lila.game.actorApi.AbortedBy
 import lila.game.actorApi.FinishGame
@@ -159,7 +160,7 @@ final private class Finisher(
         .flatMap {
           case (senteO, goteO) => {
             val finish = FinishGame(game, senteO, goteO)
-            updateCountAndPerfs(finish) map { ratingDiffs =>
+            updateCountAndPerfs(finish) map { afterPerfDataOpt =>
               gameRepo game game.id foreach { newGame =>
                 newGame foreach proxy.setFinishedGame
                 val newFinish = finish.copy(game = newGame | game)
@@ -168,13 +169,13 @@ final private class Finisher(
                   Bus.publish(newFinish, s"userFinishGame:$userId")
                 }
               }
-              List(lila.game.Event.EndData(game, ratingDiffs))
+              List(lila.game.Event.EndData(game, afterPerfDataOpt))
             }
           }
         }
   }
 
-  private def updateCountAndPerfs(finish: FinishGame): Fu[Option[RatingDiffs]] =
+  private def updateCountAndPerfs(finish: FinishGame): Fu[Option[(RatingDiffs, Provisionals)]] =
     (!finish.isVsSelf && !finish.game.aborted) ?? {
       import cats.implicits._
       (finish.sente, finish.gote).mapN((_, _)) ?? { case (sente, gote) =>

@@ -106,6 +106,10 @@ export interface ApiEnd {
     sente: number;
     gote: number;
   };
+  provisionals?: {
+    sente: boolean;
+    gote: boolean;
+  };
   boosted: boolean;
   clock?: {
     sc: Centis;

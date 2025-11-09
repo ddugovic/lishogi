@@ -2,6 +2,7 @@ import { requestIdleCallbackWithFallback } from 'common/common';
 import { icons } from 'common/icons';
 import { modalJs } from 'common/modal';
 import notify from 'common/notification';
+import { once } from 'common/storage';
 import { wsIsReady, wsLastVersionTime, wsOnOpen } from 'common/ws';
 import * as game from 'game';
 import type { Player } from 'game/interfaces';
@@ -10,6 +11,7 @@ import { i18n, i18nFormat } from 'i18n';
 import { type KeyboardMove, ctrl as makeKeyboardMove } from 'keyboard-move';
 import { flipMetaPlayers } from 'shogi/common';
 import { makeNotation, makeNotationLine } from 'shogi/notation';
+import { rankFromRating, rankName } from 'shogi/rank';
 import { Shogiground } from 'shogiground';
 import type { Api as SgApi } from 'shogiground/api';
 import type { Config as SgConfig } from 'shogiground/config';
@@ -666,17 +668,12 @@ export default class RoundController {
     if (o.ratingDiff) {
       d.player.ratingDiff = o.ratingDiff[d.player.color];
       d.opponent.ratingDiff = o.ratingDiff[d.opponent.color];
-      if (!d.simul) {
-        modalJs({
-          content: `
-          <div class="rank-change">
-          <div class="title">
-            You ranked up!
-          </div>
-          <div class="rank-change-title">1-kyu</div>
-        </div>`,
-        });
-      }
+      if (d.player.rating)
+        this.rankChangeModal(
+          d.player.rating,
+          d.player.rating + o.ratingDiff[d.player.color],
+          o.provisionals?.[d.player.color],
+        );
     }
     if (!d.player.spectator && d.game.plies > 1)
       li.sound.play(o.winner ? (d.player.color === o.winner ? 'victory' : 'defeat') : 'draw');
@@ -691,6 +688,43 @@ export default class RoundController {
     this.onChange();
     if (d.tv) setTimeout(li.reload, 10000);
     speech.status(this);
+  };
+
+  private rankChangeModal = (oldRating: number, newRating: number, prov?: boolean): void => {
+    const d = this.data;
+
+    if (d.simul || d.player.spectator || prov) return;
+
+    const oldRank = rankFromRating(oldRating);
+    const newRank = rankFromRating(newRating);
+
+    if (oldRank.min > newRank.min) return;
+
+    if (once(`r-${d.player.id}-${newRank.enName}`)) {
+      const firstRank = d.player.provisional;
+      const congratsList = [
+        i18n('learn:awesome'),
+        i18n('learn:excellent'),
+        i18n('learn:greatJob'),
+        i18n('learn:perfect'),
+        i18n('learn:outstanding'),
+        i18n('learn:wayToGo'),
+        i18n('learn:yesYesYes'),
+      ];
+      const congrats = congratsList[Math.floor(Math.random() * congratsList.length)];
+
+      modalJs({
+        content: `
+    <div class="rank-change">
+    <span class="title">${firstRank ? i18n('rank') : i18n('youRankedUp')}</span>
+    <span class="congrats">${congrats}</span>
+    <div class="r-${newRank.enName}" data-icon="${icons.upgrade}"></div>
+    <div class="rank-change-title">
+      <span class="rank-tag r-${newRank.enName}">${rankName(newRank)}</span>
+    </div>
+  </div>`,
+      });
+    }
   };
 
   challengeRematch = (): void => {

@@ -896,6 +896,7 @@ object I18nKeys {
   val `icon` = new I18nKey("icon")
   val `online` = new I18nKey("online")
   val `offline` = new I18nKey("offline")
+  val `youRankedUp` = new I18nKey("youRankedUp")
   val `opponentLeftCounter` = new I18nKey("opponentLeftCounter")
   val `nbMoves` = new I18nKey("nbMoves")
   val `nbPlayers` = new I18nKey("nbPlayers")

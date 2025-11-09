@@ -1090,6 +1090,7 @@ declare global {
     | 'icon'
     | 'online'
     | 'offline'
+    | 'youRankedUp'
     | 'activity:activity'
     | 'activity:hostedALiveStream'
     | 'activity:signedUp'

@@ -104,7 +104,8 @@ object Event {
     override def owner   = !w
   }
 
-  case class EndData(game: Game, ratingDiff: Option[RatingDiffs]) extends Event {
+  case class EndData(game: Game, afterPerfsData: Option[(RatingDiffs, Provisionals)])
+      extends Event {
     def typ = "endData"
     def data =
       Json
@@ -122,10 +123,16 @@ object Event {
             "gp" -> goteClock.periods,
           )
         })
-        .add("ratingDiff" -> ratingDiff.map { rds =>
+        .add("ratingDiff" -> afterPerfsData.map { case (rds, _) =>
           Json.obj(
             Color.Sente.name -> rds.sente,
             Color.Gote.name  -> rds.gote,
+          )
+        })
+        .add("provisionals" -> afterPerfsData.map { case (_, ps) =>
+          Json.obj(
+            Color.Sente.name -> ps.sente,
+            Color.Gote.name  -> ps.gote,
           )
         })
         .add("boosted" -> game.boosted)
