@@ -78,6 +78,22 @@ $c-study-button: theme.$c-accent;
   }
 }
 
+.tabs-horiz {
+  .chapters,
+  .members {
+    flex: 1;
+  }
+
+  .more {
+    flex: 0;
+
+    &:hover {
+      border-bottom-color: transparent;
+      color: theme.$c-link;
+    }
+  }
+}
+
 /* reused by context menu */
 .glyph-icon::before {
   content: '⁉';
