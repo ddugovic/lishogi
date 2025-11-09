@@ -63,7 +63,8 @@ final class Cached(
         loader { _ =>
           PerfType.leaderboardable
             .map { perf =>
-              rankingApi.topPerf(perf.id, 2)
+              val nb = if (perf == PerfType.RealTime) 6 else 2
+              rankingApi.topPerf(perf.id, nb)
             }
             .sequenceFu
             .dmap(_.flatten)
