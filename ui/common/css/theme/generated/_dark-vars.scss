@@ -74,13 +74,13 @@ html {
   --c-popup: #{$c-font-clear};
   --c-premoved: #{rgba(20, 30, 85, 0.5)};
   --c-premoved-hover: #{rgba(20, 30, 85, 0.25)};
-  --c-primary: #{hsl(209deg, 73%, 52%)};
+  --c-primary: #{hsl(209deg, 79%, 56%)};
   --c-primary-clear: #{c-whiter($c-primary, 20%)};
   --c-primary-dim: #{c-blacker($c-primary, 15%)};
   --c-primary-over: #{#fff};
   --c-red: #{hsl(0deg, 60%, 50%)};
   --c-secondary: #{hsl(88deg, 62%, 37%)};
-  --c-secondary-clear: #{c-whiter($c-secondary, 20%)};
+  --c-secondary-clear: #{c-whiter($c-secondary, 25%)};
   --c-secondary-dim: #{c-blacker($c-secondary, 20%)};
   --c-secondary-dimmer: #{c-blacker($c-secondary, 40%)};
   --c-secondary-over: #{#fff};

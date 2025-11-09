@@ -21,7 +21,7 @@ html.light {
   --c-bg-metal-hover: #{color.adjust($c-bg-high, $lightness: -3%)};
   --c-bg-page: #{hsl($c-site-hue, 10%, 92%)};
   --c-bg-popup: #{$c-bg-high};
-  --c-bg-zebra: #{hsl($c-site-hue, 12%, 96.5%)};
+  --c-bg-zebra: #{hsl($c-site-hue, 12%, 95%)};
   --c-bg-zebra2: #{hsl($c-site-hue, 12%, 92%)};
   --c-blunder: #{hsl(0deg, 68%, 50%)};
   --c-body-gradient: #{hsl($c-site-hue, 12%, 84%)};
@@ -176,7 +176,7 @@ html.light {
   --c-bg-metal-hover: #{color.adjust($c-bg-high, $lightness: -3%)};
   --c-bg-page: #{hsl($c-site-hue, 10%, 92%)};
   --c-bg-popup: #{$c-bg-high};
-  --c-bg-zebra: #{hsl($c-site-hue, 12%, 96.5%)};
+  --c-bg-zebra: #{hsl($c-site-hue, 12%, 95%)};
   --c-bg-zebra2: #{hsl($c-site-hue, 12%, 92%)};
   --c-blunder: #{hsl(0deg, 68%, 50%)};
   --c-body-gradient: #{hsl($c-site-hue, 12%, 84%)};

@@ -20,7 +20,7 @@ $c-font-clearer: c-light($c-font, 89%);
 $c-shade: c-light($c-font, 30%);
 $c-font-page: $c-font-dim;
 
-$c-primary: hsl(209deg, 73%, 52%);
+$c-primary: hsl(209deg, 79%, 56%);
 $c-primary-dim: c-blacker($c-primary, 15%);
 $c-primary-clear: c-whiter($c-primary, 20%);
 $c-primary-over: #fff;
@@ -28,7 +28,7 @@ $c-primary-over: #fff;
 $c-secondary: hsl(88deg, 62%, 37%);
 $c-secondary-dim: c-blacker($c-secondary, 20%);
 $c-secondary-dimmer: c-blacker($c-secondary, 40%);
-$c-secondary-clear: c-whiter($c-secondary, 20%);
+$c-secondary-clear: c-whiter($c-secondary, 23%);
 $c-secondary-over: #fff;
 
 $c-accent: hsl(22deg, 100%, 42%);
