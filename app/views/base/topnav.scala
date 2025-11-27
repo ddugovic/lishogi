@@ -54,7 +54,7 @@ object topnav {
             // a(href := langHref(routes.Practice.index))(trans.practice()),
             a(href := langHref(routes.Coordinate.home))(trans.coordinates.coordinates()),
             a(href := langHref(routes.Study.allDefault(1)))(trans.studyMenu()),
-            // ctx.noKid option a(href := routes.Coach.all(1))(trans.coaches()),
+            ctx.noKid option a(href := routes.Coach.all(1))(trans.coaches()),
             canSeeClasMenu option a(href := routes.Clas.index)(trans.clas.lishogiClasses()),
             a(href := routes.Prismic.variantHome)(trans.variants()),
           ),

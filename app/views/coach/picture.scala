@@ -36,13 +36,13 @@ object picture {
             form3.file.image("picture"),
             form3.actions(
               a(href := routes.Coach.edit)(trans.cancel()),
-              form3.submit("Upload profile picture"),
+              form3.submit(trans.streamer.uploadPicture()),
             ),
           ),
           c.coach.hasPicture option
             st.form(action := routes.Coach.pictureDelete, cls := "delete")(
               submitButton(cls := "confirm button button-empty button-red")(
-                "Delete profile picture",
+                trans.streamer.deletePicture(),
               ),
             ),
         ),

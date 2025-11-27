@@ -54,18 +54,6 @@ window.lishogi.ready.then(() => {
     $editor.find(`.panel.${$(this).data('tab')}`).addClass('active');
     $editor.find('div.status').removeClass('saved');
   });
-  const submit = debounce(() => {
-    const form = document.querySelector('form.async') as HTMLFormElement;
-    if (!form) return;
-    window.lishogi.xhr.formToXhr(form).then(() => {
-      $editor.find('div.status').addClass('saved');
-      todo();
-    });
-  }, 1000);
-  $editor.find('input, textarea, select').on('input paste change keyup', () => {
-    $editor.find('div.status').removeClass('saved');
-    submit();
-  });
 
   $('.coach_picture form.upload input[type=file]').on('change', function () {
     $('.picture_wrap').html(spinnerHtml);
@@ -75,7 +63,13 @@ window.lishogi.ready.then(() => {
   const langInput = document.getElementById('form3-languages') as HTMLInputElement;
   const whitelistJson = langInput.getAttribute('data-all');
   const whitelist = whitelistJson ? (JSON.parse(whitelistJson) as Tagify.TagData[]) : undefined;
-  const tagify = new window.Tagify(langInput, {
+  const initialValues = langInput
+    .getAttribute('data-value')
+    ?.split(',')
+    .map(code => whitelist?.find(l => l.code == code)?.value)
+    .filter(v => !!v);
+  if (initialValues) langInput.setAttribute('value', initialValues.join(','));
+  new window.Tagify(langInput, {
     maxTags: 10,
     whitelist,
     enforceWhitelist: true,
@@ -83,19 +77,23 @@ window.lishogi.ready.then(() => {
       enabled: 1,
     },
   });
-  tagify.addTags(
-    langInput
-      .getAttribute('data-value')
-      ?.split(',')
-      .map(code => whitelist?.find(l => l.code == code))
-      .filter(v => !!v) as Tagify.TagData[],
-  );
-  const a: any = langInput
-    .getAttribute('data-value')!
-    .split(',')
-    .map(code => tagify.settings.whitelist.find(l => (l as any).code == code)!)
-    .filter(x => x);
-  tagify.addTags(a);
+
+  const submit = debounce(() => {
+    const form = document.querySelector('form.async') as HTMLFormElement;
+    if (!form) return;
+    window.lishogi.xhr.formToXhr(form).then(() => {
+      $editor.find('div.status').addClass('saved');
+      todo();
+    });
+  }, 1200);
+
+  setTimeout(() => {
+    $editor.find('input, textarea, select').on('input paste change keyup', () => {
+      const $statusDiv = $editor.find('div.status');
+      $statusDiv.removeClass('saved');
+      submit();
+    });
+  }, 0);
 
   todo();
 });

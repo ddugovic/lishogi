@@ -23,12 +23,15 @@ object invite {
         p(c.desc),
         br,
         br,
-        p("You have been invited by ", showUsernameById(invite.created.by.some), "."),
+        trans.clas.invitedToXByY(
+          c.name,
+          showUsernameById(invite.created.by.some, withOnline = false),
+        ),
         br,
         br,
         invite.accepted.map {
-          case true  => flashMessage(cls := "flash-success")("You have accepted this invitation.")
-          case false => flashMessage(cls := "flash-warning")("You have declined this invitation.")
+          case true  => flashMessage(cls := "flash-success")(trans.success.txt())
+          case false => flashMessage(cls := "flash-warning")(trans.decline.txt())
         },
         invite.accepted.fold(true)(false.==) option
           postForm(cls := "form3", action := routes.Clas.invitationAccept(invite._id.value))(

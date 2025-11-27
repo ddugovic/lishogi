@@ -2,6 +2,7 @@ package views.html
 package coach
 
 import controllers.routes
+import play.api.i18n.Lang
 
 import lila.api.Context
 import lila.app.templating.Environment._
@@ -20,7 +21,7 @@ object widget {
       c.user.realNameOrUsername,
     )
 
-  def pic(c: lila.coach.Coach.WithUser, size: Int) =
+  def pic(c: lila.coach.Coach.WithUser, size: Int)(implicit lang: Lang) =
     c.coach.picturePath
       .map { path =>
         img(
@@ -28,7 +29,7 @@ object widget {
           height := size,
           cls    := "picture",
           src    := dbImageUrl(path.value),
-          alt    := s"${c.user.titleUsername} Lishogi coach picture",
+          alt    := s"${c.user.titleUsername} - ${lishogiCoach()}",
         )
       }
       .getOrElse {
@@ -98,9 +99,8 @@ object widget {
             tr(cls := "available")(
               th(availability()),
               td(
-                if (c.coach.available.value)
-                  span(cls := "text", dataIcon := Icons.correct)(accepting())
-                else span(cls := "text", dataIcon := Icons.cancel)(notAccepting()),
+                if (c.coach.available.value) span(accepting())
+                else span(notAccepting()),
               ),
             ),
             c.user.seenAt.map { seen =>

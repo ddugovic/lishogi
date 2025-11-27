@@ -23,12 +23,11 @@ object index {
       ctx: Context,
   ) =
     views.html.base.layout(
-      title = lishogiCoaches.txt(),
+      title = trans.coaches.txt(),
       moreCss = cssTag("misc.coach"),
       moreJs = infiniteScrollTag,
-      // maybe someday - withHrefLangs = lila.i18n.LangList.All.some
     ) {
-      val langSelections = ("all", "All languages") :: lila.i18n.I18nLangPicker
+      val langSelections = ("all", allLanguages.txt()) :: lila.i18n.I18nLangPicker
         .sortFor(LangList.popular.filter(l => langCodes(l.code)), ctx.req)
         .map { l =>
           l.code -> LangList.name(l)
@@ -39,15 +38,20 @@ object index {
             becomeACoach(),
             br,
             sendApplication(contactEmailLink),
+            br,
+            br,
+            lishogiOnlyFeatures(),
+            br,
+            lishogiNoFees(),
           ),
         ),
         div(cls := "coach-list__main coach-main box")(
           div(cls := "box__top")(
-            h1(lishogiCoaches()),
+            h1(trans.coaches()),
             div(cls := "box__top__actions")(
               views.html.base.bits.mselect(
                 "coach-lang",
-                lang.fold("All languages")(LangList.name),
+                lang.fold(allLanguages.txt())(LangList.name),
                 langSelections
                   .map { case (code, name) =>
                     a(

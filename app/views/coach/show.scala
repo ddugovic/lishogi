@@ -50,7 +50,7 @@ object show {
               if (c.coach.isListed) p("This page is now public.")
               else "This page is not public yet. ",
               a(href := routes.Coach.edit, cls := "text", dataIcon := Icons.pencil)(
-                "Edit my coach profile",
+                editMyCoachProfile(),
               ),
             )
           else
