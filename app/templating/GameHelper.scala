@@ -111,6 +111,25 @@ trait GameHelper {
   def ratingString(p: Player) =
     p.rating.map(r => s" ($r${if (p.provisional) "?" else ""}) ")
 
+  def showBasePlayer(
+      player: Player,
+      withRank: Boolean = true,
+      withFlag: Boolean = true,
+      withLink: Boolean = false,
+  )(implicit lang: Lang): Tag =
+    showPlayer(
+      player,
+      withRank = withRank,
+      withRating = false,
+      withDiff = false,
+      withOnline = false,
+      withPowerTip = false,
+      withFlag = withFlag,
+      withLink = withLink,
+      withModLink = false,
+      withBerserk = false,
+    )
+
   def showPlayer(
       player: Player,
       withRank: Boolean = true,

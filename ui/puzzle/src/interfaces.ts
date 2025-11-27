@@ -181,12 +181,14 @@ export interface PuzzleGame {
 }
 
 export interface PuzzlePlayer {
-  userId: string;
-  name: string;
+  color: Color;
+  userId?: string;
+  name?: string;
   title?: string;
+  rating?: number;
   ai?: number;
   aiCode?: EngineCode;
-  color: Color;
+  countryCode?: string;
 }
 
 interface PuzzleUser {

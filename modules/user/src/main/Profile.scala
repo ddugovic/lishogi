@@ -17,7 +17,7 @@ case class Profile(
 
   def countryInfo = country flatMap Countries.info
 
-  def flagCode = countryInfo.map(_.code)
+  def countryCode = countryInfo.map(_.code)
 
   def nonEmptyLocation = ne(location)
 

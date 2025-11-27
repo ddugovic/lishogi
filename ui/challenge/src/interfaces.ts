@@ -24,6 +24,7 @@ export interface ChallengeUser {
   title?: string;
   online?: boolean;
   patron?: boolean;
+  countryCode?: string;
   lag?: number;
 }
 

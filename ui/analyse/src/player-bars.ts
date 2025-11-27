@@ -1,9 +1,9 @@
 import { defined } from 'common/common';
 import * as game from 'game';
-import { i18n, i18nFormat } from 'i18n';
 import { colorName } from 'shogi/color-name';
 import { engineFromName, engineNameFromCode } from 'shogi/engine-name';
-import { extractRank, type Rank, rankFromRating, rankTag } from 'shogi/rank';
+import { extractRank, type Rank, rankFromRating } from 'shogi/rank';
+import { usernameVNodes } from 'shogi/username';
 import { COLORS } from 'shogiops/constants';
 import { h, type VNode } from 'snabbdom';
 import { ops as treeOps } from 'tree';
@@ -15,19 +15,20 @@ interface PlayerBarConfig {
   color: Color;
   name: string;
   rank?: Rank;
-  engine?: string;
+  engineLvl?: number;
   bot?: boolean;
-  anon?: boolean;
 }
 
 export function renderPlayerBars(ctrl: AnalyseCtrl): VNode[] | undefined {
-  if (ctrl.embed) return;
+  if (ctrl.embed || ctrl.forecast) return;
 
   const sente = findPlayer(ctrl, 'sente');
   const gote = findPlayer(ctrl, 'gote');
 
+  const noNames = ['', '?'];
   if (
-    ((sente.name === '?' && gote.name === '?') || (sente.anon && gote.anon)) &&
+    noNames.includes(sente.name) &&
+    noNames.includes(gote.name) &&
     !treeOps.findInMainline(ctrl.tree.root, n => {
       return defined(n.clock) && !!n.id;
     })
@@ -50,12 +51,12 @@ function renderPlayer(ctrl: AnalyseCtrl, player: PlayerBarConfig, top: boolean):
             title: colorName(player.color, ctrl.isHandicap()),
           },
         },
-        [
-          player.rank ? rankTag(player.rank) : undefined,
-          player.engine ? h('span.engine-lvl', `${player.engine} `) : undefined,
-          player.bot ? h('span.bot-tag', 'BOT ') : undefined,
-          h(`span.name${player.anon ? '.anon' : ''}`, player.name),
-        ],
+        usernameVNodes({
+          username: player.name,
+          bot: player.bot,
+          rank: player.rank,
+          engineLvl: player.engineLvl,
+        }),
       ),
     ),
     h(
@@ -78,17 +79,17 @@ function findPlayer(ctrl: AnalyseCtrl, color: Color): PlayerBarConfig {
       return {
         color,
         name: engineNameFromCode(engine.code),
-        engine: engine.level ? i18nFormat('levelX', engine.level) : undefined,
+        engineLvl: engine.level,
       };
     } else {
-      const rank = extractRank(name);
       const isBot = name?.toLowerCase().startsWith('bot ');
-      const nameWithoutRank =
+      const rank = !isBot ? extractRank(name) : undefined;
+      const nameWithoutPrefix =
         (rank || isBot) && name ? name.slice(name.indexOf(' ') + 1 || 0) : name;
-      if (nameWithoutRank)
+      if (nameWithoutPrefix)
         return {
           color,
-          name: nameWithoutRank,
+          name: nameWithoutPrefix,
           rank: rank,
           bot: isBot,
         };
@@ -100,27 +101,24 @@ function findPlayer(ctrl: AnalyseCtrl, color: Color): PlayerBarConfig {
     }
   } else {
     const player = game.getPlayer(ctrl.data, color);
-    console.log('findPlayer', player);
-    const perf = ctrl.data.game.perf;
-    const rating = !player.user?.perfs[perf].prov ? player.rating : undefined;
+    const rank = !player.provisional && player.rating ? rankFromRating(player.rating) : undefined;
     if (player.user)
       return {
         color,
         name: player.user.username,
-        rank: rating ? rankFromRating(rating) : undefined,
+        rank: rank,
         bot: player.user.title === 'BOT',
       };
     else if (player.ai)
       return {
         color,
         name: engineNameFromCode(player.aiCode),
-        engine: i18nFormat('levelX', player.ai),
+        engineLvl: player.ai,
       };
     else if (player.name || !ctrl.synthetic)
       return {
         color,
-        name: player.name || i18n('anonymousUser'),
-        anon: !player.name,
+        name: player.name,
       };
     else
       return {

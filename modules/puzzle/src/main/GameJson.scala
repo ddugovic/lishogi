@@ -61,17 +61,18 @@ final private class GameJson(
   }
 
   private def playersJson(game: Game) = JsArray(game.players.map { p =>
-    val userId = p.userId | "anon"
-    val user   = lightUserApi.syncFallback(userId)
+    val userOpt = p.userId.map(lightUserApi.syncFallback)
     Json
       .obj(
-        "userId" -> userId,
-        "name"   -> s"${user.name}${p.rating.??(r => s" ($r)")}",
-        "color"  -> p.color.name,
+        "color" -> p.color.name,
       )
-      .add("title" -> user.title)
+      .add("userId" -> p.userId)
+      .add("name" -> userOpt.map(_.name))
+      .add("title" -> userOpt.flatMap(_.title))
+      .add("rating" -> p.stableRating)
       .add("ai" -> p.aiLevel)
       .add("aiCode" -> p.aiCode)
+      .add("countryCode" -> userOpt.flatMap(_.countryCode))
   })
 
 }

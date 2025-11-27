@@ -93,6 +93,7 @@ object bits {
     div(cls := "mini-player user-link")(
       showPlayer(
         player,
+        withRank = true,
         withOnline = false,
         withLink = false,
         withPowerTip = false,

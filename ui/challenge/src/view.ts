@@ -2,6 +2,8 @@ import { icons } from 'common/icons';
 import spinner from 'common/spinner';
 import { i18n, i18nPluralSame } from 'i18n';
 import { i18nVariant } from 'i18n/variant';
+import { rankFromRating } from 'shogi/rank';
+import { usernameVNodes } from 'shogi/username';
 import { h, type VNode } from 'snabbdom';
 import type {
   Challenge,
@@ -154,7 +156,6 @@ function timeControl(c: TimeControl): string {
 
 function renderUser(u?: ChallengeUser): VNode {
   if (!u) return h('span', 'Open challenge');
-  const rating = u.rating + (u.provisional ? '?' : '');
   return h(
     'a.ulpt.user-link',
     {
@@ -163,11 +164,12 @@ function renderUser(u?: ChallengeUser): VNode {
     },
     [
       h(`i.line${u.patron ? '.patron' : ''}`),
-      h('name', [
-        u.title &&
-          h('span.title', u.title == 'BOT' ? { attrs: { 'data-bot': true } } : {}, `${u.title} `),
-        `${u.name} (${rating}) `,
-      ]),
+      ...usernameVNodes({
+        username: u.name,
+        rank: !u.provisional ? rankFromRating(u.rating) : undefined,
+        bot: u.title === 'BOT',
+        countryCode: u.countryCode,
+      }),
       h(
         'signal',
         u.lag === undefined

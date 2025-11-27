@@ -621,6 +621,7 @@ object JsonView {
           "magicScore" -> player.magicScore,
         )
         .add("title" -> light.title)
+        .add("countryCode" -> light.countryCode)
         .add("provisional" -> player.provisional)
         .add("kicked" -> player.kicked)
         .add("withdraw" -> player.withdraw)

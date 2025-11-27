@@ -117,7 +117,6 @@ final class StudyMultiBoard(
       Writes[ChapterPreview.Player] { p =>
         Json
           .obj("name" -> p.name)
-          .add("title" -> p.title)
           .add("rating" -> p.rating)
       }
 
@@ -145,7 +144,7 @@ object StudyMultiBoard {
 
   object ChapterPreview {
 
-    case class Player(name: String, title: Option[String], rating: Option[Int])
+    case class Player(name: String, rating: Option[Int])
 
     type Players = Color.Map[Player]
 
@@ -154,8 +153,8 @@ object StudyMultiBoard {
         sName <- tags(_.Sente)
         gName <- tags(_.Gote)
       } yield Color.Map(
-        sente = Player(sName, tags(_.SenteTitle), tags(_.SenteElo) flatMap (_.toIntOption)),
-        gote = Player(gName, tags(_.GoteTitle), tags(_.GoteElo) flatMap (_.toIntOption)),
+        sente = Player(sName, tags(_.SenteElo) flatMap (_.toIntOption)),
+        gote = Player(gName, tags(_.GoteElo) flatMap (_.toIntOption)),
       )
   }
 }

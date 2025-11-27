@@ -69,7 +69,7 @@ export function engineFromName(input: string): { code: EngineCode; level?: numbe
   const entry = Object.entries(ENGINE_NAME_TO_CODE).find(([name]) => lower.includes(name));
   if (!entry) return;
 
-  const [, code] = entry;
+  const [_, code] = entry;
 
   const m = input.match(/(?:level|レベル)\s*([0-9]+)/i);
   const level = m ? Number(m[1]) : undefined;

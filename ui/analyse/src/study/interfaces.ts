@@ -200,7 +200,7 @@ export type StudyMember = {
   user: {
     id: string;
     name: string;
-    title?: string;
+    countryCode?: string;
   };
   role: string;
 };
@@ -255,7 +255,6 @@ export interface ChapterPreview {
 
 export interface ChapterPreviewPlayer {
   name: string;
-  title?: string;
   rating?: number;
 }
 

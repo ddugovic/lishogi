@@ -3,7 +3,8 @@ import { getPerfIcon } from 'common/perf-icons';
 import { bind } from 'common/snabbdom';
 import { i18n, i18nPluralSame } from 'i18n';
 import { i18nPerf } from 'i18n/perf';
-import { rankFromRating, rankTag } from 'shogi/rank';
+import { rankFromRating } from 'shogi/rank';
+import { usernameVNodes } from 'shogi/username';
 import { h, type VNode } from 'snabbdom';
 import type LobbyController from '../../ctrl';
 import * as hookRepo from '../../hook-repo';
@@ -49,7 +50,11 @@ function renderHookOrSeek(hs: Hook | Seek, isAnon: boolean) {
                 veryLong: username.length > 18,
               },
             },
-            [rank ? rankTag(rank) : undefined, username],
+            usernameVNodes({
+              username,
+              rank,
+              countryCode: hs.cc,
+            }),
           )
         : h('span.anon', i18n('anonymousUser')),
       (hs.rating ? hs.rating : '-') + (provisionalRating ? '?' : ''),

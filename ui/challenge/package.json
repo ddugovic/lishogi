@@ -12,6 +12,7 @@
     "breakpoint-sass": "catalog:",
     "common": "workspace:*",
     "i18n": "workspace:*",
+    "shogi": "workspace:*",
     "snabbdom": "catalog:"
   }
 }

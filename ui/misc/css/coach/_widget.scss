@@ -8,7 +8,6 @@
 .coach-widget {
   position: relative;
   display: flex;
-  padding-bottom: 1rem;
 
   @include mixins.transition;
 
@@ -84,10 +83,13 @@
       }
     }
 
-    .flag {
-      margin-left: 0.5em;
-      vertical-align: text-bottom;
-      width: 32px;
+    .location {
+      margin-right: 0.5em;
+    }
+
+    img.flag {
+      height: 1.2em;
+      margin-left: 0;
     }
 
     .available {

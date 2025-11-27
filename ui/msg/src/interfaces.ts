@@ -16,6 +16,7 @@ export interface User {
   title?: string;
   patron: boolean;
   online: boolean;
+  countryCode?: string;
 }
 interface Me extends User {
   kid: boolean;

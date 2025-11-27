@@ -29,6 +29,7 @@ final class JsonView(
         )
         .add("provisional" -> r.rating.provisional)
         .add("patron" -> light.??(_.isPatron))
+        .add("countryCode" -> light.map(_.countryCode))
         .add("online" -> isOnline(r.id))
         .add("lag" -> UserLagCache.getLagRating(r.id))
     }

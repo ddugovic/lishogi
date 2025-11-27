@@ -143,7 +143,7 @@ trait UserHelper {
       isPatron = user.isPatron,
       isBot = user.isBot,
       rating = rating,
-      flag = user.flagCode,
+      flag = user.countryCode,
       withOnline = withOnline,
       withPowerTip = withPowerTip,
       withFlag = withFlag,
@@ -217,7 +217,7 @@ trait UserHelper {
     }
 
   def describeUser(user: User)(implicit lang: Lang) = {
-    val name      = user.titleUsername
+    val name      = user.username
     val nbGames   = user.count.game
     val createdAt = showEnglishDate(user.createdAt)
     val currentRating = user.perfs.bestPerf ?? { case (pt, perf) =>
@@ -227,7 +227,7 @@ trait UserHelper {
   }
 
   val lineIcon: Frag = i(cls := "line")
-  def patronIcon(implicit lang: Lang): Frag =
+  private def patronIcon(implicit lang: Lang): Frag =
     i(cls := "line patron", title := trans.patron.lishogiPatron.txt())
   val moderatorIcon: Frag = i(cls := "line moderator", title := "Lishogi Mod")
   private def lineIcon(patron: Boolean)(implicit lang: Lang): Frag =

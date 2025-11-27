@@ -140,10 +140,7 @@ function makePreview(study: StudyCtrl) {
 }
 
 function makePlayer(player: ChapterPreviewPlayer): VNode {
-  return h('div.player', [
-    player.title ? `${player.title} ${player.name}` : player.name,
-    player.rating && h('span', `${player.rating}`),
-  ]);
+  return h('div.player', [player.name, player.rating && h('span', `${player.rating}`)]);
 }
 
 function usiToLastMove(lm?: string): Key[] | undefined {

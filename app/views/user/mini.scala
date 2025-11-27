@@ -85,7 +85,7 @@ object mini {
             i(dataIcon := pov.game.perfType.icon, cls := "text")(
               pov.game.clock.map(_.config.show),
             ),
-            playerText(pov.opponent, withRank = true),
+            showBasePlayer(pov.opponent),
           ),
         )
       },

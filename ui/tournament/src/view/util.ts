@@ -3,7 +3,8 @@ import { initOneWithState } from 'common/mini-board';
 import { numberFormat } from 'common/number';
 import { bind, dataIcon, type MaybeVNode, type MaybeVNodes, proverb } from 'common/snabbdom';
 import { i18n } from 'i18n';
-import { rankFromRating, rankTag } from 'shogi/rank';
+import { rankFromRating } from 'shogi/rank';
+import { usernameVNodes } from 'shogi/username';
 import { h, type VNode } from 'snabbdom';
 import type TournamentController from '../ctrl';
 import type { Arrangement, BasePlayer, Featured } from '../interfaces';
@@ -36,11 +37,13 @@ export function ratio2percent(r: number): string {
 }
 
 export function playerName(
-  p: { name: string; rating?: number; provisional?: boolean } | undefined,
+  p: { name: string; rating?: number; provisional?: boolean; countryCode?: string } | undefined,
 ): MaybeVNodes {
-  return p?.rating && !p.provisional
-    ? [rankTag(rankFromRating(p.rating)), p.name]
-    : [p?.name || '?'];
+  return usernameVNodes({
+    username: p?.name || '?',
+    rank: p?.rating && !p.provisional ? rankFromRating(p.rating) : undefined,
+    countryCode: p?.countryCode,
+  });
 }
 
 export function player(
@@ -54,7 +57,7 @@ export function player(
   },
 ): VNode {
   return h(
-    `a.ulpt.user-link${((p.title || '') + p.name).length > 15 ? '.long' : ''}${config.status?.online ? '.online' : ''}`,
+    `a.ulpt.user-link${p.name.length > 15 ? '.long' : ''}${config.status?.online ? '.online' : ''}`,
     {
       attrs: config.asLink ? { href: `/@/${p.name}` } : { 'data-href': `/@/${p.name}` },
       hook: {

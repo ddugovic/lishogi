@@ -127,7 +127,7 @@ object side {
         userTv.map { u =>
           st.section(cls := "game__tv")(
             h2(cls := "top user-tv text", dataUserTv := u.id, dataIcon := Icons.television)(
-              u.titleUsername,
+              u.username,
             ),
           )
         },

@@ -231,7 +231,6 @@ export interface DuelPlayer {
   n: string; // name
   r: number; // rating
   k: number; // rank (tournament)
-  t?: string; // title
 }
 
 export interface DuelTeams {

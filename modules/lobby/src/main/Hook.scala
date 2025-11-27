@@ -79,6 +79,7 @@ case class Hook(
       .add("ra" -> realMode.rated.option(1))
       .add("rr" -> (ratingRange != RatingRange.default.toString).option(ratingRange))
       .add("c" -> shogi.Color.fromName(color).map(_.name))
+      .add("cc" -> user.map(_.countryCode))
 
 }
 

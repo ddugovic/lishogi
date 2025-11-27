@@ -12,6 +12,7 @@ private[lobby] case class LobbyUser(
     bot: Boolean,
     perfMap: LobbyUser.PerfMap,
     blocking: Set[User.ID],
+    countryCode: Option[String],
 ) {
 
   def perfAt(pt: PerfType): LobbyPerf = perfMap.get(pt.key) | LobbyPerf.default
@@ -31,6 +32,7 @@ private[lobby] object LobbyUser {
       bot = user.isBot,
       perfMap = perfMapOf(user.perfs),
       blocking = blocking,
+      countryCode = user.countryCode,
     )
 
   private def perfMapOf(perfs: lila.user.Perfs): PerfMap =

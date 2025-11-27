@@ -89,6 +89,7 @@ final class JsonView(
           .add("gameId" -> simul.hostGameId)
           .add("title" -> host.title)
           .add("patron" -> host.isPatron)
+          .add("countryCode" -> host.countryCode)
       },
       "name"       -> simul.name,
       "variants"   -> simul.variants.map(_.key),
@@ -110,6 +111,7 @@ final class JsonView(
         .add("title" -> light.map(_.title))
         .add("provisional" -> ~player.provisional)
         .add("patron" -> light.??(_.isPatron))
+        .add("countryCode" -> light.??(_.countryCode))
     }
 
   private def applicantJson(app: SimulApplicant): Fu[JsObject] =

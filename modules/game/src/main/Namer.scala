@@ -43,7 +43,7 @@ object Namer {
   ): String =
     player.engineConfig.fold(
       user.fold(player.name | trans.anonymousUser.txt()) { u =>
-        if (u.isBot) s"${u.title} ${u.name}"
+        if (u.isBot) s"${lila.user.Title.BOT} ${u.name}"
         else
           player.stableRating.ifTrue(withRank).fold(u.name) { r =>
             s"${lila.rating.Rank.fromRating(r).trans} ${u.name}"

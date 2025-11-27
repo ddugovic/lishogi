@@ -4,6 +4,8 @@ import { bind, dataIcon } from 'common/snabbdom';
 import * as game from 'game';
 import { i18n } from 'i18n';
 import { engineNameFromCode } from 'shogi/engine-name';
+import { rankFromRating } from 'shogi/rank';
+import { usernameVNodes } from 'shogi/username';
 import { h, thunk, type VNode, type VNodeData } from 'snabbdom';
 import type AnalyseCtrl from './ctrl';
 import { findTag } from './study/study-chapters';
@@ -16,29 +18,23 @@ interface Advice {
   symbol: string;
 }
 
-function renderRatingDiff(rd: number | undefined): VNode | undefined {
-  if (rd === 0) return h('span', '±0');
-  if (rd && rd > 0) return h('good', `+${rd}`);
-  if (rd && rd < 0) return h('bad', `−${-rd}`);
-  return;
-}
-
 function renderPlayer(ctrl: AnalyseCtrl, color: Color): VNode {
   const p = game.getPlayer(ctrl.data, color);
-  if (p.user)
-    return h(
-      'a.user-link.ulpt',
-      {
-        attrs: { href: `/@/${p.user.username}` },
-      },
-      [p.user.username, ' ', renderRatingDiff(p.ratingDiff)],
-    );
   return h(
-    'span',
-    p.name ||
-      (p.ai && engineNameFromCode(p.aiCode, p.ai)) ||
-      (ctrl.study && findTag(ctrl.study.data.chapter.tags, color)) ||
-      h('span.anon', i18n('anonymousUser')),
+    'a.user-link.ulpt',
+    {
+      attrs: p.user ? { href: `/@/${p.user.username}` } : undefined,
+    },
+    usernameVNodes({
+      username: p.aiCode
+        ? engineNameFromCode(p.aiCode)
+        : p.user?.username ||
+          p.name ||
+          (ctrl.study && findTag(ctrl.study.data.chapter.tags, color)),
+      rank: !p.provisional && p.rating ? rankFromRating(p.rating) : undefined,
+      bot: p.user?.title === 'BOT',
+      engineLvl: p.ai,
+    }),
   );
 }
 

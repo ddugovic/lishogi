@@ -180,7 +180,7 @@ export function view(ctrl: StudyCtrl): VNode {
       {
         attrs: { 'data-href': `/@/${u.name}` },
       },
-      (u.title ? `${u.title} ` : '') + u.name,
+      u.name,
     );
   }
 

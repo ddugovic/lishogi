@@ -100,7 +100,7 @@ export interface Player {
   offeringPause?: boolean;
   offeringResume?: boolean;
   sealedUsi?: Usi; // only for the player who played it
-  ai: number | null;
+  ai?: number;
   aiCode?: EngineCode;
   onGame: boolean;
   gone: number | boolean;
@@ -170,11 +170,9 @@ interface PlayerUser {
   username: string;
   patron?: boolean;
   title?: string;
+  countryCode?: string;
   perfs: {
     [key: string]: Perf;
-  };
-  profile?: {
-    country: string;
   };
 }
 

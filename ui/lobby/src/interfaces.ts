@@ -25,6 +25,7 @@ export interface Hook {
   ra?: number; // rated
   rr?: string; // rating range
   c?: Color;
+  cc?: string; // coutnry code
   variant: VariantKey; // default set in hook-repo
   disabled?: boolean;
   action: Action; // set in hook-repo
@@ -38,6 +39,7 @@ export interface Seek {
   perf: Perf;
   rr?: string;
   color?: Color;
+  cc?: string; // coutnry code
   days?: number;
   provisional?: boolean;
   variant: VariantKey; // default set in seek-repo
@@ -72,9 +74,12 @@ export interface Game {
   opponent: {
     id?: string;
     username?: string;
+    countryCode?: string;
     rating?: number;
+    prov?: boolean;
     ai?: number;
     aiCode?: EngineCode;
+    isBot?: boolean;
   };
   isMyTurn: boolean;
   secondsLeft?: number;

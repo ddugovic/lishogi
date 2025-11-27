@@ -3,15 +3,10 @@ import { numberFormat } from 'common/number';
 import { dataIcon, type MaybeVNode, onInsert } from 'common/snabbdom';
 import { i18n, i18nVdom, i18nVdomPlural } from 'i18n';
 import { engineNameFromCode } from 'shogi/engine-name';
+import { rankFromRating } from 'shogi/rank';
+import { usernameVNodes } from 'shogi/username';
 import { h, type VNode } from 'snabbdom';
-import type {
-  Controller,
-  Puzzle,
-  PuzzleDifficulty,
-  PuzzleGame,
-  PuzzlePlayer,
-  ThemeKey,
-} from '../interfaces';
+import type { Controller, Puzzle, PuzzleDifficulty, PuzzleGame, ThemeKey } from '../interfaces';
 import { i18nThemes } from './theme';
 
 export function puzzleBox(ctrl: Controller): VNode {
@@ -124,29 +119,25 @@ function gameInfos(ctrl: Controller, game: PuzzleGame, puzzle: Puzzle): VNode {
           game.players?.map(p =>
             h(
               `div.player.color-icon.is.text.${p.color}`,
-              p.ai
-                ? engineNameFromCode(p.aiCode, p.ai)
-                : p.userId === 'anon'
-                  ? h('span.anon', i18n('anonymousUser'))
-                  : p.userId
-                    ? h(
-                        'a.user-link.ulpt',
-                        {
-                          attrs: { href: `/@/${p.userId}` },
-                        },
-                        playerName(p),
-                      )
-                    : p.name,
+              h(
+                `${p.userId ? 'a' : 'span'}.user-link.ulpt`,
+                {
+                  attrs: p.userId ? { href: `/@/${p.userId}` } : undefined,
+                },
+                usernameVNodes({
+                  username: p.aiCode ? engineNameFromCode(p.aiCode) : p.name,
+                  rank: p.rating ? rankFromRating(p.rating) : undefined,
+                  bot: p.title === 'BOT',
+                  engineLvl: p.ai,
+                  countryCode: p.countryCode,
+                }),
+              ),
             ),
           ),
         ),
       ]),
     ],
   );
-}
-
-function playerName(p: PuzzlePlayer) {
-  return p.title && p.title != 'BOT' ? [h('span.title', p.title), ` ${p.name}`] : p.name;
 }
 
 export function userBox(ctrl: Controller): VNode {

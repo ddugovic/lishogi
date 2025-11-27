@@ -74,7 +74,7 @@ case class User(
 
   def countryInfo = profileOrDefault.countryInfo
 
-  def flagCode = profile.flatMap(_.flagCode)
+  def countryCode = profile.flatMap(_.countryCode)
 
   def hasGames = count.game > 0
 

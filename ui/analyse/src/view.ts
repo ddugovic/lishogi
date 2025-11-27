@@ -361,7 +361,7 @@ export default function (ctrl: AnalyseCtrl): VNode {
   const gamebookPlay = ctrl.gamebookPlay();
   const gamebookPlayView = gamebookPlay && gbPlay.render(gamebookPlay);
   const gamebookEditView = gbEdit.running(ctrl) ? gbEdit.render(ctrl) : undefined;
-  const playerBars = !ctrl.embed && !ctrl.forecast ? renderPlayerBars(ctrl) : undefined;
+  const playerBars = renderPlayerBars(ctrl);
   const gaugeOn = ctrl.showEvalGauge();
   const needsInnerCoords = !!playerBars;
 

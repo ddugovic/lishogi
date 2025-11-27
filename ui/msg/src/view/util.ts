@@ -1,3 +1,5 @@
+import type { MaybeVNodes } from 'common/snabbdom';
+import { usernameVNodes } from 'shogi/username';
 import { h, type VNode } from 'snabbdom';
 import type { User } from '../interfaces';
 
@@ -10,16 +12,14 @@ export function userIcon(user: User, cls: string): VNode {
         offline: !user.online,
       },
     },
-    [h(`i.line${user.patron ? '.patron' : ''}`)],
+    [h(`i.line${user.patron ? '.patron' : ''}${user.id === 'lishogi' ? '.moderator' : ''}`)],
   );
 }
 
-export function userName(user: User): Array<string | VNode> {
-  return user.title
-    ? [
-        h('span.title', user.title == 'BOT' ? { attrs: { 'data-bot': true } } : {}, user.title),
-        ' ',
-        user.name,
-      ]
-    : [user.name];
+export function userName(user: User): MaybeVNodes {
+  return usernameVNodes({
+    username: user.name,
+    bot: user.title === 'BOT',
+    countryCode: user.countryCode,
+  });
 }

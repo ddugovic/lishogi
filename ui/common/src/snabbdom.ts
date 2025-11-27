@@ -1,5 +1,5 @@
 import { type Attrs, type Hooks, h, type VNode } from 'snabbdom';
-import { assetUrl } from './assets';
+import { flagUrl } from './assets';
 import { useJapanese } from './common';
 
 export type MaybeVNode = VNode | string | null | undefined;
@@ -64,7 +64,7 @@ export function proverb(p: Proverb): VNode {
 export function flagImage(countryCode: string): VNode {
   return h('img.flag', {
     attrs: {
-      src: assetUrl(`vendors/country-flag-icons/3x2/${countryCode.toUpperCase()}.svg`),
+      src: flagUrl(countryCode),
     },
   });
 }

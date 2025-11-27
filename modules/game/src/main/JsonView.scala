@@ -40,7 +40,8 @@ final class JsonView(rematches: Rematches) {
       .add("isProMode" -> game.isProMode)
       .add("illegalUsi" -> game.illegalUsi.map(_.usi))
 
-  def ownerPreview(pov: Pov)(lightUserSync: LightUser.GetterSync) =
+  def ownerPreview(pov: Pov)(lightUserSync: LightUser.GetterSync) = {
+    val luOpponent = pov.opponent.userId flatMap lightUserSync
     Json
       .obj(
         "fullId"   -> pov.fullId,
@@ -61,20 +62,23 @@ final class JsonView(rematches: Rematches) {
           .obj(
             "id" -> pov.opponent.userId,
             "username" -> lila.game.Namer
-              .playerTextBlocking(pov.opponent, withRank = false)(
-                lightUserSync,
+              .playerTextUser(pov.opponent, luOpponent, withRank = false)(
                 lila.i18n.defaultLang,
               ),
           )
+          .add("countryCode" -> luOpponent.map(_.countryCode))
           .add("rating" -> pov.opponent.rating)
+          .add("prov" -> pov.opponent.provisional)
           .add("ai" -> pov.opponent.aiLevel)
-          .add("aiCode" -> pov.opponent.aiCode),
+          .add("aiCode" -> pov.opponent.aiCode)
+          .add("isBot" -> luOpponent.map(_.isBot)),
         "isMyTurn" -> pov.isMyTurn,
       )
       .add("secondsLeft" -> pov.remainingSeconds)
       .add("tournamentId" -> pov.game.tournamentId)
       .add("isProMode" -> pov.game.isProMode)
       .add("winner" -> pov.game.winnerColor)
+  }
 }
 
 object JsonView {

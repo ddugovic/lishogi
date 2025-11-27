@@ -37,8 +37,7 @@ export default function (opts: ChallengeOpts, data: ChallengeData, redraw: () =>
 
   function showUser(user: ChallengeUser) {
     const rating = user.rating + (user.provisional ? '?' : '');
-    const fullName = (user.title ? `${user.title} ` : '') + user.name;
-    return `${fullName} (${rating})`;
+    return `${user.name} (${rating})`;
   }
 
   update(data);

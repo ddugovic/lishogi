@@ -1,4 +1,4 @@
-import { loadCssPath, loadVendorScript } from 'common/assets';
+import { flagUrl, loadCssPath, loadVendorScript } from 'common/assets';
 import { spinnerHtml } from 'common/spinner';
 import { pubsub } from './pubsub';
 import { json } from './xhr';
@@ -55,7 +55,13 @@ export function userAutocomplete($input: JQuery, opts: UserCompleteOpts): Promis
             pending: spinnerHtml,
             suggestion: (o: any) => {
               const tag = opts.tag || 'a';
-              return `<${tag} class="ulpt user-link${o.online ? ' online' : ''}" ${tag === 'a' ? '' : 'data-'}href="/@/${o.name}"><i class="line${o.patron ? ' patron' : ''}"></i>${o.title ? `<span class="title">${o.title}</span>&nbsp;` : ''}${o.name}</${tag}>`;
+              return `
+              <${tag} class="ulpt user-link${o.online ? ' online' : ''}" ${tag === 'a' ? '' : 'data-'}href="/@/${o.name}">
+                <i class="line${o.patron ? ' patron' : ''}"></i>
+                ${o.title === 'BOT' ? '<span class="bot-tag">BOT </span>' : ''}
+                ${o.name}
+                ${o.countryCode ? `<img class="flag" src=${flagUrl(o.countryCode)}>` : ''}
+              </${tag}>`;
             },
           },
         },

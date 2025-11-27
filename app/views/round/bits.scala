@@ -102,7 +102,7 @@ object bits {
             a(href := routes.Round.player(pov.fullId), cls := pov.isMyTurn.option("my_turn"))(
               gameSfen(pov, ctx.me, withLink = false, withTitle = false, withLive = false),
               span(cls := "meta")(
-                playerText(pov.opponent),
+                showBasePlayer(pov.opponent),
                 span(cls := "indicator")(
                   if (pov.isMyTurn)
                     pov.remainingSeconds.fold[Frag](trans.yourTurn())(secondsFromNow(_, true))

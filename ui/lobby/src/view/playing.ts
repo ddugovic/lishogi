@@ -1,5 +1,7 @@
 import { i18n } from 'i18n';
 import { engineNameFromCode } from 'shogi/engine-name';
+import { rankFromRating } from 'shogi/rank';
+import { usernameVNodes } from 'shogi/username';
 import { Shogiground } from 'shogiground';
 import { usiToSquareNames } from 'shogiops/compat';
 import { forsythToRole } from 'shogiops/sfen';
@@ -68,9 +70,21 @@ export default function (ctrl: LobbyController): VNode {
             }),
           ),
           h('span.meta', [
-            pov.opponent.ai
-              ? engineNameFromCode(pov.opponent.aiCode, pov.opponent.ai)
-              : pov.opponent.username,
+            h(
+              'span.user-link',
+              usernameVNodes({
+                username: pov.opponent.aiCode
+                  ? engineNameFromCode(pov.opponent.aiCode)
+                  : pov.opponent.username,
+                rank:
+                  pov.opponent.rating && !pov.opponent.prov
+                    ? rankFromRating(pov.opponent.rating)
+                    : undefined,
+                bot: pov.opponent.isBot,
+                engineLvl: pov.opponent.ai,
+                countryCode: pov.opponent.countryCode,
+              }),
+            ),
             h(
               'span.indicator',
               pov.isMyTurn

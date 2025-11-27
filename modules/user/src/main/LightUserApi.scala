@@ -58,11 +58,19 @@ private object LightUserApi {
             name = doc.string(F.username) err "LightUser username missing",
             title = doc.string(F.title),
             isPatron = ~doc.child(F.plan).flatMap(_.getAsOpt[Boolean]("active")),
-            countryCode =
-              doc.child(F.profile).flatMap(_.getAsOpt[String]("country")).filter(_.nonEmpty),
+            countryCode = doc
+              .child(F.profile)
+              .flatMap(_.getAsOpt[String]("country"))
+              .flatMap(Countries.info)
+              .map(_.code),
           ),
         )
     }
 
-  val projection = $doc(F.username -> true, F.title -> true, s"${F.plan}.active" -> true)
+  val projection = $doc(
+    F.username              -> true,
+    F.title                 -> true,
+    s"${F.plan}.active"     -> true,
+    s"${F.profile}.country" -> true,
+  )
 }

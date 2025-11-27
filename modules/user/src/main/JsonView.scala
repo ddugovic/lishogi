@@ -31,6 +31,7 @@ final class JsonView(isOnline: lila.socket.IsOnline) {
       .add("playTime" -> u.playTime)
       .add("language" -> u.lang)
       .add("title" -> u.title)
+      .add("countryCode" -> u.countryCode)
 
   def minimal(u: User, onlyPerf: Option[PerfType]) =
     Json
@@ -44,10 +45,8 @@ final class JsonView(isOnline: lila.socket.IsOnline) {
       .add("disabled" -> u.disabled)
       .add("tosViolation" -> u.lame)
       .add("language" -> u.lang)
-      .add("profile" -> u.profile.flatMap(_.countryInfo).map { c =>
-        Json.obj("country" -> c.code)
-      })
       .add("patron" -> u.isPatron)
+      .add("countryCode" -> u.countryCode)
 
   def lightPerfIsOnline(lp: LightPerf) =
     lightPerfWrites.writes(lp).add("online" -> isOnline(lp.user.id))
@@ -72,6 +71,7 @@ object JsonView {
       )
       .add("title" -> l.user.title)
       .add("patron" -> l.user.isPatron)
+      .add("countryCode" -> l.user.countryCode)
   }
 
   implicit val modWrites: OWrites[User] = OWrites[User] { u =>

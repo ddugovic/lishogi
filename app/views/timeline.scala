@@ -42,22 +42,22 @@ object timeline {
       e.decode.map[Frag] {
         case Follow(u1, u2) =>
           trans.xStartedFollowingY(
-            showUsernameById(u1.some, withOnline = false),
-            showUsernameById(u2.some, withOnline = false),
+            showUsernameById(u1.some, withOnline = false, withFlag = false),
+            showUsernameById(u2.some, withOnline = false, withFlag = false),
           )
         case TeamJoin(userId, teamId) =>
           trans.xJoinedTeamY(
-            showUsernameById(userId.some, withOnline = false),
+            showUsernameById(userId.some, withOnline = false, withFlag = false),
             teamLink(teamId, withIcon = false),
           )
         case TeamCreate(userId, teamId) =>
           trans.xCreatedTeamY(
-            showUsernameById(userId.some, withOnline = false),
+            showUsernameById(userId.some, withOnline = false, withFlag = false),
             teamLink(teamId, withIcon = false),
           )
         case ForumPost(userId, _, topicName, postId) =>
           trans.xPostedInForumY(
-            showUsernameById(userId.some, withOnline = false),
+            showUsernameById(userId.some, withOnline = false, withFlag = false),
             a(
               href  := routes.ForumPost.redirect(postId),
               title := topicName,
@@ -65,17 +65,17 @@ object timeline {
           )
         case TourJoin(userId, tourId, tourName) =>
           trans.xCompetesInY(
-            showUsernameById(userId.some, withOnline = false),
+            showUsernameById(userId.some, withOnline = false, withFlag = false),
             a(href := routes.Tournament.show(tourId))(tourName),
           )
         case SimulCreate(userId, simulId, simulName) =>
           trans.xHostsY(
-            showUsernameById(userId.some, withOnline = false),
+            showUsernameById(userId.some, withOnline = false, withFlag = false),
             a(href := routes.Simul.show(simulId))(simulName),
           )
         case SimulJoin(userId, simulId, simulName) =>
           trans.xJoinsY(
-            showUsernameById(userId.some, withOnline = false),
+            showUsernameById(userId.some, withOnline = false, withFlag = false),
             a(href := routes.Simul.show(simulId))(simulName),
           )
         case GameEnd(playerId, opponent, win, perfKey) =>
@@ -94,23 +94,25 @@ object timeline {
                 case Some(false) => trans.defeat()
                 case None        => trans.draw()
               }),
-              showUsernameById(opponent, withOnline = false),
+              showUsernameById(opponent, withOnline = false, withFlag = false),
               perf.trans,
             )
           }
         case StudyCreate(userId, studyId, studyName) =>
           trans.xCreatesStudyY(
-            showUsernameById(userId.some, withOnline = false),
+            showUsernameById(userId.some, withOnline = false, withFlag = false),
             a(href := routes.Study.show(studyId))(studyName),
           )
         case StudyLike(userId, studyId, studyName) =>
           trans.xLikesY(
-            showUsernameById(userId.some, withOnline = false),
+            showUsernameById(userId.some, withOnline = false, withFlag = false),
             a(href := routes.Study.show(studyId))(studyName),
           )
         case PlanStart(userId) =>
           a(href := routes.Plan.index)(
-            trans.patron.xBecamePatron(showUsernameById(userId.some, withOnline = true)),
+            trans.patron.xBecamePatron(
+              showUsernameById(userId.some, withOnline = true, withFlag = false),
+            ),
           )
         case BlogPost(_) =>
           a(cls := "text", dataIcon := Icons.inkPen, href := routes.Blog.latest)(

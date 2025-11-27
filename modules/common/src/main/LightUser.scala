@@ -26,7 +26,7 @@ object LightUser {
       .obj("name" -> u.name)
       .add("title" -> u.title)
       .add("patron" -> u.isPatron)
-      .add("country" -> u.countryCode)
+      .add("countryCode" -> u.countryCode)
 
   def fallback(name: String) =
     LightUser(

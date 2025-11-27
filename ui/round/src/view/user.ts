@@ -1,9 +1,9 @@
 import { icons } from 'common/icons';
-import { flagImage } from 'common/snabbdom';
 import type { Player } from 'game/interfaces';
 import { i18n, i18nFormat } from 'i18n';
 import { engineNameFromCode } from 'shogi/engine-name';
-import { rankFromRating, rankTag } from 'shogi/rank';
+import { rankFromRating } from 'shogi/rank';
+import { usernameVNodes } from 'shogi/username';
 import { h, type VNode } from 'snabbdom';
 import type RoundController from '../ctrl';
 import type { Position } from '../interfaces';
@@ -12,8 +12,9 @@ export function userHtml(ctrl: RoundController, player: Player, position: Positi
   const d = ctrl.data;
   const user = player.user;
   const perf = user ? user.perfs[d.game.perf] : null;
+  const isBot = user?.title === 'BOT';
   const rating = player.rating ? player.rating : perf?.rating;
-  const rank = !player.provisional && rating ? rankFromRating(rating) : undefined;
+  const rank = !isBot && !player.provisional && rating ? rankFromRating(rating) : undefined;
   const rd = player.ratingDiff;
   const ratingDiff =
     rd === 0
@@ -26,15 +27,13 @@ export function userHtml(ctrl: RoundController, player: Player, position: Positi
 
   if (user) {
     const connecting = !player.onGame && ctrl.firstSeconds && user.online;
-    const countryNode = user.profile?.country ? flagImage(user.profile.country) : undefined;
-    const mainUserNodes = [user.username, countryNode];
     return h(
       `div.ruser-${position}.ruser.user-link`,
       {
         class: {
           online: player.onGame,
           offline: !player.onGame,
-          long: (user.title?.length || 0) + user.username.length > 15,
+          long: user.username.length > 15,
           connecting,
         },
       },
@@ -57,11 +56,12 @@ export function userHtml(ctrl: RoundController, player: Player, position: Positi
               target: ctrl.isPlaying() ? '_blank' : '_self',
             },
           },
-          [
-            user.title == 'BOT' ? h('span.bot-tag', 'BOT ') : undefined,
-            rank ? rankTag(rank) : undefined,
-            ...mainUserNodes,
-          ],
+          usernameVNodes({
+            username: user.username,
+            rank: rank,
+            bot: isBot,
+            countryCode: user.countryCode,
+          }),
         ),
         rating ? h('rating', rating + (player.provisional ? '?' : '')) : null,
         ratingDiff,
@@ -96,13 +96,11 @@ export function userHtml(ctrl: RoundController, player: Player, position: Positi
               : i18nFormat('xLeftTheGame', i18n('player')),
         },
       }),
-      h(
-        'name',
-        player.ai
-          ? engineNameFromCode(player.aiCode)
-          : player.name || h('span.anon', i18n('anonymousUser')),
-      ),
-      player.ai ? h('div.ai-level', i18nFormat('levelX', player.ai)) : null,
+      ...usernameVNodes({
+        username: player.aiCode ? engineNameFromCode(player.aiCode) : player.name,
+        rank: rank,
+        engineLvl: player.ai,
+      }),
     ],
   );
 }

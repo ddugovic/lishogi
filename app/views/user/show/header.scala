@@ -19,16 +19,18 @@ object header {
       info: lila.app.mashup.UserInfo,
       angle: lila.app.mashup.UserInfo.Angle,
       social: lila.app.mashup.UserInfo.Social,
-  )(implicit ctx: Context) =
+  )(implicit ctx: Context) = {
+    val isSystem = u.id == User.lishogiId
     frag(
       div(cls := "box__top user-show__header")(
-        h1(cls := s"user-link ${if (isOnline(u.id)) "online" else "offline"}")(
+        h1(
           frag(
-            u.isPatron option a(href := routes.Plan.index)(patronIcon),
+            // we want a link to /patron on wings
+            u.isPatron option a(cls := "patron-link", href := routes.Plan.index)(nbsp),
             showUsername(
               u,
               withLink = false,
-              withOnline = false,
+              withOnline = true,
               withPowerTip = false,
               withFlag = false,
             ),
@@ -100,7 +102,7 @@ object header {
               titleOrText("Mod zone (Hotkey: m)"),
               dataIcon := Icons.agent,
             ),
-          a(
+          !isSystem option a(
             cls  := "btn-rack__btn",
             href := routes.User.tv(u.username),
             titleOrText(trans.watchGames.txt()),
@@ -121,7 +123,7 @@ object header {
               dataIcon := Icons.download,
             )
           else
-            (ctx.isAuth && ctx.noKid) option a(
+            (ctx.isAuth && ctx.noKid && !isSystem) option a(
               titleOrText(trans.reportXToModerators.txt(u.username)),
               cls      := "btn-rack__btn",
               href     := s"${routes.Report.form}?username=${u.username}",
@@ -301,4 +303,5 @@ object header {
         ),
       ),
     )
+  }
 }

@@ -65,6 +65,7 @@ case class Seek(
       .add("rr" -> (ratingRange != RatingRange.default.toString).option(ratingRange))
       .add("variant" -> (!realVariant.standard).option(realVariant.key))
       .add("provisional" -> perf.provisional)
+      .add("cc" -> user.countryCode)
 
   lazy val perfType = lila.rating.PerfType.from(realVariant, hasClock = false)
 }
