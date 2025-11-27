@@ -272,7 +272,7 @@ object Countries {
     C("ZW", "Zimbabwe"),
   ).sortBy(_.name)
 
-  val allPairs = all map { c =>
+  val allPairs: List[(String, String)] = all map { c =>
     c.code -> c.name
   }
 

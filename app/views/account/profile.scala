@@ -27,7 +27,14 @@ object profile {
           div(cls := "form-group")(trans.allInformationIsPublicAndOptional()),
           form3.split(
             form3.group(form("country"), trans.country(), half = true) { f =>
-              form3.select(f, lila.user.Countries.allPairs, default = "".some)
+              form3.select(
+                f,
+                lila.user.Countries
+                  .info(ctx.lang.country)
+                  .map(c => c.code -> c.name)
+                  .toList ::: lila.user.Countries.allPairs,
+                default = "".some,
+              )
             },
             form3.group(form("location"), trans.location(), half = true)(form3.input(_)),
           ),
