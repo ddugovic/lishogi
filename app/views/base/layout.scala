@@ -3,6 +3,7 @@ package views.html.base
 import controllers.routes
 
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 
 import lila.api.AnnounceStore
 import lila.api.Context
@@ -10,6 +11,7 @@ import lila.app.templating.Environment._
 import lila.app.ui.ScalatagsTemplate._
 import lila.common.CanonicalPath
 import lila.common.ContentSecurityPolicy
+import lila.common.Holiday
 import lila.common.String.html.safeJsonValue
 
 object layout {
@@ -220,7 +222,6 @@ object layout {
 
   private val dataVapid         = attr("data-vapid")
   private val dataUser          = attr("data-user")
-  private val dataDate          = attr("data-date")
   private val dataSocketDomains = attr("data-socket-domains")
   private val dataNonce         = attr("data-nonce")
   private val dataAnnounce      = attr("data-announce")
@@ -332,7 +333,6 @@ object layout {
           dataDev           := (!isProd).option("true"),
           dataVapid         := vapidPublicKey,
           dataUser          := ctx.userId,
-          dataDate          := (ctx.req.path == "/").option(showEnglishDayMonth(DateTime.now)),
           dataSoundSet      := ctx.currentSoundSet.toString,
           dataClockSoundSet := ctx.currentClockSoundSet.toString,
           dataSocketDomains := socketDomains.mkString(","),
@@ -413,19 +413,31 @@ object layout {
     // For Japanese let's force lang param - to build backlinks for SEO - for now
     // unless JP comes from param itself, langHref will take care of that
     private def siteUrl(implicit ctx: Context) =
-      if (ctx.lang.language == "ja" && ctx.req.getQueryString("lang").isEmpty)
+      if (ctx.isJapanese && ctx.req.getQueryString("lang").isEmpty)
         urlWithLangQuery("/", "ja")
       else langHref("/")
 
-    def apply(playing: Boolean)(implicit ctx: Context) =
+    def apply(playing: Boolean)(implicit ctx: Context) = {
+      val isRoot = ctx.req.path == "/"
+      // date good enough
+      val holiday = isRoot ?? Holiday.find(
+        if (ctx.isJapanese) DateTime.now(DateTimeZone.forID("Asia/Tokyo")) else DateTime.now,
+      )
+
       header(id := "top")(
         div(cls := "site-title-nav")(
           topnavToggle,
-          (if (ctx.req.path == "/") h1 else div) (cls := "site-title", title := "lishogi.org")(
-            if (ctx.kid) span(title := trans.kidMode.txt(), cls := "kiddo")(":)")
-            else ctx.isBot option botImage,
+          (if (isRoot) h1 else div) (cls := "site-title", title := "lishogi.org")(
             a(href := siteUrl)(
-              i(cls := "site-icon", dataIcon := Icons.logo),
+              i(
+                title := holiday.map(h => h.trans),
+                cls := List(
+                  "site-icon" -> true,
+                  "bot"       -> ctx.isBot,
+                  "kiddo"     -> ctx.kid,
+                ) ++ holiday.map(h => h.key -> true),
+                dataIcon := Icons.logo,
+              ),
               "lishogi",
               span(if (isProd) ".org" else ".dev"),
             ),
@@ -443,6 +455,7 @@ object layout {
           } getOrElse { !ctx.pageData.error option anonDasher(playing) },
         ),
       )
+    }
   }
 
 }

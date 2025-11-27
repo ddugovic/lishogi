@@ -1,98 +1,74 @@
 @use 'sass:meta';
 @use 'pkg:common/abstract/icons';
 @use 'pkg:common/abstract/extends';
+@use 'pkg:common/abstract/functions';
+@use 'pkg:common/theme';
 
-@mixin holiday-title($content, $args...) {
-  .site-beta {
-    display: none;
+@mixin holiday-title($icon) {
+  position: relative;
+
+  &::after {
+    content: '';
+
+    position: absolute;
+    background-image: functions.img-url('holidays/#{$icon}');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    width: 200%;
+    height: 200%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(50%);
+    left: 50%;
   }
 
-  .site-title {
-    position: relative;
-    padding-right: 2.5rem;
-
-    &::after {
-      @extend %data-icon;
-
-      content: $content;
-      position: absolute;
-      right: -0.5rem;
-      will-change: transform;
-
-      @each $prop, $val in meta.keywords($args) {
-        #{$prop}: #{$val};
-      }
-    }
-  }
-}
-
-// halloween
-body[data-date='30-10'],
-body[data-date='31-10'] {
-  @include holiday-title(
-    icons.$halloween,
-    $animation: ghost-float 6s linear infinite,
-    $transform: translateX(0) translateY(6px) rotate(0deg)
-  );
-}
-
-@keyframes ghost-float {
-  0% {
-    transform: translateX(0) translateY(6px) rotate(0deg);
-  }
-
-  20% {
-    transform: translateX(-1px) translateY(0) rotate(-8deg);
-  }
-
-  50% {
-    transform: translateX(0) translateY(-6px) rotate(3deg);
-  }
-
-  80% {
-    transform: translateX(2px) translateY(0) rotate(6deg);
-  }
-
-  100% {
-    transform: translateX(0) translateY(6px) rotate(0deg);
+  &::before {
+    opacity: 0;
   }
 }
 
-// christmas
-body[data-date='24-12'],
-body[data-date='25-12'] {
-  @include holiday-title(
-    icons.$christmas,
-    $animation: snowman-wiggle 3s linear infinite,
-    $top: -5px,
-    $transform-origin: bottom center
-  );
+.site-icon.year-start {
+  @include holiday-title('fuji.png');
 }
 
-@keyframes snowman-wiggle {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  25% {
-    transform: rotate(12deg);
-  }
-
-  50% {
-    transform: rotate(0deg);
-  }
-
-  75% {
-    transform: rotate(-10deg);
-  }
-
-  100% {
-    transform: rotate(0deg);
-  }
+.site-icon.setsubun {
+  @include holiday-title('ogre.png');
 }
 
-// new year
-body[data-date='31-12'],
-body[data-date='01-01'] {
-  @include holiday-title(icons.$shougatsu);
+.site-icon.hinamatsuri {
+  @include holiday-title('dolls.svg');
+}
+
+.site-icon.childrens-day {
+  @include holiday-title('koinobori.svg');
+}
+
+.site-icon.tanabata {
+  @include holiday-title('bamboo-tree.svg');
+}
+
+.site-icon.tsukimi {
+  @include holiday-title('full-moon.svg');
+
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+}
+
+.site-icon.birthday {
+  @include holiday-title('party.svg');
+}
+
+.site-icon.shogi-day {
+  color: theme.$c-brag;
+}
+
+.site-icon.halloween {
+  @include holiday-title('pumpkin.svg');
+}
+
+.site-icon.christmas {
+  @include holiday-title('christmas-tree.svg');
+}
+
+.site-icon.year-end {
+  @include holiday-title('bell.png');
 }
