@@ -56,23 +56,26 @@ object home {
           div(cls := "lobby__start")(
             ctx.blind option h2(trans.play()),
             button(
+              dataIcon := Icons.createNew,
               cls := List(
-                "button button-metal config_hook" -> true,
-                "disabled" -> (playban.isDefined || currentGame.isDefined || ctx.isBot),
+                "button config_hook" -> true,
+                "disabled"           -> (playban.isDefined || currentGame.isDefined || ctx.isBot),
               ),
               trans.createAGame(),
             ),
             button(
+              dataIcon := Icons.person,
               cls := List(
-                "button button-metal config_friend" -> true,
-                "disabled"                          -> currentGame.isDefined,
+                "button config_friend" -> true,
+                "disabled"             -> currentGame.isDefined,
               ),
               trans.playWithAFriend(),
             ),
             button(
+              dataIcon := Icons.cogs,
               cls := List(
-                "button button-metal config_ai" -> true,
-                "disabled"                      -> currentGame.isDefined,
+                "button config_ai" -> true,
+                "disabled"         -> currentGame.isDefined,
               ),
               trans.playWithTheMachine(),
             ),

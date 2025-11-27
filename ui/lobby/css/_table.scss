@@ -25,22 +25,27 @@
 
     button {
       color: theme.$c-font-clear;
+      background: theme.$c-bg-action;
       font-size: 1.1em;
       text-align: center;
       margin: 0.15em 0;
-      padding: 0.55em;
+      padding: 0.65em;
+      position: relative;
 
-      &.button-metal {
-        background: theme.$c-bg-action;
-
-        &:not(.disabled):hover {
-          background: theme.$c-accent;
-          color: theme.$c-accent-over;
-        }
+      &:not(.disabled):hover {
+        background: theme.$c-accent;
+        color: theme.$c-accent-over;
       }
 
       &.disabled {
         opacity: 0.2;
+      }
+
+      &::before {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
       }
     }
 
@@ -48,7 +53,7 @@
       justify-content: center;
 
       button {
-        margin: 1.2em 0;
+        margin: 0.5em 0;
         padding: 1em;
       }
     }
