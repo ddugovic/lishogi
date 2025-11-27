@@ -52,7 +52,7 @@ final class GameSearchApi(
         }).id,
         Fields.plies         -> (game.plies + 1) / 2,
         Fields.rated         -> game.rated,
-        Fields.variant       -> game.variant.id,
+        Fields.perf          -> game.perfType.id,
         Fields.uids          -> game.userIds.toArray.some.filterNot(_.isEmpty),
         Fields.winner        -> game.winner.flatMap(_.userId),
         Fields.loser         -> game.loser.flatMap(_.userId),

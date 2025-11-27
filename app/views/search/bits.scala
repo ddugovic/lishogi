@@ -123,14 +123,14 @@ private object bits {
           td(cls := "single")(form3.select(form("source"), Query.sources, "".some)),
         )
 
-      def variant =
+      def perf =
         tr(
-          th(label(`for` := form3.id(form("variant")))(trans.variant())),
+          th(label(`for` := form3.id(form("perf")))(trans.variant())),
           td(cls := "single")(
             form3.select(
-              form("variant"),
-              shogi.variant.Variant.all map { v =>
-                v.id -> variantName(v)
+              form("perf"),
+              lila.rating.PerfType.nonPuzzle map { pt =>
+                pt.id -> pt.trans
               },
               "".some,
             ),
