@@ -167,10 +167,11 @@ object home {
         div(cls := "lobby__about")(
           ctx.blind option h2("About"),
           a(href := "/about")(trans.aboutX("Lishogi")),
+          a(href := "https://lichess.org", target := "_blank")("lichess.org"),
           a(href := "/faq")(trans.faq.faqAbbreviation()),
           a(href := "/contact")(trans.contact.contact()),
           // a(href := "/mobile")(trans.mobileApp()),
-          ctx.noKid option a(href := routes.Prismic.resources)(trans.shogiResources()),
+          // ctx.noKid option a(href := routes.Prismic.resources)(trans.shogiResources()),
           a(href := routes.Prismic.tos)(trans.termsOfService()),
           a(href := routes.Prismic.privacy)(trans.privacy()),
           a(href := routes.Plan.index)(trans.patron.donate()),

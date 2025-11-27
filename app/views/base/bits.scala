@@ -40,8 +40,11 @@ z-index: 99;
 
   val connectLinks =
     div(cls := "connect-links")(
-      a(href := "https://twitter.com/lishogi", rel := "nofollow")("Twitter"),
-      a(href := "https://discord.gg/YFtpMGg3rR", rel := "nofollow")("Discord"),
+      a(href := "https://discord.gg/YFtpMGg3rR", target := "_blank", rel := "nofollow")("Discord"),
+      a(href := "https://github.com/WandererXII/lishogi", target := "_blank", rel := "nofollow")(
+        "GtiHub",
+      ),
+      a(href := "https://twitter.com/lishogi", target := "_blank", rel := "nofollow")("Twitter"),
     )
 
   def sfenAnalysisLink(variant: Variant, sfen: Sfen)(implicit lang: Lang) =
