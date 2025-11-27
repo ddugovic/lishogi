@@ -74,7 +74,7 @@ function makeConcealOf(ctrl: AnalyseCtrl): ConcealOf | undefined {
   return undefined;
 }
 
-function renderAnalyse(ctrl: AnalyseCtrl, concealOf?: ConcealOf) {
+function renderAnalyseMoves(ctrl: AnalyseCtrl, concealOf?: ConcealOf) {
   return h('div.analyse__moves.areplay', [
     ctrl.embed && ctrl.study ? h('div.chapter-name', ctrl.study.currentChapter().name) : null,
     renderTreeView(ctrl, concealOf),
@@ -437,9 +437,9 @@ export default function (ctrl: AnalyseCtrl): VNode {
           ...(menuIsOpen
             ? [actionMenu(ctrl)]
             : [
-                cevalView.renderCeval(ctrl),
+                cevalView.renderCeval(ctrl) || h('div.ceval'),
                 showCevalPvs ? cevalView.renderPvs(ctrl) : null,
-                renderAnalyse(ctrl, concealOf),
+                renderAnalyseMoves(ctrl, concealOf),
                 gamebookEditView || forkView(ctrl, concealOf),
                 retroView(ctrl) || practiceView(ctrl),
               ]),
