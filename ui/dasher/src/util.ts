@@ -59,7 +59,7 @@ export function urlInput<K extends string>(
         insert: vm =>
           $(vm.elm as HTMLInputElement).on('change keyup paste', function (this: HTMLInputElement) {
             const url = $(this).val()?.trim();
-            if (url && validateUrl(url)) set(key, url);
+            if (validateUrl(url)) set(key, url || '');
           }),
       },
     }),

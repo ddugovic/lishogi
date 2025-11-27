@@ -19,6 +19,8 @@ object Background {
     default,
     dark,
     light,
+    new Background("dark-new"),
+    new Background("light-new"),
     new Background("transp"),
     new Background("custom"),
   )

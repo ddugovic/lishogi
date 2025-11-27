@@ -21,7 +21,7 @@ html.light {
   --c-bg-metal-hover: #{color.adjust($c-bg-high, $lightness: -3%)};
   --c-bg-page: #{hsl($c-site-hue, 10%, 92%)};
   --c-bg-popup: #{$c-bg-high};
-  --c-bg-zebra: #{hsl($c-site-hue, 12%, 95%)};
+  --c-bg-zebra: #{hsl($c-site-hue, 12%, 94%)};
   --c-bg-zebra2: #{hsl($c-site-hue, 12%, 92%)};
   --c-blunder: #{hsl(0deg, 68%, 50%)};
   --c-body-gradient: #{hsl($c-site-hue, 12%, 84%)};
@@ -48,9 +48,8 @@ html.light {
   --c-link-dim: #{$c-primary-dim};
   --c-link-hover: #{c-blacker(color.adjust($c-primary, $saturation: 100%), 35%)};
   --c-mistake: #{hsl(41deg, 100%, 35%)};
-  --c-page-input: #{$c-bg-low};
   --c-popup: #{$c-font};
-  --c-primary: #{hsl(209deg, 73%, 46%)};
+  --c-primary: #{hsl(209deg, 77%, 46%)};
   --c-primary-clear: #{c-blacker($c-primary, 17%)};
   --c-primary-dim: #{c-whiter($c-primary, 17%)};
   --c-secondary-clear: #{c-blacker($c-secondary, 17%)};
@@ -176,7 +175,7 @@ html.light {
   --c-bg-metal-hover: #{color.adjust($c-bg-high, $lightness: -3%)};
   --c-bg-page: #{hsl($c-site-hue, 10%, 92%)};
   --c-bg-popup: #{$c-bg-high};
-  --c-bg-zebra: #{hsl($c-site-hue, 12%, 95%)};
+  --c-bg-zebra: #{hsl($c-site-hue, 12%, 94%)};
   --c-bg-zebra2: #{hsl($c-site-hue, 12%, 92%)};
   --c-blunder: #{hsl(0deg, 68%, 50%)};
   --c-body-gradient: #{hsl($c-site-hue, 12%, 84%)};
@@ -203,9 +202,8 @@ html.light {
   --c-link-dim: #{$c-primary-dim};
   --c-link-hover: #{c-blacker(color.adjust($c-primary, $saturation: 100%), 35%)};
   --c-mistake: #{hsl(41deg, 100%, 35%)};
-  --c-page-input: #{$c-bg-low};
   --c-popup: #{$c-font};
-  --c-primary: #{hsl(209deg, 73%, 46%)};
+  --c-primary: #{hsl(209deg, 77%, 46%)};
   --c-primary-clear: #{c-blacker($c-primary, 17%)};
   --c-primary-dim: #{c-whiter($c-primary, 17%)};
   --c-secondary-clear: #{c-blacker($c-secondary, 17%)};

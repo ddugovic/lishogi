@@ -23,6 +23,14 @@ export const loadCss = (href: string): Promise<void> => {
   });
 };
 
+export const removeCssPath = (key: string): void => {
+  const isDev = !!document.body.dataset.dev;
+  const url = assetUrl(`css/${key}.${isDev ? 'dev' : 'min'}.css`);
+  document.querySelectorAll<HTMLLinkElement>('link[rel="stylesheet"]').forEach(link => {
+    if (link.href.endsWith(url)) link.remove();
+  });
+};
+
 export const loadCssPath = (key: string): Promise<void> => {
   const isDev = !!document.body.dataset.dev;
   return loadCss(assetUrl(`css/${key}.${isDev ? 'dev' : 'min'}.css`));

@@ -2,9 +2,8 @@
 @use 'pkg:common/theme';
 
 #dasher_app {
-  .links,
-  .subs {
-    padding: 5px 0;
+  .links a:first-child {
+    @extend %box-radius-top-left;
   }
 
   .links a,

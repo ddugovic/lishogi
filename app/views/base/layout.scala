@@ -276,7 +276,8 @@ object layout {
             else if (isProd) fullTitle | s"$title | lishogi.org"
             else s"[dev] ${fullTitle | s"$title | lishogi.dev"}"
           },
-          cssTag("common.variables"),
+          if (ctx.pref.isNewBackground) cssTag("common.variables-new")
+          else cssTag("common.variables"),
           ctx.pref.activeCustomBackground.isDefined option cssTag("common.custom"),
           cssTag("misc.site"),
           ctx.pageData.inquiry.isDefined option cssTag("user.mod.inquiry"),

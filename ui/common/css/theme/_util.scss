@@ -1,6 +1,6 @@
 @use 'sass:color';
 
-$c-site-hue: 32deg;
+$c-site-hue: 37deg;
 
 @function c-blacker($color, $weight) {
   @return color.mix(black, $color, $weight);

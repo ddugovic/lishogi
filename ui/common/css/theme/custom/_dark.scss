@@ -6,8 +6,7 @@ html.custom-dark {
   --c-bg-zebra2: oklch(from var(--c-bg-zebra) calc(l + 0.04) c h);
   --c-bg-box-opaque: var(--c-bg-high);
   --c-bg-box: var(--c-bg-high);
-  --c-page-input: oklch(from var(--c-bg-high) calc(l - 0.04) c h);
-  --c-bg-input: var(--c-page-input);
+  --c-bg-input: oklch(from var(--c-bg-high) calc(l - 0.04) c h);
   --c-bg-action: color-mix(in srgb, var(--c-bg-box) 90%, var(--c-font-dim));
   --c-border: oklch(from var(--c-font) calc(l - 0.5) c h);
   --c-border-page: var(--c-border);

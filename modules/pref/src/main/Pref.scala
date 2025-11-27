@@ -56,6 +56,8 @@ case class Pref(
   def isLightBackground =
     (background == "light") || (background == "custom" && ~customBackground.map(_.light))
 
+  def isNewBackground = background.endsWith("-new")
+
   def activeCustomTheme = (theme == "custom") option customThemeOrDefault
 
   def activeCustomBackground = (background == "custom") option customBackgroundOrDefault

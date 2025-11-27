@@ -1,7 +1,7 @@
 import { writeFile } from 'node:fs/promises';
 import * as path from 'node:path';
 import { prefix, signature, themes } from '../constants.js';
-import { defaultTheme, type ThemeRecord } from '../types.js';
+import { defaultTheme, type Theme, type ThemeRecord } from '../types.js';
 
 export async function generateThemeVariables(
   rootDir: string,
@@ -10,16 +10,19 @@ export async function generateThemeVariables(
   outDir: string,
 ): Promise<void> {
   for (const theme of themes) {
+    const defaultThemeByCategory: Theme = theme.endsWith('-new')
+      ? (`${defaultTheme}-new` as Theme)
+      : defaultTheme;
     let output = `${signature} ${path.relative(rootDir, import.meta.filename)}
 
 @use 'sass:color';
 @use '../../abstract/icons';
 @use '../util' as *;
-@use '../${defaultTheme}' as *;
-${theme !== defaultTheme ? `@use '../${theme}' as *;` : ''}
+@use '../${defaultThemeByCategory}' as *;
+${theme !== defaultThemeByCategory ? `@use '../${theme}' as *;` : ''}
 `;
 
-    const sel = theme === defaultTheme ? 'html' : `html.${theme}`;
+    const sel = theme === defaultThemeByCategory ? 'html' : `html.${theme}`;
     output += `\n${sel} {\n`;
 
     const vars = themeVars[theme];
@@ -29,9 +32,9 @@ ${theme !== defaultTheme ? `@use '../${theme}' as *;` : ''}
     varKeys.forEach(name => {
       const value = vars[name];
       if (
-        theme !== defaultTheme &&
+        theme !== defaultThemeByCategory &&
         !value.includes('c-') &&
-        themeVars[defaultTheme][name] === value
+        themeVars[defaultThemeByCategory][name] === value
       )
         console.warn(`Redundant variable repetition: $${name}: ${value}in ${theme}`);
       varOutput += cssVariable(name, value);

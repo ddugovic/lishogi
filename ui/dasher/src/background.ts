@@ -1,11 +1,11 @@
-import { loadCssPath } from 'common/assets';
+import { loadCssPath, removeCssPath } from 'common/assets';
 import { debounce } from 'common/timings';
 import { i18n } from 'i18n';
 import { h, type VNode } from 'snabbdom';
 import { type CustomBackgroundData, colors, cssVariableName } from './custom-background';
 import { bind, type Close, header, type Open, validateUrl } from './util';
 
-type Key = 'system' | 'dark' | 'light' | 'transp' | 'custom';
+type Key = 'system' | 'dark' | 'light' | 'dark-new' | 'light-new' | 'transp' | 'custom';
 
 export interface BackgroundCtrl {
   list: Background[];
@@ -40,6 +40,10 @@ export function ctrl(
     { key: 'transp', name: i18n('transparent') },
   ];
   if (document.body.dataset.user) list.push({ key: 'custom', name: i18n('custom') });
+  list.push(
+    { key: 'dark-new', name: `${i18n('dark')} (BETA)` },
+    { key: 'light-new', name: `${i18n('light')} (BETA)` },
+  );
 
   const announceFail = (validUrl: boolean) =>
     window.lishogi.announce({
@@ -51,15 +55,27 @@ export function ctrl(
     get: () => data.current,
     set(c: Key) {
       data.current = c;
+      redraw();
+
       window.lishogi.xhr
         .text('POST', '/pref/bg', { formData: { bg: c } })
         .catch(() => announceFail(false));
+
+      if (c === 'dark-new' || c === 'light-new') {
+        removeCssPath('common.variables');
+        loadCssPath('common.variables-new');
+      } else {
+        removeCssPath('common.variables-new');
+        loadCssPath('common.variables');
+      }
+
       if (c === 'transp') data.image = this.getImage();
-      applyBackground(data, list);
-      if (c === 'custom') {
+      else if (c === 'custom') {
         loadCssPath('common.custom');
         open('customBackground');
-      } else redraw();
+      }
+
+      applyBackground(data, list);
       window.lishogi.pubsub.emit('background-change');
     },
     getImage: () => data.image || '//lishogi1.org/assets/images/background/nature.jpg',
@@ -88,7 +104,7 @@ export function view(ctrl: BackgroundCtrl): VNode {
         return h(
           'a.text',
           {
-            class: { active: cur === bg.key },
+            class: { active: cur === bg.key, half: bg.key.endsWith('-new') },
             hook: bind('click', () => ctrl.set(bg.key)),
             disabled: bg.key === 'custom' && !supportsCustom,
             title:
@@ -160,7 +176,7 @@ function applyBackground(data: BackgroundData, list: Background[]) {
 
   updateMetaThemeColor(
     key,
-    key === 'light' || (key === 'custom' && !!data.customBackground?.light),
+    key === 'light' || key === 'light-new' || (key === 'custom' && !!data.customBackground?.light),
   );
 }
 

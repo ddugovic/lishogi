@@ -1,8 +1,9 @@
 @use 'pkg:breakpoint-sass' as breakpoint;
 @use 'pkg:common/abstract/mixins';
 @use 'pkg:common/abstract/uniboard';
-@use 'pkg:common/theme';
 @use 'pkg:common/abstract/extends';
+@use 'pkg:common/abstract/variables';
+@use 'pkg:common/theme';
 @use 'link';
 @use 'board';
 @use 'piece';
@@ -13,7 +14,8 @@
   @extend %box-radius-left;
 
   width: 225px;
-
+  overflow: hidden;
+  border-radius: variables.$box-radius-size 0 variables.$box-radius-size variables.$box-radius-size;
   .spinner {
     margin: 20px auto;
   }
@@ -130,6 +132,11 @@
       &.active::before {
         opacity: 1;
         color: theme.$c-secondary-over !important;
+      }
+
+      &.half {
+        width: 50%;
+        display: inline-block;
       }
     }
 

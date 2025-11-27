@@ -1,4 +1,4 @@
-export const themes = ['dark', 'light', 'transp'] as const;
+export const themes = ['dark', 'light', 'dark-new', 'light-new', 'transp'] as const;
 
 export const prefix: string = 'm-';
 

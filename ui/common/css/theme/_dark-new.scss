@@ -2,48 +2,49 @@
 @use 'util' as *;
 @use '../abstract/icons';
 
-$c-bg-page: hsl($c-site-hue, 10%, 8%);
-$c-body-gradient: hsl($c-site-hue, 12%, 16%);
+$c-bg-page: #141617; // hsl($c-site-hue, 10%, 6%);
+$c-bg-high: #1d2021;
+$c-bg-low: #2d2d2d;
 
-$c-bg-high: hsl($c-site-hue, 7%, 14%);
-$c-bg-low: hsl($c-site-hue, 6%, 20%);
+$c-bg-zebra: color.adjust($c-bg-high, $lightness: 3%, $saturation: -2%);
+$c-bg-zebra2: color.adjust($c-bg-high, $lightness: 5%, $saturation: -3%);
 
-$c-bg-zebra: hsl($c-site-hue, 5%, 18%);
-$c-bg-zebra2: hsl($c-site-hue, 5%, 24%);
+$c-body-gradient: color.adjust($c-bg-page, $lightness: 6%, $saturation: 2%);
 
-$c-font: hsl(0deg, 0%, 75%);
-$c-font-dim: color.change($c-font, $lightness: 58%);
-$c-font-dimmer: color.change($c-font, $lightness: 42%);
-$c-font-clear: color.change($c-font, $lightness: 80%);
-$c-font-clearer: color.change($c-font, $lightness: 89%);
-$c-shade: color.change($c-font, $lightness: 30%);
+$c-font: hsl(37, 35%, 73%);
+$c-font-dim: hsl(37, 15%, 55%);
+$c-font-dimmer: hsl(37, 10%, 42%);
+$c-font-clear: color.adjust($c-font, $lightness: 7%, $space: oklch);
+$c-font-clearer: color.adjust($c-font, $lightness: 15%, $space: oklch);
+$c-shade: color.change($c-font, $lightness: 50%, $space: oklch);
+$c-shade: color.mix($c-bg-high, $c-font-dim, 60%);
 $c-font-page: $c-font-dim;
 
-$c-primary: hsl(209deg, 79%, 56%);
+$c-primary: #80aa9e;
 $c-primary-dim: c-blacker($c-primary, 15%);
 $c-primary-clear: c-whiter($c-primary, 20%);
-$c-primary-over: #fff;
+$c-primary-over: #000;
 
-$c-secondary: hsl(88deg, 62%, 37%);
+$c-secondary: #b0b846;
 $c-secondary-dim: c-blacker($c-secondary, 20%);
 $c-secondary-dimmer: c-blacker($c-secondary, 40%);
 $c-secondary-clear: c-whiter($c-secondary, 23%);
-$c-secondary-over: #fff;
+$c-secondary-over: #000;
 
-$c-accent: hsl(22deg, 100%, 42%);
+$c-accent: hsl(26, 80%, 38%);
 $c-accent-dim: c-blacker($c-accent, 20%);
 $c-accent-clear: c-whiter($c-accent, 20%);
 $c-accent-over: #fff;
 
-$c-brag: hsl(37deg, 74%, 43%);
-$c-brag-over: #fff;
+$c-brag: #e9b143;
+$c-brag-over: #000;
 
-$c-red: hsl(0deg, 60%, 50%);
+$c-red: #db4740;
 $c-error: $c-red;
-$c-error-over: #fff;
+$c-error-over: #000;
 
-$c-good: $c-secondary;
-$c-good-over: $c-secondary-over;
+$c-good: #b0b846;
+$c-good-over: #000;
 
 $c-warn: $c-brag;
 $c-warn-over: $c-brag-over;
@@ -81,9 +82,9 @@ $c-link-over: $c-primary-over;
 
 $c-bg-box: $c-bg-high;
 $c-bg-box-opaque: $c-bg-box;
-$c-bg-input: color.change($c-bg-page, $lightness: 13%);
+$c-bg-input: c-light($c-bg-page, 13%);
 
-$c-border: hsl(0deg, 0%, 25%);
+$c-border: hsl(0deg, 0%, 26%);
 $c-border-page: hsl(0deg, 0%, 22%);
 $border: 1px solid $c-border;
 

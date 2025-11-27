@@ -24,7 +24,6 @@ html.transp {
   --c-font-dimmer: #{c-light($c-font, 48%)};
   --c-font-metal-hover: #{inherit};
   --c-font-page: #{$c-font-clearer};
-  --c-page-input: #{$c-bg-box};
   --text-shadow: #{0.5px 1px 1px #000};
   --m-accent_bg-box_mix_10: #{color.mix($c-accent,$c-bg-box,10%)};
   --m-accent_bg-box_mix_12: #{color.mix($c-accent,$c-bg-box,12%)};

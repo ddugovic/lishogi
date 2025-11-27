@@ -6,8 +6,7 @@ html.custom-light {
   --c-bg-zebra2: oklch(from var(--c-bg-zebra) calc(l - 0.04) c h);
   --c-bg-box-opaque: var(--c-bg-high);
   --c-bg-box: var(--c-bg-high);
-  --c-page-input: var(--c-bg-high);
-  --c-bg-input: var(--c-page-input);
+  --c-bg-input: var(--c-bg-high);
   --c-bg-action: var(--c-bg-box);
   --c-border: oklch(from var(--c-bg-low) calc(l - 0.2) c h);
   --c-border-page: var(--c-border);
