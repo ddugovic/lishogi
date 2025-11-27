@@ -360,7 +360,7 @@ final class UserRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCont
     coll.update
       .one(
         $id(userId),
-        $set(F.enabled -> false) ++ $unset(F.roles) ++ {
+        $set(F.enabled -> false) ++ $unset(F.roles, "profile.bio") ++ {
           if (keepEmail) $unset(F.mustConfirmEmail)
           else $doc("$rename" -> $doc(F.email -> F.prevEmail))
         },
