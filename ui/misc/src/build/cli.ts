@@ -9,15 +9,17 @@ function main(opts: { $wrap: JQuery; toggle: () => void }): void {
       focus: true,
       friend: true,
       onSelect(q: any) {
-        $input.val('').blur();
+        $input.val('').trigger('blur');
         execute(q.name || q.trim());
         $('body').hasClass('clinput') && opts.toggle();
       },
     })
     .then(() => {
-      $input.on('blur', () => {
-        $input.val('');
-        $('body').hasClass('clinput') && opts.toggle();
+      $input.on('blur', e => {
+        if (e.target !== document.activeElement) {
+          $input.val('');
+          $('body').hasClass('clinput') && opts.toggle();
+        }
       });
     });
 }
