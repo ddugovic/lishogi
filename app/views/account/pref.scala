@@ -106,7 +106,7 @@ object pref {
               radios(form("display.zen"), booleanChoices),
             ),
             setting(
-              "No flags",
+              noFlags(),
               radios(form("display.noFlags"), booleanChoices),
             ),
             setting(
