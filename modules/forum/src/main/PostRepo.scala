@@ -69,6 +69,11 @@ final class PostRepo(val coll: Coll, filter: Filter = Safe)(implicit
   def countByCateg(categ: Categ): Fu[Int] =
     coll.countSel(selectCateg(categ.id))
 
+  def allByUserCursor(user: User) =
+    coll
+      .find($doc("userId" -> user.id))
+      .cursor[Post](ReadPreference.secondaryPreferred)
+
   def removeByTopic(topicId: String): Funit =
     coll.delete.one(selectTopic(topicId)).void
 

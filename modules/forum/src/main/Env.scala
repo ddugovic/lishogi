@@ -33,7 +33,10 @@ final class Env(
     relationApi: RelationApi,
     userRepo: lila.user.UserRepo,
     cacheApi: lila.memo.CacheApi,
-)(implicit ec: scala.concurrent.ExecutionContext) {
+)(implicit
+    ec: scala.concurrent.ExecutionContext,
+    mat: akka.stream.Materializer,
+) {
 
   private val config = appConfig.get[ForumConfig]("forum")(AutoConfig.loader)
 

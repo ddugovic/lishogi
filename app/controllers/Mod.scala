@@ -122,9 +122,10 @@ final class Mod(
     }(actionResult(username))
 
   def deletePmsAndChats(username: String) =
-    OAuthMod(_.Shadowban) { _ => _ =>
+    OAuthMod(_.Shadowban) { _ => me =>
       withSuspect(username) { sus =>
         env.mod.publicChat.delete(sus) >>
+          env.forum.postApi.deleteAllByUser(sus.user, me) >>
           env.msg.api.deleteAllBy(sus.user) map some
       }
     }(actionResult(username))

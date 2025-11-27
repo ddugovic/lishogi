@@ -2,6 +2,7 @@ package lila.forum
 
 import scala.util.chaining._
 
+import akka.stream.scaladsl._
 import org.joda.time.DateTime
 import reactivemongo.api.ReadPreference
 
@@ -26,7 +27,10 @@ final class PostApi(
     timeline: lila.hub.actors.Timeline,
     shutup: lila.hub.actors.Shutup,
     detectLanguage: lila.common.DetectLanguage,
-)(implicit ec: scala.concurrent.ExecutionContext) {
+)(implicit
+    ec: scala.concurrent.ExecutionContext,
+    mat: akka.stream.Materializer,
+) {
 
   import BSONHandlers._
 
@@ -188,33 +192,47 @@ final class PostApi(
       maxPerPage = maxPerPage,
     )
 
+  def deleteAllByUser(user: User, mod: User): Funit =
+    env.postRepo.unsafe
+      .allByUserCursor(user)
+      .documentSource()
+      .mapAsyncUnordered(2) { post =>
+        viewOf(post).flatMap(_ ?? { view => deletePostView(view, mod) })
+      }
+      .runWith(Sink.ignore)
+      .void
+
   def delete(categSlug: String, postId: String, mod: User): Funit =
     env.postRepo.unsafe.byCategAndId(categSlug, postId) flatMap {
       _ ?? { post =>
         viewOf(post) flatMap {
           _ ?? { view =>
-            (for {
-              first <- env.postRepo.isFirstPost(view.topic.id, view.post.id)
-              _ <-
-                if (first) env.topicApi.delete(view.categ, view.topic)
-                else
-                  env.postRepo.coll.delete.one($id(view.post.id)) >>
-                    (env.topicApi denormalize view.topic) >>
-                    (env.categApi denormalize view.categ) >>-
-                    env.recent.invalidate() >>-
-                    (indexer ! RemovePost(post.id))
-              _ <- MasterGranter(_.ModerateForum)(mod) ?? modLog.deletePost(
-                mod.id,
-                post.userId,
-                post.author,
-                post.ip,
-                text = "%s / %s / %s".format(view.categ.name, view.topic.name, post.text),
-              )
-            } yield ())
+            deletePostView(view, mod)
           }
         }
       }
     }
+
+  def deletePostView(view: PostView, mod: User) =
+    (for {
+      first <- env.postRepo.isFirstPost(view.topic.id, view.post.id)
+      _ <-
+        if (first) env.topicApi.delete(view.categ, view.topic)
+        else
+          env.postRepo.coll.delete.one($id(view.post.id)) >>
+            (env.topicApi denormalize view.topic) >>
+            (env.categApi denormalize view.categ) >>-
+            env.recent.invalidate() >>-
+            (indexer ! RemovePost(view.post.id))
+      _ <- MasterGranter(_.ModerateForum)(mod) ?? modLog
+        .deletePost(
+          mod.id,
+          view.post.userId,
+          view.post.author,
+          view.post.ip,
+          text = "%s / %s / %s".format(view.categ.name, view.topic.name, view.post.text),
+        )
+    } yield ())
 
   def allUserIds(topicId: Topic.ID) = env.postRepo allUserIdsByTopicId topicId
 
