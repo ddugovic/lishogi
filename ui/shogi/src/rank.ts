@@ -13,28 +13,28 @@ const GLICKO_MAX = 4000;
 
 // In sync with modules/rating/src/main/Rank.scala
 const defs: [string, string, number][] = [
-  ['15級', '15-kyu', 80],
-  ['14級', '14-kyu', 80],
-  ['13級', '13-kyu', 80],
-  ['12級', '12-kyu', 80],
-  ['11級', '11-kyu', 80],
-  ['10級', '10-kyu', 80],
-  ['9級', '9-kyu', 80],
-  ['8級', '8-kyu', 80],
-  ['7級', '7-kyu', 80],
-  ['6級', '6-kyu', 80],
-  ['5級', '5-kyu', 80],
-  ['4級', '4-kyu', 80],
-  ['3級', '3-kyu', 80],
-  ['2級', '2-kyu', 90],
-  ['1級', '1-kyu', 120],
-  ['初段', '1-Dan', 120],
-  ['二段', '2-Dan', 120],
-  ['三段', '3-Dan', 120],
-  ['四段', '4-Dan', 120],
-  ['五段', '5-Dan', 120],
-  ['六段', '6-Dan', 120],
-  ['七段', '7-Dan', 120],
+  ['15級', '15-kyu', 75],
+  ['14級', '14-kyu', 75],
+  ['13級', '13-kyu', 75],
+  ['12級', '12-kyu', 75],
+  ['11級', '11-kyu', 75],
+  ['10級', '10-kyu', 75],
+  ['9級', '9-kyu', 75],
+  ['8級', '8-kyu', 75],
+  ['7級', '7-kyu', 75],
+  ['6級', '6-kyu', 75],
+  ['5級', '5-kyu', 75],
+  ['4級', '4-kyu', 75],
+  ['3級', '3-kyu', 75],
+  ['2級', '2-kyu', 75],
+  ['1級', '1-kyu', 100],
+  ['初段', '1-Dan', 100],
+  ['二段', '2-Dan', 100],
+  ['三段', '3-Dan', 100],
+  ['四段', '4-Dan', 125],
+  ['五段', '5-Dan', 150],
+  ['六段', '6-Dan', 150],
+  ['七段', '7-Dan', 225],
   ['八段', '8-Dan', 0],
 ];
 
@@ -53,7 +53,7 @@ export function rankFromRating(rating: number): Rank {
   );
 }
 
-export function rankName(rank: Rank): string {
+function rankName(rank: Rank): string {
   return useJapanese() ? rank.jaName : rank.enName;
 }
 
@@ -69,4 +69,8 @@ export function extractRank(input?: string): Rank | undefined {
 
 export function rankTag(rank: Rank): VNode {
   return h(`span.rank-tag.r-${rank.enName}`, `${rankName(rank)} `);
+}
+
+export function rankTagHtml(rank: Rank): string {
+  return `<span class="rank-tag r-${rank.enName}">${rankName(rank)}&nbsp;</span>`;
 }

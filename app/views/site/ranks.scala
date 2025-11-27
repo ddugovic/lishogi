@@ -10,17 +10,19 @@ object ranks {
   def apply()(implicit ctx: Context) =
     views.html.base.layout(
       moreCss = cssTag("misc.page"),
-      title = "Ranks",
+      title = trans.ranks.txt(),
     ) {
       main(cls := "page-small box box-pad page")(
-        h1("Ranks"),
+        h1(trans.ranks()),
         div(cls := "body")(
+          p(trans.ranksAfterStable()),
+          br,
           table(cls := "normal-table ranks-table")(
             thead(
               tr(
-                th("Ranks"),
-                th("段級位"),
-                th("ELO"),
+                th("日本語"),
+                th("English"),
+                th(trans.rating()),
               ),
             ),
             tbody(
