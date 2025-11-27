@@ -25,7 +25,7 @@ object post {
               dataIcon := Icons.people,
             ),
             span(cls := "post_topic")(shorten(p.topicName, 30)),
-            span(cls := "post_text")(shorten(p.text, 70)),
+            ctx.isAuth option span(cls := "post_text")(shorten(p.text, 70)),
           ),
           showUsernameById(p.userId, withOnline = false, withPowerTip = false),
         )
