@@ -166,9 +166,6 @@ importers:
       balloon-css:
         specifier: ^1.2.0
         version: 1.2.0
-      country-flag-icons:
-        specifier: ^1.5.21
-        version: 1.5.21
       fairy-stockfish-nnue.wasm:
         specifier: 1.1.8
         version: 1.1.8
@@ -313,6 +310,9 @@ importers:
       i18n:
         specifier: workspace:*
         version: link:../i18n
+      shogi:
+        specifier: workspace:*
+        version: link:../shogi
       snabbdom:
         specifier: 'catalog:'
         version: 3.6.3
@@ -632,6 +632,9 @@ importers:
       i18n:
         specifier: workspace:*
         version: link:../i18n
+      shogi:
+        specifier: 'workspace:'
+        version: link:../shogi
       snabbdom:
         specifier: 'catalog:'
         version: 3.6.3
@@ -2598,9 +2601,6 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
-
-  country-flag-icons@1.5.21:
-    resolution: {integrity: sha512-0KmU4oeiyAM+F+atzK99ghQDQJKxEY3tiDhnRraVFL4o65rZgrmrx7xKi0b+hxcVpcEpuUbu+KCC6TKTZQTDcA==}
 
   cross-spawn@7.0.3:
     resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}
@@ -6868,8 +6868,6 @@ snapshots:
       parse-json: 5.2.0
     optionalDependencies:
       typescript: 5.9.3
-
-  country-flag-icons@1.5.21: {}
 
   cross-spawn@7.0.3:
     dependencies:

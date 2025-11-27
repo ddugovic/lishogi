@@ -118,7 +118,7 @@ trait AssetHelper { self: I18nHelper with SecurityHelper =>
     )
 
   def flagImage(code: String) =
-    img(cls := "flag", src := staticUrl(s"vendors/country-flag-icons/3x2/$code.svg"))
+    img(cls := "flag", src := staticUrl(s"images/flags/$code.svg"))
 
   def basicCsp(implicit req: RequestHeader): ContentSecurityPolicy = {
     val assets = if (req.secure) s"https://$assetDomain" else assetDomain.value

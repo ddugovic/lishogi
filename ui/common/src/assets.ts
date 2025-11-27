@@ -93,3 +93,7 @@ export const spectrum = (): Promise<void> => {
 export const flatpickr = (): Promise<void> => {
   return loadLishogiScript('misc.flatpickr');
 };
+
+export const flagUrl = (countryCode: string): string => {
+  return assetUrl(`images/flags/${countryCode.toUpperCase()}.svg`);
+};

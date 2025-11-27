@@ -14,7 +14,6 @@ const vendorsJs: [string, string[]][] = [
   ['infinite-scroll', ['dist/infinite-scroll.pkgd.min.js']],
   ['sortablejs', ['Sortable.min.js']],
   ['@yaireo/tagify', ['dist/tagify.js']],
-  ['country-flag-icons', ['3x2']],
 ];
 
 async function main(): Promise<void> {
