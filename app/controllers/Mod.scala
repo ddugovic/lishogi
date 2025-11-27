@@ -370,7 +370,7 @@ final class Mod(
       val op =
         if (v) env.security.firewall.blockIps _
         else env.security.firewall.unblockIps _
-      op(List(address)) inject jsonOkResult
+      op(List(address)) inject Redirect(routes.Mod.singleIp(ip)).flashSuccess
     }
 
   def chatUser(username: String) =
