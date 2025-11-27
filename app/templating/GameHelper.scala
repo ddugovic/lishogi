@@ -49,8 +49,7 @@ trait GameHelper {
   // Shogi - Dalliard vs Smith
   // Chushogi - PeterFile vs FilePeter
   def titleGame(g: Game)(implicit lang: Lang) = {
-    val variant = g.variant.standard ?? s" ${trans.shogi.txt()}"
-    s"${g.perfType.trans}$variant - ${playerText(g.sentePlayer)} vs ${playerText(g.gotePlayer)}"
+    s"${g.perfType.trans} - ${trans.xVsY.txt(playerText(g.sentePlayer), playerText(g.gotePlayer))}"
   }
 
   // Beethoven played Handel - Rated Shogi (5|3) - Handel won! Click to replay, analyse, and discuss the game!
@@ -67,7 +66,6 @@ trait GameHelper {
         List(
           modeName(game.mode),
           game.perfType.trans,
-          game.variant.standard ?? trans.shogi.txt(),
           game.clock.map(_.config) ?? { clock => s"(${clock.show})" },
         ).filter(_.nonEmpty).mkString(" ")
     val result = game.winner.map(w => trans.xWon.txt(playerText(w))) getOrElse {
