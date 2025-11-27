@@ -146,7 +146,7 @@ final class Report(
               }
             },
           data =>
-            if (data.user.id == me.id) notFound
+            if (data.user.id == me.id || data.user.id == UserModel.lishogiId) notFound
             else
               api.create(data, Reporter(me)) inject
                 Redirect(routes.Report.thanks(data.user.name)),

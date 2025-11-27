@@ -199,7 +199,6 @@ body.no-inquiry {
   .links {
     @extend %flex-center-nowrap;
 
-    margin-right: 10px;
     white-space: nowrap;
     height: 100%;
     text-align: center;
@@ -261,9 +260,7 @@ body.no-inquiry {
   }
 
   .cancel button {
-    margin-left: 5px;
     font-size: 0.8em;
-    padding: 0 8px;
   }
 
   .accuracy {
@@ -315,7 +312,8 @@ body.no-inquiry {
     }
 
     > i {
-      line-height: 40px;
+      display: flex;
+      align-items: center;
     }
 
     &.buttons button {
@@ -364,7 +362,7 @@ body.no-inquiry {
   }
 
   .switcher {
-    margin-left: -10px;
+    padding: 0.25rem;
 
     label {
       transform: scale(0.7);

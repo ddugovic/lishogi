@@ -54,25 +54,25 @@ object appeal2 {
             case Some(Inquiry(mod, _)) if ctx.userId has mod =>
               frag(
                 postForm(action := routes.Report.inquiry(appeal.id))(
-                  submitButton(cls := "button button-metal button-thin")("Release this appeal"),
+                  submitButton(cls := "button")("Release this appeal"),
                 ),
                 if (appeal.isOpen)
                   frag(
                     postForm(action := routes.Appeal.act(suspect.user.username, "close"))(
-                      submitButton("Close")(cls := "button button-red button-thin"),
+                      submitButton("Close")(cls := "button button-red"),
                     ),
                     if (appeal.isMuted)
                       postForm(action := routes.Appeal.act(suspect.user.username, "open"))(
-                        submitButton("Un-mute")(cls := "button button-green button-thin"),
+                        submitButton("Un-mute")(cls := "button button-green"),
                       )
                     else
                       postForm(action := routes.Appeal.act(suspect.user.username, "mute"))(
-                        submitButton("Mute")(cls := "button button-red button-thin"),
+                        submitButton("Mute")(cls := "button button-red"),
                       ),
                   )
                 else
                   postForm(action := routes.Appeal.act(suspect.user.username, "open"))(
-                    submitButton("Open")(cls := "button button-green button-thin"),
+                    submitButton("Open")(cls := "button button-green"),
                   ),
               )
             case Some(Inquiry(mod, _)) => frag(showUsernameById(mod.some), " is handling this.")
@@ -107,7 +107,7 @@ object appeal2 {
                 msg.text
               }),
               td(
-                a(href := routes.Appeal.show(appeal.id), cls := "button button-metal")("View"),
+                a(href := routes.Appeal.show(appeal.id), cls := "button")("View"),
                 inquiries.get(appeal.id) map { i =>
                   frag(showUsernameById(i.mod.some), " is handling this")
                 },

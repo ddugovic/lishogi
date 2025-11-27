@@ -8,20 +8,20 @@ import lila.app.ui.ScalatagsTemplate._
 
 object actions {
 
-  private val dataHoverText = data("hover-text")
-
   def apply(
       userId: lila.user.User.ID,
       relation: Option[lila.relation.Relation],
       followable: Boolean,
       blocked: Boolean,
       signup: Boolean = false,
-  )(implicit ctx: Context) =
+  )(implicit ctx: Context) = {
+    val isSystem = userId == lila.user.User.lishogiId
+
     div(cls := "relation-actions btn-rack")(
       ctx.userId map { myId =>
         (myId != userId) ?? frag(
           !blocked option frag(
-            a(
+            !isSystem option a(
               titleOrText(trans.challengeToPlay.txt()),
               href     := s"${routes.Lobby.home}?user=$userId#friend",
               cls      := "btn-rack__btn",
@@ -43,7 +43,7 @@ object actions {
                   titleOrText(trans.follow.txt()),
                   dataIcon := Icons.thumbsUp,
                 ),
-                a(
+                !isSystem option a(
                   cls  := "btn-rack__btn relation-button",
                   href := routes.Relation.block(userId),
                   titleOrText(trans.block.txt()),
@@ -53,18 +53,16 @@ object actions {
             case Some(true) =>
               a(
                 dataIcon := Icons.thumbsUp,
-                cls      := "btn-rack__btn relation-button text hover-text",
+                cls      := "btn-rack__btn relation-button text",
                 href     := routes.Relation.unfollow(userId),
                 titleOrText(trans.following.txt()),
-                dataHoverText := trans.unfollow.txt(),
               )
             case Some(false) =>
               a(
                 dataIcon := Icons.forbidden,
-                cls      := "btn-rack__btn relation-button text hover-text",
+                cls      := "btn-rack__btn relation-button text",
                 href     := routes.Relation.unblock(userId),
                 titleOrText(trans.blocked.txt()),
-                dataHoverText := trans.unblock.txt(),
               )
           },
         )
@@ -75,4 +73,5 @@ object actions {
         )
       },
     )
+  }
 }

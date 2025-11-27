@@ -5,7 +5,6 @@ import lila.common.EmailAddress
 import lila.report.Mod
 import lila.report.Room
 import lila.report.Suspect
-import lila.report.SuspectId
 import lila.security.Granter
 import lila.security.Permission
 import lila.user.LightUserApi
@@ -48,16 +47,6 @@ final class ModApi(
         }
       }
     }
-
-  def autoMark(suspectId: SuspectId): Funit =
-    for {
-      sus       <- reportApi.getSuspect(suspectId.value) orFail s"No such suspect $suspectId"
-      unengined <- logApi.wasUnengined(sus)
-      _ <- (!sus.user.isBot && !unengined) ?? {
-        lila.mon.cheat.autoMark.increment()
-        logApi.alert(s"Auto-mark suggestion (good player or engine) - ${suspectId}")
-      }
-    } yield ()
 
   def setBoost(mod: Mod, prev: Suspect, v: Boolean): Fu[Suspect] =
     if (prev.user.marks.boost == v) fuccess(prev)

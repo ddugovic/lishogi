@@ -10,28 +10,32 @@ object thanks {
 
   def apply(userId: String, blocked: Boolean)(implicit ctx: Context) = {
 
-    val title = "Thanks for the report"
+    val title = trans.thanksForReport.txt()
 
     views.html.base.layout(title = title, moreJs = jsTag("misc.thanks-report")) {
       main(cls := "page-small box box-pad")(
         h1(title),
-        p("The moderators will review it very soon, and take appropriate action."),
+        p(trans.moderatorsReportReview()),
         br,
         br,
         !blocked option p(
-          "In the meantime, you can block this user: ",
+          trans.blockSuggestions(),
           submitButton(
             attr("data-action") := routes.Relation.block(userId),
-            cls                 := "report-block button",
+            cls                 := "report-block button button-block button-spaced",
             st.title            := trans.block.txt(),
           )(
-            span(cls := "text", dataIcon := Icons.forbidden)("Block ", usernameOrId(userId)),
+            span(cls := "text", dataIcon := Icons.forbidden)(
+              trans.block.txt(),
+              " - ",
+              usernameOrId(userId),
+            ),
           ),
         ),
         br,
         br,
         p(
-          a(href := routes.Lobby.home)("Return to Lishogi homepage"),
+          a(href := routes.Lobby.home)(trans.returnToHomepage()),
         ),
       )
 

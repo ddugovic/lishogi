@@ -157,7 +157,7 @@ object inquiry {
         isGranted(_.MarkEngine) option {
           val url = routes.Mod.engine(in.user.username, !in.user.marks.engine).url
           div(cls := "dropper engine buttons")(
-            postForm(action := url, title := "Mark as cheat")(
+            postForm(action := url, cls := "main", title := "Mark as cheat")(
               markButton(in.user.marks.engine)(dataIcon := Icons.cogs),
               autoNextInput,
             ),
@@ -223,7 +223,7 @@ object inquiry {
           title  := "Dismiss this report as processed.",
           cls    := "process",
         )(
-          submitButton(dataIcon := Icons.correct, cls := "fbt"),
+          submitButton(dataIcon := Icons.thumbsUp, cls := "fbt"),
           autoNextInput,
         ),
         postForm(
