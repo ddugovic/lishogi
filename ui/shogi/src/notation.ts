@@ -9,7 +9,7 @@ import { makeWesternEngineMoveOrDrop } from 'shogiops/notation/western-engine';
 import { makeYorozuyaMoveOrDrop } from 'shogiops/notation/yorozuya';
 import { parseSfen, roleToForsyth } from 'shogiops/sfen';
 import type { MoveOrDrop, Role, Rules, Square } from 'shogiops/types';
-import { makeUsi, parseUsi, toBW } from 'shogiops/util';
+import { makeUsi, parseUsi } from 'shogiops/util';
 import type { Position } from 'shogiops/variant/position';
 import { plyColor } from './common';
 
@@ -143,24 +143,40 @@ export function usiToNotation(
   text: string,
 ): string {
   const matches = text.match(/\[usi:(\d*)\.?((?:\d\w|\w\*)\d\w(?:\+|=)?)\]/g);
-  if (matches?.length) {
-    for (const mText of matches) {
-      const match = mText.match(/usi:(\d*)\.?((?:\d\w|\w\*)\d\w(?:\+|=)?)/);
-      if (match) {
-        const textPlyColor = plyColor(Number.parseInt(match[1]) || node.ply);
-        const useParentNode = plyColor(node.ply) !== textPlyColor;
-        const refNode = useParentNode && parentNode ? parentNode : node;
-        const refSfen =
-          !node.usi && useParentNode
-            ? refNode.sfen.replace(/ (b|w) /, ` ${toBW(textPlyColor)} `)
-            : refNode.sfen; // for initial node
-        const moveOrDrop = match[2] && parseUsi(match[2]); // to make sure we have valid usi
-        const notation =
-          moveOrDrop && makeNotation(refSfen, variant, makeUsi(moveOrDrop), refNode.usi);
-        if (notation) text = text.replace(mText, notation);
-        else text = text.replace(mText, 'Invalid move');
+  if (!matches?.length) return text;
+
+  for (const mText of matches) {
+    const match = mText.match(/usi:(\d*)\.?((?:\d\w|\w\*)\d\w(?:\+|=)?)/);
+    if (match) {
+      const textUsi = match[2];
+      const moveOrDrop = textUsi ? parseUsi(textUsi) : undefined;
+
+      if (!moveOrDrop) {
+        console.error('Cannot parse usi:', textUsi);
+        continue;
       }
+
+      const usi = makeUsi(moveOrDrop);
+      const textPlyColor = plyColor(Number.parseInt(match[1]) || node.ply);
+      const tryParentNodeFirst = plyColor(node.ply) !== textPlyColor;
+
+      const makeDirectNotation = () => {
+        return makeNotation(node.sfen, variant, usi, node.usi);
+      };
+      const makeParentNotation = () => {
+        const parentSfen =
+          parentNode?.sfen || node.sfen.replace(/ (b|w) /, (_, c) => ` ${c === 'b' ? 'w' : 'b'} `);
+        return makeNotation(parentSfen, variant, usi, parentNode?.usi);
+      };
+
+      const notation = tryParentNodeFirst
+        ? makeParentNotation() || makeDirectNotation()
+        : makeDirectNotation() || makeParentNotation();
+
+      if (notation) text = text.replace(mText, notation);
+      else text = text.replace(mText, `[${usi}]`);
     }
   }
+
   return text;
 }
