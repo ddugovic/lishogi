@@ -47,23 +47,27 @@ export async function createBuilder(
 
   return {
     build: async filepath => {
-      const sassResult = await compiler.compileAsync(filepath, sassOptions);
-      const postCssResult = await processor.process(sassResult.css, { from: filepath });
+      try {
+        const sassResult = await compiler.compileAsync(filepath, sassOptions);
+        const postCssResult = await processor.process(sassResult.css, { from: filepath });
 
-      for (const warning of postCssResult.warnings()) {
-        console.warn(warning.toString());
+        for (const warning of postCssResult.warnings()) {
+          console.warn(warning.toString());
+        }
+
+        const pkg = getPackageFromPath(pkgs, filepath)!;
+        const basename = path.basename(filepath, '.scss');
+        const name = basename === 'main' ? pkg.manifest.name : `${pkg.manifest.name}.${basename}`;
+        const outputPath = path.join(outdir, `${name}.${isProd ? 'min' : 'dev'}.css`);
+
+        let res = postCssResult.css;
+        if (!isProd && sassResult.sourceMap)
+          res = res + '\n'.repeat(2) + createSourceMap(sassResult.sourceMap);
+
+        await fs.writeFile(outputPath, res);
+      } catch (e) {
+        console.error(e);
       }
-
-      const pkg = getPackageFromPath(pkgs, filepath)!;
-      const basename = path.basename(filepath, '.scss');
-      const name = basename === 'main' ? pkg.manifest.name : `${pkg.manifest.name}.${basename}`;
-      const outputPath = path.join(outdir, `${name}.${isProd ? 'min' : 'dev'}.css`);
-
-      let res = postCssResult.css;
-      if (!isProd && sassResult.sourceMap)
-        res = res + '\n'.repeat(2) + createSourceMap(sassResult.sourceMap);
-
-      await fs.writeFile(outputPath, res);
     },
     stop: async () => {
       await compiler.dispose();
