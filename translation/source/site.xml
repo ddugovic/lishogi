@@ -704,6 +704,7 @@
 	<string name="termsOfService">Terms of Service</string>
 	<string name="sourceCode">Source Code</string>
 	<string name="simultaneousExhibitions">Simultaneous exhibitions</string>
+	<string name="xSimul" comment="Name simul">%s simul</string>
 	<string name="simulComplete">Simul complete</string>
 	<string name="backToSimul">Back to simul</string>
 	<string name="host">Host</string>

@@ -39,7 +39,7 @@ object form {
   def edit(form: Form[SimulForm.Setup], teams: List[LightTeam], simul: Simul)(implicit
       ctx: Context,
   ) = {
-    val title = s"${trans.edit.txt()} - ${simul.name}"
+    val title = s"${trans.edit.txt()} - ${trans.xSimul.txt(simul.name)}"
     views.html.base.layout(
       title = title,
       moreCss = cssTag("simul.form"),

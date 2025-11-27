@@ -47,7 +47,9 @@ object publicChat {
               div(cls := "player_chats")(
                 simulChats.map { case (simul, chat) =>
                   div(cls := "game")(
-                    a(cls := "title", href := routes.Simul.show(simul.id))(simul.name),
+                    a(cls := "title", href := routes.Simul.show(simul.id))(
+                      trans.xSimul(simul.name),
+                    ),
                     div(cls := "chat")(
                       chat.lines.filter(_.isVisible).map { line =>
                         div(cls := "line")(

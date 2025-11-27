@@ -26,7 +26,7 @@ object bits {
     a(href := routes.Simul.show(s.id), cls := s"tour-spotlight simul-spotlight little id_${s.id}")(
       iconTag(Icons.people)(cls := "img"),
       span(cls := "content")(
-        span(cls := "name")(s.name),
+        span(cls := "name")(trans.xSimul(s.name)),
         span(cls := "more")(
           trans.nbPlayers.plural(s.applicants.size, s.applicants.size.localize),
           " - ",

@@ -19,7 +19,7 @@ object show {
   )(implicit ctx: Context) =
     views.html.base.layout(
       moreCss = cssTag("simul.show"),
-      title = sim.name,
+      title = trans.xSimul.txt(sim.name),
       moreJs = frag(
         moduleJsTag(
           "simul",

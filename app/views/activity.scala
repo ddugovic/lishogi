@@ -226,9 +226,11 @@ object activity {
               simuls.map { s =>
                 div(
                   a(href := routes.Simul.show(s.id))(
-                    s.name,
-                    " simul by ",
-                    showUsernameById(s.hostId.some),
+                    trans.xSimul(s.name),
+                    " - ",
+                    trans.by(
+                      showUsernameById(s.hostId.some),
+                    ),
                   ),
                   scoreFrag(Score(s.wins, s.losses, s.draws, none)),
                 )

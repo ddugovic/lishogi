@@ -97,7 +97,7 @@ object homeInner {
   private def simTd(sim: lila.simul.Simul)(implicit lang: Lang) =
     td(cls := "header")(
       a(href := routes.Simul.show(sim.id))(
-        span(cls := "name")(sim.name),
+        span(cls := "name")(trans.xSimul(sim.name)),
         bits.setup(sim),
       ),
     )
