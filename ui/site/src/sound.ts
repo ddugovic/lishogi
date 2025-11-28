@@ -90,7 +90,7 @@ export function createSound(): SoundI {
     }
   }
 
-  function play(name: string, categ?: SoundCateg): void {
+  function play(name: string, categ?: SoundCateg, volumeOverride?: number): void {
     if (!enabled(categ || 'system')) return;
 
     categ = categ || 'system';
@@ -102,7 +102,7 @@ export function createSound(): SoundI {
       else set = defaultSoundSet;
     }
 
-    window.Howler.volume(volume());
+    window.Howler.volume(volumeOverride || volume());
 
     const howl = loadSound(name, categ, set);
     if (howl) {

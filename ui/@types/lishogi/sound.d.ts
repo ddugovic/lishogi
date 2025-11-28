@@ -17,7 +17,7 @@ declare global {
     | 'silent';
 
   interface SoundI {
-    play: (name: string, categ?: SoundCateg) => void;
+    play: (name: string, categ?: SoundCateg, volumeOverride?: number) => void;
     move: (capture?: boolean) => void;
     countdown: (number: number) => void;
     volume: (value?: number) => number;

@@ -84,7 +84,7 @@ export default class LearnCtrl {
 
       window.history.replaceState('', '', `/learn#/${stage.id}/${level.id}`);
       window.scrollTo(0, 0);
-      if (this.vm.stageState === 'init') window.lishogi.sound.play('learn/koto-start', 'misc');
+      if (this.vm.stageState === 'init') window.lishogi.sound.play('learn/koto-start', 'misc', 0.3);
     } else this.setHome();
   }
 
@@ -109,7 +109,7 @@ export default class LearnCtrl {
     if (this.vm) {
       if (this.vm.level.id === this.vm.stage.levels.length) {
         this.vm.stageState = 'completed';
-        window.lishogi.sound.play('learn/koto-end', 'misc');
+        window.lishogi.sound.play('learn/koto-end', 'misc', 0.3);
       }
       this.vm.levelState = 'completed';
       this.vm.score = calcScore(this.vm.level, this.vm.usiCList);
