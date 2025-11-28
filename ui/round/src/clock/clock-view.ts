@@ -44,7 +44,7 @@ export function renderClock(ctrl: RoundController, player: Player, position: Pos
         byo: usingByo,
         emerg:
           (millis < clock.emergMs && clock.byoyomi === 0) ||
-          (usingByo && millis < (clock.byoyomi * 1000) / 3),
+          (usingByo && millis < emergByoMs(clock.byoyomi)),
       },
     },
     clock.opts.nvui
@@ -133,11 +133,15 @@ export function updateElements(
     const cl = els.clock.parentElement.classList;
     if (
       (millis < clock.emergMs && clock.byoyomi === 0) ||
-      (clock.isUsingByo(color) && millis < (clock.byoyomi * 1000) / 3)
+      (clock.isUsingByo(color) && millis < emergByoMs(clock.byoyomi))
     )
       cl.add('emerg');
     else if (cl.contains('emerg')) cl.remove('emerg');
   }
+}
+
+function emergByoMs(byo: number): number {
+  return (byo * 1000) / 3;
 }
 
 function showBerserk(ctrl: RoundController, color: Color): boolean {

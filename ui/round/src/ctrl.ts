@@ -11,7 +11,7 @@ import { i18n, i18nFormat } from 'i18n';
 import { type KeyboardMove, ctrl as makeKeyboardMove } from 'keyboard-move';
 import { flipMetaPlayers } from 'shogi/common';
 import { makeNotation, makeNotationLine } from 'shogi/notation';
-import { rankFromRating, rankName } from 'shogi/rank';
+import { rankFromRating, rankTagHtml } from 'shogi/rank';
 import { Shogiground } from 'shogiground';
 import type { Api as SgApi } from 'shogiground/api';
 import type { Config as SgConfig } from 'shogiground/config';
@@ -642,7 +642,6 @@ export default class RoundController {
   };
 
   endWithData = (o: ApiEnd): void => {
-    // todo outoftime juu
     const d = this.data;
     d.game.winner = o.winner;
     d.game.status = o.status;
@@ -675,8 +674,16 @@ export default class RoundController {
           o.provisionals?.[d.player.color],
         );
     }
-    if (!d.player.spectator && d.game.plies > 1)
-      li.sound.play(o.winner ? (d.player.color === o.winner ? 'victory' : 'defeat') : 'draw');
+    if (!d.player.spectator && d.game.plies > 1) {
+      if (
+        o.status.name === 'outoftime' &&
+        d.clock?.byoyomi &&
+        window.lishogi.sound.clockSoundJapanese()
+      ) {
+        window.lishogi.sound.countdown(Math.min(d.clock?.byoyomi, 10));
+      } else
+        li.sound.play(o.winner ? (d.player.color === o.winner ? 'victory' : 'defeat') : 'draw');
+    }
     this.setTitle();
     this.moveOn.next();
     this.setQuietMode();
@@ -719,9 +726,7 @@ export default class RoundController {
     <span class="title">${firstRank ? i18n('rank') : i18n('youRankedUp')}</span>
     <span class="congrats">${congrats}</span>
     <div class="r-${newRank.enName}" data-icon="${icons.upgrade}"></div>
-    <div class="rank-change-title">
-      <span class="rank-tag r-${newRank.enName}">${rankName(newRank)}</span>
-    </div>
+    <div class="rank-change-title">${rankTagHtml(newRank)}</div>
   </div>`,
       });
     }

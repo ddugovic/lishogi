@@ -249,23 +249,15 @@ export class ClockController {
 
         if (this.byoyomi === remainingByo) return;
 
-        switch (window.lishogi.sound.clockSoundSet()) {
-          case 'chisei_mazawa':
-          case 'ippan_dansei':
-          case 'robot_ja':
-          case 'sakura_ajisai':
-          case 'shougi_sennin':
-            // count up from 0 to 9
-            if (remainingByo < 10) window.lishogi.sound.countdown(10 - remainingByo);
-            // after 10, 20, 30, 40, 50 seconds elapsed
-            else if (spentByo > 0 && spentByo % 10 === 0 && spentByo <= 50) {
-              window.lishogi.sound.play(`${spentByo}s`, 'clock');
-            }
-            break;
-          default:
-            if (remainingByo < 10 || (remainingByo < 60 && remainingByo % 10 === 0))
-              window.lishogi.sound.countdown(remainingByo);
-            break;
+        if (window.lishogi.sound.clockSoundJapanese()) {
+          // count up from 0 to 9
+          if (remainingByo < 10) window.lishogi.sound.countdown(10 - remainingByo);
+          // after 10, 20, 30, 40, 50 seconds elapsed
+          else if (spentByo > 0 && spentByo % 10 === 0 && spentByo <= 50)
+            window.lishogi.sound.play(`${spentByo}s`, 'clock');
+        } else {
+          if (remainingByo < 10 || (remainingByo < 60 && remainingByo % 10 === 0))
+            window.lishogi.sound.countdown(remainingByo);
         }
       }
     }

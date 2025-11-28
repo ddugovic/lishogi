@@ -45,6 +45,12 @@ export function createSound(): SoundI {
     return state.clockSoundSet;
   }
 
+  function clockSoundJapanese(): boolean {
+    return ['chisei_mazawa', 'ippan_dansei', 'robot_ja', 'sakura_ajisai', 'shougi_sennin'].includes(
+      state.clockSoundSet,
+    );
+  }
+
   function volume(value?: number) {
     if (defined(value)) state.volumeStorage.set(value);
     const v = Number.parseFloat(state.volumeStorage.get() || '');
@@ -159,6 +165,7 @@ export function createSound(): SoundI {
     volume,
     soundSet,
     clockSoundSet,
+    clockSoundJapanese,
     loadGameSounds,
     say,
   };
