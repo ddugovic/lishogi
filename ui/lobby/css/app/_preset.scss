@@ -74,9 +74,14 @@
       .slider-wrap {
         justify-content: center;
         align-items: center;
+        width: 100%;
 
         .label {
           text-align: center;
+        }
+
+        input {
+          width: 100%;
         }
       }
     }
@@ -112,7 +117,7 @@
   }
 
   .perf {
-    font-size: 0.8em;
+    font-size: 0.7em;
   }
 
   .check-mark {

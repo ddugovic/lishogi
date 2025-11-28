@@ -286,7 +286,7 @@ function submitButtons(ctrl: SetupCtrl): VNode {
         const name = color === 'random' ? i18n('randomColor') : colorName(color, ctrl.isHandicap());
         const disabled = allDisabled || (color !== 'random' && !ctrl.canChooseColor());
         return h(`div.button-wrap${ctrl.submitted ? '.hidden' : ''}`, [
-          h(`button.button.button-metal.color-icon.${color}${disabled ? '.disabled' : ''}`, {
+          h(`button.button.button-clear.color-icon.${color}${disabled ? '.disabled' : ''}`, {
             attrs: {
               title: name,
               disabled,

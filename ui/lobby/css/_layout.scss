@@ -47,7 +47,7 @@
 
   @include breakpoint.breakpoint(local.$mq-col3) {
     grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: 12em repeat(5, fit-content(0)) min-content 1fr;
+    grid-template-rows: 14em repeat(5, fit-content(0)) min-content 1fr;
     grid-template-areas:
       'table   app     app'
       'side    app     app'

@@ -2,6 +2,8 @@ import { icons } from 'common/icons';
 import { getPerfIcon } from 'common/perf-icons';
 import { bind } from 'common/snabbdom';
 import { i18n, i18nPluralSame } from 'i18n';
+import { i18nPerf } from 'i18n/perf';
+import { rankFromRating, rankTagHtml } from 'shogi/rank';
 import { h, type VNode } from 'snabbdom';
 import type LobbyController from '../../ctrl';
 import type { Hook, Seek } from '../../interfaces';
@@ -54,19 +56,27 @@ function renderPlot(ctrl: LobbyController, hs: Hook | Seek): VNode {
 }
 
 function renderPowertip(hs: Hook | Seek): string {
+  const usr = isHook(hs) ? hs.u : hs.username;
+  const prov = isHook(hs) ? hs.prov : hs.provisional;
   const color = (isHook(hs) ? hs.c : hs.color) || 'random';
   let html = '<div class="inner">';
   if (hs.rating) {
-    const usr = isHook(hs) ? hs.u : hs.username;
-    html += `<a class="opponent ulpt is color-icon ${color}" href="/@/${usr}">`;
-    html += ` ${usr} (${hs.rating}${(isHook(hs) ? hs.prov : hs.provisional) ? '?' : ''})`;
+    const rank = !prov ? rankFromRating(hs.rating) : undefined;
+
+    html += `<a class="opponent ulpt is text color-icon ${color}" href="/@/${usr}">`;
+    html += `${rank ? rankTagHtml(rank) : ''}${usr} `;
+    html += `(${hs.rating}${(isHook(hs) ? hs.prov : hs.provisional) ? '?' : ''})`;
     html += '</a>';
   } else {
-    html += `<span class="opponent anon ${color}">${i18n('anonymousUser')}</span>`;
+    html += `<span class="opponent anon is text color-icon ${color}">${i18n('anonymousUser')}</span>`;
   }
   html += '<div class="inner-clickable">';
-  html += `<div>${isHook(hs) ? hs.clock : hs.days ? i18nPluralSame('nbDays', hs.days) : 'INF'}</div>`;
-  html += `<i data-icon="${getPerfIcon(hs.perf)}"> ${(isHook(hs) ? hs.ra : hs.mode) ? i18n('rated') : i18n('casual')}</i>`;
+  html += `<div>${isHook(hs) ? hs.clock : hs.days ? i18nPluralSame('nbDays', hs.days) : '∞'}</div>`;
+  html += `<div>${i18nPerf(hs.perf)}</div>`;
+  html += `<div>${(isHook(hs) ? hs.ra : hs.mode) ? i18n('rated') : i18n('casual')}</div>`;
+  if (hs.action === 'unjoinable')
+    html += `<div class="not-allowed">${usr ? i18n('outsideYourRating') : i18n('registeredJoinTheGame')}</div>`;
+
   html += '</div>';
   html += '</div>';
   return html;

@@ -72,6 +72,16 @@
       opacity: 1;
       transform: scale(1.15);
     }
+
+    &.unjoinable {
+      opacity: 0.6;
+      cursor: not-allowed;
+
+      &:hover {
+        opacity: 0.6;
+        transform: unset;
+      }
+    }
   }
 }
 
@@ -92,6 +102,11 @@
       cursor: pointer;
       padding: 5px 0;
     }
+  }
+
+  .not-allowed {
+    margin-top: 0.5rem;
+    max-width: 15rem;
   }
 
   .opponent {

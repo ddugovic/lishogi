@@ -32,7 +32,7 @@
       opacity: 0.4;
 
       td {
-        cursor: default;
+        cursor: not-allowed;
         background: transparent;
         border-color: transparent;
       }
@@ -154,8 +154,14 @@
     }
   }
 
-  tbody.stepping {
-    opacity: 0.7;
+  tbody {
+    tr:first-child {
+      border-top: theme.$border;
+    }
+
+    &.stepping {
+      opacity: 0.7;
+    }
   }
 }
 

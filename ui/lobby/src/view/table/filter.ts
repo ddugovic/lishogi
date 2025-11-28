@@ -51,7 +51,11 @@ export function toggle(ctrl: LobbyController, nbFiltered: number): VNode {
       hook: bind('mousedown', filter.toggle, ctrl.redraw),
       attrs: {
         'data-icon': filter.open ? icons.cancel : icons.filter,
-        title: hasFiltered ? `${i18n('filterGames')}: ${nbFiltered}` : i18n('close'),
+        title: hasFiltered
+          ? `${i18n('filterGames')}: ${nbFiltered}`
+          : !filter.open
+            ? i18n('filterGames')
+            : i18n('close'),
       },
     },
     hasFiltered ? h('small', nbFiltered < 10 ? nbFiltered : '9+') : undefined,
