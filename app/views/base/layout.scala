@@ -168,13 +168,6 @@ object layout {
       else """<button type="submit" name="lang" value="en-US" title="en-US">English</button>"""}
     </form>""")
 
-  private lazy val botImage = img(
-    src   := staticUrl("images/icons/bot.png"),
-    title := "Robot shogi",
-    style :=
-      "display:inline;width:34px;height:34px;vertical-align:top;margin-right:5px;vertical-align:text-top",
-  )
-
   private def canonical(canonicalPath: CanonicalPath)(implicit ctx: Context) = raw {
     val langQuery = ctx.req
       .getQueryString("lang")

@@ -19,25 +19,21 @@
     display: inline-flex;
     font-size: 28px;
     margin-right: 0.15em;
-  }
 
-  span {
-    color: theme.$c-font-dim;
+    &.bot::before {
+      content: icons.$cogs;
+    }
 
-    &.site-beta {
-      display: none;
-      color: theme.$c-font-dimmer;
-      position: relative;
-      top: -16px;
-      margin-left: 5px;
-      font-size: 14px;
+    &.kiddo::before {
+      content: ':)';
+      font-family: monospace;
+      color: theme.$c-font-dim;
     }
   }
 
-  .kiddo {
-    color: theme.$c-font-dimmer;
-    font-weight: bold;
-    margin-right: 0.5em;
+  // .org or .dev
+  span {
+    color: theme.$c-font-dim;
   }
 
   @include breakpoint.breakpoint(media-queries.$mq-xx-small) {
