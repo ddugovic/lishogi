@@ -28,7 +28,7 @@ final class Env(
   def version(id: lila.chat.Chat.Id) =
     chatroomSocket.rooms.ask[SocketVersion](id.value)(GetVersion)
 
-  system.scheduler.scheduleWithFixedDelay(40 seconds, 10 minutes) { () =>
+  system.scheduler.scheduleWithFixedDelay(80 seconds, 10 minutes) { () =>
     chatApi.userChat.clearInactive(lila.chat.Chat.Id(lishogiChatroomId), _.Chatroom).unit
   }
 
