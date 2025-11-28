@@ -3,6 +3,7 @@
 @use 'pkg:common/abstract/media-queries';
 @use 'pkg:common/abstract/variables';
 @use 'pkg:common/theme';
+@use './local';
 
 .tour__main__header {
   @extend %flex-center-nowrap;
@@ -83,11 +84,16 @@
   }
 
   .tour-sched-monthly & h1 {
-    color: theme.$c-red;
+    color: local.$c-monthly;
   }
 
   .tour-sched-yearly & h1 {
-    color: theme.$c-brag;
+    color: local.$c-yearly;
+    font-weight: bold;
+  }
+
+  .tour-sched-shield & h1 {
+    color: local.$c-shield;
   }
 
   .tour__main-finished & h1 {
