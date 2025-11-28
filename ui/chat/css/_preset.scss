@@ -33,6 +33,14 @@
         color: theme.$c-accent-over;
         opacity: 1;
       }
+
+      &:first-child {
+        border-left: none;
+      }
+
+      &:last-child {
+        border-right: none;
+      }
     }
   }
 }

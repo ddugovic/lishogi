@@ -5,6 +5,8 @@
 
 .now-playing {
   display: grid;
+  padding: 9px;
+  grid-gap: 9px;
 
   --np-min-width: 200px;
 
@@ -21,7 +23,10 @@
     flex-direction: column;
     justify-content: center;
     color: theme.$c-font;
-    padding: 0.3em;
+
+    &:hover {
+      background-color: theme.$c-bg-zebra;
+    }
   }
 
   .meta {

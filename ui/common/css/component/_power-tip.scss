@@ -8,7 +8,7 @@
   @extend %box-radius-force, %popup-shadow;
 
   width: 20rem;
-  min-height: 3em;
+  min-height: 8em; // determines powertip positioning
   background: theme.$c-bg-popup;
   display: none;
   position: absolute;
@@ -26,7 +26,7 @@
     @extend %flex-column;
 
     min-height: 80px;
-    padding: 4px 5px 4px 2px;
+    padding: 8px;
     border-bottom: theme.$border;
     overflow: hidden;
     justify-content: space-between;
@@ -81,12 +81,14 @@
   }
 
   &__actions.btn-rack {
-    @extend %box-shadow;
-
     width: 100%;
     justify-content: stretch;
     border: 0;
     border-radius: 0;
+
+    &:not(:last-child) {
+      border-bottom: theme.$border;
+    }
 
     a {
       flex: 0 0 18%;

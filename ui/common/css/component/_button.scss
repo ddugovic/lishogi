@@ -38,6 +38,14 @@
     text-transform: none;
   }
 
+  &-block {
+    display: block;
+  }
+
+  &-spaced {
+    margin: 1rem;
+  }
+
   &-thin {
     padding: 0.1em 1em;
     font-size: 90%;
@@ -98,15 +106,13 @@
     }
   }
 
-  &.button-metal {
-    @extend %metal;
-
+  &.button-clear {
+    background: theme.$c-bg-zebra;
     color: theme.$c-font-clear;
 
     &:not(.disabled):hover {
+      background: theme.$c-bg-zebra2;
       color: theme.$c-font-clearer;
-
-      @extend %metal-hover;
     }
   }
 

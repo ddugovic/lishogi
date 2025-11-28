@@ -1,6 +1,4 @@
-@use 'pkg:breakpoint-sass' as breakpoint;
 @use 'pkg:common/abstract/extends';
-@use 'pkg:common/abstract/uniboard';
 @use 'pkg:common/theme';
 
 .mchat {
@@ -8,15 +6,10 @@
     @extend %break-word;
 
     flex: 1 1 auto;
-    max-height: 50vh;
     overflow-y: auto;
     overflow-x: hidden;
     cursor: initial;
     font-size: 0.9em;
-
-    @include breakpoint.breakpoint(uniboard.$mq-col3-uniboard) {
-      max-height: none;
-    }
 
     li {
       position: relative;

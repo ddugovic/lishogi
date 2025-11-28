@@ -61,12 +61,10 @@
       white-space: nowrap;
       display: block;
       padding: 0.45rem calc(1rem - 6px);
-      border-left: 3px solid transparent;
 
       &.current {
         color: theme.$c-primary-over;
         background: theme.$c-primary;
-        border-color: theme.$c-primary-over;
       }
 
       @include mixins.transition;
