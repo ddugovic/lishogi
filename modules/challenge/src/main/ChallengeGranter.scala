@@ -22,7 +22,6 @@ object ChallengeDenied {
     case class RatingOutsideRange(perf: PerfType)  extends Reason
     case class RatingIsProvisional(perf: PerfType) extends Reason
     case object FriendsOnly                        extends Reason
-    case object BotTooFast                         extends Reason
     case object SelfChallenge                      extends Reason
   }
 
@@ -39,7 +38,6 @@ object ChallengeDenied {
       case Reason.FriendsOnly =>
         I18nKeys.xOnlyAcceptsChallengesFromFriends.txt(d.dest.titleUsername)
       case Reason.SelfChallenge => "You cannot challenge yourself."
-      case Reason.BotTooFast    => "Bots cannot play UltraBullet. Choose a slower time control."
     }
 }
 
@@ -80,11 +78,6 @@ final class ChallengeGranter(
             case _ if from == dest          => SelfChallenge.some
             case _                          => none
           }
-      }
-      .map {
-        // todo
-        // case None if dest.isBot && perfType.has(PerfType.UltraBullet) => BotTooFast.some
-        case res => res
       }
       .map {
         _.map { ChallengeDenied(dest, _) }
