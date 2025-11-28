@@ -97,7 +97,10 @@ const pieceSetNameCls: Record<string, [string, string]> = {
     'image-rendering: pixelated; background-size: contain; background-repeat: no-repeat;',
     'image-rendering: unset; background-size: cover;',
   ],
-  characters: ['background-size: contain;', 'background-size: cover;'],
+  characters: [
+    'background-size: contain; background-repeat: no-repeat;',
+    'background-size: cover;',
+  ],
 };
 
 function extraCss(pieceSet: PieceSet): string {
