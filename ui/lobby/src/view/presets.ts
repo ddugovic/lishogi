@@ -78,23 +78,13 @@ function presetPerf(p: Preset): Perf {
   return p.timeMode == 2 ? 'correspondence' : 'realTime';
 }
 
-function fullWidthNumber(n: number): string {
-  return n
-    .toString()
-    .split('')
-    .map(d => String.fromCharCode(d.charCodeAt(0) + 0xfee0))
-    .join('');
-}
-
 function presetLabel(p: Preset, perf: Perf): string | undefined {
   if (useJapanese()) {
-    return !p.lim && p.byo
-      ? `${fullWidthNumber(p.byo)}秒秒読み`
-      : p.lim && !p.byo
-        ? `${fullWidthNumber(p.lim)}分切れ負け`
-        : p.lim && p.byo
-          ? `${fullWidthNumber(p.lim)}分切れ${fullWidthNumber(p.byo)}秒`
-          : i18nPerf(perf);
+    if (!p.lim && p.byo) return `1手${p.byo}秒`;
+    else if (p.lim && !p.byo) return `${p.lim}分切れ負け`;
+    else if (p.lim && p.byo) return `${p.lim}分・秒読み${p.byo}秒`;
+
+    return i18nPerf(perf);
   } else if (perf !== 'realTime') {
     return i18nPerf(perf);
   } else return;
@@ -104,7 +94,10 @@ function presetButton(p: Preset, ctrl: LobbyController): VNode {
   const clock =
     p.timeMode == 2 ? i18nPluralSame('nbDays', p.days) : clockShow(p.lim * 60, p.byo, p.inc, p.per);
   const perf = presetPerf(p);
-  const label = p.ai ? `AI - ${i18nFormat('levelX', p.ai).toLowerCase()}` : presetLabel(p, perf);
+  const separator = useJapanese() ? '・' : ' - ';
+  const label = p.ai
+    ? `AI${separator}${i18nFormat('levelX', p.ai).toLowerCase()}`
+    : presetLabel(p, perf);
   const isReady =
     !!p.ai ||
     (p.timeMode == 2
@@ -129,7 +122,10 @@ function presetButton(p: Preset, ctrl: LobbyController): VNode {
       h('div.perf', label),
       isReady
         ? h('i.check-mark', {
-            attrs: { 'data-icon': icons.circleFull, title: i18n('readyToPlay') },
+            attrs: {
+              'data-icon': icons.circleFull,
+              title: i18n('readyToPlay'),
+            },
           })
         : null,
     ],
