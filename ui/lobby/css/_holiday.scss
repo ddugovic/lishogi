@@ -9,7 +9,6 @@
 
   &::after {
     content: '';
-
     position: absolute;
     background-image: functions.img-url('holidays/#{$icon}');
     background-repeat: no-repeat;

@@ -3,10 +3,10 @@
 @use 'dark-new' as *;
 @use '../abstract/icons';
 
-$c-bg-page: hsl(48, 65%, 87%);
-$c-body-gradient: hsl(48, 60%, 83%);
+$c-bg-page: hsl(48deg, 65%, 87%);
+$c-body-gradient: hsl(48deg, 60%, 83%);
 
-$c-bg-high: hsl(53, 74%, 94%);
+$c-bg-high: hsl(53deg, 74%, 94%);
 $c-bg-low: #f5edca;
 
 $c-bg-zebra: #f3eac7;

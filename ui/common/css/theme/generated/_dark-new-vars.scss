@@ -8,7 +8,7 @@
 
 html {
   --border: #{1px solid $c-border};
-  --c-accent: #{hsl(26, 80%, 38%)};
+  --c-accent: #{hsl(26deg, 80%, 38%)};
   --c-accent-clear: #{c-whiter($c-accent, 20%)};
   --c-accent-dim: #{c-blacker($c-accent, 20%)};
   --c-accent-over: #{#fff};
@@ -43,11 +43,11 @@ html {
   --c-error-over: #{#000};
   --c-fancy: #{hsl(294deg, 62%, 48%)};
   --c-fancy-over: #{white};
-  --c-font: #{hsl(37, 35%, 73%)};
+  --c-font: #{hsl(37deg, 35%, 73%)};
   --c-font-clear: #{color.adjust($c-font, $lightness: 7%, $space: oklch)};
   --c-font-clearer: #{color.adjust($c-font, $lightness: 15%, $space: oklch)};
-  --c-font-dim: #{hsl(37, 15%, 55%)};
-  --c-font-dimmer: #{hsl(37, 10%, 42%)};
+  --c-font-dim: #{hsl(37deg, 15%, 55%)};
+  --c-font-dimmer: #{hsl(37deg, 10%, 42%)};
   --c-font-metal: #{inherit};
   --c-font-metal-hover: #{$c-font-clear};
   --c-font-page: #{$c-font-dim};

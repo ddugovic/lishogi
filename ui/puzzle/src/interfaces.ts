@@ -180,7 +180,7 @@ export interface PuzzleGame {
   description?: string;
 }
 
-export interface PuzzlePlayer {
+interface PuzzlePlayer {
   color: Color;
   userId?: string;
   name?: string;
