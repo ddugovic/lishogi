@@ -295,9 +295,7 @@ final class ChatApi(
               "$slice" -> -maxLinesPerChat.value,
             ),
           ),
-        ) ++ $set(Chat.BSONFields.updatedAt -> DateTime.now) ++ (permanent ?? $set(
-          Chat.BSONFields.permanent -> true,
-        )),
+        ) ++ (!permanent ?? $set(Chat.BSONFields.updatedAt -> DateTime.now)),
         upsert = true,
       )
       .void

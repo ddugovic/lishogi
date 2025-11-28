@@ -112,7 +112,6 @@ object Chat {
     val id        = "_id"
     val lines     = "l"
     val updatedAt = "u"
-    val permanent = "p"
   }
 
   import BSONFields._
