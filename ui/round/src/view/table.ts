@@ -160,20 +160,24 @@ function whosTurn(ctrl: RoundController, color: Color, position: Position) {
   ]);
 }
 
-function anyClock(ctrl: RoundController, position: Position) {
-  const player = ctrl.playerAt(position);
-  if (ctrl.clock) return renderClock(ctrl, player, position);
-  else if (
+function showCorresClock(ctrl: RoundController): boolean {
+  return (
     ctrl.data.correspondence &&
     ctrl.data.game.plies > 1 &&
     !(ctrl.data.game.status.id > status.ids.paused)
-  )
+  );
+}
+
+function anyClock(ctrl: RoundController, position: Position) {
+  const player = ctrl.playerAt(position);
+  if (ctrl.clock) return renderClock(ctrl, player, position);
+  else if (showCorresClock(ctrl))
     return renderCorresClock(ctrl.corresClock!, player.color, position, ctrl.data.game.player);
   else return whosTurn(ctrl, player.color, position);
 }
 
 export const renderTable = (ctrl: RoundController): MaybeVNodes => [
-  h(`div.round__app__table${!ctrl.data.clock ? '.no-clock' : ''}`),
+  h(`div.round__app__table${!ctrl.data.clock && !showCorresClock(ctrl) ? '.no-clock' : ''}`),
   renderExpiration(ctrl),
   renderPlayer(ctrl, 'top'),
   ...(ctrl.data.player.spectator
