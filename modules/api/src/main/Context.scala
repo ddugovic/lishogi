@@ -48,6 +48,7 @@ sealed trait Context extends lila.user.UserContextWrapper {
 
   def lang = userContext.lang
   def withLang(newLang: Lang): Context
+  def isJapanese = lang.language == "ja"
 
   def teamNbRequests  = pageData.teamNbRequests
   def nbChallenges    = pageData.nbChallenges

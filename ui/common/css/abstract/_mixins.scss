@@ -101,6 +101,7 @@
 
 @mixin light-theme {
   html.light &,
+  html.light-new &,
   html.custom-light & {
     @content;
   }

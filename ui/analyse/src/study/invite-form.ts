@@ -102,7 +102,7 @@ export function view(ctrl: StudyInviteFormCtrl): VNode {
             'div.users',
             candidates.map((username: string) =>
               h(
-                'span.button.button-metal',
+                'span.button',
                 {
                   key: username,
                   hook: bind('click', _ => ctrl.invite(username)),
