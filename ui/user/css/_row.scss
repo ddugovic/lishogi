@@ -57,7 +57,7 @@
     @extend %flex-center;
 
     &::before {
-      font-size: 3em;
+      font-size: 3.5em;
       opacity: 0.7;
       margin-right: 0.7rem;
     }
@@ -67,7 +67,7 @@
         @extend %roboto;
 
         font-weight: normal;
-        font-size: 1.4em;
+        font-size: 1.5em;
         text-transform: uppercase;
         display: block;
       }

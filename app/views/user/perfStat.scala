@@ -50,6 +50,7 @@ object perfStat {
               a(href := routes.User.show(u.username))(u.username),
               span(perfStats(perfType.trans)),
             ),
+            bits.perfTrophies(u, rankMap.view.filterKeys(perfType.==).toMap),
             div(cls := "box__top__actions")(
               u.perfs(perfType).nb > 0 option a(
                 cls      := "button button-empty text",
@@ -57,7 +58,6 @@ object perfStat {
                 href     := s"${routes.User.games(u.username, "search")}?perf=${perfType.id}",
               )(viewTheGames()),
             ),
-            bits.perfTrophies(u, rankMap.view.filterKeys(perfType.==).toMap),
           ),
           ratingChart.isDefined option bits.ratingHistoryContainer,
           div(cls := "box__pad perf-stat__content")(

@@ -46,7 +46,7 @@
       }
     }
 
-    > span {
+    > div {
       flex: 1 1 100%;
 
       @extend %flex-column;
@@ -84,6 +84,17 @@
       font-size: 0.8em;
       opacity: 0.6;
       line-height: 1em;
+    }
+
+    &.perf-puzzle .perf-rating-int {
+      display: block;
+      font-size: 1.3em;
+      font-weight: bold;
+    }
+
+    &.perf-storm .perf-cnt {
+      display: block;
+      margin-left: 0;
     }
   }
 

@@ -19,13 +19,14 @@
 
   .trophy {
     margin-top: -4em;
+    margin-left: auto;
 
     &.top1 {
       filter: drop-shadow(0 0 6px theme.$c-brag);
     }
 
     img {
-      height: 8em;
+      height: 80px;
     }
   }
 

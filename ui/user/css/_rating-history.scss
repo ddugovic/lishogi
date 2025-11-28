@@ -21,11 +21,6 @@
     button {
       display: inline-flex;
       text-transform: uppercase;
-      border: theme.$border;
-
-      &:only-child {
-        display: none;
-      }
     }
   }
 }

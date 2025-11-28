@@ -34,7 +34,7 @@ object side {
           if (isPuzzle) ctx.is(u) option routes.Puzzle.dashboard(30, "home").url
           else routes.User.perfStat(u.username, perfType.key).url.some
         },
-        span(
+        div(
           h3(perfType.trans),
           !isPuzzle option strong(cls := "perf-rank")(
             rankTag(perf, withUnknown = true),
@@ -90,20 +90,24 @@ object side {
     a(
       dataIcon := Icons.storm,
       cls := List(
-        "perf-item" -> true,
-        "empty"     -> !storm.nonEmpty,
+        "perf-item"  -> true,
+        "perf-storm" -> true,
+        "empty"      -> !storm.nonEmpty,
       ),
       href := routes.Storm.dashboardOf(user.username),
-      span(
+      div(
         h3("Storm"),
-        st.rating(
-          strong(storm.score),
+        div(cls := "perf-meta")(
+          st.rating(
+            span(cls := "perf-rating-int")(
+              trans.storm.highscoreX(strong(storm.score)),
+            ),
+          ),
+          span(cls := "perf-cnt")(
+            span(trans.storm.xRuns.plural(storm.runs, storm.runs.localize)),
+          ),
         ),
       ),
-      span(cls := "perf-cnt")(
-        span(trans.storm.xRuns.plural(storm.runs, storm.runs.localize)),
-      ),
-      iconTag(Icons.play),
     )
 
   private def aiLevel(level: Int, variant: shogi.variant.Variant)(implicit lang: Lang) =

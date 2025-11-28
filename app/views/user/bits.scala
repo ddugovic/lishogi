@@ -93,7 +93,7 @@ object bits {
     )
 
   def ratingHistoryContainer = div(cls := "rating-history-container")(
-    div(cls := "time-selector-buttons"),
+    div(cls := "time-selector-buttons btn-rack"),
     spinner,
     div(cls := "chart-container")(canvas(cls := "rating-history")),
   )

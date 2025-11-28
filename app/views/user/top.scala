@@ -12,21 +12,26 @@ object top {
 
   def apply(perfType: lila.rating.PerfType, users: List[User.LightPerf])(implicit ctx: Context) = {
 
-    val title = s"${perfType.trans} top 200"
+    val title = s"${trans.leaderboard.txt()} - ${perfType.trans}"
+    val desc  = trans.topXPlayersInY.txt("200", perfType.trans)
 
     views.html.base.layout(
       title = title,
-      moreCss = cssTag("misc.slist"),
+      moreCss = frag(
+        cssTag("misc.slist"),
+        cssTag("misc.page"),
+      ),
       openGraph = lila.app.ui
         .OpenGraph(
-          title = s"${trans.leaderboard.txt()} - ${perfType.trans}",
+          title = title,
           url = s"$netBaseUrl${routes.User.topNb(200, perfType.key).url}",
-          description = trans.topXPlayersInY.txt("200", perfType.trans),
+          description = desc,
         )
         .some,
     )(
       main(cls := "page-small box")(
-        h1(a(href := routes.User.list, dataIcon := Icons.left), title),
+        h1(a(cls := "text", href := routes.User.list, dataIcon := Icons.left), title),
+        p(cls := "center")(desc),
         table(cls := "slist slist-pad")(
           tbody(
             users.zipWithIndex.map { case (u, i) =>
