@@ -154,7 +154,10 @@ final class MsgApi(
   }
 
   def postPreset(dest: User, preset: MsgPreset): Funit =
-    systemPost(dest.id, preset.text)
+    systemPost(
+      dest.id,
+      if (dest.realLang.exists(_.language == "ja")) preset.jaText else preset.enText,
+    )
 
   def systemPost(destId: User.ID, text: String) =
     post(User.lishogiId, destId, text, multi = true)
