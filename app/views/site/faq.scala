@@ -103,6 +103,15 @@ object faq {
           ),
         ),
         question(
+          "ranks",
+          trans.ranks.txt(),
+          p(
+            trans.ranksAfterStable(),
+            br,
+            a(href := routes.Main.ranks)(clickHereRatingRanks()),
+          ),
+        ),
+        question(
           "provisional",
           whatIsProvisionalRating.txt(),
           p(provisionalRatingExplanation()),
