@@ -232,7 +232,7 @@ export default function (
 
     const merge = !vm.mode.write && sameChapter;
     ctrl.reloadData(d.analysis, merge);
-    vm.gamebookOverride = undefined;
+    if (vm.gamebookOverride !== 'play' || !data.chapter.gamebook) vm.gamebookOverride = undefined;
     configureAnalysis();
     vm.loading = false;
 
