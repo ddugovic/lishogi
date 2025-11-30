@@ -1,4 +1,5 @@
 @use 'pkg:breakpoint-sass' as breakpoint;
+@use '../abstract/extends';
 @use '../abstract/media-queries';
 @use '../abstract/uniboard';
 @use '../component/subnav';
@@ -31,9 +32,10 @@
   }
 
   &__content {
+    @extend %box-neat-force;
+
     grid-area: content;
     height: 100%;
-    // overflow: hidden; /* fixes crazy text overflow on Fx */
   }
 
   &__content.box {
