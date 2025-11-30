@@ -42,7 +42,8 @@ final class Photographer(repo: ImageRepo, prefix: String) {
 
 object Photographer {
 
-  val uploadMaxMb = 3
+  val uploadMaxMbRecommended = 2
+  val uploadMaxMb            = 3
 
   type Uploaded = play.api.mvc.MultipartFormData.FilePart[play.api.libs.Files.TemporaryFile]
 }

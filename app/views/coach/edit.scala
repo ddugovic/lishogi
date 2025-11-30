@@ -42,28 +42,18 @@ object edit {
       div(cls := "account coach-edit box")(
         div(cls := "top")(
           div(cls := "picture_wrap")(
-            if (c.coach.hasPicture)
-              a(
-                cls   := "upload_picture",
-                href  := routes.Coach.picture,
-                title := "Change/delete your profile picture",
-              )(
-                widget.pic(c, 250),
-              )
-            else
-              div(cls := "upload_picture")(
-                a(cls := "button", href := routes.Coach.picture)("Upload a profile picture"),
-              ),
+            a(
+              cls  := "upload_picture",
+              href := routes.Coach.picture,
+              title := (if (c.coach.hasPicture)
+                          trans.streamer.changePicture.txt()
+                        else trans.streamer.uploadPicture.txt()),
+            )(
+              widget.pic(c, 250),
+            ),
           ),
           div(cls := "overview")(
             h1(widget.titleName(c)),
-            div(
-              cls                  := "todo",
-              attr("data-profile") := c.user.profileOrDefault.nonEmptyRealName.isDefined,
-            )(
-              h3(trans.coach.todoTitle()),
-              ul,
-            ),
             div(
               a(
                 href     := routes.Coach.show(c.user.username),

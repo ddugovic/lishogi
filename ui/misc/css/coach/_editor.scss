@@ -7,6 +7,9 @@
 .coach-picture {
   .top {
     display: flex;
+    background: theme.$c-bg-zebra;
+    border-bottom: 3px solid theme.$c-primary;
+    padding: 1rem;
 
     h1 {
       @extend %roboto;
@@ -34,12 +37,6 @@
 }
 
 .coach-edit {
-  .top .upload_picture {
-    text-align: center;
-    margin: 0 10px;
-    margin-top: 50%;
-  }
-
   .overview {
     width: 100%;
     height: 250px;
@@ -47,36 +44,10 @@
     flex-flow: column;
   }
 
-  .overview .todo {
-    display: none;
-  }
-
-  .overview.with-todo .todo {
-    @extend %box-radius;
-
-    display: block;
-    width: 85%;
-    border-radius: 20px;
-    padding: 1rem;
-    background: theme.$m-error_bg-box_mix_15;
-    border: 1px solid theme.$c-error;
-    margin: auto;
-  }
-
-  .overview .todo h3 {
-    margin: 0;
-    color: theme.$c-bad;
-    font-weight: bold;
-  }
-
-  .overview .todo li {
-    list-style: disc inside;
-  }
-
   .tabs {
     display: flex;
     cursor: pointer;
-    margin: 40px 0;
+    margin: 20px 0 40px 0;
     text-transform: uppercase;
 
     > div {

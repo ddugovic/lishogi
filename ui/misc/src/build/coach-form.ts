@@ -61,22 +61,24 @@ window.lishogi.ready.then(() => {
   });
 
   const langInput = document.getElementById('form3-languages') as HTMLInputElement;
-  const whitelistJson = langInput.getAttribute('data-all');
-  const whitelist = whitelistJson ? (JSON.parse(whitelistJson) as Tagify.TagData[]) : undefined;
-  const initialValues = langInput
-    .getAttribute('data-value')
-    ?.split(',')
-    .map(code => whitelist?.find(l => l.code == code)?.value)
-    .filter(v => !!v);
-  if (initialValues) langInput.setAttribute('value', initialValues.join(','));
-  new window.Tagify(langInput, {
-    maxTags: 10,
-    whitelist,
-    enforceWhitelist: true,
-    dropdown: {
-      enabled: 1,
-    },
-  });
+  if (langInput) {
+    const whitelistJson = langInput.getAttribute('data-all');
+    const whitelist = whitelistJson ? (JSON.parse(whitelistJson) as Tagify.TagData[]) : undefined;
+    const initialValues = langInput
+      .getAttribute('data-value')
+      ?.split(',')
+      .map(code => whitelist?.find(l => l.code == code)?.value)
+      .filter(v => !!v);
+    if (initialValues) langInput.setAttribute('value', initialValues.join(','));
+    new window.Tagify(langInput, {
+      maxTags: 10,
+      whitelist,
+      enforceWhitelist: true,
+      dropdown: {
+        enabled: 1,
+      },
+    });
+  }
 
   const submit = debounce(() => {
     const form = document.querySelector('form.async') as HTMLFormElement;

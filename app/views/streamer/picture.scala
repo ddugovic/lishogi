@@ -28,7 +28,7 @@ object picture {
             enctype := "multipart/form-data",
             cls     := "upload",
           )(
-            p(maxSize(s"${lila.db.Photographer.uploadMaxMb}MB.")),
+            p(maxSize(s"${lila.db.Photographer.uploadMaxMbRecommended}MB.")),
             form3.file.image("picture"),
             submitButton(cls := "button")(uploadPicture()),
           ),

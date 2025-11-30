@@ -32,7 +32,7 @@ object picture {
             enctype := "multipart/form-data",
             cls     := "upload",
           )(
-            p("Max size: ", lila.db.Photographer.uploadMaxMb, "MB."),
+            p("Max size: ", lila.db.Photographer.uploadMaxMbRecommended, "MB. Ratio: 1/1 (square)"),
             form3.file.image("picture"),
             form3.actions(
               a(href := routes.Coach.edit)(trans.cancel()),
