@@ -84,14 +84,11 @@ main.robin {
               margin-right: 0.5rem;
             }
 
-            .name {
-              padding-right: 5px;
-            }
-
             .rating {
               font-style: italic;
               font-size: 0.9em;
               opacity: 0.9;
+              color: theme.$c-font-dim;
             }
 
             .user-link:hover {

@@ -62,6 +62,7 @@ object bits {
               p,
               withOnline = false,
               withModLink = true,
+              withFlag = false,
             ),
             s" ${p.blurs.nb}/${game.playerMoves(p.color)} blurs ",
             strong(game.playerBlurPercent(p.color), "%"),

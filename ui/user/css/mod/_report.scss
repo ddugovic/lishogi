@@ -60,6 +60,7 @@ $c-report-high-over: theme.$c-brag-over;
     font-weight: bold;
     font-size: 1.2em;
     padding: 0.3em 0.5em;
+    margin-right: 0.3rem;
     border-radius: 0.3em;
   }
 
@@ -118,8 +119,15 @@ $c-report-high-over: theme.$c-brag-over;
   }
 
   table.see .perfs {
+    display: flex;
+    flex-wrap: wrap;
     font-size: 0.9em;
-    white-space: nowrap;
+    max-width: 12rem;
+    margin-top: 0.5rem;
+
+    .text {
+      margin-left: 0.5rem;
+    }
   }
 
   table.see .text {

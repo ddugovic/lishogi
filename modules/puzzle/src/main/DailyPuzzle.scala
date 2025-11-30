@@ -72,8 +72,8 @@ final private[puzzle] class DailyPuzzle(
                     ),
                     $doc(
                       "$match" -> $doc(
-                        Puzzle.BSONFields.day $exists false,
-                        Puzzle.BSONFields.themes $ne PuzzleTheme.oneMove.key.value,
+                        F.day $exists false,
+                        F.themes $ne PuzzleTheme.oneMove.key.value,
                       ),
                     ),
                   ),

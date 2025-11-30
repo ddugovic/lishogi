@@ -126,6 +126,7 @@
 
   .setup-time-mode {
     margin-bottom: 0.5rem;
+    overflow: hidden; // helps radio group clipping
   }
 
   .setup-time.section {
@@ -158,6 +159,10 @@
   }
 
   .setup-levels {
+    label {
+      overflow: hidden; // helps radio group clipping
+    }
+
     padding-bottom: 0.25rem;
   }
 
