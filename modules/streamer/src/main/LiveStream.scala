@@ -77,6 +77,7 @@ final class LiveStreamApi(
       .buildAsyncFuture { _ =>
         streamingActor ? Streaming.Get mapTo manifest[LiveStreams] dmap { s =>
           LiveStreams(s.streams.sortBy(-_.streamer.approval.tier))
+          // useForTesting(s)
         } addEffect { s =>
           userIdsCache = s.streams.map(_.streamer.userId).toSet
         }
@@ -85,40 +86,38 @@ final class LiveStreamApi(
   private var userIdsCache = Set.empty[User.ID]
 
   def all: Fu[LiveStreams] = cache.getUnit
+
   // import org.joda.time.DateTime
-  // def all: Fu[LiveStreams] =
-  //  fuccess(
-  //    LiveStreams(
-  //      List(
-  //        Stream.Twitch.Stream(
-  //          "test",
-  //          "Playing shogi on lishogi.org, come and watch!",
-  //          Streamer(
-  //            _id = Streamer.Id("test"),
-  //            listed = Streamer.Listed(true),
-  //            approval = Streamer.Approval(
-  //              requested = false,
-  //              granted = true,
-  //              ignored = false,
-  //              tier = 5,
-  //              chatEnabled = true,
-  //              lastGrantedAt = DateTime.now.some
-  //            ),
-  //            picturePath = none,
-  //            name = Streamer.Name("test"),
-  //            headline = none,
-  //            description = none,
-  //            twitch = none,
-  //            youTube = none,
-  //            seenAt = DateTime.now,      // last seen online
-  //            liveAt = DateTime.now.some, // last seen streaming
-  //            createdAt = DateTime.now,
-  //            updatedAt = DateTime.now
-  //          )
-  //        )
-  //      )
-  //    )
-  //  )
+  // def useForTesting(s: LiveStreams) = LiveStreams(
+  //   s.streams ::: List(
+  //     Stream.Twitch.Stream(
+  //       "test",
+  //       "Playing shogi on lishogi.org, come and watch!",
+  //       Streamer(
+  //         _id = Streamer.Id("test"),
+  //         listed = Streamer.Listed(true),
+  //         approval = Streamer.Approval(
+  //           requested = false,
+  //           granted = true,
+  //           ignored = false,
+  //           tier = 5,
+  //           chatEnabled = true,
+  //           lastGrantedAt = DateTime.now.some,
+  //         ),
+  //         picturePath = none,
+  //         name = Streamer.Name("test"),
+  //         headline = none,
+  //         description = none,
+  //         twitch = none,
+  //         youTube = none,
+  //         seenAt = DateTime.now,      // last seen online
+  //         liveAt = DateTime.now.some, // last seen streaming
+  //         createdAt = DateTime.now,
+  //         updatedAt = DateTime.now,
+  //       ),
+  //     ),
+  //   ),
+  // )
 
   def of(s: Streamer.WithUser): Fu[Streamer.WithUserAndStream] =
     all.map { live =>
