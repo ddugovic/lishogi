@@ -30,7 +30,7 @@
     padding: 0.5em 0.7em;
     white-space: nowrap;
     line-height: 1.9em;
-    border: 1px solid theme.$c-border-page;
+    border: theme.$border;
     border-bottom: none;
 
     @include mixins.transition;

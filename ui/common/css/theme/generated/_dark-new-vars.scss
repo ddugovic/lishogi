@@ -30,8 +30,7 @@ html {
   --c-blunder: #{hsl(0deg, 69%, 60%)};
   --c-blunder-clear: #{hsl(0deg, 100%, 62%)};
   --c-body-gradient: #{color.adjust($c-bg-page, $lightness: 6%, $saturation: 2%)};
-  --c-border: #{hsl(0deg, 0%, 26%)};
-  --c-border-page: #{hsl(0deg, 0%, 22%)};
+  --c-border: #{hsl(44, 35%, 20%)};
   --c-bot: #{$c-fancy};
   --c-brag: #{#e9b143};
   --c-brag-over: #{#000};
@@ -201,8 +200,6 @@ html {
   --m-secondary_bg-header-dropdown_mix_15: #{color.mix($c-secondary,$c-bg-header-dropdown,15%)};
   --m-secondary_bg-header-dropdown_mix_27: #{color.mix($c-secondary,$c-bg-header-dropdown,27%)};
   --m-secondary_bg-header-dropdown_mix_36: #{color.mix($c-secondary,$c-bg-header-dropdown,36%)};
-  --m-secondary_bg-page_mix_60: #{color.mix($c-secondary,$c-bg-page,60%)};
-  --m-secondary_bg-page_mix_80: #{color.mix($c-secondary,$c-bg-page,80%)};
   --m-secondary_bg-popup_mix_10: #{color.mix($c-secondary,$c-bg-popup,10%)};
   --m-secondary_bg-zebra_mix_10: #{color.mix($c-secondary,$c-bg-zebra,10%)};
   --m-secondary_black_mix_60: #{color.mix($c-secondary,black,60%)};

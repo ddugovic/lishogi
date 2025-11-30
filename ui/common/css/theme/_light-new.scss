@@ -3,14 +3,14 @@
 @use 'dark-new' as *;
 @use '../abstract/icons';
 
-$c-bg-page: hsl(48deg, 65%, 87%);
-$c-body-gradient: hsl(48deg, 60%, 83%);
+$c-bg-page: #f3eac7;
+$c-body-gradient: #eee3ba;
 
-$c-bg-high: hsl(53deg, 74%, 94%);
+$c-bg-high: hsl(53, 74%, 91%);
 $c-bg-low: #f5edca;
 
-$c-bg-zebra: #f3eac7;
-$c-bg-zebra2: #eee0b7;
+$c-bg-zebra: hsl(48, 80%, 89%);
+$c-bg-zebra2: hsl(48, 79%, 88%);
 
 $c-font: #3a322e;
 $c-font-dim: c-light($c-font, 42%);
@@ -61,7 +61,6 @@ $c-bg-box-opaque: $c-bg-box;
 $c-bg-input: c-light($c-bg-page, 98%);
 
 $c-border: $c-font-dimmer;
-$c-border-page: hsl(0deg, 0%, 80%);
 $border: 1px solid $c-border;
 
 $c-bg-popup: $c-bg-high;

@@ -9,7 +9,6 @@ html.custom-dark {
   --c-bg-input: oklch(from var(--c-bg-high) calc(l - 0.04) c h);
   --c-bg-action: color-mix(in srgb, var(--c-bg-box) 90%, var(--c-font-dim));
   --c-border: oklch(from var(--c-font) calc(l - 0.5) c h);
-  --c-border-page: var(--c-border);
   --border: 1px solid var(--c-border);
   --c-bg-metal: var(--c-bg-zebra);
   --c-bg-metal-hover: var(--c-bg-zebra2);

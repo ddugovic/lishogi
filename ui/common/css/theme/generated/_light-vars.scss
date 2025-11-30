@@ -26,7 +26,6 @@ html.light {
   --c-blunder: #{hsl(0deg, 68%, 50%)};
   --c-body-gradient: #{hsl($c-site-hue, 12%, 84%)};
   --c-border: #{hsl(0deg, 0%, 85%)};
-  --c-border-page: #{hsl(0deg, 0%, 80%)};
   --c-bot: #{$c-fancy};
   --c-brag: #{hsl(37deg, 74%, 48%)};
   --c-fancy: #{hsl(294deg, 61%, 62%)};
@@ -152,8 +151,6 @@ html.light {
   --m-secondary_bg-header-dropdown_mix_15: #{color.mix($c-secondary,$c-bg-header-dropdown,15%)};
   --m-secondary_bg-header-dropdown_mix_27: #{color.mix($c-secondary,$c-bg-header-dropdown,27%)};
   --m-secondary_bg-header-dropdown_mix_36: #{color.mix($c-secondary,$c-bg-header-dropdown,36%)};
-  --m-secondary_bg-page_mix_60: #{color.mix($c-secondary,$c-bg-page,60%)};
-  --m-secondary_bg-page_mix_80: #{color.mix($c-secondary,$c-bg-page,80%)};
   --m-secondary_bg-popup_mix_10: #{color.mix($c-secondary,$c-bg-popup,10%)};
   --m-secondary_bg-zebra_mix_10: #{color.mix($c-secondary,$c-bg-zebra,10%)};
   --m-white_brag_mix_20: #{color.mix(white,$c-brag,20%)};
@@ -180,7 +177,6 @@ html.light {
   --c-blunder: #{hsl(0deg, 68%, 50%)};
   --c-body-gradient: #{hsl($c-site-hue, 12%, 84%)};
   --c-border: #{hsl(0deg, 0%, 85%)};
-  --c-border-page: #{hsl(0deg, 0%, 80%)};
   --c-bot: #{$c-fancy};
   --c-brag: #{hsl(37deg, 74%, 48%)};
   --c-fancy: #{hsl(294deg, 61%, 62%)};
@@ -306,8 +302,6 @@ html.light {
   --m-secondary_bg-header-dropdown_mix_15: #{color.mix($c-secondary,$c-bg-header-dropdown,15%)};
   --m-secondary_bg-header-dropdown_mix_27: #{color.mix($c-secondary,$c-bg-header-dropdown,27%)};
   --m-secondary_bg-header-dropdown_mix_36: #{color.mix($c-secondary,$c-bg-header-dropdown,36%)};
-  --m-secondary_bg-page_mix_60: #{color.mix($c-secondary,$c-bg-page,60%)};
-  --m-secondary_bg-page_mix_80: #{color.mix($c-secondary,$c-bg-page,80%)};
   --m-secondary_bg-popup_mix_10: #{color.mix($c-secondary,$c-bg-popup,10%)};
   --m-secondary_bg-zebra_mix_10: #{color.mix($c-secondary,$c-bg-zebra,10%)};
   --m-white_brag_mix_20: #{color.mix(white,$c-brag,20%)};
