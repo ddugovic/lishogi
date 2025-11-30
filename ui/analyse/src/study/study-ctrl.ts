@@ -176,7 +176,7 @@ export default function (
     ctrl.userJump(data.position.path);
   }
   if (vm.toolTab() === 'comments' && !commentForm.opening())
-    commentForm.start(vm.chapterId, ctrl.path, ctrl.node);
+    commentForm.start(vm.chapterId, ctrl.path, ctrl.node, false);
 
   function configureAnalysis() {
     if (ctrl.embed) return;

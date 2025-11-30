@@ -24,8 +24,8 @@ export class CommentForm {
     if (cur) this.root.study!.makeChange('setComment', { ch: cur.chapterId, path: cur.path, text });
   });
 
-  start = (chapterId: string, path: Tree.Path, node: Tree.Node): void => {
-    this.opening(true);
+  start = (chapterId: string, path: Tree.Path, node: Tree.Node, opening = true): void => {
+    this.opening(opening);
     this.current({ chapterId, path, node });
     this.root.userJump(path);
   };
@@ -54,8 +54,7 @@ export function view(root: AnalyseCtrl): VNode {
   const setupTextarea = (vnode: VNode, old?: VNode) => {
     const el = vnode.elm as HTMLInputElement;
     const newKey = current.chapterId + current.path;
-
-    if (old?.data && old.data.path !== newKey) {
+    if (!old || (old?.data && old.data.path !== newKey)) {
       const mine = (current.node.comments || []).find(
         (c: any) => c.by?.id && c.by.id === ctrl.root.opts.userId,
       );
