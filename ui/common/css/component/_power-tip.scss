@@ -58,10 +58,14 @@
       justify-content: flex-start;
 
       > span {
-        flex: 0 0 25%;
-        max-width: 25%;
+        flex: 0 0 calc(100% / 3);
+        width: calc(100% / 3);
         padding: 2px 3px;
         text-align: left;
+
+        .unknown {
+          padding-left: 3px;
+        }
       }
     }
 
