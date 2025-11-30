@@ -9,14 +9,14 @@
   position: relative;
   display: flex;
   align-items: stretch;
+  column-gap: 6px;
   overflow: hidden;
+  padding: 2px 0;
 
   &.enabled {
-    padding-top: 2px;
-    height: 40px;
-
     .show-threat {
-      visibility: visible;
+      opacity: 1;
+      pointer-events: all;
     }
   }
 
@@ -24,7 +24,7 @@
     @extend %flex-center;
 
     flex: 0 0 40px;
-    margin-right: 8px;
+    margin-left: 6px;
 
     &.disabled {
       cursor: not-allowed;
@@ -37,7 +37,7 @@
   }
 
   pearl {
-    flex: 0 0 75px;
+    flex: 1 0 auto;
     line-height: 38px;
     font-size: 1.6em;
     text-align: center;
@@ -48,10 +48,11 @@
   .engine {
     @extend %nowrap-hidden;
 
-    flex: 1 1 auto;
+    flex: 0 1 40%;
     font-size: 12px;
     line-height: 16px;
     margin-top: 3px;
+    margin-left: 3px;
     color: theme.$c-font-dim;
   }
 
@@ -74,7 +75,7 @@
 
     .deeper {
       color: theme.$c-primary;
-      margin-left: 4px;
+      margin-right: 4px;
     }
 
     .deeper::before {
@@ -133,22 +134,24 @@
   }
 
   .show-threat {
-    flex: 0 99 auto;
-    line-height: 38px;
-    color: theme.$c-font-dim;
-    font-size: 0.9em;
-    padding-right: 0.5em;
-    overflow: hidden;
-    visibility: hidden;
+    @extend %button-none;
 
-    &:hover:not(.hidden),
+    flex: 0 0 18px;
+    color: theme.$c-font-dim;
+    font-size: 14px;
+    margin-right: 6px;
+    overflow: hidden;
+    opacity: 0.3;
+    pointer-events: none;
+
+    &:hover,
     &.active {
       color: theme.$c-red;
     }
 
     &.hidden {
       opacity: 0.3;
-      cursor: default;
+      pointer-events: none;
     }
   }
 }

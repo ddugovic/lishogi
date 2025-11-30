@@ -1,5 +1,6 @@
 import { defined, notNull, requestIdleCallbackWithFallback } from 'common/common';
 import { icons } from 'common/icons';
+import type { MaybeVNodes } from 'common/snabbdom';
 import stepwiseScroll from 'common/wheel';
 import { i18n, i18nFormat } from 'i18n';
 import { makeNotationLineWithPosition, notationsWithColor } from 'shogi/notation';
@@ -20,7 +21,7 @@ const gaugeTicks: VNode[] = [...Array(7).keys()].map(i =>
   h(i === 3 ? 'tick.zero' : 'tick', { attrs: { style: `height: ${(i + 1) * 12.5}%` } }),
 );
 
-function localEvalInfo(ctrl: ParentCtrl, evs: NodeEvals): Array<VNode | string | null> {
+function localEvalInfo(ctrl: ParentCtrl, evs: NodeEvals): MaybeVNodes {
   const ceval = ctrl.getCeval();
   if (!evs.client) {
     if (!ceval.analysable) return ['Engine cannot analyze this position'];
@@ -33,19 +34,8 @@ function localEvalInfo(ctrl: ParentCtrl, evs: NodeEvals): Array<VNode | string |
     ];
   }
   const depth = evs.client.depth || 0;
-  const t: Array<VNode | string | null> = evs.client.cloud
-    ? [
-        i18nFormat('depthX', depth),
-        h(
-          'span.cloud',
-          { attrs: { title: i18n('cloudAnalysis') } },
-          `Cloud - ${ceval.shouldUseYaneuraou ? 'NNUE' : 'HCE'}`,
-        ),
-      ]
-    : [i18nFormat('depthX', `${depth}/${Math.max(depth, evs.client.maxDepth)}`)];
-  if (ceval.canGoDeeper())
-    t.push(
-      h('a.deeper', {
+  const deeperButton = ceval.canGoDeeper()
+    ? h('a.deeper', {
         attrs: {
           title: i18n('goDeeper'),
           'data-icon': icons.createNew,
@@ -57,10 +47,19 @@ function localEvalInfo(ctrl: ParentCtrl, evs: NodeEvals): Array<VNode | string |
               ceval.redraw();
             }),
         },
-      }),
-    );
-  else if (!evs.client.cloud && evs.client.knps)
-    t.push(`, ${Math.round(evs.client.knps)}k nodes/s`);
+      })
+    : undefined;
+  const t: MaybeVNodes = evs.client.cloud
+    ? [
+        deeperButton,
+        i18nFormat('depthX', depth),
+        h('span.cloud', { attrs: { title: i18n('cloudAnalysis') } }, 'Cloud'),
+      ]
+    : [
+        deeperButton,
+        i18nFormat('depthX', `${depth}/${Math.max(depth, evs.client.maxDepth)}`),
+        evs.client.knps ? `, ${Math.round(evs.client.knps)}k nodes/s` : undefined,
+      ];
   return t;
 }
 
@@ -73,7 +72,7 @@ function threatInfo(threat?: Tree.LocalEval | false): string {
 
 function threatButton(ctrl: ParentCtrl): VNode | null {
   if (ctrl.disableThreatMode?.()) return null;
-  return h('a.show-threat', {
+  return h('button.show-threat', {
     class: {
       active: ctrl.threatMode(),
       hidden: !!ctrl.getNode().check,
@@ -220,7 +219,6 @@ export function renderCeval(ctrl: ParentCtrl): VNode | undefined {
 
   const body: Array<VNode | null> = enabled
     ? [
-        h('pearl', [pearl]),
         h('div.engine', [
           ...(threatMode ? [i18n('showThreat')] : engineName(instance)),
           h(
@@ -232,9 +230,9 @@ export function renderCeval(ctrl: ParentCtrl): VNode | undefined {
                 : localEvalInfo(ctrl, evs),
           ),
         ]),
+        h('pearl', [pearl]),
       ]
     : [
-        pearl ? h('pearl', [pearl]) : null,
         h('help', [
           ...engineName(instance),
           h('span', [
@@ -246,6 +244,7 @@ export function renderCeval(ctrl: ParentCtrl): VNode | undefined {
                 : 'Engine cannot analyse this game',
           ]),
         ]),
+        pearl ? h('pearl', [pearl]) : null,
       ];
 
   const switchButton: VNode = h(
@@ -278,7 +277,7 @@ export function renderCeval(ctrl: ParentCtrl): VNode | undefined {
         computing: percent < 100 && instance.isComputing(),
       },
     },
-    [progressBar, ...body, threatButton(ctrl), switchButton],
+    [switchButton, progressBar, ...body, threatButton(ctrl)],
   );
 }
 
