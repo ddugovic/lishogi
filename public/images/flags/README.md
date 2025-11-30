@@ -13,6 +13,7 @@ Flags were taken from https://gitlab.com/catamphetamine/country-flag-icons versi
 - US - Colors and stars from twemoji
 - NP - Square, Make background transparent
 - ZW - Shift left triangle to the edge
+- GB - Make blue and red darker - more accurate 
 
 ### Additions:
 
