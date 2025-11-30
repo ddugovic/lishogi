@@ -23,7 +23,7 @@ export default function (opts: ChallengeOpts, data: ChallengeData, redraw: () =>
       if (once(`c-${c.id}`)) {
         if (!li.quietMode && data.in.length <= 3) {
           opts.show();
-          li.sound.play('new-challenge');
+          li.sound.playOnce('new-challenge');
         }
         const pushSubsribed =
           Number.parseInt(li.storage.get('push-subscribed2') || '0', 10) + 86400000 >= Date.now(); // 24h

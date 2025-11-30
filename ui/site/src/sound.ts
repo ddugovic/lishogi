@@ -120,6 +120,26 @@ export function createSound(): SoundI {
     } else console.warn('Howl not found', name, categ, set);
   }
 
+  function playOnce(name: string, categ?: SoundCateg, volumeOverride?: number): void {
+    const store = storage.make('just-played2');
+
+    const attemptPlay = () => {
+      const now = Date.now();
+      const lastPlayed = Number.parseInt(store.get() || '0', 10);
+
+      if (now - lastPlayed < 2000) return;
+
+      store.set(`${now}`);
+      play(name, categ, volumeOverride);
+    };
+
+    if (document.hasFocus()) {
+      attemptPlay();
+    } else {
+      setTimeout(attemptPlay, 50 + Math.random() * 300);
+    }
+  }
+
   function move(capture?: boolean): void {
     if (enabled('system') && state.soundSet !== 'speech') {
       if (capture) play('capture');
@@ -160,6 +180,7 @@ export function createSound(): SoundI {
 
   return {
     play,
+    playOnce,
     move: throttle(100, (o?: boolean) => move(o)),
     countdown,
     volume,

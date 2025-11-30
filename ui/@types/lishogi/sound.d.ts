@@ -18,6 +18,7 @@ declare global {
 
   interface SoundI {
     play: (name: string, categ?: SoundCateg, volumeOverride?: number) => void;
+    playOnce: (name: string, categ?: SoundCateg, volumeOverride?: number) => void;
     move: (capture?: boolean) => void;
     countdown: (number: number) => void;
     volume: (value?: number) => number;
