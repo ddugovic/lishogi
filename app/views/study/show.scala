@@ -61,7 +61,7 @@ object show {
     )(
       frag(
         main(cls := "analyse"),
-        bits.streamers(streams),
+        views.html.streamer.bits.contextualWrap(streams.map(_.streamer.userId), hidden = true),
       ),
     )
 

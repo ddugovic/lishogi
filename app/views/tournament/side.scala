@@ -129,9 +129,7 @@ object side {
           "You cannot receive challenges from all users",
         ),
       ),
-      streamers.nonEmpty option div(cls := "context-streamers")(
-        streamers map views.html.streamer.bits.contextual,
-      ),
+      views.html.streamer.bits.contextualWrap(streamers),
       chat option views.html.chat.frag,
     )
 

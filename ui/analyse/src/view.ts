@@ -467,7 +467,6 @@ export default function (ctrl: AnalyseCtrl): VNode {
               {
                 hook: onInsert(elm => {
                   ctrl.opts.$side?.length && $(elm).replaceWith(ctrl.opts.$side);
-                  $(elm).append($('.streamers').clone().removeClass('none'));
                 }),
               },
               (study
@@ -499,9 +498,9 @@ export default function (ctrl: AnalyseCtrl): VNode {
                     })
                   : null,
                 ctrl.opts.$streamers
-                  ? h('div.context-streamer', {
+                  ? h('div.context-streamers', {
                       hook: onInsert(el => {
-                        $(el).replaceWith(ctrl.opts.$streamers!);
+                        $(el).replaceWith(ctrl.opts.$streamers!.removeClass('none'));
                       }),
                     })
                   : null,

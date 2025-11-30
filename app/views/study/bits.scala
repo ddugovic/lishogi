@@ -2,7 +2,6 @@ package views.html
 package study
 
 import controllers.routes
-import play.api.i18n.Lang
 import play.api.mvc.Call
 
 import lila.api.Context
@@ -103,13 +102,6 @@ object bits {
             .toList,
         ),
       ),
-    )
-
-  def streamers(streams: List[lila.streamer.Stream])(implicit lang: Lang) =
-    streams.nonEmpty option div(cls := "streamers none")(
-      streams.map { s =>
-        views.html.streamer.bits.contextual(s.streamer.userId)
-      },
     )
 
   def home(studies: List[lila.study.Study.MiniStudy]) =

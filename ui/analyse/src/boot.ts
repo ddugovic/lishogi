@@ -8,7 +8,7 @@ export function replay(opts: AnalyseOpts, start: (opts: AnalyseOpts) => AnalyseC
   const data = opts.data;
 
   opts.$meta = $('.analyse__side .game__meta').clone();
-  opts.$streamers = $('.analyse__side .context-streamer').clone();
+  opts.$streamers = $('.analyse__side .context-streamers').clone();
   opts.$underboard = $('.analyse__underboard').clone();
   opts.initialPly = 'url';
 
@@ -33,6 +33,8 @@ export function replay(opts: AnalyseOpts, start: (opts: AnalyseOpts) => AnalyseC
 
 export function study(opts: AnalyseOpts, start: (opts: AnalyseOpts) => AnalyseCtrl): AnalyseCtrl {
   let ctrl: AnalyseCtrl | undefined;
+
+  opts.$streamers = $('.context-streamers').clone();
 
   opts.initialPly = 'url';
   opts.socketSend = wsConnect(`/study/${opts.study.id}/socket/v5`, opts.socketVersion, {

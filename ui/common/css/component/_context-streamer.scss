@@ -1,18 +1,27 @@
+@use 'pkg:breakpoint-sass' as breakpoint;
 @use '../abstract/extends';
 @use '../abstract/mixins';
+@use '../abstract/uniboard';
+@use '../abstract/variables';
 @use '../theme/generated/theme';
 
 .context-streamers {
+  min-height: calc(2.2em + 1vmin);
   max-height: 20vh;
-  overflow-y: auto;
+  margin-bottom: -1vmin;
+
+  @include breakpoint.breakpoint(uniboard.$mq-col1-uniboard) {
+    margin-bottom: 0;
+  }
 }
 
 .context-streamer {
-  @extend %nowrap-hidden, %box-radius-bottom, %box-shadow, %flex-center-nowrap;
+  @extend %nowrap-hidden, %box-radius, %box-shadow, %flex-center-nowrap;
 
   height: 2.2em;
-  color: theme.$c-secondary-over !important;
-  background: theme.$m-secondary_bg-page_mix_60;
+  background: theme.$c-bg-box;
+  color: theme.$c-brag;
+  margin-top: 1vmin;
 
   @include mixins.transition;
 
@@ -22,6 +31,7 @@
   }
 
   &:hover {
-    background: theme.$m-secondary_bg-page_mix_80;
+    background: theme.$c-brag;
+    color: theme.$c-brag-over;
   }
 }

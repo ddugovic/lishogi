@@ -103,9 +103,19 @@ object bits extends Context.ToLang {
       )
     }
 
-  def contextual(userId: User.ID)(implicit lang: Lang): Frag =
+  private def contextual(userId: User.ID)(implicit lang: Lang): Frag =
     redirectLink(userId)(cls := "context-streamer text", dataIcon := Icons.mic)(
       xIsStreaming(usernameOrId(userId)),
+    )
+
+  def contextualWrap(userIds: Seq[User.ID], hidden: Boolean = false)(implicit lang: Lang): Frag =
+    userIds.nonEmpty option div(cls := s"context-streamers${hidden ?? " none"}")(
+      userIds map views.html.streamer.bits.contextual,
+    )
+
+  def contextualWrap(userId: User.ID)(implicit lang: Lang): Frag =
+    div(cls := "context-streamers")(
+      views.html.streamer.bits.contextual(userId),
     )
 
   def rules(implicit lang: Lang) =

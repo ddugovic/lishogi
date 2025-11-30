@@ -125,6 +125,9 @@ final class TournamentRepo(val coll: Coll, playerCollName: CollName)(implicit
   def isUnfinished(tourId: Tournament.ID): Fu[Boolean] =
     coll.exists($id(tourId) ++ unfinishedSelect)
 
+  def isCreator(tourId: Tournament.ID, userId: User.ID) =
+    coll.exists($id(tourId) ++ $doc("createdBy" -> userId))
+
   def byTeamCursor(teamId: TeamID) =
     coll
       .find(forTeamSelect(teamId))

@@ -55,7 +55,10 @@ object otherTrophies {
             "trophy award icon3d streamer" -> true,
             "streaming"                    -> streaming,
           ),
-          ariaTitle(if (streaming) "Live now!" else "Lishogi Streamer"),
+          ariaTitle(
+            if (streaming) trans.streamer.live.txt()
+            else trans.streamer.lishogiStreamer.txt(),
+          ),
         )(Icons.mic)
       },
     )

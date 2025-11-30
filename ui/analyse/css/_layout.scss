@@ -93,6 +93,12 @@
     display: none;
   }
 
+  &__side,
+  .chat__members,
+  .mchat {
+    margin: variables.$block-gap 0 0 0;
+  }
+
   @include breakpoint.breakpoint(local.$mq-col2) {
     grid-template-columns:
       var(--col2-uniboard-main-size)
@@ -106,12 +112,6 @@
       '.          .     side'
       'uchat      uchat uchat';
     grid-row-gap: 0;
-
-    &__side,
-    .chat__members,
-    .mchat {
-      margin: variables.$block-gap 0 0 0;
-    }
 
     &__underboard {
       margin-top: #{variables.$block-gap + 1};
