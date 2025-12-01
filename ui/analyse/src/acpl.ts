@@ -3,9 +3,10 @@ import { icons } from 'common/icons';
 import { bind, dataIcon } from 'common/snabbdom';
 import * as game from 'game';
 import { i18n } from 'i18n';
+import { colorName } from 'shogi/color-name';
 import { engineNameFromCode } from 'shogi/engine-name';
 import { rankFromRating } from 'shogi/rank';
-import { usernameVNodes } from 'shogi/username';
+import { usernameDataFromName, usernameVNodes } from 'shogi/username';
 import { h, thunk, type VNode, type VNodeData } from 'snabbdom';
 import type AnalyseCtrl from './ctrl';
 import { findTag } from './study/study-chapters';
@@ -21,20 +22,22 @@ interface Advice {
 function renderPlayer(ctrl: AnalyseCtrl, color: Color): VNode {
   const p = game.getPlayer(ctrl.data, color);
   return h(
-    'a.user-link.ulpt',
+    `a.user-link${p.user ? '.ulpt' : ''}`,
     {
       attrs: p.user ? { href: `/@/${p.user.username}` } : undefined,
     },
-    usernameVNodes({
-      username: p.aiCode
-        ? engineNameFromCode(p.aiCode)
-        : p.user?.username ||
-          p.name ||
-          (ctrl.study && findTag(ctrl.study.data.chapter.tags, color)),
-      rank: !p.provisional && p.rating ? rankFromRating(p.rating) : undefined,
-      bot: p.user?.title === 'BOT',
-      engineLvl: p.ai,
-    }),
+    usernameVNodes(
+      ctrl.study
+        ? usernameDataFromName(
+            findTag(ctrl.study.data.chapter.tags, color) || colorName(color, ctrl.isHandicap()),
+          )
+        : {
+            username: p.aiCode ? engineNameFromCode(p.aiCode) : p.user?.username || p.name,
+            rank: !p.provisional && p.rating ? rankFromRating(p.rating) : undefined,
+            bot: p.user?.title === 'BOT',
+            engineLvl: p.ai,
+          },
+    ),
   );
 }
 
@@ -91,7 +94,7 @@ function playerTable(ctrl: AnalyseCtrl, color: Color): VNode {
 
 function doRender(ctrl: AnalyseCtrl): VNode {
   return h(
-    'div.advice-summary',
+    `div.advice-summary${ctrl.study ? '.no-button' : ''}`,
     {
       hook: {
         insert: vnode => {
@@ -134,5 +137,8 @@ export function render(ctrl: AnalyseCtrl): VNode | undefined {
   let cacheKey = `${buster}${!!ctrl.retro}`;
   if (ctrl.study) cacheKey += ctrl.study.data.chapter.id;
 
-  return h('div.analyse__acpl', thunk('div.advice-summary', doRender, [ctrl, cacheKey]));
+  return h(
+    'div.analyse__acpl',
+    thunk(`div.advice-summary${ctrl.study ? '.no-button' : ''}`, doRender, [ctrl, cacheKey]),
+  );
 }

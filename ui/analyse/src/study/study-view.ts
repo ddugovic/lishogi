@@ -117,7 +117,7 @@ function buttons(root: AnalyseCtrl): VNode {
         tab: 'serverEval',
         hint: i18n('computerAnalysis'),
         icon: iconTag(icons.barChart),
-        count: root.data.analysis && 'O',
+        count: root.data.analysis && '•',
       }),
       toolButton({
         ctrl,

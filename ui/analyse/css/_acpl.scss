@@ -84,4 +84,8 @@
       order: 1;
     }
   }
+
+  @include breakpoint.breakpoint(local.$mq-col2) {
+    margin-top: var(--panel-tab-height);
+  }
 }

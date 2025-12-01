@@ -1,4 +1,5 @@
 @use 'pkg:common/abstract/mixins';
+@use 'pkg:common/abstract/variables';
 @use 'pkg:common/theme';
 
 .ricons {
@@ -10,7 +11,7 @@
   .fbt {
     font-size: 1.4em;
     padding: 0.1em 1em;
-    border-radius: 3px;
+    border-radius: variables.$box-radius-size;
 
     &.pause-yes {
       font-size: 1.2em;

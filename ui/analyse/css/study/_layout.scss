@@ -1,3 +1,9 @@
+@use 'pkg:common/abstract/uniboard';
+
 .analyse__underboard {
   margin-top: 0;
+}
+
+:root {
+  --panel-tab-height: calc(#{uniboard.$col2-uniboard-controls} - 2px);
 }

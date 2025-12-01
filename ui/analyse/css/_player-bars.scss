@@ -17,10 +17,6 @@ $player-bar-height: 1.7rem;
     .analyse__underboard {
       margin-top: uniboard.$col2-uniboard-controls;
     }
-
-    .advice-summary {
-      margin-top: var(--panel-tab-height);
-    }
   }
 
   @include breakpoint.breakpoint(local.$mq-col1) {

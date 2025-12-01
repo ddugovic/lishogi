@@ -16,6 +16,14 @@
   }
 }
 
-.advice-summary table:first-child {
-  margin-bottom: 1em;
+.advice-summary {
+  table:first-child {
+    margin-bottom: 1em;
+  }
+
+  &.no-button {
+    table:first-child {
+      margin-bottom: 3em;
+    }
+  }
 }
