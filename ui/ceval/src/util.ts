@@ -7,4 +7,4 @@ export function renderEval(e: number): string {
   return (e > 0 ? '+' : '') + e.toFixed(1);
 }
 
-export const unsupportedVariants: VariantKey[] = ['chushogi', 'annanshogi', 'checkshogi'];
+export const unsupportedVariants: VariantKey[] = ['chushogi', 'annanshogi'];
