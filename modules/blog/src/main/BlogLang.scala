@@ -3,7 +3,8 @@ package lila.blog
 import play.api.i18n.Lang
 
 sealed abstract class BlogLang(val code: BlogLang.Code) {
-  def language = code.takeWhile('-' !=)
+  def language = code.take(2)
+  def country  = code.takeRight(2)
 }
 
 object BlogLang {
@@ -18,7 +19,7 @@ object BlogLang {
   val allLangs = List(English, Japanese)
 
   def fromLangCode(langCode: Code): BlogLang =
-    allLangs.find(_.code.toLowerCase == langCode.toLowerCase).getOrElse(default)
+    allLangs.find(l => langCode.toLowerCase.startsWith(l.language)).getOrElse(default)
 
   def fromLang(lang: Lang): BlogLang =
     fromLangCode(lang.code)

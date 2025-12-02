@@ -28,7 +28,7 @@ final class Blog(
   def showUid(uid: String) =
     WithPrismic { implicit ctx => implicit prismic =>
       blogApi.allByUid(uid) flatMap { docs =>
-        val lang = BlogLang.fromLang(ctx.lang)
+        val lang = BlogLang.fromLangCode(get("blang").getOrElse(ctx.lang.code))
         docs
           .find(d => BlogLang.fromLangCode(d.lang) == lang)
           .orElse(docs.headOption)

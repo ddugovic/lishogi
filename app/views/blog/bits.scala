@@ -46,6 +46,13 @@ object bits {
         span(cls := "text", dataIcon := Icons.clock)(semanticDate(post.date)),
         span(cls := "text", dataIcon := Icons.person)(richText(post.author)),
         span(cls := "text", dataIcon := Icons.starFull)(post.category),
+        post.doc.uid map { uid =>
+          a(
+            cls := "lang-alt",
+            href := s"${routes.Blog.showUid(uid)}?blang=${if (post.isJapanese) lila.blog.BlogLang.English.code
+              else lila.blog.BlogLang.Japanese.code}",
+          )(flagImage(post.lang.country))
+        },
       ),
       strong(cls := "headline")(
         post.doc.getHtml(s"${post.coll}.shortlede", prismic.linkResolver).map(raw),
