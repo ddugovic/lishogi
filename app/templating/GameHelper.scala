@@ -179,8 +179,8 @@ trait GameHelper {
         game.loserColor
           .map(l => transWithColorName(trans.xResigned, l, game.isHandicap))
           .getOrElse(trans.finished.txt())
-      case S.UnknownFinish     => trans.finished.txt()
-      case S.Stalemate         => trans.stalemate.txt()
+      case S.UnknownFinish => trans.finished.txt()
+      case S.Stalemate     => trans.stalemate.txt() // just say checkmate?
       case S.TryRule           => "Try Rule" // games before July 2021 might still have this status
       case S.Impasse27         => trans.impasse.txt()
       case S.PerpetualCheck    => trans.perpetualCheck.txt()

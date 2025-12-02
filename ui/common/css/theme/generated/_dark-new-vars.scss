@@ -30,7 +30,7 @@ html {
   --c-blunder: #{hsl(0deg, 69%, 60%)};
   --c-blunder-clear: #{hsl(0deg, 100%, 62%)};
   --c-body-gradient: #{color.adjust($c-bg-page, $lightness: 6%, $saturation: 2%)};
-  --c-border: #{hsl(44, 35%, 20%)};
+  --c-border: #{hsl(44deg, 35%, 20%)};
   --c-bot: #{$c-fancy};
   --c-brag: #{#e9b143};
   --c-brag-over: #{#000};
