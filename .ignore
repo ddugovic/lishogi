@@ -8,5 +8,6 @@ public/piece-css
 public/vendors
 public/font
 public/images
-public/sound
+public/sound/mp3
+public/sound/ogg
 generated
