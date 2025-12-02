@@ -33,12 +33,13 @@ final class Streamer(
     env.streamer.liveStreamApi.all
       .map { streams =>
         val max      = env.streamer.homepageMaxSetting.get()
-        val featured = streams.homepage(max) withTitles env.user.lightUserApi
+        val featured = streams.homepage(max)
         JsonOk {
-          featured.live.streams.map { s =>
+          featured.streams.map { s =>
             Json.obj(
               "url"               -> routes.Streamer.redirect(s.streamer.id.value).absoluteURL(),
-              "usernameWithTitle" -> featured.titleName(s),
+              "usernameWithTitle" -> s.streamer.name.value, // bc
+              "username"          -> s.streamer.name.value,
               "status"            -> s.status,
             )
           }

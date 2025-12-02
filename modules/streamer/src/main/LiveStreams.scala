@@ -22,49 +22,14 @@ case class LiveStreams(streams: List[Stream]) {
   def homepage(max: Int) =
     LiveStreams {
       streams
-        .takeWhile(_.streamer.approval.tier > 0)
-        .foldLeft(Vector.empty[Stream]) {
-          case (selected, s) if {
-                selected.sizeIs < max || s.streamer.approval.tier == Streamer.maxTier
-              } && {
-                s.streamer.approval.tier > 1 || selected.sizeIs < 2
-              } =>
-            selected :+ s
-          case (selected, _) => selected
-        }
-        .toList
+        .take(max)
+        .filter(_.streamer.approval.tier > 0)
     }
-
-  def withTitles(lightUser: lila.user.LightUserApi) =
-    LiveStreams.WithTitles(
-      this,
-      streams
-        .map(_.streamer.userId)
-        .flatMap { userId =>
-          lightUser.sync(userId).flatMap(_.title) map (userId ->)
-        }
-        .toMap,
-    )
-
-  def excludeUsers(userIds: List[User.ID]) =
-    copy(
-      streams = streams.filterNot(s => userIds contains s.streamer.userId),
-    )
 }
 
 object LiveStreams {
 
-  case class WithTitles(live: LiveStreams, titles: Map[User.ID, String]) {
-    def titleName(s: Stream) =
-      s"${titles.get(s.streamer.userId).fold("")(_ + " ")}${s.streamer.name}"
-    def excludeUsers(userIds: List[User.ID]) =
-      copy(
-        live = live excludeUsers userIds,
-      )
-  }
-
-  implicit val zero: Zero[WithTitles] =
-    Zero(WithTitles(LiveStreams(Nil), Map.empty))
+  implicit val zero: Zero[LiveStreams] = Zero(LiveStreams(Nil))
 }
 
 final class LiveStreamApi(
@@ -73,7 +38,7 @@ final class LiveStreamApi(
 )(implicit ec: scala.concurrent.ExecutionContext) {
 
   private val cache = cacheApi.unit[LiveStreams] {
-    _.refreshAfterWrite(2 seconds)
+    _.refreshAfterWrite(3 seconds)
       .buildAsyncFuture { _ =>
         streamingActor ? Streaming.Get mapTo manifest[LiveStreams] dmap { s =>
           LiveStreams(s.streams.sortBy(-_.streamer.approval.tier))

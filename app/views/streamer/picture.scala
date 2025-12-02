@@ -28,7 +28,10 @@ object picture {
             enctype := "multipart/form-data",
             cls     := "upload",
           )(
-            p(maxSize(s"${lila.db.Photographer.uploadMaxMbRecommended}MB.")),
+            p(
+              maxSize(s"${lila.db.Photographer.uploadMaxMbRecommended}MB."),
+              " Best ratio: 1/1 (square)",
+            ),
             form3.file.image("picture"),
             submitButton(cls := "button")(uploadPicture()),
           ),

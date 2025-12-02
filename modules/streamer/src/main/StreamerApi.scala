@@ -60,8 +60,8 @@ final class StreamerApi(
 
   def setLiveNow(ids: List[Streamer.Id]): Funit =
     coll.update.one($doc("_id" $in ids), $set("liveAt" -> DateTime.now), multi = true) >>
-      cache.candidateIds.getUnit.map { candidateIds =>
-        if (ids.exists(candidateIds.contains)) cache.candidateIds.invalidateUnit()
+      cache.neverStreamedIds.getUnit.map { ids =>
+        if (ids.exists(ids.contains)) cache.neverStreamedIds.invalidateUnit()
       }
 
   def update(
@@ -92,7 +92,7 @@ final class StreamerApi(
                 icon = lila.common.Icons.mic,
               ),
             ),
-          ) >>- cache.candidateIds.invalidateUnit()
+          ) >>- cache.neverStreamedIds.invalidateUnit()
         }
         modChange
       }
@@ -115,11 +115,11 @@ final class StreamerApi(
   def isPotentialStreamer(user: User): Fu[Boolean] =
     cache.listedIds.getUnit.dmap(_ contains Streamer.Id(user.id))
 
-  def isCandidateStreamer(user: User): Fu[Boolean] =
-    cache.candidateIds.getUnit.dmap(_ contains Streamer.Id(user.id))
+  def hasNeverStreamed(user: User): Fu[Boolean] =
+    cache.neverStreamedIds.getUnit.dmap(_ contains Streamer.Id(user.id))
 
   def isActualStreamer(user: User): Fu[Boolean] =
-    isPotentialStreamer(user) >>& !isCandidateStreamer(user)
+    isPotentialStreamer(user) >>& !hasNeverStreamed(user)
 
   def uploadPicture(s: Streamer, picture: Photographer.Uploaded, by: User): Funit =
     photographer(s.id.value, picture, createdBy = by.id).flatMap { pic =>
@@ -184,7 +184,7 @@ final class StreamerApi(
         }
     }
 
-    val candidateIds = cacheApi.unit[Set[Streamer.Id]] {
+    val neverStreamedIds = cacheApi.unit[Set[Streamer.Id]] {
       _.refreshAfterWrite(1 hour)
         .buildAsyncFuture { _ =>
           coll.secondaryPreferred.distinctEasy[Streamer.Id, Set](

@@ -33,7 +33,10 @@ object StreamerForm {
           .verifying("Invalid Twitch username", s => Streamer.Twitch.parseUserId(s).isDefined),
       ),
       "youTube" -> optional(
-        text.verifying("Invalid YouTube channel", s => Streamer.YouTube.parseChannelId(s).isDefined),
+        text.verifying(
+          "Invalid YouTube channel ID (Starts with UC and then 22 characters)",
+          s => Streamer.YouTube.parseChannelId(s).isDefined,
+        ),
       ),
       "listed" -> boolean,
       "approval" -> optional(

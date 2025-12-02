@@ -17,6 +17,40 @@ object edit extends Context.ToLang {
       form: Form[_],
       modData: Option[((List[lila.mod.Modlog], List[lila.user.Note]), List[lila.streamer.Streamer])],
   )(implicit ctx: Context) = {
+    val granted = s.streamer.approval.granted
+    val statusBox = (ctx.is(s.user) && s.streamer.listed.value) option div(
+      cls      := s"status is${granted ?? "-green"}${s.streamer.completeEnough ?? " highlight"}",
+      dataIcon := (if (granted) Icons.correct else Icons.infoCircle),
+    )(
+      if (granted)
+        frag(
+          approved(),
+          s.streamer.approval.tier > 0 option frag(
+            br,
+            strong(youHaveBeenSelectedFrontpage()),
+          ),
+        )
+      else
+        frag(
+          if (s.streamer.approval.requested) pendingReview()
+          else
+            frag(
+              if (s.streamer.completeEnough)
+                whenReady(
+                  postForm(action := routes.Streamer.approvalRequest)(
+                    button(
+                      tpe := "submit",
+                      cls := "button",
+                      (!ctx.is(s.user)) option disabled,
+                    )(
+                      requestReview(),
+                    ),
+                  ),
+                )
+              else pleaseFillIn(),
+            ),
+        ),
+    )
 
     views.html.base.layout(
       title = s"${s.user.titleUsername} ${lishogiStreamer.txt()}",
@@ -28,74 +62,30 @@ object edit extends Context.ToLang {
         div(cls := "page-menu__content box streamer-edit")(
           if (ctx.is(s.user))
             div(cls := "streamer-header")(
-              if (s.streamer.hasPicture)
+              div(cls := "streamer-info")(
+                h1(s.streamer.name),
                 a(
                   target := "_blank",
                   href   := routes.Streamer.picture,
                   title  := changePicture.txt(),
                 )(
                   bits.pic(s.streamer, s.user),
-                )
-              else
-                div(cls := "picture-create")(
+                ),
+                (!s.streamer.hasPicture) option div(cls := "picture-create")(
                   ctx.is(s.user) option
                     a(target := "_blank", cls := "button", href := routes.Streamer.picture)(
                       uploadPicture(),
                     ),
                 ),
+              ),
               div(cls := "overview")(
-                h1(s.streamer.name),
                 bits.rules,
               ),
             )
           else views.html.streamer.header(s),
           div(cls := "box__pad") {
-            val granted = s.streamer.approval.granted
             frag(
-              (ctx.is(s.user) && s.streamer.listed.value) option div(
-                cls      := s"status is${granted ?? "-green"}",
-                dataIcon := (if (granted) Icons.correct else Icons.infoCircle),
-              )(
-                if (granted)
-                  frag(
-                    approved(),
-                    s.streamer.approval.tier > 0 option frag(
-                      br,
-                      strong(youHaveBeenSelectedFrontpage()),
-                      p(
-                        noteThatOnlyLimited(),
-                        soYoursMayNotAlwaysAppear(),
-                      ),
-                    ),
-                  )
-                else
-                  frag(
-                    if (s.streamer.approval.requested) pendingReview()
-                    else
-                      frag(
-                        if (s.streamer.completeEnough)
-                          whenReady(
-                            postForm(action := routes.Streamer.approvalRequest)(
-                              button(
-                                tpe := "submit",
-                                cls := "button",
-                                (!ctx.is(s.user)) option disabled,
-                              )(
-                                requestReview(),
-                              ),
-                            ),
-                          )
-                        else pleaseFillIn(),
-                      ),
-                  ),
-              ),
-              ctx.is(s.user) option div(cls := "status")(
-                anotherLanguage(
-                  a(href := "https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes")(
-                    "2-letter ISO 639-1 code",
-                  ),
-                ),
-              ),
+              statusBox,
               modData.map { case ((log, notes), same) =>
                 div(cls := "mod_log status")(
                   strong(cls := "text", dataIcon := Icons.warning)(
@@ -213,13 +203,23 @@ object edit extends Context.ToLang {
                 form3.split(
                   form3.group(
                     form("twitch"),
-                    twitchUsername(),
+                    frag(
+                      br,
+                      twitchUsername(),
+                    ),
                     help = optionalOrEmpty().some,
                     half = true,
                   )(form3.input(_)),
                   form3.group(
                     form("youTube"),
-                    youtubeChannel(),
+                    frag(
+                      youtubeChannelId(),
+                      br,
+                      a(
+                        href   := "https://support.google.com/youtube/answer/3250431",
+                        target := "_blank",
+                      )("https://support.google.com"),
+                    ),
                     help = optionalOrEmpty().some,
                     half = true,
                   )(form3.input(_)),
@@ -249,6 +249,7 @@ object edit extends Context.ToLang {
                   form3.submit(trans.apply()),
                 ),
               ),
+              statusBox,
             )
           },
         ),

@@ -17,11 +17,11 @@ object show {
       activities: Vector[lila.activity.ActivityView],
   )(implicit ctx: Context) =
     views.html.base.layout(
-      title = xStreamsShogi.txt(s.titleName),
+      title = xStreamsShogi.txt(s.streamer.name),
       moreCss = cssTag("misc.streamer.show"),
       openGraph = lila.app.ui
         .OpenGraph(
-          title = xStreamsShogi.txt(s.titleName),
+          title = xStreamsShogi.txt(s.streamer.name),
           description = shorten(
             ~(s.streamer.headline.map(_.value) orElse s.streamer.description.map(_.value)),
             152,

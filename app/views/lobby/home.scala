@@ -111,7 +111,7 @@ object home {
           ctx.blind option h2("Highlights"),
           ctx.noKid option st.section(cls := "lobby__streams")(
             views.html.streamer.bits liveStreams streams,
-            streams.live.streams.nonEmpty option a(href := routes.Streamer.index(), cls := "more")(
+            streams.streams.nonEmpty option a(href := routes.Streamer.index(), cls := "more")(
               trans.streamersMenu(),
               " »",
             ),

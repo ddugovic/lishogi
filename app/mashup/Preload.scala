@@ -60,7 +60,7 @@ final class Preload(
       tourWinners.all.dmap(_.top).mon(_.lobby segment "tourWinners") zip
       (ctx.noBot ?? dailyPuzzle()).mon(_.lobby segment "puzzle") zip
       (ctx.noKid ?? liveStreamApi.all
-        .dmap(_.homepage(streamerSpots) withTitles lightUserApi)
+        .dmap(_.homepage(streamerSpots))
         .mon(_.lobby segment "streams")) zip
       (ctx.userId ?? playbanApi.currentBan).mon(_.lobby segment "playban") zip
       (ctx.blind ?? ctx.me ?? roundProxy.urgentGames) flatMap {
@@ -87,7 +87,7 @@ final class Preload(
                 lead,
                 tWinners,
                 puzzle,
-                streams.excludeUsers(events.flatMap(_.hostedBy)),
+                streams,
                 lastPostCache.apply(ctx.lang),
                 playban,
                 currentGame,
@@ -139,7 +139,7 @@ object Preload {
       leaderboard: List[User.LightPerf],
       tournamentWinners: List[Winner],
       puzzle: Option[lila.puzzle.DailyPuzzle.WithHtml],
-      streams: LiveStreams.WithTitles,
+      streams: LiveStreams,
       lastPost: List[lila.blog.MiniPost],
       playban: Option[TempBan],
       currentGame: Option[Preload.CurrentGame],

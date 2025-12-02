@@ -5,15 +5,23 @@
 @use 'pkg:common/theme';
 @use 'header';
 
-$mq-picture: media-queries.$mq-medium;
-
 .streamer-edit {
   .streamer-header {
     margin-bottom: 2em;
 
-    .overview {
-      @include breakpoint.breakpoint($mq-picture) {
+    .streamer-info {
+      @include breakpoint.breakpoint(media-queries.$mq-medium) {
         margin: 20px 10px 0 2em;
+      }
+
+      h1 {
+        text-align: center;
+      }
+    }
+
+    .overview {
+      @include breakpoint.breakpoint(media-queries.$mq-medium) {
+        margin: 5rem 10px 0 2em;
       }
     }
 
@@ -24,14 +32,11 @@ $mq-picture: media-queries.$mq-medium;
     }
 
     .picture-create {
-      @extend %flex-center;
+      width: 100%;
 
-      justify-content: center;
-
-      @include breakpoint.breakpoint($mq-picture) {
-        display: flex;
-        width: 300px;
-        height: 300px;
+      a {
+        display: block;
+        margin-top: 1rem;
       }
     }
 
@@ -43,12 +48,6 @@ $mq-picture: media-queries.$mq-medium;
     a {
       text-align: center;
     }
-
-    .picture {
-      @include breakpoint.breakpoint($mq-picture) {
-        display: block;
-      }
-    }
   }
 
   .status {
@@ -57,6 +56,7 @@ $mq-picture: media-queries.$mq-medium;
     padding: 1em 1.5em;
     margin-bottom: 2em;
     background: theme.$c-bg-zebra;
+    border: 1px solid theme.$c-warn;
 
     &::before {
       font-size: 2em;
@@ -66,16 +66,24 @@ $mq-picture: media-queries.$mq-medium;
     form {
       display: inline;
     }
+
+    &.highlight {
+      border-color: theme.$c-primary;
+    }
+
+    &.is-green {
+      border-color: theme.$c-good;
+    }
   }
 
   .mod {
     margin-bottom: 6em;
   }
 
-  #site_header a.preview {
-    display: block;
-    margin-top: 40px;
-    text-align: center;
+  @include breakpoint.breakpoint(media-queries.$mq-medium) {
+    .form-check {
+      margin-top: 2rem;
+    }
   }
 }
 
@@ -87,10 +95,11 @@ $mq-picture: media-queries.$mq-medium;
   &::before {
     font-family: lishogi;
     content: icons.$correct;
-    font-size: 1.5em;
+    font-size: 1.2em;
     margin-right: 0.5em;
     vertical-align: middle;
     opacity: 0.8;
+    color: theme.$c-good;
   }
 }
 

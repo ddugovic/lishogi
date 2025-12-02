@@ -42,7 +42,7 @@ final private class Streaming(
   }
 
   private def scheduleTick(): Unit =
-    context.system.scheduler.scheduleOnce(60 seconds, self, Tick).unit
+    context.system.scheduler.scheduleOnce(62 seconds, self, Tick).unit
 
   self ! Tick
 

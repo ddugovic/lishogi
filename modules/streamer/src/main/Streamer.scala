@@ -32,7 +32,7 @@ case class Streamer(
 
   def completeEnough = {
     twitch.isDefined || youTube.isDefined
-  } && headline.isDefined && hasPicture
+  } && hasPicture
 }
 
 object Streamer {
@@ -97,22 +97,21 @@ object Streamer {
     def minUrl  = s"youtube.com/channel/$channelId/live"
   }
   object YouTube {
-    private val ChannelIdRegex = """^([\w-]{24})$""".r
-    private val UrlRegex       = """youtube\.com/channel/([\w-]{24})""".r.unanchored
+    private val ChannelIdRegex = """^(UC[\w-]{22})$""".r
+    private val ChannelIdUrlRegex =
+      """(?:https?://)?(?:www\.)?youtube\.com/channel/(UC[\w-]{22})""".r.unanchored
+
     def parseChannelId(str: String): Option[String] =
       str match {
-        case ChannelIdRegex(c) => c.some
-        case UrlRegex(c)       => c.some
-        case _                 => none
+        case ChannelIdRegex(c)    => c.some
+        case ChannelIdUrlRegex(c) => c.some
+        case _                    => none
       }
   }
 
-  case class WithUser(streamer: Streamer, user: User) {
-    def titleName = s"${user.title.fold("")(t => s"$t ")}${streamer.name}"
-  }
+  case class WithUser(streamer: Streamer, user: User)
   case class WithUserAndStream(streamer: Streamer, user: User, stream: Option[Stream]) {
     def withoutStream = WithUser(streamer, user)
-    def titleName     = withoutStream.titleName
 
     def redirectToLiveUrl: Option[String] =
       stream ?? { s =>
@@ -127,5 +126,5 @@ object Streamer {
 
   val tierChoices = (0 to maxTier).map(t => t -> t.toString)
 
-  def canApply(u: User) = (u.count.game >= 3 && u.createdSinceDays(1)) || u.hasTitle || u.isVerified
+  def canApply(u: User) = (u.count.game >= 1 && u.createdSinceDays(1)) || u.hasTitle || u.isVerified
 }

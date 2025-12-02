@@ -17,7 +17,5 @@ final private[app] class Renderer extends Actor {
     case lila.puzzle.DailyPuzzle.Render(puzzle, sfen, lastUsi) =>
       sender() ! V.puzzle.bits.daily(puzzle, sfen, lastUsi).render
 
-    case streams: lila.streamer.LiveStreams.WithTitles =>
-      sender() ! V.streamer.bits.liveStreams(streams).render
   }
 }

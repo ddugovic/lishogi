@@ -15,11 +15,6 @@ trait Stream {
   def is(userId: User.ID): Boolean = streamer.userId == userId
   def twitch                       = serviceName == "twitch"
   def youTube                      = serviceName == "youTube"
-
-  lazy val lang: String = status match {
-    case Stream.LangRegex(code) => code.toLowerCase
-    case _                      => "en"
-  }
 }
 
 object Stream {
@@ -89,7 +84,6 @@ object Stream {
     "stream" -> Json.obj(
       "service" -> stream.serviceName,
       "status"  -> stream.status,
-      "lang"    -> stream.lang,
     ),
     "streamer" -> Json
       .obj("name" -> stream.streamer.name.value)
@@ -99,5 +93,4 @@ object Stream {
       .add("youTube" -> stream.streamer.youTube.map(_.fullUrl)),
   )
 
-  private val LangRegex = """\[(\w\w)\]""".r.unanchored
 }
