@@ -8,7 +8,7 @@
     "xml2js": "^0.6.2"
   },
   "scripts": {
-    "favicons": "./scripts/favicons.sh",
+    "logo:generate": "./scripts/logo.sh",
     "sound:generate": "./scripts/sound-generate.sh",
     "sound:trim": "./scripts/sound-trim.sh",
     "icons:dump": "tsx ./scripts/icons-dump.ts",
