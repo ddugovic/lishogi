@@ -95,7 +95,7 @@ object help {
                 title    := "Copy code",
                 cls      := "copy button",
                 dataRel  := "tv-embed-src",
-                dataIcon := Icons.link,
+                dataIcon := Icons.copy,
               ),
             ),
             parameters,
@@ -121,7 +121,7 @@ object help {
                 title    := "Copy code",
                 cls      := "copy button",
                 dataRel  := "puzzle-embed-src",
-                dataIcon := Icons.link,
+                dataIcon := Icons.copy,
               ),
             ),
             parameters,
@@ -188,7 +188,6 @@ object help {
       moreJs = moreJs,
     ) {
       val sep                  = div(cls := "sep")
-      val external             = frag(" ", i(dataIcon := Icons.external))
       def activeCls(c: String) = cls := active.activeO(c)
       main(cls := "page-menu")(
         st.nav(cls := "page-menu__menu subnav")(
@@ -206,7 +205,7 @@ object help {
           sep,
           a(activeCls("webmasters"), href := routes.Main.webmasters)(trans.webmasters()),
           // a(activeCls("database"), href := "https://database.lishogi.org")(trans.database(), external),
-          a(activeCls("api"), href := routes.Api.index)("API", external),
+          a(activeCls("api"), href := routes.Api.index, target := "_blank")("API"),
           sep,
           a(activeCls("lag"), href := routes.Main.lag)(trans.lag.isLishogiLagging()),
         ),

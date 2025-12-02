@@ -60,7 +60,7 @@ object mine {
                           title    := "Copy URL",
                           cls      := "copy button",
                           dataRel  := "challenge-id",
-                          dataIcon := Icons.link,
+                          dataIcon := Icons.copy,
                         ),
                       ),
                       p(trans.theFirstPersonToComeOnThisUrlWillPlayWithYou()),
