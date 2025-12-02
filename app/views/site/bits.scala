@@ -22,7 +22,7 @@ object bits {
   </head>
   <body>
     <redoc spec-url="//${env.net.assetDomain}/assets/doc/lishogi-api.yaml"></redoc>
-    <script src="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/redoc@2.5.2/bundles/redoc.standalone.js"></script>
   </body>
 </html>""",
     )

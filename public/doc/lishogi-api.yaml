@@ -2301,7 +2301,6 @@ paths:
                     "stream": {
                       "service": "twitch",
                       "status": "Tuesday night shogi | lishogi.org",
-                      "lang": "en"
                     },
                     "streamer": {
                       "name": "shogi_harbour",
