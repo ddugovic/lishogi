@@ -579,8 +579,9 @@ final private[round] class RoundDuct(
     case e: ClientError =>
       logger.info(s"Round client error $name: ${e.getMessage}")
       lila.mon.round.error.client.increment().unit
-    case e: ShoginetError =>
-      logger.info(s"Round shoginet error $name: ${e.getMessage}")
+    case _: ShoginetError =>
+      // spams the logs, it's always the ply mismatch, I blame takebacks
+      // logger.info(s"Round shoginet error $name: ${e.getMessage}")
       lila.mon.round.error.shoginet.increment().unit
     case e: Exception =>
       logger.warn(s"$name: ${e.getMessage}")
