@@ -1,4 +1,5 @@
 import { useJapanese } from 'common/common';
+import { icons } from 'common/icons';
 import { debounce } from 'common/timings';
 import { i18n } from 'i18n';
 import { h, type VNode } from 'snabbdom';
@@ -145,6 +146,13 @@ function slider(ctrl: SoundCtrl): VNode {
   );
 }
 
+const credits: Partial<Record<SoundSet | ClockSoundSet, string>> = {
+  chisei_mazawa: 'https://www.youtube.com/c/chisei',
+  sakura_ajisai: 'https://youtube.com/@Sakura_Ajisai',
+  ippan_dansei: 'https://www.youtube.com/channel/UCoEQgBLlacPU18FoWDJA5Qg',
+  shougi_sennin: 'https://www.youtube.com/channel/UCoEQgBLlacPU18FoWDJA5Qg',
+};
+
 function soundView(ctrl: SoundCtrl, current: string) {
   return (s: Sound) =>
     h(
@@ -157,6 +165,21 @@ function soundView(ctrl: SoundCtrl, current: string) {
         ),
         class: { active: current === s.key },
       },
-      useJapanese() ? s.ja : s.en,
+      [
+        useJapanese() ? s.ja : s.en,
+        credits[s.key]
+          ? h('a.credit-link', {
+              hook: bind('click', e => {
+                e.stopPropagation();
+              }),
+              attrs: {
+                'data-icon': icons.link,
+                title: credits[s.key]!,
+                href: credits[s.key]!,
+                target: '_blank',
+              },
+            })
+          : undefined,
+      ],
     );
 }

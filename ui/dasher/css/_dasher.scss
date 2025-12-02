@@ -107,37 +107,43 @@
 
     a {
       display: block;
+      position: relative;
       padding: 0.7rem 1rem;
 
       @include mixins.transition(background);
-
-      &:hover {
-        background: local.$c-dasher-light;
-      }
 
       &.active {
         background: theme.$c-secondary !important;
         color: theme.$c-secondary-over !important;
       }
 
-      &::before {
-        margin-right: 8px;
-        font-size: 19px;
-        justify-content: center;
-        align-items: center;
-        opacity: 0;
-
-        @include mixins.transition(opacity);
-      }
-
-      &.active::before {
-        opacity: 1;
-        color: theme.$c-secondary-over !important;
-      }
-
       &.half {
         width: 50%;
         display: inline-block;
+      }
+
+      .credit-link {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        right: 0;
+        top: 0;
+        height: 100%;
+        padding: 0 0.5rem;
+        opacity: 0;
+      }
+
+      &:hover {
+        background: local.$c-dasher-light;
+
+        .credit-link {
+          opacity: 0.5;
+
+          &:hover {
+            background: none;
+            opacity: 1;
+          }
+        }
       }
     }
 
