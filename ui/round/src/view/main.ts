@@ -30,6 +30,8 @@ export function main(ctrl: RoundController): VNode {
                       'wheel',
                       stepwiseScroll((e: WheelEvent, scroll: boolean) => {
                         if (!ctrl.isPlaying()) {
+                          const target = e.target as HTMLElement;
+                          if (target.tagName !== 'SG-PIECES') return;
                           e.preventDefault();
                           if (e.deltaY > 0 && scroll) keyboard.next(ctrl);
                           else if (e.deltaY < 0 && scroll) keyboard.prev(ctrl);
