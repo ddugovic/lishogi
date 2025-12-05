@@ -677,15 +677,24 @@ export default class RoundController {
           o.provisionals?.[d.player.color],
         );
     }
-    if (!d.player.spectator && d.game.plies > 1) {
+    if (
+      (!d.player.spectator || d.pref.clockAudible === prefs.clockAudible.ALL) &&
+      d.game.plies > 1
+    ) {
+      const isPlayerWinner = d.player.color === o.winner;
+      const play = () => {
+        if (!d.player.spectator)
+          li.sound.play(o.winner ? (isPlayerWinner ? 'victory' : 'defeat') : 'draw');
+      };
       if (
         o.status.name === 'outoftime' &&
+        (!isPlayerWinner || d.pref.clockAudible !== prefs.clockAudible.MINE) &&
         d.clock?.byoyomi &&
         window.lishogi.sound.clockSoundJapanese()
       ) {
         window.lishogi.sound.countdown(Math.min(d.clock?.byoyomi, 10));
-      } else
-        li.sound.play(o.winner ? (d.player.color === o.winner ? 'victory' : 'defeat') : 'draw');
+        setTimeout(play, 750);
+      } else play();
     }
     this.setTitle();
     this.moveOn.next();
