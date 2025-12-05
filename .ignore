@@ -11,3 +11,4 @@ public/images
 public/sound/mp3
 public/sound/ogg
 generated
+!.vscode
