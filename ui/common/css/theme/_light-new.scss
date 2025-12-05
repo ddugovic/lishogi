@@ -6,7 +6,7 @@
 $c-bg-page: #f3eac7;
 $c-body-gradient: #eee3ba;
 
-$c-bg-high: hsl(53deg, 74%, 91%);
+$c-bg-high: hsl(53deg, 74%, 95%);
 $c-bg-low: #f5edca;
 
 $c-bg-zebra: hsl(48deg, 80%, 89%);
@@ -37,6 +37,7 @@ $c-accent-dim: c-whiter($c-accent, 17%);
 $c-accent-clear: c-blacker($c-accent, 17%);
 
 $c-brag: #b4730e;
+$c-brag-over: #fff;
 
 $c-red: #af2528;
 $c-error: $c-red;

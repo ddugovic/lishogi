@@ -15,7 +15,7 @@ html.light-new {
   --c-bg-box: #{$c-bg-high};
   --c-bg-box-opaque: #{$c-bg-box};
   --c-bg-header-dropdown: #{$c-bg-popup};
-  --c-bg-high: #{hsl(53deg, 74%, 91%)};
+  --c-bg-high: #{hsl(53deg, 74%, 95%)};
   --c-bg-input: #{c-light($c-bg-page, 98%)};
   --c-bg-low: #{#f5edca};
   --c-bg-metal: #{$c-bg-high};
@@ -29,6 +29,7 @@ html.light-new {
   --c-border: #{$c-font-dimmer};
   --c-bot: #{$c-fancy};
   --c-brag: #{#b4730e};
+  --c-brag-over: #{#fff};
   --c-error: #{$c-red};
   --c-fancy: #{#924f79};
   --c-font: #{#3a322e};
