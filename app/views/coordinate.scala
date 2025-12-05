@@ -6,7 +6,6 @@ import play.api.libs.json.Json
 import lila.api.Context
 import lila.app.templating.Environment._
 import lila.app.ui.ScalatagsTemplate._
-import lila.pref.Pref.Color
 
 object coordinate {
 
@@ -20,8 +19,7 @@ object coordinate {
         moduleJsTag(
           "misc.coordinate",
           Json.obj(
-            "colorPref" -> ctx.pref.coordColorName,
-            "scoreUrl"  -> ctx.isAuth.option(routes.Coordinate.score.url),
+            "scoreUrl" -> ctx.isAuth.option(routes.Coordinate.score.url),
             "points" -> scoreOption.map(s => {
               Json.obj(
                 "sente" -> s.sente,
@@ -52,10 +50,9 @@ object coordinate {
               div(cls := "scores")(scoreCharts(score))
             },
           ),
-          form(cls := "color buttons", action := routes.Coordinate.color, method := "post")(
+          form(cls := "color buttons")(
             st.group(cls := "radio")(
-              List(Color.SENTE, Color.RANDOM, Color.GOTE).map { id =>
-                val colorName = Color.name(id)
+              List("sente", "random", "gote").zipWithIndex.map { case (colorName, id) =>
                 val translated =
                   shogi.Color.fromName(colorName).fold(trans.randomColor.txt())(standardColorName)
                 div(
@@ -64,7 +61,6 @@ object coordinate {
                     st.id := s"coord_color_$id",
                     name  := "color",
                     value := id,
-                    (id == ctx.pref.coordColor) option checked,
                   ),
                   label(`for` := s"coord_color_$id", cls := s"color", title := translated)(
                     div(cls := s"color-icon ${colorName}"),
@@ -79,7 +75,7 @@ object coordinate {
           div(cls := "next_coord", id := "next_coord1"),
           shogigroundEmpty(
             shogi.variant.Standard,
-            shogi.Color.fromSente(ctx.pref.coordColor != Color.GOTE),
+            shogi.Color.Sente,
           ),
         ),
         div(cls := "coord-trainer__table")(

@@ -35,7 +35,6 @@ case class Pref(
     tourChallenge: Int,
     message: Int,
     studyInvite: Int,
-    coordColor: Int,
     submitMove: Int,
     confirmResign: Int,
     insightsShare: Boolean,
@@ -68,8 +67,7 @@ case class Pref(
     .map(cssBackgroundImageValue)
     .filterNot(_ == "none")
 
-  def coordColorName = Color name coordColor
-  def coordsClass    = Coords cssClassOf coords
+  def coordsClass = Coords cssClassOf coords
 
   def hasSeenVerifyTitle = tags contains Tag.verifyTitle
 
@@ -151,25 +149,6 @@ object Pref {
 
   object Tag {
     val verifyTitle = "verifyTitle"
-  }
-
-  object Color {
-    val SENTE  = 1
-    val RANDOM = 2
-    val GOTE   = 3
-
-    def name(v: Int) =
-      v match {
-        case SENTE => "sente"
-        case GOTE  => "gote"
-        case _     => "random"
-      }
-
-    val choices = Seq(
-      SENTE,
-      RANDOM,
-      GOTE,
-    )
   }
 
   object SubmitMove {
@@ -303,11 +282,13 @@ object Pref {
   }
 
   object ClockAudible {
-    val MINE = 0
-    val ALL  = 1
+    val MINE   = 0
+    val MYGAME = 1
+    val ALL    = 2
 
     val choices = Seq(
       MINE,
+      MYGAME,
       ALL,
     )
   }
@@ -423,7 +404,6 @@ object Pref {
     tourChallenge = Challenge.ALWAYS,
     message = Message.ALWAYS,
     studyInvite = StudyInvite.ALWAYS,
-    coordColor = Color.RANDOM,
     submitMove = SubmitMove.CORRESPONDENCE_ONLY,
     confirmResign = ConfirmResign.YES,
     insightsShare = false,

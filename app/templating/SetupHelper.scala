@@ -126,6 +126,7 @@ trait SetupHelper { self: I18nHelper =>
   def translatedClockAudibleChoices(implicit lang: Lang) =
     List(
       (Pref.ClockAudible.MINE, trans.preferences.myClock.txt()),
+      (Pref.ClockAudible.MYGAME, trans.preferences.myAndOpponentClock.txt()),
       (Pref.ClockAudible.ALL, trans.preferences.allClocks.txt()),
     )
 

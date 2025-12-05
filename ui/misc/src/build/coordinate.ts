@@ -1,15 +1,17 @@
 import { capitalize } from 'common/string';
 import { colorName } from 'shogi/color-name';
+import { COLORS } from 'shogiops/constants';
 import { handRoles } from 'shogiops/variant/util';
 
 interface CoordinatesOpts {
-  colorPref: 'random' | Color;
   scoreUrl: string;
   points: {
     sente: number[];
     gote: number[];
   };
 }
+
+type ColorPref = Color | 'random';
 
 const duration: number = 30 * 1000;
 const tickDelay: number = 50;
@@ -30,9 +32,10 @@ function main(opts: CoordinatesOpts): void {
 
   const scoreUrl = opts.scoreUrl;
   const notationPref = Number.parseInt(document.body.dataset.notation || '0');
+  const colorStorage = window.lishogi.storage.make('coordinate.color2');
 
   let ground: ReturnType<typeof window.Shogiground>;
-  let colorPref = opts.colorPref;
+
   let color: Color;
   let startAt: Date;
   let score: number;
@@ -40,10 +43,12 @@ function main(opts: CoordinatesOpts): void {
 
   $board.removeClass('preload');
   const showColor = () => {
-    color =
-      colorPref === 'random'
-        ? (['sente', 'gote'] as Color[])[Math.round(Math.random())]
-        : colorPref;
+    const colorPref = colorStorage.get() || 'random';
+    const colorWithFallback: ColorPref = (COLORS as readonly string[]).includes(colorPref)
+      ? (colorPref as Color)
+      : 'random';
+
+    color = colorWithFallback === 'random' ? COLORS[Math.round(Math.random())] : colorWithFallback;
     if (!ground)
       ground = window.Shogiground(
         {
@@ -75,16 +80,20 @@ function main(opts: CoordinatesOpts): void {
 
   $trainer.find('form.color').each(function (this: HTMLFormElement) {
     const $form = $(this);
+
+    const stored = colorStorage.get();
+    const map = { sente: 0, random: 1, gote: 2 } as const;
+    const val = map[stored as ColorPref] ?? map.random;
+    $form.find(`input[value="${val}"]`).prop('checked', true);
+
     $form.find('input').on('change', () => {
       const selected: string = $form.find<HTMLInputElement>('input:checked').val()!;
       const c = {
-        1: 'sente',
-        2: 'random',
-        3: 'gote',
+        0: 'sente',
+        1: 'random',
+        2: 'gote',
       }[selected]!;
-      if (c !== colorPref) window.lishogi.xhr.formToXhr(this);
-      colorPref = c as any;
-      showColor();
+      colorStorage.set(c);
       return false;
     });
   });
