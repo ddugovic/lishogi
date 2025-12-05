@@ -1,3 +1,4 @@
+import { prefs } from 'common/prefs';
 import { notationFiles, notationRanks } from 'shogi/notation';
 import { predrop } from 'shogi/pre-drop';
 import { premove } from 'shogi/pre-move';
@@ -64,7 +65,7 @@ export function makeConfig(ctrl: AnalyseCtrl): SgConfig {
       showDests: pref.dropDestination && pref.destination,
     },
     coordinates: {
-      enabled: pref.coords !== 0 && !ctrl.embed,
+      enabled: pref.coords !== prefs.coords.NONE && !ctrl.embed,
       files: notationFiles(),
       ranks: notationRanks(),
     },
@@ -136,12 +137,12 @@ export function makeConfig(ctrl: AnalyseCtrl): SgConfig {
       check: pref.highlightCheck && variant !== 'chushogi',
     },
     draggable: {
-      enabled: pref.moveEvent > 0,
+      enabled: pref.moveEvent !== prefs.moveEvent.CLICK,
       showGhost: pref.highlightLastDests,
       showTouchSquareOverlay: pref.squareOverlay,
     },
     selectable: {
-      enabled: pref.moveEvent !== 1,
+      enabled: pref.moveEvent !== prefs.moveEvent.DRAG,
     },
     animation: {
       duration: pref.animationDuration,

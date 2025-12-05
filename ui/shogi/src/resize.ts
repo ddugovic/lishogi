@@ -1,4 +1,5 @@
 import { loadCssPath } from 'common/assets';
+import { type PrefTypes, prefs } from 'common/prefs';
 import { debounce } from 'common/timings';
 import type { BoardElements } from 'shogiground/types';
 
@@ -6,7 +7,7 @@ type MouchEvent = MouseEvent & TouchEvent;
 
 export default function resizeHandle(
   els: BoardElements,
-  pref: number,
+  pref: PrefTypes['resizeHandle'],
   conf: {
     ply?: number;
     initialPly?: number;
@@ -63,7 +64,7 @@ export default function resizeHandle(
   el.addEventListener('touchstart', startResize, { passive: false });
   el.addEventListener('mousedown', startResize, { passive: false });
 
-  if (pref == 1) {
+  if (pref == prefs.resizeHandle.INITIAL) {
     const toggle = (ply: number) =>
       el.classList.toggle(
         'none',

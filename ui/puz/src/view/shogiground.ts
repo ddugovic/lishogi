@@ -1,3 +1,4 @@
+import { prefs } from 'common/prefs';
 import resizeHandle from 'shogi/resize';
 import type { Config as SgConfig } from 'shogiground/config';
 import type { State } from 'shogiground/state';
@@ -29,7 +30,7 @@ export function makeConfig(
     turnColor: opts.turnColor,
     checks: opts.checks,
     lastDests: opts.lastDests,
-    coordinates: { enabled: pref.coords !== 0 },
+    coordinates: { enabled: pref.coords !== prefs.coords.NONE },
     hands: {
       roles: handRoles(variant),
       inlined: true,
@@ -69,12 +70,12 @@ export function makeConfig(
       },
     },
     draggable: {
-      enabled: pref.moveEvent > 0,
+      enabled: pref.moveEvent !== prefs.moveEvent.CLICK,
       showGhost: pref.highlightLastDests,
       showTouchSquareOverlay: pref.squareOverlay,
     },
     selectable: {
-      enabled: pref.moveEvent !== 1,
+      enabled: pref.moveEvent !== prefs.moveEvent.DRAG,
     },
     events: {
       move: userMove,

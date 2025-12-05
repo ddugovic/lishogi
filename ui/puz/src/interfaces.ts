@@ -1,17 +1,18 @@
+import type { PrefTypes } from 'common/prefs';
 import type { Piece } from 'shogiops/types';
 import type { Clock } from './clock';
 import type { Combo } from './combo';
 import type CurrentPuzzle from './current';
 
 export interface PuzPrefs {
-  coords: 0 | 1 | 2 | 3;
+  coords: PrefTypes['coords'];
   destination: boolean;
   dropDestination: boolean;
-  moveEvent: number;
+  moveEvent: PrefTypes['moveEvent'];
   highlightLastDests: boolean;
   highlightCheck: boolean;
   squareOverlay: boolean;
-  resizeHandler: number;
+  resizeHandler: PrefTypes['resizeHandle'];
 }
 
 export type UserMove = (orig: Key, dest: Key, prom: boolean) => void;

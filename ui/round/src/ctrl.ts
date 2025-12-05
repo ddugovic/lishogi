@@ -2,6 +2,7 @@ import { requestIdleCallbackWithFallback } from 'common/common';
 import { icons } from 'common/icons';
 import { modalJs } from 'common/modal';
 import notify from 'common/notification';
+import { prefs } from 'common/prefs';
 import { once } from 'common/storage';
 import { wsIsReady, wsLastVersionTime, wsOnOpen } from 'common/ws';
 import * as game from 'game';
@@ -399,7 +400,9 @@ export default class RoundController {
 
   replayEnabledByPref = (): boolean => {
     const d = this.data;
-    return d.pref.replay === 2 || (d.pref.replay === 1 && !d.clock);
+    return (
+      d.pref.replay === prefs.replay.ALWAYS || (d.pref.replay === prefs.replay.SLOW && !d.clock)
+    );
   };
 
   isLate = (): boolean => this.replaying() && status.playing(this.data);

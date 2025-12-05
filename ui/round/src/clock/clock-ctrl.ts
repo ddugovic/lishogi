@@ -1,4 +1,5 @@
 import { defined } from 'common/common';
+import { type PrefTypes, prefs } from 'common/prefs';
 import * as game from 'game';
 import type { RoundData } from '../interfaces';
 import { updateElements } from './clock-view';
@@ -14,8 +15,6 @@ interface ClockOpts {
   nvui: boolean;
 }
 
-type TenthsPref = 0 | 1 | 2;
-
 export interface ClockData {
   running: boolean;
   initial: Seconds;
@@ -25,8 +24,8 @@ export interface ClockData {
   sente: Seconds;
   gote: Seconds;
   emerg: Seconds;
-  showTenths: TenthsPref;
-  clockAudible: number;
+  showTenths: PrefTypes['clockTenths'];
+  clockAudible: PrefTypes['clockAudible'];
   moretime: number;
   sPeriods: number;
   gPeriods: number;
@@ -95,12 +94,15 @@ export class ClockController {
   ) {
     const cdata = d.clock!;
 
-    if (cdata.showTenths === 0) this.showTenths = () => false;
+    if (cdata.showTenths === prefs.clockTenths.NEVER) this.showTenths = () => false;
     else {
-      const cutoff = cdata.showTenths === 1 ? 10000 : 3600000;
+      const cutoff = cdata.showTenths === prefs.clockTenths.LOWTIME ? 10000 : 3600000;
       this.showTenths = (time, color) =>
         time < cutoff &&
-        (this.byoyomi === 0 || time <= 1000 || this.isUsingByo(color) || cdata.showTenths === 2);
+        (this.byoyomi === 0 ||
+          time <= 1000 ||
+          this.isUsingByo(color) ||
+          cdata.showTenths === prefs.clockTenths.ALWAYS);
     }
 
     this.byoyomi = cdata.byoyomi;
@@ -157,7 +159,8 @@ export class ClockController {
   nextPeriod = (color: Color): void => {
     this.curPeriods[color] += 1;
     this.times[color] += this.byoyomi * 1000;
-    if (this.opts.soundColor === color || this.audible === 1) this.emergSound.nextPeriod();
+    if (this.opts.soundColor === color || this.audible >= prefs.clockAudible.MYGAME)
+      this.emergSound.nextPeriod();
     this.resetByoTicks();
   };
 

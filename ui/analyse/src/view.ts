@@ -3,6 +3,7 @@ import { chatMembers, makeChat } from 'chat';
 import { defined } from 'common/common';
 import { icons } from 'common/icons';
 import { bindMobileMousedown, hasTouchEvents } from 'common/mobile';
+import { prefs } from 'common/prefs';
 import { bind, bindNonPassive, dataIcon, type MaybeVNode, onInsert } from 'common/snabbdom';
 import spinner from 'common/spinner';
 import stepwiseScroll from 'common/wheel';
@@ -343,7 +344,7 @@ function controls(ctrl: AnalyseCtrl) {
 }
 
 function forceInnerCoords(ctrl: AnalyseCtrl, v: boolean) {
-  if (ctrl.data.pref.coords == 2) {
+  if (ctrl.data.pref.coords == prefs.coords.OUTSIDE) {
     $('body').toggleClass('coords-in', v).toggleClass('coords-out', !v);
   }
 }

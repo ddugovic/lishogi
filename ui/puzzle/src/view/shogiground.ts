@@ -1,3 +1,4 @@
+import { prefs } from 'common/prefs';
 import { notationFiles, notationRanks } from 'shogi/notation';
 import resizeHandle from 'shogi/resize';
 import type { Config as SgConfig } from 'shogiground/config';
@@ -28,7 +29,7 @@ function makeConfig(ctrl: Controller): SgConfig {
     checks: opts.checks,
     lastDests: opts.lastDests,
     coordinates: {
-      enabled: ctrl.pref.coords !== 0,
+      enabled: ctrl.pref.coords !== prefs.coords.NONE,
       files: notationFiles(),
       ranks: notationRanks(),
     },
@@ -65,12 +66,12 @@ function makeConfig(ctrl: Controller): SgConfig {
       },
     },
     draggable: {
-      enabled: ctrl.pref.moveEvent > 0,
+      enabled: ctrl.pref.moveEvent > prefs.moveEvent.CLICK,
       showGhost: ctrl.pref.highlightLastDests,
       showTouchSquareOverlay: ctrl.pref.squareOverlay,
     },
     selectable: {
-      enabled: ctrl.pref.moveEvent !== 1,
+      enabled: ctrl.pref.moveEvent !== prefs.moveEvent.DRAG,
     },
     events: {
       move: ctrl.userMove,

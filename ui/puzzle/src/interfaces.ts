@@ -1,6 +1,7 @@
 import type { CevalCtrl, NodeEvals } from 'ceval/types';
 import type { Prop } from 'common/common';
 import type { Deferred } from 'common/defer';
+import type { PrefTypes } from 'common/prefs';
 import type { StoredBooleanProp } from 'common/storage';
 import type { KeyboardMove } from 'keyboard-move';
 import type { EngineCode } from 'shogi/engine-name';
@@ -126,17 +127,17 @@ export interface PuzzleOpts {
 }
 
 interface PuzzlePrefs {
-  coords: 0 | 1 | 2;
+  coords: PrefTypes['coords'];
   destination: boolean;
   dropDestination: boolean;
-  moveEvent: number;
+  moveEvent: PrefTypes['moveEvent'];
   highlightLastDests: boolean;
   highlightCheck: boolean;
   squareOverlay: boolean;
   animation: {
     duration: number;
   };
-  resizeHandle: number;
+  resizeHandle: PrefTypes['resizeHandle'];
   keyboardMove: boolean;
 }
 

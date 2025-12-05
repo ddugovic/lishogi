@@ -1,4 +1,5 @@
 import type { ChatPlugin } from 'chat/interfaces';
+import type { PrefTypes } from 'common/prefs';
 import type { GameData, Status } from 'game/interfaces';
 import type { MoveMetadata as SgMoveMetadata } from 'shogiground/types';
 import type { Role } from 'shogiops/types';
@@ -123,10 +124,10 @@ export interface ApiEnd {
 interface Pref {
   animationDuration: number;
   clockSound: boolean;
-  clockAudible: 0 | 1;
-  clockTenths: 0 | 1 | 2;
+  clockAudible: PrefTypes['clockAudible'];
+  clockTenths: PrefTypes['clockTenths'];
   confirmResign: boolean;
-  coords: 0 | 1 | 2;
+  coords: PrefTypes['coords'];
   destination: boolean;
   dropDestination: boolean;
   enablePremove: boolean;
@@ -134,10 +135,10 @@ interface Pref {
   highlightCheck: boolean;
   squareOverlay: boolean;
   keyboardMove: boolean;
-  moveEvent: 0 | 1 | 2;
-  replay: 0 | 1 | 2;
+  moveEvent: PrefTypes['moveEvent'];
+  replay: PrefTypes['replay'];
   submitMove: boolean;
-  resizeHandle: 0 | 1 | 2;
+  resizeHandle: PrefTypes['resizeHandle'];
 }
 
 export type MoveMetadata = Partial<SgMoveMetadata>;

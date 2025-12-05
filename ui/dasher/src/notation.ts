@@ -1,7 +1,9 @@
+import { type PrefTypes, prefs } from 'common/prefs';
 import { i18n } from 'i18n';
-import { Notation } from 'shogi/notation';
 import { h, type VNode } from 'snabbdom';
 import { bind, type Close, header } from './util';
+
+type Notation = PrefTypes['notation'];
 
 export interface NotationData {
   current: Notation;
@@ -61,38 +63,38 @@ function notationView(ctrl: NotationCtrl, current: Notation) {
 
 function notationExample(notation: Notation): string {
   switch (notation) {
-    case Notation.Western:
+    case prefs.notation.WESTERN:
       return 'P-76';
-    case Notation.WesternEngine:
+    case prefs.notation.WESTERNENGINE:
       return 'P-7f';
-    case Notation.Japanese:
+    case prefs.notation.JAPANESE:
       return '７六歩';
-    case Notation.Kawasaki:
+    case prefs.notation.KAWASAKI:
       return '歩-76';
-    case Notation.Kif:
+    case prefs.notation.KIF:
       return '７六歩(77)';
-    case Notation.Usi:
+    case prefs.notation.USI:
       return '7g7f';
-    case Notation.Yorozuya:
+    case prefs.notation.YOROZUYA:
       return '午六歩';
   }
 }
 
 function notationDisplay(notation: Notation): string {
   switch (notation) {
-    case Notation.Western:
+    case prefs.notation.WESTERN:
       return `${i18n('preferences:westernNotation')} (76)`;
-    case Notation.WesternEngine:
+    case prefs.notation.WESTERNENGINE:
       return `${i18n('preferences:westernNotation')} (7f)`;
-    case Notation.Japanese:
+    case prefs.notation.JAPANESE:
       return i18n('preferences:japaneseNotation');
-    case Notation.Kawasaki:
+    case prefs.notation.KAWASAKI:
       return i18n('preferences:kitaoKawasakiNotation');
-    case Notation.Kif:
+    case prefs.notation.KIF:
       return i18n('preferences:kifNotation');
-    case Notation.Usi:
+    case prefs.notation.USI:
       return 'USI';
-    case Notation.Yorozuya:
+    case prefs.notation.YOROZUYA:
       return i18n('preferences:yorozuyaNotation');
   }
 }

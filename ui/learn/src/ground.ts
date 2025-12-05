@@ -1,3 +1,4 @@
+import { prefs } from 'common/prefs';
 import { notationFiles, notationRanks } from 'shogi/notation';
 import resizeHandle from 'shogi/resize';
 import type { Config } from 'shogiground/config';
@@ -70,12 +71,12 @@ export function initConfig(ctrl: LearnCtrl): Config {
       },
     },
     draggable: {
-      enabled: ctrl.pref.moveEvent > 0,
+      enabled: ctrl.pref.moveEvent !== prefs.moveEvent.CLICK,
       showGhost: ctrl.pref.highlightLastDests,
       showTouchSquareOverlay: ctrl.pref.squareOverlay,
     },
     selectable: {
-      enabled: ctrl.pref.moveEvent !== 1,
+      enabled: ctrl.pref.moveEvent !== prefs.moveEvent.DRAG,
     },
     highlight: {
       check: ctrl.pref.highlightCheck,

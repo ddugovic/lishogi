@@ -1,4 +1,5 @@
 import { memoize } from 'common/common';
+import { type PrefTypes, prefs } from 'common/prefs';
 import type { Notation as sgNotation } from 'shogiground/types';
 import { makeJapaneseMoveOrDrop } from 'shogiops/notation/japanese';
 import { makeKifMoveOrDrop } from 'shogiops/notation/kif';
@@ -13,16 +14,7 @@ import { makeUsi, parseUsi } from 'shogiops/util';
 import type { Position } from 'shogiops/variant/position';
 import { plyColor } from './common';
 
-export const Notation = {
-  Western: 0,
-  Kawasaki: 1,
-  Japanese: 2,
-  WesternEngine: 3,
-  Kif: 4,
-  Usi: 5,
-  Yorozuya: 6,
-} as const;
-export type Notation = (typeof Notation)[keyof typeof Notation];
+type Notation = PrefTypes['notation'];
 
 const notationPref = memoize(
   () => Number.parseInt(document.body.dataset.notation || '0') as Notation,
@@ -30,24 +22,28 @@ const notationPref = memoize(
 
 // Notations, that should be displayed with ☖/☗
 export function notationsWithColor(): boolean {
-  const colorNotations: Notation[] = [Notation.Kawasaki, Notation.Japanese, Notation.Kif];
+  const colorNotations: Notation[] = [
+    prefs.notation.KAWASAKI,
+    prefs.notation.JAPANESE,
+    prefs.notation.KIF,
+  ];
   return colorNotations.includes(notationPref());
 }
 
 export function notationFiles(): sgNotation {
-  if (notationPref() === Notation.Western) return 'hex';
-  else if (notationPref() === Notation.Yorozuya) return 'dizhi';
+  if (notationPref() === prefs.notation.WESTERN) return 'hex';
+  else if (notationPref() === prefs.notation.YOROZUYA) return 'dizhi';
   else return 'numeric';
 }
 
 export function notationRanks(): sgNotation {
   switch (notationPref()) {
-    case Notation.Japanese:
-    case Notation.Kif:
-    case Notation.Yorozuya:
+    case prefs.notation.JAPANESE:
+    case prefs.notation.KIF:
+    case prefs.notation.YOROZUYA:
       return 'japanese';
-    case Notation.WesternEngine:
-    case Notation.Usi:
+    case prefs.notation.WESTERNENGINE:
+    case prefs.notation.USI:
       return 'engine';
     default:
       return 'hex';
@@ -56,13 +52,13 @@ export function notationRanks(): sgNotation {
 
 export function roleName(rules: Rules, role: Role): string {
   switch (notationPref()) {
-    case Notation.Kawasaki:
+    case prefs.notation.KAWASAKI:
       return roleToKanji(role).replace('成', '+');
-    case Notation.Japanese:
+    case prefs.notation.JAPANESE:
       return roleToKanji(role);
-    case Notation.Kif:
+    case prefs.notation.KIF:
       return roleToFullKanji(role);
-    case Notation.Usi:
+    case prefs.notation.USI:
       return roleToForsyth(rules)(role)!;
     default:
       return roleToWestern(rules)(role);
@@ -75,17 +71,17 @@ export function makeNotationWithPosition(
   lastMoveOrDrop?: MoveOrDrop | { to: Square },
 ): string {
   switch (notationPref()) {
-    case Notation.Kawasaki:
+    case prefs.notation.KAWASAKI:
       return makeKitaoKawasakiMoveOrDrop(pos, md, lastMoveOrDrop?.to)!;
-    case Notation.Japanese:
+    case prefs.notation.JAPANESE:
       return makeJapaneseMoveOrDrop(pos, md, lastMoveOrDrop?.to)!;
-    case Notation.WesternEngine:
+    case prefs.notation.WESTERNENGINE:
       return makeWesternEngineMoveOrDrop(pos, md)!;
-    case Notation.Kif:
+    case prefs.notation.KIF:
       return makeKifMoveOrDrop(pos, md, lastMoveOrDrop?.to)!;
-    case Notation.Usi:
+    case prefs.notation.USI:
       return makeUsi(md);
-    case Notation.Yorozuya:
+    case prefs.notation.YOROZUYA:
       return makeYorozuyaMoveOrDrop(pos, md, lastMoveOrDrop?.to)!;
     default:
       return makeWesternMoveOrDrop(pos, md)!;

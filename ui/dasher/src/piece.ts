@@ -8,7 +8,7 @@ type PieceSetKey = string;
 type PieceSet = {
   key: PieceSetKey;
   name: string;
-  pro?: string;
+  pro?: boolean;
 };
 type Tab = 'standard' | 'chushogi' | 'kyotoshogi';
 

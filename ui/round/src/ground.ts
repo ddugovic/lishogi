@@ -1,3 +1,4 @@
+import { prefs } from 'common/prefs';
 import { notationFiles, notationRanks } from 'shogi/notation';
 import { predrop } from 'shogi/pre-drop';
 import { premove } from 'shogi/pre-move';
@@ -39,7 +40,7 @@ export function makeConfig(ctrl: RoundController): Config {
     lastDests: step.usi ? usiToSquareNames(step.usi) : undefined,
     checks: step.check,
     coordinates: {
-      enabled: data.pref.coords !== 0,
+      enabled: data.pref.coords !== prefs.coords.NONE,
       files: notationFiles(),
       ranks: notationRanks(),
     },
@@ -130,12 +131,12 @@ export function makeConfig(ctrl: RoundController): Config {
       showDests: data.pref.destination && data.pref.dropDestination,
     },
     draggable: {
-      enabled: data.pref.moveEvent > 0,
+      enabled: data.pref.moveEvent !== prefs.moveEvent.CLICK,
       showGhost: data.pref.highlightLastDests,
       showTouchSquareOverlay: data.pref.squareOverlay,
     },
     selectable: {
-      enabled: data.pref.moveEvent !== 1,
+      enabled: data.pref.moveEvent !== prefs.moveEvent.DRAG,
     },
     drawable: {
       enabled: true,
