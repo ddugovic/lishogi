@@ -454,6 +454,8 @@ export default class RoundController {
     if (this.data.pref.submitMove && !meta.premade) {
       this.usiToSubmit = socUsi;
       this.redraw();
+      // https://github.com/WandererXII/lishogi/issues/939
+      window.dispatchEvent(new Event('resize'));
     } else {
       this.sendUsiData(socUsi, meta);
     }
