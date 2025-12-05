@@ -673,7 +673,7 @@ export default class RoundController {
       if (d.player.rating)
         this.rankChangeModal(
           d.player.rating,
-          d.player.rating + o.ratingDiff[d.player.color],
+          d.player.rating + d.player.ratingDiff,
           o.provisionals?.[d.player.color],
         );
     }
@@ -717,7 +717,7 @@ export default class RoundController {
     const oldRank = rankFromRating(oldRating);
     const newRank = rankFromRating(newRating);
 
-    if (oldRank.min > newRank.min) return;
+    if (oldRank.min >= newRank.min) return;
 
     if (once(`r-${d.player.id}-${newRank.enName}`)) {
       const firstRank = d.player.provisional;
@@ -728,7 +728,6 @@ export default class RoundController {
         i18n('learn:perfect'),
         i18n('learn:outstanding'),
         i18n('learn:wayToGo'),
-        i18n('learn:yesYesYes'),
       ];
       const congrats = congratsList[Math.floor(Math.random() * congratsList.length)];
 
