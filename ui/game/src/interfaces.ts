@@ -33,6 +33,7 @@ interface Game {
   perf: string;
   isProMode?: boolean;
   illegalUsi?: Usi;
+  createdAt?: number;
 }
 
 export interface AnalyseGame {
