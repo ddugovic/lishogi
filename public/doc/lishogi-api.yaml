@@ -4920,79 +4920,27 @@ components:
     UserPreferences:
       type: object
       properties:
-        dark:
-          type: boolean
-          example: true
-        transp:
-          type: boolean
-          example: false
+        background:
+          type: string
+          example: dark
         bgImg:
           type: string
           format: uri
         theme:
           type: string
-          enum:
-            - orange
-            - natural
-            - wood
-            - wood1
-            - kaya1
-            - kaya2
-            - oak
-            - blue
-            - grey
-            - painting1
-            - painting2
-            - kinkaku
-            - space
-            - dobutsu
-            - custom
+          example: wood2
         pieceSet:
           type: string
-          enum:
-            - kanji_light
-            - kanji_brown
-            - Ryoko_1Kanji
-            - orangain
-            - kanji_red_wood
-            - Portella
-            - Portella_2Kanji
-            - 1Kanji_3D
-            - 2Kanji_3D
-            - Shogi_cz
-            - Engraved_cz
-            - Kanji_Guide_Shadowed
-            - Valdivia
-            - Vald_opt
-            - pixel
-            - shogi_BnW
-            - Intl_Colored_2D
-            - Intl_Colored_3D
-            - Intl_Shadowed
-            - Intl_Monochrome_2D
-            - Intl_Wooden_3D
-            - Intl_Portella
-            - international
-            - simple_kanji
-            - doubutsu
-            - Logy_Games
-            - western
+          example: Ryoko_1Kanji
+        pieceSetChu:
+          type: string
+          example: Ryoko_1Kanji
+        pieceSetKyo:
+          type: string
+          example: Ryoko_1Kanji
         soundSet:
           type: string
-          enum:
-            - silent
-            - chess
-            - nes
-            - sfx
-            - futuristic
-            - robot
-            - music
-            - shogiAlt
-            - shogi
-            - speech
-        blindfold:
-          type: integer
-          example: 0
+          example: shogi
         takeback:
           type: integer
           example: 3
@@ -5017,9 +4965,6 @@ components:
         animation:
           type: integer
           example: 2
-        captured:
-          type: boolean
-          example: true
         follow:
           type: boolean
           example: true
@@ -5041,9 +4986,6 @@ components:
         message:
           type: integer
           example: 3
-        coordColor:
-          type: integer
-          example: 2
         submitMove:
           type: integer
           example: 4
