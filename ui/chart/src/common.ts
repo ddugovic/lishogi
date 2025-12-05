@@ -22,7 +22,10 @@ export const goteColor: () => string = () => cssVar('--c-gote');
 export const shadeColor: () => string = () => cssVar('--c-shade');
 export const bragColor: () => string = () => cssVar('--c-brag');
 
-export const axisOpts = (xmin: number, xmax: number): ChartOptions<'line'>['scales'] => ({
+export const axisOpts: (xmin: number, xmax: number) => ChartOptions<'line'>['scales'] = (
+  xmin,
+  xmax,
+) => ({
   x: {
     display: false,
     type: 'linear',
@@ -87,7 +90,7 @@ export function plyLine(ply: number, mainline = true): ChartDataset<'line'> {
   };
 }
 
-export function selectPly(this: Chart, ply: number, onMainline: boolean): void {
+export function selectPly(this: Chart<'line'>, ply: number, onMainline: boolean): void {
   const index = this.data.datasets.findIndex(dataset => dataset.label === 'ply');
   const line = plyLine(ply, onMainline);
   this.data.datasets[index] = line;

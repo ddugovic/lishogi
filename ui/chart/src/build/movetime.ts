@@ -152,7 +152,7 @@ function movetime(
     datalabels: { display: false },
   }));
   const divisionLines = division(data.game.division);
-  const datasets: ChartDataset[] = [];
+  const datasets: ChartDataset<any>[] = [];
   if (labels.length > 8) {
     datasets.push(...moveSeriesSet);
   }
