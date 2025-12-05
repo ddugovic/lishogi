@@ -30,7 +30,8 @@ object picture {
           )(
             p(
               maxSize(s"${lila.db.Photographer.uploadMaxMbRecommended}MB."),
-              " Best ratio: 1/1 (square)",
+              br,
+              lila.db.Photographer.recommendations,
             ),
             form3.file.image("picture"),
             submitButton(cls := "button")(uploadPicture()),

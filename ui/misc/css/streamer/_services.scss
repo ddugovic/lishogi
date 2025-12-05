@@ -1,0 +1,27 @@
+@use 'pkg:common/abstract/extends';
+@use 'pkg:common/abstract/z-index' as z;
+
+.services {
+  @extend %flex-center;
+
+  column-gap: 0.5rem;
+
+  a {
+    @extend %flex-center;
+
+    justify-content: center;
+    height: 3.5rem;
+    min-width: 3.5rem;
+    z-index: z.get('above-link-overlay');
+    padding: 0 0.25rem;
+    margin-left: -0.55rem;
+  }
+
+  .s-twitch {
+    height: 2rem;
+  }
+
+  .s-yt {
+    height: 3.5rem;
+  }
+}

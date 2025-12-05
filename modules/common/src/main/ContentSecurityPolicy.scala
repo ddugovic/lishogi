@@ -19,17 +19,6 @@ case class ContentSecurityPolicy(
       scriptSrc = "'unsafe-eval'" :: scriptSrc,
     )
 
-  def withTwitch =
-    copy(
-      defaultSrc = Nil,
-      connectSrc = "https://www.twitch.tv" :: "https://www-cdn.jtvnw.net" :: connectSrc,
-      styleSrc = Nil,
-      fontSrc = Nil,
-      frameSrc = Nil,
-      workerSrc = Nil,
-      scriptSrc = Nil,
-    )
-
   def withTwitter =
     copy(
       scriptSrc = "https://platform.twitter.com" :: "https://*.twimg.com" :: scriptSrc,

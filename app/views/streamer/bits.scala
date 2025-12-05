@@ -51,6 +51,28 @@ object bits extends Context.ToLang {
         )
     }
 
+  def headline(s: lila.streamer.Streamer): Frag = {
+    val d = s.headline.fold("-")(_.value)
+    p(
+      cls := s"headline ${if (d.sizeIs < 60) "small"
+        else if (d.sizeIs < 120) "medium"
+        else "large"}",
+    )(d)
+  }
+
+  def ats(s: lila.streamer.Streamer.WithUserAndStream)(implicit lang: Lang): Frag =
+    div(cls := "ats")(
+      p(showUsername(s.user)),
+      s.stream.map { s =>
+        p(cls := "at")(currentlyStreaming(strong(s.status)))
+      } getOrElse frag(
+        p(cls := "at")(trans.lastSeenActive(momentFromNow(s.streamer.seenAt))),
+        s.streamer.liveAt.map { liveAt =>
+          p(cls := "at")(lastStream(momentFromNow(liveAt)))
+        },
+      ),
+    )
+
   def menu(active: String, s: Option[lila.streamer.Streamer.WithUser])(implicit ctx: Context) =
     st.nav(cls := "subnav")(
       a(cls := active.active("index"), href := routes.Streamer.index())(allStreamers()),
@@ -72,12 +94,26 @@ object bits extends Context.ToLang {
         cls  := active.active("requests"),
         href := s"${routes.Streamer.index()}?requests=1",
       )("Approval requests"),
-      /*
-      a(dataIcon := Icons.infoCircle, cls := "text", href := "/blog/Wk5z0R8AACMf6ZwN/join-the-lishogi-streamer-community")(
-        "Streamer community"
-      ),
-      a(href := "/about")(downloadKit())
-       */
+    )
+
+  def services(streamer: lila.streamer.Streamer): Frag =
+    div(cls := "services")(
+      streamer.youTube map { youTube =>
+        a(
+          targetBlank,
+          href := youTube.fullUrl,
+        )(
+          img(cls := "s-yt", src := staticUrl(s"images/brands/yt.png")),
+        )
+      },
+      streamer.twitch map { twitch =>
+        a(
+          targetBlank,
+          href := twitch.fullUrl,
+        )(
+          img(cls := "s-twitch", src := staticUrl(s"images/brands/twitch.svg")),
+        )
+      },
     )
 
   def redirectLink(username: String, isStreaming: Option[Boolean] = None) =

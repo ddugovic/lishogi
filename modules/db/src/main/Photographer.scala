@@ -44,6 +44,7 @@ object Photographer {
 
   val uploadMaxMbRecommended = 2
   val uploadMaxMb            = 3
+  val recommendations        = "Best ratio: 1/1 (square), transparency becomes white."
 
   type Uploaded = play.api.mvc.MultipartFormData.FilePart[play.api.libs.Files.TemporaryFile]
 }

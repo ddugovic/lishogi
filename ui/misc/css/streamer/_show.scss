@@ -1,94 +1,53 @@
 @use 'pkg:breakpoint-sass' as breakpoint;
 @use 'pkg:common/abstract/extends';
 @use 'pkg:common/abstract/fluid-size';
+@use 'pkg:common/abstract/mixins';
 @use 'pkg:common/abstract/media-queries';
 @use 'pkg:common/abstract/variables';
 @use 'pkg:common/theme';
 @use 'header';
-
-$mq-picture: media-queries.$mq-large;
+@use 'local';
 
 .streamer-show {
-  .streamer-header {
-    .overview {
-      @include breakpoint.breakpoint($mq-picture) {
-        margin: 20px 10px 0 2em;
-      }
-    }
-  }
+  .streamer-live-box a {
+    @extend %flex-center;
 
-  .page-menu__content {
-    overflow: hidden; /* help with responsive overflow of activity */
-  }
-
-  h1 {
-    @extend %roboto, %ellipsis;
-    @include fluid-size.fluid-size('font-size', 23px, 40px);
+    justify-content: center;
+    height: 10rem;
+    width: 100%;
+    background-color: theme.$c-brag;
+    font-size: 2rem;
+    color: theme.$c-brag-over;
 
     &::before {
-      margin-right: 0.2em;
-      display: none;
+      @include mixins.transition(transform, 300ms);
 
-      @include breakpoint.breakpoint(media-queries.$mq-xx-small) {
-        display: inline;
-      }
-
-      @include breakpoint.breakpoint($mq-picture) {
-        display: none;
-      }
-    }
-  }
-
-  .streamer-chat {
-    margin-right: variables.$block-gap;
-    display: none;
-
-    @include breakpoint.breakpoint(media-queries.$mq-medium) {
-      display: block;
+      position: relative;
     }
 
-    iframe {
-      height: 500px;
+    &:hover::before {
+      transform: translateY(-5px);
     }
   }
 
   .picture {
     display: none;
 
-    @include breakpoint.breakpoint($mq-picture) {
+    @include breakpoint.breakpoint(local.$mq-picture) {
       display: block;
     }
-  }
-
-  .embed {
-    @extend %embed;
-
-    margin-bottom: variables.$block-gap;
-  }
-
-  .nostream {
-    background: black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 40px;
-    letter-spacing: 10px;
   }
 
   .description {
     padding: 2.5em 50px 2.5em 65px;
     font-size: 1.4em;
-  }
+    border-bottom: theme.$border;
 
-  .services {
-    display: none;
-
-    @include breakpoint.breakpoint(media-queries.$mq-large) {
-      display: block;
+    &:empty {
+      display: none;
     }
   }
 
-  .services a:hover,
   .description a {
     color: #3893e8;
   }
@@ -100,7 +59,7 @@ $mq-picture: media-queries.$mq-large;
     padding: 2em 50px 1em 58px;
     font-size: 1.6em;
     line-height: 0.9;
-    background: theme.$m-brag_bg-box_mix_20;
+    border-bottom: theme.$border;
     color: theme.$c-font;
 
     span {
@@ -113,22 +72,7 @@ $mq-picture: media-queries.$mq-large;
     }
   }
 
-  .blocker {
-    margin: variables.$block-gap variables.$block-gap 0 0;
-    flex-flow: column;
-    align-items: center;
-    text-align: center;
-    font-weight: normal;
-    text-transform: none;
-    display: none;
-
-    @include breakpoint.breakpoint(media-queries.$mq-small) {
-      display: flex;
-    }
-
-    i {
-      font-size: 40px;
-      margin-bottom: 10px;
-    }
+  .activity {
+    padding-bottom: 2em;
   }
 }

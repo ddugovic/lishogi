@@ -60,29 +60,7 @@ object edit extends Context.ToLang {
       main(cls := "page-menu")(
         bits.menu("edit", s.withoutStream.some),
         div(cls := "page-menu__content box streamer-edit")(
-          if (ctx.is(s.user))
-            div(cls := "streamer-header")(
-              div(cls := "streamer-info")(
-                h1(s.streamer.name),
-                a(
-                  target := "_blank",
-                  href   := routes.Streamer.picture,
-                  title  := changePicture.txt(),
-                )(
-                  bits.pic(s.streamer, s.user),
-                ),
-                (!s.streamer.hasPicture) option div(cls := "picture-create")(
-                  ctx.is(s.user) option
-                    a(target := "_blank", cls := "button", href := routes.Streamer.picture)(
-                      uploadPicture(),
-                    ),
-                ),
-              ),
-              div(cls := "overview")(
-                bits.rules,
-              ),
-            )
-          else views.html.streamer.header(s),
+          views.html.streamer.header(s, edit = ctx.is(s.user)),
           div(cls := "box__pad") {
             frag(
               statusBox,

@@ -6,7 +6,6 @@ import lila.api.Context
 import lila.app.templating.Environment._
 import lila.app.ui.ScalatagsTemplate._
 import lila.common.String.html.richText
-import lila.streamer.Stream.YouTube
 
 object show {
 
@@ -27,57 +26,25 @@ object show {
             152,
           ),
           url = s"$netBaseUrl${routes.Streamer.show(s.user.username)}",
-          `type` = "video",
           image = s.streamer.picturePath.map(p => dbImageUrl(p.value)),
         )
         .some,
-      csp = defaultCsp.withTwitch.some,
     )(
       main(cls := "page-menu streamer-show")(
         st.aside(cls := "page-menu__menu")(
-          s.streamer.approval.chatEnabled option div(cls := "streamer-chat")(
-            s.stream match {
-              case Some(YouTube.Stream(_, _, videoId, _)) =>
-                iframe(
-                  st.frameborder  := "0",
-                  frame.scrolling := "no",
-                  src := s"https://www.youtube.com/live_chat?v=$videoId&embed_domain=$netDomain",
-                )
-              case _ =>
-                s.streamer.twitch.map { twitch =>
-                  iframe(
-                    st.frameborder  := "0",
-                    frame.scrolling := "yes",
-                    src := s"https://twitch.tv/embed/${twitch.userId}/chat?${(!ctx.pref.isLightBackground) ?? "darkpopout&"}parent=$netDomain",
-                  )
-                }
-            },
-          ),
           bits.menu("show", s.withoutStream.some),
         ),
         div(cls := "page-menu__content")(
-          s.stream match {
-            case Some(YouTube.Stream(_, _, videoId, _)) =>
-              div(cls := "box embed youTube")(
-                iframe(
-                  src            := s"https://www.youtube.com/embed/$videoId?autoplay=1",
-                  st.frameborder := "0",
-                  frame.allowfullscreen,
-                ),
-              )
-            case _ =>
-              s.streamer.twitch.map { twitch =>
-                div(cls := "box embed twitch")(
-                  iframe(
-                    src := s"https://player.twitch.tv/?channel=${twitch.userId}&parent=$netDomain",
-                    frame.allowfullscreen,
-                  ),
-                )
-              } getOrElse div(cls := "box embed")(div(cls := "nostream")(offline()))
-          },
           div(cls := "box streamer")(
+            (s.stream.isDefined) option div(cls := "streamer-live-box")(
+              bits.redirectLink(s.user.id)(cls := "text", dataIcon := Icons.mic)(
+                xIsStreaming(s.streamer.name),
+              ),
+            ),
             views.html.streamer.header(s),
-            div(cls := "description")(richText(s.streamer.description.fold("")(_.value))),
+            s.streamer.description map { desc =>
+              div(cls := "description")(richText(desc.value))
+            },
             a(cls := "ratings", href := routes.User.show(s.user.username))(
               s.user.best6Perfs.map { showPerfRating(s.user, _) },
             ),

@@ -4,20 +4,10 @@
 @use 'pkg:common/abstract/media-queries';
 @use 'pkg:common/abstract/mixins';
 @use 'pkg:common/theme';
-
-$mq-picture: media-queries.$mq-medium;
+@use 'local';
+@use 'services';
 
 .streamer-list {
-  h1 {
-    &::before {
-      display: none;
-
-      @include breakpoint.breakpoint($mq-picture) {
-        display: inline;
-      }
-    }
-  }
-
   .streamer {
     border-top: theme.$border;
     position: relative;
@@ -35,15 +25,6 @@ $mq-picture: media-queries.$mq-medium;
       margin-bottom: 0.7em;
 
       @include fluid-size.fluid-size('font-size', 23px, 40px);
-
-      &::before {
-        display: inline;
-        margin-right: 0.2em;
-
-        @include breakpoint.breakpoint($mq-picture) {
-          display: none;
-        }
-      }
     }
 
     &:nth-child(even) {
@@ -65,15 +46,10 @@ $mq-picture: media-queries.$mq-medium;
   }
 
   .picture {
-    flex: 0 0 300px;
-
-    &.default {
-      opacity: 0.3;
-    }
-
     display: none;
+    flex: 0 0 local.$pic-size;
 
-    @include breakpoint.breakpoint($mq-picture) {
+    @include breakpoint.breakpoint(local.$mq-picture) {
       display: block;
     }
   }
@@ -96,30 +72,6 @@ $mq-picture: media-queries.$mq-medium;
 
   .headline.large {
     font-size: 0.9em;
-  }
-
-  .services {
-    margin: 5px 0 10px 0;
-    display: none;
-
-    @include breakpoint.breakpoint(media-queries.$mq-large) {
-      display: block;
-    }
-  }
-
-  .service {
-    @extend %nowrap-ellipsis;
-
-    display: flex;
-    font-size: 1.2em;
-    padding: 3px 0;
-
-    svg {
-      width: 1.4em;
-      height: 1.4em;
-      margin-right: 0.4em;
-      opacity: 0.7;
-    }
   }
 
   .ribbon {

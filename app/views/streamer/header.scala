@@ -10,60 +10,33 @@ object header {
 
   import trans.streamer._
 
-  def apply(s: lila.streamer.Streamer.WithUserAndStream)(implicit ctx: Context) =
+  def apply(s: lila.streamer.Streamer.WithUserAndStream, edit: Boolean = false)(implicit
+      ctx: Context,
+  ) = {
+    val pic = bits.pic(s.streamer, s.user)
     div(cls := "streamer-header")(
-      bits.pic(s.streamer, s.user),
+      if (edit)
+        frag(
+          a(
+            target := "_blank",
+            href   := routes.Streamer.picture,
+            title  := (if (s.streamer.hasPicture) changePicture.txt() else uploadPicture.txt()),
+          )(
+            pic,
+            ctx.is(s.user) option div(cls := "picture-create button")(uploadPicture()),
+          ),
+        )
+      else pic,
       div(cls := "overview")(
-        h1(dataIcon := Icons.mic)(
-          s.streamer.name,
-        ),
-        s.streamer.headline.map(_.value).map { d =>
-          p(cls := s"headline ${if (d.sizeIs < 60) "small"
-            else if (d.sizeIs < 120) "medium"
-            else "large"}")(
-            d,
-          )
-        },
-        ul(cls := "services")(
-          s.streamer.twitch.map { twitch =>
-            li(
-              a(
-                cls := List(
-                  "service twitch" -> true,
-                  "live"           -> s.stream.exists(_.twitch),
-                ),
-                href := twitch.fullUrl,
-              )(twitch.minUrl),
-            )
-          },
-          s.streamer.youTube.map { youTube =>
-            li(
-              a(
-                cls := List(
-                  "service youTube" -> true,
-                  "live"            -> s.stream.exists(_.youTube),
-                ),
-                href := youTube.fullUrl,
-              )(youTube.minUrl),
-            )
-          },
-          li(
-            a(cls := "service lishogi ulpt", href := routes.User.show(s.user.username))(
-              netDomain,
-              routes.User.show(s.user.username).url,
-            ),
+        h1(s.streamer.name),
+        if (edit) bits.rules
+        else
+          frag(
+            bits.headline(s.streamer),
+            bits.services(s.streamer),
+            bits.ats(s),
           ),
-        ),
-        div(cls := "ats")(
-          s.stream.map { s =>
-            p(cls := "at")(currentlyStreaming(strong(s.status)))
-          } getOrElse frag(
-            p(cls := "at")(trans.lastSeenActive(momentFromNow(s.streamer.seenAt))),
-            s.streamer.liveAt.map { liveAt =>
-              p(cls := "at")(lastStream(momentFromNow(liveAt)))
-            },
-          ),
-        ),
       ),
     )
+  }
 }
