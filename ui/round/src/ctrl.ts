@@ -141,8 +141,6 @@ export default class RoundController {
       this.clock = new ClockController(d, {
         onFlag: this.socket.outoftime,
         redraw: this.redraw,
-        soundColor:
-          d.simul || d.player.spectator || !d.pref.clockSound ? undefined : d.player.color,
         nvui: !!this.nvui,
       });
     else {
@@ -690,11 +688,13 @@ export default class RoundController {
       };
       if (
         o.status.name === 'outoftime' &&
+        o.winner &&
+        this.clock?.canPlaySound(opposite(o.winner)) &&
         (!isPlayerWinner || d.pref.clockAudible !== prefs.clockAudible.MINE) &&
         d.clock?.byoyomi &&
         window.lishogi.sound.clockSoundJapanese()
       ) {
-        window.lishogi.sound.countdown(Math.min(d.clock?.byoyomi, 10));
+        window.lishogi.sound.countdown(Math.min(d.clock.byoyomi, 10));
         setTimeout(play, 750);
       } else play();
     }

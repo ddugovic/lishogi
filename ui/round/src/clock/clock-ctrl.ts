@@ -11,7 +11,6 @@ export type Millis = number;
 interface ClockOpts {
   onFlag(): void;
   redraw: Redraw;
-  soundColor?: Color;
   nvui: boolean;
 }
 
@@ -24,11 +23,14 @@ export interface ClockData {
   sente: Seconds;
   gote: Seconds;
   emerg: Seconds;
-  showTenths: PrefTypes['clockTenths'];
-  clockAudible: PrefTypes['clockAudible'];
   moretime: number;
   sPeriods: number;
   gPeriods: number;
+  pref: {
+    showTenths: PrefTypes['clockTenths'];
+    clockAudible: PrefTypes['clockAudible'];
+    lowClockSound: boolean;
+  };
 }
 
 interface Times {
@@ -58,6 +60,8 @@ interface EmergSound {
 }
 
 export class ClockController {
+  data: ClockData;
+
   emergSound: EmergSound = {
     lowtime: () => window.lishogi.sound.play('low-time', 'clock'),
     nextPeriod: () => window.lishogi.sound.play('byoyomi', 'clock'),
@@ -71,8 +75,9 @@ export class ClockController {
   showTenths: (millis: Millis, color: Color) => boolean;
   times: Times;
 
+  playerColor: Color;
+  isSpectator: boolean;
   emergMs: Millis;
-  audible: number;
 
   elements = {
     sente: {},
@@ -92,33 +97,34 @@ export class ClockController {
     d: RoundData,
     readonly opts: ClockOpts,
   ) {
-    const cdata = d.clock!;
+    this.data = d.clock!;
 
-    if (cdata.showTenths === prefs.clockTenths.NEVER) this.showTenths = () => false;
+    if (this.data.pref.showTenths === prefs.clockTenths.NEVER) this.showTenths = () => false;
     else {
-      const cutoff = cdata.showTenths === prefs.clockTenths.LOWTIME ? 10000 : 3600000;
+      const cutoff = this.data.pref.showTenths === prefs.clockTenths.LOWTIME ? 10000 : 3600000;
       this.showTenths = (time, color) =>
         time < cutoff &&
         (this.byoyomi === 0 ||
           time <= 1000 ||
           this.isUsingByo(color) ||
-          cdata.showTenths === prefs.clockTenths.ALWAYS);
+          this.data.pref.showTenths === prefs.clockTenths.ALWAYS);
     }
 
-    this.byoyomi = cdata.byoyomi;
-    this.initial = cdata.initial;
+    this.byoyomi = this.data.byoyomi;
+    this.initial = this.data.initial;
 
-    this.totalPeriods = cdata.periods;
-    this.curPeriods.sente = cdata.sPeriods ?? 0;
-    this.curPeriods.gote = cdata.gPeriods ?? 0;
+    this.totalPeriods = this.data.periods;
+    this.curPeriods.sente = this.data.sPeriods ?? 0;
+    this.curPeriods.gote = this.data.gPeriods ?? 0;
 
     this.goneBerserk[d.player.color] = !!d.player.berserk;
     this.goneBerserk[d.opponent.color] = !!d.opponent.berserk;
 
-    this.emergMs = 1000 * Math.min(60, Math.max(10, cdata.initial * 0.125));
-    this.audible = cdata.clockAudible;
+    this.isSpectator = !!d.player.spectator;
+    this.playerColor = d.player.color;
+    this.emergMs = 1000 * Math.min(60, Math.max(10, this.data.initial * 0.125));
 
-    this.setClock(d, cdata.sente, cdata.gote, cdata.sPeriods, cdata.gPeriods);
+    this.setClock(d, this.data.sente, this.data.gote, this.data.sPeriods, this.data.gPeriods);
   }
 
   isUsingByo = (color: Color): boolean =>
@@ -156,11 +162,18 @@ export class ClockController {
     this.goneBerserk[color] = true;
   };
 
+  canPlaySound = (color: Color) => {
+    return (
+      this.data.pref.clockAudible === prefs.clockAudible.ALL ||
+      (this.data.pref.clockAudible === prefs.clockAudible.MYGAME && !this.isSpectator) ||
+      (color === this.playerColor && !this.isSpectator)
+    );
+  };
+
   nextPeriod = (color: Color): void => {
     this.curPeriods[color] += 1;
     this.times[color] += this.byoyomi * 1000;
-    if (this.opts.soundColor === color || this.audible >= prefs.clockAudible.MYGAME)
-      this.emergSound.nextPeriod();
+    if (this.canPlaySound(color)) this.emergSound.nextPeriod();
     this.resetByoTicks();
   };
 
@@ -224,8 +237,8 @@ export class ClockController {
     } else if (millis === 0) this.opts.onFlag();
     else updateElements(this, this.elements[color], millis, color);
 
-    if (this.opts.soundColor === color || this.audible === 1) {
-      if (this.emergSound.playable[color]) {
+    if (this.canPlaySound(color)) {
+      if (this.data.pref.lowClockSound && this.emergSound.playable[color]) {
         if (millis < this.emergMs && !(now < this.emergSound.next!) && !this.isUsingByo(color)) {
           this.emergSound.lowtime();
           this.emergSound.next = now + this.emergSound.delay;

@@ -110,13 +110,7 @@ export default class StormCtrl {
       pos.isCheckmate() ||
       usi == puzzle.expectedMove() ||
       (!isDrop(md) &&
-        this.isSameMove(
-          usi,
-          puzzle.expectedMove(),
-          puzzle.isAmbPromotion(),
-          pos.turn,
-          pos.board.getRole(md.from),
-        ))
+        this.isSameMove(usi, puzzle.expectedMove(), pos.turn, pos.board.getRole(md.from)))
     ) {
       puzzle.moveIndex++;
       this.run.combo.inc();
@@ -157,13 +151,7 @@ export default class StormCtrl {
   }
 
   // When not promotion isn't an option usi in solution might not contain '+'
-  private isSameMove(
-    u1: string,
-    u2: string,
-    ignoreProm: boolean,
-    turn: Color,
-    role?: Role,
-  ): boolean {
+  private isSameMove(u1: string, u2: string, turn: Color, role?: Role): boolean {
     const usi1 = parseUsi(u1)!;
     const usi2 = parseUsi(u2)!;
     if (isDrop(usi1) && isDrop(usi2)) {
@@ -172,8 +160,7 @@ export default class StormCtrl {
       return (
         usi1.from === usi2.from &&
         usi1.to === usi2.to &&
-        (ignoreProm ||
-          !!usi1.promotion === !!usi2.promotion ||
+        (!!usi1.promotion === !!usi2.promotion ||
           (!!role && pieceForcePromote('standard')({ role: role, color: turn }, usi1.to)))
       );
     }

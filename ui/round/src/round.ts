@@ -18,8 +18,10 @@ export function plyStep(d: RoundData, ply: number): Step {
 
 export function massage(d: RoundData): void {
   if (d.clock) {
-    d.clock.showTenths = d.pref.clockTenths;
-    d.clock.clockAudible = d.pref.clockAudible;
+    d.clock.pref = d.clock.pref || {};
+    d.clock.pref.showTenths = d.pref.clockTenths;
+    d.clock.pref.clockAudible = d.pref.clockAudible;
+    d.clock.pref.lowClockSound = !d.simul && !!d.pref.clockSound;
   }
 
   if (d.expiration) d.expiration.movedAt = Date.now() - d.expiration.idleMillis;
