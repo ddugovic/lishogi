@@ -3,7 +3,7 @@
   "includeEntryExports": true,
   "ignoreDependencies": ["common", ".*-(css|sass|scss)", "@pnpm/*", "@typescript/native-preview"],
   "ignoreBinaries": ["only-allow"],
-  "ignore": ["**/_*.ts"],
+  "ignore": ["**/_*.ts", "**/_*.scss"],
   "workspaces": {
     ".": {
       "includeEntryExports": false
