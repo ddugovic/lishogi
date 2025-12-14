@@ -23,7 +23,7 @@ object form {
             "If you found an interesting position and want to share the problem with others, you can submit it here.",
             br,
             strong(
-              "Puzzle should have only one possible solution. You can chcek this in analysis board with engine set to output multiple pvs.",
+              "Puzzle should have only one possible solution. You can check this in analysis board with engine set to output multiple pvs.",
             ),
             br,
             "Puzzle will be verified by Lishogi together with generating solution and themes. Submitted puzzles are put into a queue and it might take days before they appear publicly.",

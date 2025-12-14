@@ -32,7 +32,7 @@ object ranks {
                   td(rankTag(rank)(lila.i18n.enLang)),
                   td(
                     if (rank.max == lila.rating.Glicko.maxRating) s"${rank.min}+"
-                    else s"${rank.min} - ${rank.max}",
+                    else s"${rank.min} - ${rank.max - 1}",
                   ),
                 ),
             ),

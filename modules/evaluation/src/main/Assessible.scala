@@ -37,7 +37,7 @@ case class Assessible(analysed: Analysed, color: Color) {
     !game.isSimul && game.playerBlurPercent(color) > 70
 
   lazy val suspiciousHoldAlert: Boolean =
-    analysed.holdAlerts(color).exists(_.suspicious)
+    holdAlerts(color).exists(_.suspicious)
 
   lazy val highestChunkBlurs: Int =
     game.player(color).blurs.booleans.sliding(12).map(_.count(identity)).max

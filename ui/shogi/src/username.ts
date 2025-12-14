@@ -31,8 +31,8 @@ export function usernameDataFromName(name: string | undefined): UsernameData {
       engineLvl: engine.level,
     };
   else {
-    const isBot = !engine && name?.toLowerCase().startsWith('bot ');
-    const rank = !isBot && !engine ? extractRank(name) : undefined;
+    const isBot = name?.toLowerCase().startsWith('bot ');
+    const rank = !isBot ? extractRank(name) : undefined;
     const nameWithoutPrefix =
       (rank || isBot) && name ? name.slice(name.indexOf(' ') + 1 || 0) : name;
 

@@ -533,8 +533,6 @@ object mon {
       }
       def status(enabled: Boolean) = gauge("shoginet.client.status").withTag("enabled", enabled)
       def version(v: String)       = gauge("shoginet.client.version").withTag("version", v)
-      def stockfish(v: String)     = gauge("shoginet.client.engine.stockfish").withTag("version", v)
-      def python(v: String)        = gauge("shoginet.client.python").withTag("version", v)
     }
     def queueTime(sender: String) = timer("shoginet.queue.db").withTag("sender", sender)
     val acquire                   = future("shoginet.acquire")
