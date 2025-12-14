@@ -174,7 +174,6 @@ object Work {
       lastTryByKey: Option[Client.Key],
       acquired: Option[Acquired],
       createdAt: DateTime,
-      verifiable: Boolean,
   ) extends Work {
 
     def skill = Client.Skill.Puzzle
@@ -191,8 +190,6 @@ object Work {
         lastTryByKey = client.key.some,
         tries = tries + 1,
       )
-
-    def prepareToVerify = copy(verifiable = true, tries = 0)
 
     def timeout = copy(acquired = none)
     def invalid = copy(acquired = none)

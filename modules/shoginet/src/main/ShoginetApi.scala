@@ -38,7 +38,7 @@ final class ShoginetApi(
   def keyExists(key: Client.Key) = repo.getEnabledClient(key).map(_.isDefined)
 
   def authenticateClient(req: JsonApi.Request, ip: IpAddress): Fu[Try[Client]] = {
-    if (config.offlineMode && req.shoginet.apikey.value.isEmpty) repo.getOfflineClient map some
+    if (config.anonMode && req.shoginet.apikey.value.isEmpty) repo.getAnonClient map some
     else repo.getEnabledClient(req.shoginet.apikey)
   } map {
     case None => Failure(new Exception("Can't authenticate: invalid key or disabled client"))
@@ -52,13 +52,11 @@ final class ShoginetApi(
     (client.skill match {
       case Skill.Move | Skill.MoveStd => acquireMove(client)
       case Skill.Analysis             => acquireAnalysis(client, slow)
-      case Skill.Puzzle               => acquirePuzzle(client, verifiable = false)
-      case Skill.VerifyPuzzle         => acquirePuzzle(client, verifiable = true)
+      case Skill.Puzzle               => acquirePuzzle(client)
       case Skill.All =>
-        acquireMove(client) orElse acquireAnalysis(client, slow) orElse acquirePuzzle(
-          client,
-          verifiable = false,
-        )
+        acquireMove(client) orElse acquireAnalysis(client, slow) orElse {
+          !client.isAnon ?? acquirePuzzle(client)
+        }
     }).monSuccess(_.shoginet.acquire)
       .recover { case e: Exception =>
         logger.error("Shoginet.acquire", e)
@@ -72,16 +70,17 @@ final class ShoginetApi(
     workQueue {
       colls.analysis
         .find(
-          $doc("acquired" $exists false) ++ {
-            $doc("lastTryByKey" $ne client.key) // client alternation
-          } ++ {
+          $doc(
+            "acquired" $exists false,
+            "lastTryByKey" $ne client.key, // client alternation
+          ) ++ {
             slow ?? $doc("sender.system" -> true)
           },
         )
         .sort(
           $doc(
             "sender.system" -> 1, // user requests first, then lishogi auto analysis
-            "createdAt"     -> 1, // oldest requests first
+            "createdAt"     -> 1,
           ),
         )
         .one[Work.Analysis]
@@ -92,20 +91,16 @@ final class ShoginetApi(
         }
     }.map { _ map JsonApi.analysisFromWork(config.analysisNodes) }
 
-  private def acquirePuzzle(client: Client, verifiable: Boolean): Fu[Option[JsonApi.Work]] =
+  private def acquirePuzzle(client: Client): Fu[Option[JsonApi.Work]] =
     workQueue {
       colls.puzzle
         .find(
-          $doc("acquired" $exists false) ++
-            $doc("verifiable" -> verifiable) ++ {
-              $doc("lastTryByKey" $ne client.key) // client alternation
-            },
-        )
-        .sort(
           $doc(
-            "createdAt" -> 1, // oldest requests first
+            "acquired" $exists false,
+            "lastTryByKey" $ne client.key, // client alternation
           ),
         )
+        .sort($doc("createdAt" -> 1))
         .one[Work.Puzzle]
         .flatMap {
           _ ?? { work =>
@@ -203,42 +198,17 @@ final class ShoginetApi(
           Monitor.notFound(workId, "puzzle", client)
           fufail(WorkNotFound)
         case Some(work) if work isAcquiredBy client =>
-          if (data.result)
-            repo.updatePuzzle(work.prepareToVerify)
-          else repo.deletePuzzle(work)
-        case Some(work) =>
-          Monitor.notAcquired(work, client)
-          fufail(NotAcquired)
-      }
-
-  def postVerifiedPuzzle(
-      workId: Work.Id,
-      client: Client,
-      data: JsonApi.Request.PostPuzzleVerified,
-  ): Funit =
-    repo
-      .getPuzzle(workId)
-      .flatMap {
-        case None =>
-          Monitor.notFound(workId, "verified puzzle", client)
-          fufail(WorkNotFound)
-        case Some(work) if work isAcquiredBy client =>
-          repo.deletePuzzle(work) >> data.result.fold {
-            fuccess(
-              logger.info(
-                s"Couldn't verify ${work._id} with sfen: ${work.game.initialSfen.getOrElse("Initial")}, ${work.game.moves}",
-              ),
-            )
-          } { res =>
-            puzzles.submissions.addNew(
-              sfen = res.sfen,
-              line = res.line,
-              ambProms = res.ambiguousPromotions,
-              themes = res.themes,
-              source = work.source.game.map(_.id).toRight(work.source.user.flatMap(_.author)),
-              submittedBy = work.source.user.map(_.submittedBy),
-            )
-          }
+          (data.puzzle ?? { puz =>
+            puzzles.submissions
+              .addNew(
+                sfen = puz.sfen,
+                line = puz.line,
+                themes = puz.themes,
+                source = work.source.game.map(_.id).toRight(work.source.user.flatMap(_.author)),
+                submittedBy = work.source.user.map(_.submittedBy),
+              )
+              .map2(id => Monitor.newPuzzle(id.value, client))
+          }) >> repo.deletePuzzle(work)
         case Some(work) =>
           Monitor.notAcquired(work, client)
           fufail(NotAcquired)
@@ -251,17 +221,13 @@ final class ShoginetApi(
         Json.obj(
           "acquired" -> s.acquired,
           "queued"   -> s.queued,
-          "oldest"   -> s.oldest,
         )
       Json.obj(
         "analysis" -> Json.obj(
           "user"   -> statusFor(c.user),
           "system" -> statusFor(c.system),
         ),
-        "puzzles" -> Json.obj(
-          "verifiable" -> c.puzzles.verifiable,
-          "candidates" -> c.puzzles.candidates,
-        ),
+        "puzzles" -> statusFor(c.puzzles),
       )
     }
 
@@ -301,7 +267,6 @@ final class ShoginetApi(
           lastTryByKey = none,
           acquired = none,
           createdAt = DateTime.now,
-          verifiable = false,
         )
       }
     repo.addPuzzles(puzs)
@@ -338,7 +303,7 @@ object ShoginetApi {
   import lila.base.LilaException
 
   case class Config(
-      offlineMode: Boolean,
+      anonMode: Boolean,
       analysisNodes: Int,
       clientVersion: Client.ClientVersion,
   )

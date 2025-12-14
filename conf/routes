@@ -330,7 +330,6 @@ POST  /shoginet/acquire                        controllers.Shoginet.acquire(slow
 POST  /shoginet/move/$workId<\w{8}>            controllers.Shoginet.move(workId: String)
 POST  /shoginet/analysis/$workId<\w{8}>        controllers.Shoginet.analysis(workId: String, slow: Boolean ?= false, stop: Boolean ?= false)
 POST  /shoginet/puzzle/$workId<\w{8}>          controllers.Shoginet.puzzle(workId: String)
-POST  /shoginet/puzzle-verification/$workId<\w{8}> controllers.Shoginet.verifiedPuzzle(workId: String)
 POST  /shoginet/abort/$workId<\w{8}>           controllers.Shoginet.abort(workId: String)
 GET   /shoginet/key/$key<\w{8}>                controllers.Shoginet.keyExists(key: String)
 GET   /shoginet/status                         controllers.Shoginet.status

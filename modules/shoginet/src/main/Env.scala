@@ -17,7 +17,7 @@ private class ShoginetConfig(
     @ConfigName("collection.puzzle") val puzzleColl: CollName,
     @ConfigName("collection.client") val clientColl: CollName,
     @ConfigName("actor.name") val actorName: String,
-    @ConfigName("offline_mode") val offlineMode: Boolean,
+    @ConfigName("anon_mode") val anonMode: Boolean,
     @ConfigName("analysis.nodes") val analysisNodes: Int,
     @ConfigName("move.plies") val movePlies: Int,
     @ConfigName("client_min_version") val clientMinVersion: String,
@@ -69,7 +69,7 @@ final class Env(
   private lazy val analysisBuilder = wire[AnalysisBuilder]
 
   private lazy val apiConfig = ShoginetApi.Config(
-    offlineMode = config.offlineMode,
+    anonMode = config.anonMode,
     analysisNodes = config.analysisNodes,
     clientVersion = new Client.ClientVersion(config.clientMinVersion),
   )

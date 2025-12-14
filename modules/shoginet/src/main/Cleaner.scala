@@ -31,7 +31,7 @@ final private class Cleaner(
   private def cleanPuzzle: Funit =
     colls.puzzle
       .find(
-        $doc("verifiable" -> false) ++ $or(
+        $or(
           $doc("acquired.date" $lt durationAgo(puzzleTimeout)),
           $doc("tries" $gte Work.maxTries),
         ),
@@ -90,10 +90,10 @@ final private class Cleaner(
   system.scheduler.scheduleWithFixedDelay(10 seconds, 5 seconds) { () =>
     cleanMoves.unit
   }
-  system.scheduler.scheduleWithFixedDelay(15 seconds, 15 seconds) { () =>
+  system.scheduler.scheduleWithFixedDelay(16 seconds, 15 seconds) { () =>
     cleanAnalysis.unit
   }
-  system.scheduler.scheduleWithFixedDelay(20 seconds, 50 seconds) { () =>
+  system.scheduler.scheduleWithFixedDelay(21 seconds, 50 seconds) { () =>
     cleanPuzzle.unit
   }
 }

@@ -6,7 +6,7 @@ final private class ShoginetEvalCache(
     evalCacheApi: lila.evalCache.EvalCacheApi,
 )(implicit ec: scala.concurrent.ExecutionContext) {
 
-  val maxPlies = 15
+  val maxPlies = 12
 
   // indexes of positions to skip
   def skipPositions(game: Work.Game): Fu[List[Int]] =

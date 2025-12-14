@@ -63,7 +63,6 @@ private object PuzzleFinder {
             lastTryByKey = none,
             acquired = none,
             createdAt = DateTime.now,
-            verifiable = false,
           )
         }
       }

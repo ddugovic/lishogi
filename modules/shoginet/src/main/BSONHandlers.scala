@@ -12,8 +12,6 @@ private object BSONHandlers {
     stringAnyValHandler[Client.Key](_.value, Client.Key.apply)
   implicit val ClientVersionBSONHandler: BSONHandler[Client.Version] =
     stringAnyValHandler[Client.Version](_.value, Client.Version.apply)
-  implicit val ClientPythonBSONHandler: BSONHandler[Client.Python] =
-    stringAnyValHandler[Client.Python](_.value, Client.Python.apply)
   implicit val ClientUserIdBSONHandler: BSONHandler[Client.UserId] =
     stringAnyValHandler[Client.UserId](_.value, Client.UserId.apply)
 
@@ -21,11 +19,6 @@ private object BSONHandlers {
     { case BSONString(v) => Client.Skill.byKey(v).getOrElse(Client.Skill.Analysis) },
     x => BSONString(x.key),
   )
-
-  import Client.Engine
-  import Client.Engines
-  implicit val EngineBSONHandler: BSONDocumentHandler[Engine]   = Macros.handler[Engine]
-  implicit val EnginesBSONHandler: BSONDocumentHandler[Engines] = Macros.handler[Engines]
 
   import Client.Instance
   implicit val InstanceBSONHandler: BSONDocumentHandler[Instance] = Macros.handler[Instance]

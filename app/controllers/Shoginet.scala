@@ -67,12 +67,6 @@ final class Shoginet(env: Env) extends LilaController(env) {
         api.acquire(client).map(Right.apply)
     }
 
-  def verifiedPuzzle(workId: String) =
-    ClientAction[JsonApi.Request.PostPuzzleVerified] { data => client =>
-      api.postVerifiedPuzzle(Work.Id(workId), client, data) >>
-        api.acquire(client).map(Right.apply)
-    }
-
   def keyExists(key: String) =
     Action.async { _ =>
       api keyExists lila.shoginet.Client.Key(key) map {

@@ -24,13 +24,13 @@ case class Client(
   def fullId = s"$userId:$key"
 
   def updateInstance(i: Client.Instance): Option[Client] =
-    instance.fold(i.some)(_ update i) map { newInstance =>
+    instance.fold(i.some)(_.update(i, isAnon)) map { newInstance =>
       copy(instance = newInstance.some)
     }
 
   def lishogi = userId.value == lila.user.User.lishogiId
 
-  def offline = key == Client.offline.key
+  def isAnon = key == Client.anon.key
 
   def disabled = !enabled
 
@@ -39,9 +39,9 @@ case class Client(
 
 object Client {
 
-  val offline = Client(
-    _id = Key("offline"),
-    userId = UserId("offline"),
+  val anon = Client(
+    _id = Key("anon"),
+    userId = UserId("anon"),
     skill = Skill.All,
     instance = None,
     enabled = true,
@@ -50,24 +50,17 @@ object Client {
 
   case class Key(value: String)     extends AnyVal with StringValue
   case class Version(value: String) extends AnyVal with StringValue
-  case class Python(value: String)  extends AnyVal with StringValue
   case class UserId(value: String)  extends AnyVal with StringValue
-  case class Engine(name: String)
-  case class Engines(yaneuraou: Engine, fairy: Engine)
 
   case class Instance(
       version: Version,
-      python: Python,
-      engines: Engines,
       ip: IpAddress,
       seenAt: DateTime,
   ) {
 
-    def update(i: Instance): Option[Instance] =
-      if (i.version != version) i.some
-      else if (i.python != python) i.some
-      else if (i.engines != engines) i.some
-      else if (i.ip != ip) i.some
+    def update(i: Instance, isAnon: Boolean): Option[Instance] =
+      if (i.version != version && !isAnon) i.some
+      else if (i.ip != ip && !isAnon) i.some
       else if (i.seenAt isAfter seenAt.plusMinutes(5)) i.some
       else none
 
@@ -83,13 +76,12 @@ object Client {
     def key = toString.toLowerCase
   }
   object Skill {
-    case object Move         extends Skill
-    case object MoveStd      extends Skill // Most requests, option to have dedicated client
-    case object Analysis     extends Skill
-    case object Puzzle       extends Skill
-    case object VerifyPuzzle extends Skill // Only dedicated trusted clients
-    case object All          extends Skill
-    val all                = List(Move, MoveStd, Analysis, Puzzle, VerifyPuzzle, All)
+    case object Move     extends Skill
+    case object MoveStd  extends Skill // Most requests, option to have dedicated client
+    case object Analysis extends Skill
+    case object Puzzle   extends Skill
+    case object All      extends Skill
+    val all                = List(Move, MoveStd, Analysis, Puzzle, All)
     def byKey(key: String) = all.find(_.key == key)
   }
 

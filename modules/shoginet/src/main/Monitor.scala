@@ -32,13 +32,9 @@ final private class Monitor(
   ) = {
     Monitor.success(work, client)
 
-    val threads = result.yaneuraou.options.threadsInt
-    val userId  = client.userId.value
+    val userId = client.userId.value
 
-    result.yaneuraou.options.hashInt foreach { monBy.hash(userId).update(_) }
-    result.yaneuraou.options.threadsInt foreach { monBy.threads(userId).update(_) }
-
-    monBy.totalSecond(userId).increment(sumOf(result.evaluations)(_.time) * threads.|(1) / 1000)
+    monBy.totalSecond(userId).increment(sumOf(result.evaluations)(_.time) / 1000)
     monBy
       .totalMeganode(userId)
       .increment(sumOf(result.evaluations) { eval =>
@@ -83,13 +79,6 @@ final private class Monitor(
         case (v, nb) =>
           version(v).update(nb)
       }
-      instances.map(_.engines.yaneuraou.name).groupBy(identity).view.mapValues(_.size) foreach {
-        case (s, nb) => stockfish(s).update(nb)
-      }
-      instances.map(_.python.value).groupBy(identity).view.mapValues(_.size) foreach {
-        case (s, nb) =>
-          python(s).update(nb)
-      }
     }
 
   private def monitorStatus(): Funit =
@@ -98,10 +87,8 @@ final private class Monitor(
       lila.mon.shoginet.work("queued", "user").update(c.user.queued)
       lila.mon.shoginet.work("acquired", "system").update(c.system.acquired)
       lila.mon.shoginet.work("acquired", "user").update(c.user.acquired)
-      lila.mon.shoginet.work("puzzles", "verifiable").update(c.puzzles.verifiable)
-      lila.mon.shoginet.work("puzzles", "candidates").update(c.puzzles.candidates)
-      lila.mon.shoginet.oldest("system").update(c.system.oldest)
-      lila.mon.shoginet.oldest("user").update(c.user.oldest)
+      lila.mon.shoginet.work("puzzles", "queued").update(c.puzzles.queued)
+      lila.mon.shoginet.work("puzzles", "acquired").update(c.puzzles.acquired)
       ()
     }
 
@@ -113,10 +100,9 @@ final private class Monitor(
 
 object Monitor {
 
-  case class StatusFor(acquired: Int, queued: Int, oldest: Int)
-  case class StatusPuzzle(verifiable: Int, candidates: Int)
+  case class StatusFor(acquired: Int, queued: Int)
 
-  case class Status(user: StatusFor, system: StatusFor, puzzles: StatusPuzzle)
+  case class Status(user: StatusFor, system: StatusFor, puzzles: StatusFor)
 
   private val monResult = lila.mon.shoginet.client.result
 
@@ -159,5 +145,9 @@ object Monitor {
       s"Received unacquired ${work.name} ${work.id} for ${work.game.id} by ${client.fullId}. Work current tries: ${work.tries} acquired: ${work.acquired}",
     )
     monResult.notAcquired(client.userId.value).increment()
+  }
+
+  private[shoginet] def newPuzzle(puzzleId: String, client: Client) = {
+    logger.info(s"Added new puzzle #${puzzleId} by ${client.fullId}")
   }
 }

@@ -2,7 +2,6 @@ package lila.shoginet
 
 import scala.concurrent.duration._
 
-import org.joda.time.DateTime
 import reactivemongo.api.bson._
 
 import lila.db.dsl._
@@ -28,8 +27,8 @@ final private class ShoginetRepo(
 
   def getClient(key: Client.Key)        = clientCache get key
   def getEnabledClient(key: Client.Key) = getClient(key).map { _.filter(_.enabled) }
-  def getOfflineClient: Fu[Client] =
-    getEnabledClient(Client.offline.key) getOrElse fuccess(Client.offline)
+  def getAnonClient: Fu[Client] =
+    getEnabledClient(Client.anon.key) getOrElse fuccess(Client.anon)
   def updateClient(client: Client): Funit =
     clientColl.update.one(selectClient(client.key), client, upsert = true).void >>-
       clientCache.invalidate(client.key)
@@ -83,32 +82,25 @@ final private class ShoginetRepo(
   object status {
     private def system(v: Boolean)   = $doc("sender.system" -> v)
     private def acquired(v: Boolean) = $doc("acquired" $exists v)
-    private def oldestSeconds(system: Boolean): Fu[Int] =
-      analysisColl
-        .find($doc("sender.system" -> system) ++ acquired(false), $doc("createdAt" -> true).some)
-        .sort($sort asc "createdAt")
-        .one[Bdoc]
-        .map(~_.flatMap(_.getAsOpt[DateTime]("createdAt").map { date =>
-          (nowSeconds - date.getSeconds).toInt atLeast 0
-        }))
 
     def compute =
       for {
         all            <- analysisColl.countSel($empty)
         userAcquired   <- analysisColl.countSel(system(false) ++ acquired(true))
         userQueued     <- analysisColl.countSel(system(false) ++ acquired(false))
-        userOldest     <- oldestSeconds(false)
         systemAcquired <- analysisColl.countSel(system(true) ++ acquired(true))
         systemQueued =
           all - userAcquired - userQueued - systemAcquired // because counting this is expensive (no useful index)
-        systemOldest     <- oldestSeconds(true)
-        puzzleVerifiable <- puzzleColl.countSel($doc("verifiable" -> true))
-        puzzleCandidates <- puzzleColl.countSel($doc("verifiable" -> false))
+        puzzleAcquired <- puzzleColl.countSel(acquired(true))
+        puzzleQueued   <- puzzleColl.countSel(acquired(false))
       } yield Monitor.Status(
-        user = Monitor.StatusFor(acquired = userAcquired, queued = userQueued, oldest = userOldest),
+        user = Monitor.StatusFor(acquired = userAcquired, queued = userQueued),
         system = Monitor
-          .StatusFor(acquired = systemAcquired, queued = systemQueued, oldest = systemOldest),
-        puzzles = Monitor.StatusPuzzle(verifiable = puzzleVerifiable, candidates = puzzleCandidates),
+          .StatusFor(acquired = systemAcquired, queued = systemQueued),
+        puzzles = Monitor.StatusFor(
+          acquired = puzzleAcquired,
+          queued = puzzleQueued,
+        ),
       )
   }
 

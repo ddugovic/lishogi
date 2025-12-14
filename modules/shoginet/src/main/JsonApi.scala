@@ -22,17 +22,10 @@ object JsonApi {
 
   sealed trait Request {
     val shoginet: Request.Shoginet
-    val yaneuraou: Request.Engine
-    val fairy: Request.Engine
 
     def instance(ip: IpAddress) =
       Client.Instance(
         shoginet.version,
-        shoginet.python | Client.Python(""),
-        Client.Engines(
-          yaneuraou = Client.Engine(yaneuraou.name),
-          fairy = Client.Engine(fairy.name),
-        ),
         ip,
         DateTime.now,
       )
@@ -44,39 +37,15 @@ object JsonApi {
 
     case class Shoginet(
         version: Client.Version,
-        python: Option[Client.Python],
         apikey: Client.Key,
     )
 
-    sealed trait Engine {
-      def name: String
-    }
-
-    case class BaseEngine(name: String) extends Engine
-
-    case class FullEngine(
-        name: String,
-        options: EngineOptions,
-    ) extends Engine
-
-    case class EngineOptions(
-        threads: Option[String],
-        hash: Option[String],
-    ) {
-      def threadsInt = threads flatMap (_.toIntOption)
-      def hashInt    = hash flatMap (_.toIntOption)
-    }
-
     case class Acquire(
         shoginet: Shoginet,
-        yaneuraou: BaseEngine,
-        fairy: BaseEngine,
     ) extends Request
 
     case class PostMove(
         shoginet: Shoginet,
-        yaneuraou: FullEngine,
-        fairy: FullEngine,
         move: MoveResult,
     ) extends Request
         with Result {}
@@ -90,22 +59,18 @@ object JsonApi {
 
     case class PostAnalysis(
         shoginet: Shoginet,
-        yaneuraou: FullEngine,
-        fairy: FullEngine,
         analysis: List[Option[Evaluation.OrSkipped]],
     ) extends Request
         with Result {
 
       def completeOrPartial =
         if (analysis.headOption.??(_.isDefined))
-          CompleteAnalysis(shoginet, yaneuraou, fairy, analysis.flatten)
-        else PartialAnalysis(shoginet, yaneuraou, fairy, analysis)
+          CompleteAnalysis(shoginet, analysis.flatten)
+        else PartialAnalysis(shoginet, analysis)
     }
 
     case class CompleteAnalysis(
         shoginet: Shoginet,
-        yaneuraou: FullEngine,
-        fairy: FullEngine,
         analysis: List[Evaluation.OrSkipped],
     ) {
 
@@ -123,8 +88,6 @@ object JsonApi {
 
     case class PartialAnalysis(
         shoginet: Shoginet,
-        yaneuraou: FullEngine,
-        fairy: FullEngine,
         analysis: List[Option[Evaluation.OrSkipped]],
     )
 
@@ -162,24 +125,13 @@ object JsonApi {
 
     case class PostPuzzle(
         shoginet: Shoginet,
-        yaneuraou: FullEngine,
-        fairy: FullEngine,
-        result: Boolean,
-    ) extends Request
-        with Result {}
-
-    case class PostPuzzleVerified(
-        shoginet: Shoginet,
-        yaneuraou: FullEngine,
-        fairy: FullEngine,
-        result: Option[CompletedPuzzle],
+        puzzle: Option[CompletedPuzzle],
     ) extends Request
         with Result {}
 
     case class CompletedPuzzle(
         sfen: Sfen,
         line: List[Usi],
-        ambiguousPromotions: List[Int],
         themes: List[String],
     )
   }
@@ -266,15 +218,9 @@ object JsonApi {
     import play.api.libs.functional.syntax._
     implicit val ClientVersionReads: Reads[Client.Version] =
       Reads.of[String].map(new Client.Version(_))
-    implicit val ClientPythonReads: Reads[Client.Python] =
-      Reads.of[String].map(new Client.Python(_))
-    implicit val ClientKeyReads: Reads[Client.Key] = Reads.of[String].map(new Client.Key(_))
-    implicit val EngineOptionsReads: Reads[Request.EngineOptions] =
-      Json.reads[Request.EngineOptions]
-    implicit val BaseEngineReads: Reads[Request.BaseEngine]  = Json.reads[Request.BaseEngine]
-    implicit val FullEngineReads: Reads[Request.FullEngine]  = Json.reads[Request.FullEngine]
-    implicit val ShoginetReads: Reads[Request.Shoginet]      = Json.reads[Request.Shoginet]
-    implicit val AcquireReads: Reads[Request.Acquire]        = Json.reads[Request.Acquire]
+    implicit val ClientKeyReads: Reads[Client.Key]      = Reads.of[String].map(new Client.Key(_))
+    implicit val ShoginetReads: Reads[Request.Shoginet] = Json.reads[Request.Shoginet]
+    implicit val AcquireReads: Reads[Request.Acquire]   = Json.reads[Request.Acquire]
     implicit val MoveResultReads: Reads[Request.MoveResult]  = Json.reads[Request.MoveResult]
     implicit val PostMoveReads: Reads[Request.PostMove]      = Json.reads[Request.PostMove]
     implicit val ScoreReads: Reads[Request.Evaluation.Score] = Json.reads[Request.Evaluation.Score]
@@ -298,12 +244,10 @@ object JsonApi {
           else EvaluationReads reads obj map Right.apply map some
       }
     implicit val PostAnalysisReads: Reads[Request.PostAnalysis] = Json.reads[Request.PostAnalysis]
-    implicit val PostPuzzleReads: Reads[Request.PostPuzzle]     = Json.reads[Request.PostPuzzle]
 
     implicit val CompletedPuzzleReads: Reads[Request.CompletedPuzzle] =
       Json.reads[Request.CompletedPuzzle]
-    implicit val PostPuzzleVerified: Reads[Request.PostPuzzleVerified] =
-      Json.reads[Request.PostPuzzleVerified]
+    implicit val PostPuzzleReads: Reads[Request.PostPuzzle] = Json.reads[Request.PostPuzzle]
   }
 
   object writers {
@@ -323,7 +267,7 @@ object JsonApi {
             "work" -> Json.obj(
               "type"   -> "analysis",
               "id"     -> a.id,
-              "flavor" -> a.engine,
+              "engine" -> a.engine,
             ),
             "nodes"         -> a.nodes,
             "skipPositions" -> a.skipPositions,
@@ -335,7 +279,7 @@ object JsonApi {
               "id"     -> m.id,
               "level"  -> m.level,
               "clock"  -> m.clock,
-              "flavor" -> m.engine,
+              "engine" -> m.engine,
             ),
           )
         case p: Puzzle =>
@@ -343,7 +287,7 @@ object JsonApi {
             "work" -> Json.obj(
               "type"   -> "puzzle",
               "id"     -> p.id,
-              "flavor" -> p.engine,
+              "engine" -> p.engine,
             ),
           )
       }) ++ Json.toJson(work.game).as[JsObject]
