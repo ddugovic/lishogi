@@ -12,7 +12,6 @@ case class Puzzle(
     id: Puzzle.Id,
     sfen: Sfen,
     line: NonEmptyList[Usi],
-    ambiguousPromotions: List[Int],
     glicko: Glicko,
     plays: Int,
     vote: Float, // denormalized ratio of voteUp/voteDown
@@ -71,22 +70,21 @@ object Puzzle {
   )
 
   object BSONFields {
-    val id                  = "_id"
-    val gameId              = "gameId"
-    val sfen                = "sfen"
-    val line                = "line"
-    val ambiguousPromotions = "ambP"
-    val glicko              = "glicko"
-    val vote                = "vote"
-    val voteUp              = "vu"
-    val voteDown            = "vd"
-    val plays               = "plays"
-    val themes              = "themes"
-    val day                 = "day"
-    val dirty               = "dirty" // themes need to be denormalized
-    val author              = "a"
-    val description         = "dsc"
-    val submittedBy         = "sb"
+    val id          = "_id"
+    val gameId      = "gameId"
+    val sfen        = "sfen"
+    val line        = "line"
+    val glicko      = "glicko"
+    val vote        = "vote"
+    val voteUp      = "vu"
+    val voteDown    = "vd"
+    val plays       = "plays"
+    val themes      = "themes"
+    val day         = "day"
+    val dirty       = "dirty" // themes need to be denormalized
+    val author      = "a"
+    val description = "dsc"
+    val submittedBy = "sb"
   }
 
   implicit val idIso: Iso.StringIso[Id] = lila.common.Iso.string[Id](Id.apply, _.value)

@@ -15,6 +15,8 @@ import type { PuzPrefs, UserDrop, UserMove } from '../interfaces';
 
 // all puzzles are standard
 const variant: VariantKey = 'standard';
+const standardPieceCanPromote = pieceCanPromote(variant);
+const standardPieceForcePromote = pieceForcePromote(variant);
 
 export function makeConfig(
   opts: SgConfig,
@@ -52,13 +54,8 @@ export function makeConfig(
         const capture = state.pieces.get(dest) as Piece | undefined;
         return (
           !!piece &&
-          pieceCanPromote(variant)(
-            piece,
-            parseSquareName(orig)!,
-            parseSquareName(dest)!,
-            capture,
-          ) &&
-          !pieceForcePromote(variant)(piece, parseSquareName(dest)!)
+          standardPieceCanPromote(piece, parseSquareName(orig)!, parseSquareName(dest)!, capture) &&
+          !standardPieceForcePromote(piece, parseSquareName(dest)!)
         );
       },
       dropPromotionDialog(piece) {
@@ -66,7 +63,14 @@ export function makeConfig(
       },
       forceMovePromotion: (orig: Key, dest: Key) => {
         const piece = state.pieces.get(orig) as Piece;
-        return !!piece && pieceForcePromote(variant)(piece, parseSquareName(dest)!);
+        const origSq = parseSquareName(orig)!;
+        const destSq = parseSquareName(dest)!;
+        return (
+          !!piece &&
+          ((['rook', 'bishop'].includes(piece.role) &&
+            standardPieceCanPromote(piece, origSq, destSq, undefined)) ||
+            standardPieceForcePromote(piece, destSq))
+        );
       },
     },
     draggable: {

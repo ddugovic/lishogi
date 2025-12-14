@@ -11,7 +11,7 @@ type MoveTestReturn = undefined | 'fail' | 'win' | MoveTest;
 
 // checks whether both usi actually aren't the same, although it doesn't look like it at first
 // for example - 1i1a+ === 1i1a if promotion is forced anyways
-function sameMove(u1: string, u2: string, ignoreProm: boolean, shogi: Shogi): boolean {
+function sameMove(u1: string, u2: string, shogi: Shogi): boolean {
   const usi1 = parseUsi(u1)!;
   const usi2 = parseUsi(u2)!;
   if (isDrop(usi1) && isDrop(usi2)) {
@@ -21,8 +21,7 @@ function sameMove(u1: string, u2: string, ignoreProm: boolean, shogi: Shogi): bo
     return (
       usi1.from === usi2.from &&
       usi1.to === usi2.to &&
-      (ignoreProm ||
-        !!usi1.promotion === !!usi2.promotion ||
+      (!!usi1.promotion === !!usi2.promotion ||
         (!!role && pieceForcePromote('standard')({ role: role, color: shogi.turn }, usi1.to)))
     );
   }
@@ -45,9 +44,8 @@ export default function moveTest(vm: Vm, puzzle: Puzzle): MoveTestReturn {
       return vm.node.puzzle;
     }
     const usi = nodes[i].usi!;
-    const isAmbProm = puzzle.ambPromotions?.includes(nodes[i].ply);
     const solUsi = puzzle.solution[i];
-    if (!sameMove(usi, solUsi, isAmbProm, shogi)) {
+    if (!sameMove(usi, solUsi, shogi)) {
       vm.node.puzzle = 'fail';
       return vm.node.puzzle;
     }

@@ -9,7 +9,6 @@ export default class CurrentPuzzle {
   startAt: number;
   moveIndex = 0;
   pov: Color;
-  ambPromotions: number[];
 
   constructor(
     readonly index: number,
@@ -18,7 +17,6 @@ export default class CurrentPuzzle {
     this.line = puzzle.line.split(' ');
     this.pov = parseSfen('standard', puzzle.sfen, false).unwrap().turn;
     this.startAt = getNow();
-    this.ambPromotions = puzzle.ambPromotions ?? [];
   }
 
   position = (): Shogi => {
@@ -34,6 +32,4 @@ export default class CurrentPuzzle {
   lastMove = (): string => this.line[this.moveIndex - 1];
 
   isOver = (): boolean => this.moveIndex >= this.line.length - 1;
-
-  isAmbPromotion = (): boolean => this.ambPromotions.includes(this.moveIndex);
 }

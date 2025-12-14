@@ -128,7 +128,6 @@ final class JsonView(
       },
       "themes" -> simplifyThemes(puzzle.themes),
     )
-    .add("ambPromotions", puzzle.ambiguousPromotions.some.filter(_.nonEmpty))
     .add("initialUsi", puzzle.gameId.isDefined option puzzle.line.head.usi)
 
   private def simplifyThemes(themes: Set[PuzzleTheme.Key]) =

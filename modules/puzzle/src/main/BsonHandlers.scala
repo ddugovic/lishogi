@@ -33,7 +33,6 @@ object BsonHandlers {
         id = r.get[Puzzle.Id](F.id),
         sfen = r.get[Sfen](F.sfen),
         line = line,
-        ambiguousPromotions = r.getO[List[Int]](F.ambiguousPromotions).getOrElse(Nil),
         glicko = r.getD[Glicko](F.glicko, Puzzle.glickoDefault(line.size)),
         plays = r.intD(F.plays),
         vote = r.floatD(F.vote),
@@ -47,18 +46,17 @@ object BsonHandlers {
 
     def writes(w: BSON.Writer, p: Puzzle) =
       BSONDocument(
-        F.id                  -> p.id,
-        F.sfen                -> p.sfen,
-        F.line                -> p.line.map(_.usi).toList.mkString(" "),
-        F.ambiguousPromotions -> p.ambiguousPromotions,
-        F.glicko              -> p.glicko,
-        F.plays               -> p.plays,
-        F.vote                -> p.vote,
-        F.themes              -> p.themes,
-        F.gameId              -> p.gameId,
-        F.author              -> p.author,
-        F.description         -> p.description,
-        F.submittedBy         -> p.submittedBy,
+        F.id          -> p.id,
+        F.sfen        -> p.sfen,
+        F.line        -> p.line.map(_.usi).toList.mkString(" "),
+        F.glicko      -> p.glicko,
+        F.plays       -> p.plays,
+        F.vote        -> p.vote,
+        F.themes      -> p.themes,
+        F.gameId      -> p.gameId,
+        F.author      -> p.author,
+        F.description -> p.description,
+        F.submittedBy -> p.submittedBy,
       )
 
   }

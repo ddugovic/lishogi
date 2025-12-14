@@ -19,6 +19,9 @@ export function renderBoard(ctrl: Controller): VNode {
   });
 }
 
+const standardPieceCanPromote = pieceCanPromote('standard');
+const standardPieceForcePromote = pieceForcePromote('standard');
+
 function makeConfig(ctrl: Controller): SgConfig {
   const opts = ctrl.makeSgOpts();
   return {
@@ -51,18 +54,25 @@ function makeConfig(ctrl: Controller): SgConfig {
         const piece = ctrl.shogiground.state.pieces.get(orig) as Piece;
         return (
           !!piece &&
-          pieceCanPromote('standard')(
+          standardPieceCanPromote(
             piece,
             parseSquareName(orig)!,
             parseSquareName(dest)!,
             undefined,
           ) &&
-          !pieceForcePromote('standard')(piece, parseSquareName(dest)!)
+          !standardPieceForcePromote(piece, parseSquareName(dest)!)
         );
       },
       forceMovePromotion: (orig: Key, dest: Key) => {
         const piece = ctrl.shogiground.state.pieces.get(orig) as Piece;
-        return !!piece && pieceForcePromote('standard')(piece, parseSquareName(dest)!);
+        const origSq = parseSquareName(orig)!;
+        const destSq = parseSquareName(dest)!;
+        return (
+          !!piece &&
+          ((['rook', 'bishop'].includes(piece.role) &&
+            standardPieceCanPromote(piece, origSq, destSq, undefined)) ||
+            standardPieceForcePromote(piece, destSq))
+        );
       },
     },
     draggable: {

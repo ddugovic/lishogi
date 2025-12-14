@@ -204,7 +204,6 @@ interface PuzzleUser {
 export interface Puzzle {
   id: string;
   solution: Usi[];
-  ambPromotions: number[];
   rating: number;
   plays: number;
   initialPly: number;
