@@ -59,8 +59,7 @@ object Puzzle {
 
   def toId(id: String) = id.sizeIs == idSize option Id(id)
 
-  // idk - tweak it later
-  def glickoDefault(nbMoves: Int) = Glicko(600d + nbMoves * 150d, 500d, 0.08d)
+  def glickoDefault(nbMoves: Int) = Glicko(1000d + nbMoves * 150d, 500d, 0.08d)
 
   case class UserResult(
       puzzleId: Id,

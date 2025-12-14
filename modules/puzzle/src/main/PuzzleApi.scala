@@ -189,7 +189,7 @@ final class PuzzleApi(
                 $set(
                   F.voteUp   -> up,
                   F.voteDown -> down,
-                  F.vote     -> ((up - down).toFloat / (up + down)),
+                  F.vote     -> ((up - down).toFloat / ((up + down) atLeast 1)),
                 ),
               )
               .void
@@ -264,43 +264,45 @@ final class PuzzleApi(
     def addNew(
         sfen: Sfen,
         line: List[Usi],
-        ambProms: List[Int],
         themes: List[String],
         source: Either[Option[String], lila.game.Game.ID],
         submittedBy: Option[String],
-    ): Funit =
-      (for {
-        validSfen <- fuccess(
-          sfen.toSituation(shogi.variant.Standard).map(_.toSfen),
-        ) orFail "Invalid sfen"
-        validLine     <- fuccess(line.toNel) orFail "No moveline"
-        alreadyExists <- puzzle.existsBySfen(validSfen)
-        _ <- alreadyExists ?? fufail[Unit]("Puzzle with the same position already present")
-        similarExists <- source.fold(
-          _ => fuccess(false),
-          gameId =>
-            puzzle
-              .fromGame(gameId)
-              .map(_.exists(p => Math.abs(~p.sfen.stepNumber - ~validSfen.stepNumber) >= 10)),
-        )
-        _  <- similarExists ?? fufail[Unit](s"Similar puzzle exists (~${source.map(_.toString)})")
-        id <- makeId
-      } yield Puzzle(
-        id = id,
-        sfen = validSfen,
-        line = validLine,
-        ambiguousPromotions = ambProms,
-        glicko = Puzzle.glickoDefault(validLine.size),
-        plays = 0,
-        vote = 0f,
-        gameId = source.toOption,
-        themes = themes.flatMap(PuzzleTheme.find).map(_.key).toSet,
-        author = source.left.toOption.flatten,
-        description = None,
-        submittedBy = submittedBy,
-      )).flatMap { p =>
-        colls.puzzle(_.insert.one(p))
-      }.void
+    ): Fu[Option[Puzzle.Id]] = {
+      val validated = for {
+        validSfen <- sfen.toSituation(shogi.variant.Standard).map(_.toSfen)
+        validLine <- line.toNel
+      } yield ((validSfen, validLine))
+
+      validated ?? { case (validSfen, validLine) =>
+        alreadyExistsOrSimilar(validSfen, source.toOption) flatMap { exists =>
+          !exists ?? (for {
+            id <- makeId
+            puzzle = Puzzle(
+              id = id,
+              sfen = validSfen,
+              line = validLine,
+              glicko = Puzzle.glickoDefault(validLine.size),
+              plays = 0,
+              vote = 0.95f,
+              gameId = source.toOption,
+              themes = themes.flatMap(PuzzleTheme.find).map(_.key).toSet,
+              author = source.left.toOption.flatten,
+              description = None,
+              submittedBy = submittedBy,
+            )
+            _ <- colls.puzzle(_.insert.one(puzzle))
+            _ <- colls.puzzle(_.updateField($id(puzzle.id), Puzzle.BSONFields.voteUp, 10))
+          } yield (puzzle.id.some))
+        }
+      }
+    }
+
+    private def alreadyExistsOrSimilar(sfen: Sfen, gameId: Option[lila.game.Game.ID]): Fu[Boolean] =
+      puzzle.existsBySfen(sfen) >>| gameId ?? { gid =>
+        puzzle
+          .fromGame(gid)
+          .map(_.exists(p => Math.abs(~p.sfen.stepNumber - ~sfen.stepNumber) >= 10))
+      }
 
     private def makeId: Fu[Puzzle.Id] = {
       val id = Puzzle.Id(lila.common.ThreadLocalRandom nextString 5)
