@@ -87,8 +87,9 @@ object appeal2 {
       counts: lila.report.Room.Counts,
       streamers: Int,
       nbAppeals: Int,
+      puzzles: Int,
   )(implicit ctx: Context) =
-    views.html.report.list.layout("appeal", counts, streamers, nbAppeals)(
+    views.html.report.list.layout("appeal", counts, streamers, nbAppeals, puzzles)(
       table(cls := "slist slist-pad see")(
         thead(
           tr(

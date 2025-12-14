@@ -87,6 +87,13 @@ export default function (ctrl: Controller): VNode {
         side.userBox(ctrl),
         side.config(ctrl),
         theme(ctrl),
+        ctrl.curator
+          ? h(
+              'a',
+              { attrs: { href: `/training/report/puzzle/${ctrl.getData().puzzle.id}` } },
+              'View reports',
+            )
+          : undefined,
       ]),
       h(
         'div.puzzle__board.main-board',

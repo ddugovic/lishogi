@@ -88,8 +88,13 @@ GET   /training/history                controllers.Puzzle.history(page: Int ?= 1
 GET   /training/upload                 controllers.Puzzle.newPuzzlesForm
 POST  /training/upload                 controllers.Puzzle.addPuzzles
 GET   /training/submitted              controllers.Puzzle.submitted(name: Option[String] ?= None, page: Int ?= 1)
+POST  /training/delete/$id<\w{5}>      controllers.Puzzle.delete(id: String)
 GET   /training/mobile/:themeOrId      controllers.Puzzle.mobileShow(themeOrId: String)
 POST  /training/mobile-solve           controllers.Puzzle.mobileSolve
+POST  /training/report/create          controllers.Puzzle.reportCreate
+POST  /training/report/close/$id<\w{8}>  controllers.Puzzle.reportClose(id: String, puzzle: Option[String] ?= None, close: Boolean ?= true)
+GET   /training/report/list            controllers.Puzzle.reportList(page: Int ?= 1, closed: Boolean ?= false)
+GET   /training/report/puzzle/$id<\w{5}>      controllers.Puzzle.reportOfPuzzle(id: String, page: Int ?= 1)
 GET   /training/:themeOrId             controllers.Puzzle.show(themeOrId: String)
 GET   /training/:theme/$id<\w{5}>      controllers.Puzzle.showWithTheme(theme: String, id: String)
 POST  /training/$id<\w{5}>/vote        controllers.Puzzle.vote(id: String)

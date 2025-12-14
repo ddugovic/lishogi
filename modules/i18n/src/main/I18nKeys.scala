@@ -438,6 +438,8 @@ object I18nKeys {
   val `autoSwitch` = new I18nKey("autoSwitch")
   val `puzzles` = new I18nKey("puzzles")
   val `puzzleStorm` = new I18nKey("puzzleStorm")
+  val `reportPuzzle` = new I18nKey("reportPuzzle")
+  val `reportPuzzleReason` = new I18nKey("reportPuzzleReason")
   val `latestUpdates` = new I18nKey("latestUpdates")
   val `tournamentWinners` = new I18nKey("tournamentWinners")
   val `name` = new I18nKey("name")

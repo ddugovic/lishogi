@@ -71,6 +71,58 @@ final class PuzzleApi(
       }
   }
 
+  object report {
+    def create(
+        puzzle: Puzzle.Id,
+        text: Option[String],
+        by: User.ID,
+    ) =
+      colls.report(
+        _.insert.one(
+          PuzzleReport(
+            puzzle,
+            text,
+            by,
+          ),
+        ),
+      )
+
+    def close(id: String, value: Boolean) =
+      colls.report(_.updateField($id(id), "closed", value))
+
+    def list(page: Int, closed: Boolean): Fu[Paginator[PuzzleReport]] =
+      colls.report { coll =>
+        Paginator(
+          adapter = new Adapter[PuzzleReport](
+            collection = coll,
+            selector = $doc("closed" -> closed),
+            projection = none,
+            sort = $sort desc "date",
+          ),
+          page,
+          MaxPerPage(20),
+        )
+      }
+
+    def ofPuzzle(puzzleId: Puzzle.Id, page: Int): Fu[Paginator[PuzzleReport]] =
+      colls.report { coll =>
+        Paginator(
+          adapter = new Adapter[PuzzleReport](
+            collection = coll,
+            selector = $doc("puzzle" -> puzzleId.value),
+            projection = none,
+            sort = $sort desc "date",
+          ),
+          page,
+          MaxPerPage(20),
+        )
+      }
+
+    def countUnclosed: Fu[Int] =
+      colls.report(_.countSel($doc("closed" -> false)))
+
+  }
+
   object round {
 
     def find(user: User, puzzleId: Puzzle.Id): Fu[Option[PuzzleRound]] =

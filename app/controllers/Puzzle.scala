@@ -180,6 +180,12 @@ final class Puzzle(
       }
     }
 
+  def delete(id: String) =
+    Secure(_.Puzzles) { _ => me =>
+      env.puzzle.api.puzzle.delete(Puz.Id(id)) >>
+        env.mod.logApi.puzzleDelete(lila.report.Mod(me), id) inject jsonOkResult
+    }
+
   def voteTheme(id: String, themeStr: String) =
     AuthBody { implicit ctx => me =>
       NoBot {
@@ -356,6 +362,43 @@ final class Puzzle(
         } map { case res =>
           Ok(views.html.puzzle.submitted(~fixed, userOpt, res.map(_._1), res.map(_._2)))
         }
+      }
+    }
+
+  def reportCreate =
+    AuthBody { implicit ctx => me =>
+      implicit val body = ctx.body
+      env.puzzle.forms.report
+        .bindFromRequest()
+        .fold(
+          _ => BadRequest.fuccess,
+          { case (puzzleId, text) =>
+            env.puzzle.api.report.create(Puz.Id(puzzleId), text, me.id) inject jsonOkResult
+          },
+        )
+    }
+
+  def reportClose(id: String, puzzle: Option[String], close: Boolean) =
+    Secure(_.Puzzles) { _ => me =>
+      (env.puzzle.api.report.close(id, close) >>
+        env.mod.logApi.puzzleCloseReport(lila.report.Mod(me), id)) inject Redirect(
+        puzzle.fold(routes.Puzzle.reportList(1, !close)) { pid =>
+          routes.Puzzle.reportOfPuzzle(pid, 1)
+        },
+      )
+    }
+
+  def reportList(page: Int, closed: Boolean) =
+    Secure(_.Puzzles) { implicit ctx => _ =>
+      env.puzzle.api.report.list(page, closed) map { res =>
+        views.html.puzzle.report(res, Right(closed))
+      }
+    }
+
+  def reportOfPuzzle(id: String, page: Int) =
+    Secure(_.Puzzles) { implicit ctx => _ =>
+      env.puzzle.api.report.ofPuzzle(Puz.Id(id), page) map { res =>
+        views.html.puzzle.report(res, Left(Puz.Id(id)))
       }
     }
 

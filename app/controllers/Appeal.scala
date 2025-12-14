@@ -33,9 +33,9 @@ final class Appeal(env: Env, reportC: => Report) extends LilaController(env) {
   def queue =
     Secure(_.Appeals) { implicit ctx => _ =>
       env.appeal.api.queue zip env.report.api.inquiries.allBySuspect zip reportC.getCounts flatMap {
-        case ((appeals, inquiries), ((counts, streamers), nbAppeals)) =>
+        case ((appeals, inquiries), (((counts, streamers), nbAppeals), puzzles)) =>
           (env.user.lightUserApi preloadMany appeals.map(_.id)) inject
-            Ok(html.appeal2.queue(appeals, inquiries, counts, streamers, nbAppeals))
+            Ok(html.appeal2.queue(appeals, inquiries, counts, streamers, nbAppeals, puzzles))
       }
     }
 

@@ -115,4 +115,8 @@ object BsonHandlers {
   implicit private[puzzle] val ThemeKeyBSONHandler: BSONHandler[PuzzleTheme.Key] = stringIsoHandler(
     PuzzleTheme.keyIso,
   )
+
+  implicit val PuzzleReportBSONHandler: BSONDocumentHandler[PuzzleReport] =
+    Macros.handler[PuzzleReport]
+
 }

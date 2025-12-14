@@ -72,5 +72,11 @@ object bits {
       a(cls := active.active("submitted"), href := routes.Puzzle.submitted(ctx.me.map(_.username)))(
         trans.puzzle.submissions(),
       ),
+      isGranted(_.Puzzles) option a(
+        cls  := active.active("reports"),
+        href := routes.Puzzle.reportList(1),
+      )(
+        "Reports",
+      ),
     )
 }

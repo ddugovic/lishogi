@@ -701,6 +701,8 @@ declare global {
     | 'autoSwitch'
     | 'puzzles'
     | 'puzzleStorm'
+    | 'reportPuzzle'
+    | 'reportPuzzleReason'
     | 'latestUpdates'
     | 'tournamentWinners'
     | 'name'

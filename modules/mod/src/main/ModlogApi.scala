@@ -41,6 +41,21 @@ final class ModlogApi(repo: ModlogRepo)(implicit
       )
     }
 
+  def puzzleDelete(mod: Mod, puzzleId: String) =
+    add {
+      Modlog(mod.user.id, none, Modlog.puzzleDelete, details = s"#$puzzleId".some)
+    }
+
+  def puzzleCloseReport(mod: Mod, reportId: String) =
+    add {
+      Modlog(
+        mod.user.id,
+        none,
+        Modlog.puzzleCloseReport,
+        details = s"/training/report/$reportId".some,
+      )
+    }
+
   def practiceConfig(mod: User.ID) =
     add {
       Modlog(mod, none, Modlog.practiceConfig)

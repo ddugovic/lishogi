@@ -64,7 +64,7 @@ final private class PuzzleTrustApi(colls: PuzzleColls)(implicit
   private def patronBonus(user: User) = (~user.planMonths * 5) atMost 20
 
   private def modBonus(user: User) =
-    if (user.roles.exists(_ contains "ROLE_PUZZLE_CURATOR")) 100
+    if (user.roles.exists(_ contains "ROLE_PUZZLES")) 100
     else if (user.isAdmin) 50
     else if (user.isVerified) 30
     else 0

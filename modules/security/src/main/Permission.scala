@@ -61,6 +61,7 @@ object Permission {
   case object Cli              extends Permission("ClI", "Command line")
   case object Settings         extends Permission("SETTINGS", "Lila settings")
   case object Streamers        extends Permission("STREAMERS", "Manage streamers")
+  case object Puzzles          extends Permission("PUZZLES", "Manage puzzles")
   case object Verified         extends Permission("VERIFIED", "Verified badge")
   case object MonitoredMod     extends Permission("MONITORED_MOD", "Monitored mod")
   case object StudyAdmin       extends Permission("STUDY_ADMIN", "Study admin")
@@ -141,6 +142,7 @@ object Permission {
           PracticeConfig,
           RemoveRanking,
           Streamers,
+          Puzzles,
           DisableTwoFactor,
           ChangePermission,
           StudyAdmin,
@@ -198,6 +200,7 @@ object Permission {
       ModLog,
       ManageTeam,
       Streamers,
+      Puzzles,
     ),
     "Content" -> List(
       ManageEvent,

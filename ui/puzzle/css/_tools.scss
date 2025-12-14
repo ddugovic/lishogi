@@ -178,13 +178,18 @@
     text-align: center;
     visibility: hidden;
     opacity: 0;
-  }
 
-  .view_solution.show {
-    visibility: visible;
-    opacity: 0.8;
+    &.show {
+      visibility: visible;
+      opacity: 0.8;
 
-    @include mixins.transition(opacity, 1.5s);
+      @include mixins.transition(opacity, 1.5s);
+    }
+
+    &.force {
+      visibility: visible;
+      opacity: 0.8;
+    }
   }
 }
 

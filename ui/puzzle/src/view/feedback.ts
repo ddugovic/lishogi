@@ -9,7 +9,7 @@ function viewSolution(ctrl: Controller): VNode {
   return h(
     'div.view_solution',
     {
-      class: { show: ctrl.vm.canViewSolution },
+      class: { show: ctrl.vm.canViewSolution, force: ctrl.curator },
     },
     [
       h(

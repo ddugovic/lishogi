@@ -82,6 +82,7 @@ export default function (opts: PuzzleOpts, redraw: Redraw): Controller {
     vm.initialNode = tree.nodeAtPath(initialPath);
     vm.pov = plyColor(vm.initialNode.ply);
     data.player = { color: vm.pov };
+    vm.reported = false;
 
     setPath(treePath.init(initialPath));
     if (data.game.id)
@@ -567,6 +568,7 @@ export default function (opts: PuzzleOpts, redraw: Redraw): Controller {
     getCeval,
     pref: opts.pref,
     difficulty: opts.difficulty,
+    curator: !!opts.curator,
     autoNext,
     autoNexting: () => vm.lastFeedback == 'win' && autoNext(),
     outcome,

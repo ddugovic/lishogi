@@ -8,7 +8,6 @@ final private[api] class Cli(
     teamSearch: lila.teamSearch.Env,
     forumSearch: lila.forumSearch.Env,
     team: lila.team.Env,
-    puzzle: lila.puzzle.Env,
     tournament: lila.tournament.Env,
     shoginet: lila.shoginet.Env,
     study: lila.study.Env,
@@ -78,7 +77,6 @@ final private[api] class Cli(
       teamSearch.cli.process orElse
       forumSearch.cli.process orElse
       team.cli.process orElse
-      puzzle.cli.process orElse
       tournament.cli.process orElse
       shoginet.cli.process orElse
       study.cli.process orElse

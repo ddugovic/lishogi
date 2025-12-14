@@ -82,6 +82,7 @@ export interface Controller extends KeyboardController {
   voteTheme(theme: ThemeKey, v: boolean): void;
   pref: PuzzlePrefs;
   difficulty?: PuzzleDifficulty;
+  curator: boolean;
   userMove(orig: Key, dest: Key, prom: boolean): void;
   userDrop(piece: Piece, dest: Key, prom: boolean): void;
   autoNext: StoredBooleanProp;
@@ -112,6 +113,7 @@ export interface Vm {
   autoScrollRequested: boolean;
   autoScrollNow: boolean;
   voteDisabled?: boolean;
+  reported?: boolean;
   showComputer(): boolean;
   showAutoShapes(): boolean;
 }
@@ -124,6 +126,7 @@ export interface PuzzleOpts {
     dynamic: string;
     static: string;
   };
+  curator?: boolean;
 }
 
 interface PuzzlePrefs {

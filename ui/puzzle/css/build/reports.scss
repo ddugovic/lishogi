@@ -1,0 +1,9 @@
+@use 'pkg:common/abstract/extends';
+@use 'pkg:common/component/slist';
+@use 'pkg:common/component/fbt';
+
+.fbt {
+  @extend %box-radius;
+
+  padding: 0 0.5rem;
+}

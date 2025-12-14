@@ -15,8 +15,9 @@ object list {
       counts: lila.report.Room.Counts,
       streamers: Int,
       appeals: Int,
+      puzzles: Int,
   )(implicit ctx: Context) =
-    layout(filter, counts, streamers, appeals)(
+    layout(filter, counts, streamers, appeals, puzzles)(
       table(cls := "slist slist-pad see")(
         thead(
           tr(
@@ -90,7 +91,13 @@ object list {
       ),
     )
 
-  def layout(filter: String, counts: lila.report.Room.Counts, streamers: Int, appeals: Int)(
+  def layout(
+      filter: String,
+      counts: lila.report.Room.Counts,
+      streamers: Int,
+      appeals: Int,
+      puzzles: Int,
+  )(
       body: Frag,
   )(implicit ctx: Context) =
     views.html.base.layout(
@@ -137,6 +144,11 @@ object list {
                 a(href := s"${routes.Streamer.index()}?requests=1", cls := "new")(
                   countTag(streamers),
                   "Streamers",
+                ),
+              puzzles > 0 option
+                a(href := routes.Puzzle.reportList(1, closed = false), cls := "new")(
+                  countTag(puzzles),
+                  "Puzzles",
                 ),
             ),
           ),

@@ -14,12 +14,14 @@ private class PuzzleConfig(
     @ConfigName("collection.puzzle") val puzzleColl: CollName,
     @ConfigName("collection.round") val roundColl: CollName,
     @ConfigName("collection.path") val pathColl: CollName,
+    @ConfigName("collection.report") val reportColl: CollName,
 )
 
 case class PuzzleColls(
     puzzle: AsyncColl,
     round: AsyncColl,
     path: AsyncColl,
+    report: AsyncColl,
 )
 
 @Module
@@ -45,6 +47,7 @@ final class Env(
     puzzle = db(config.puzzleColl),
     round = db(config.roundColl),
     path = db(config.pathColl),
+    report = db(config.reportColl),
   )
 
   private lazy val gameJson: GameJson = wire[GameJson]
@@ -79,10 +82,4 @@ final class Env(
 
   lazy val history = wire[PuzzleHistoryApi]
 
-  def cli =
-    new lila.common.Cli {
-      def process = { case "puzzle" :: "delete" :: id :: Nil =>
-        api.puzzle delete Puzzle.Id(id) inject "Done"
-      }
-    }
 }

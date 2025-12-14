@@ -36,7 +36,8 @@ object show {
               "pref" -> pref,
             )
             .add("themes" -> ctx.isAuth.option(bits.jsonThemes))
-            .add("difficulty" -> difficulty.map(_.key)),
+            .add("difficulty" -> difficulty.map(_.key))
+            .add("curator" -> isGranted(_.Puzzles)),
         ),
       ),
       csp = defaultCsp.withWebAssembly.some,

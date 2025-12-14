@@ -50,9 +50,14 @@
 
     a {
       color: theme.$c-font;
+      padding: 0 0.2em;
 
       &:hover {
         color: theme.$c-link;
+      }
+
+      &:not(:first-child) {
+        margin-left: 0.5em;
       }
     }
 
@@ -135,5 +140,22 @@
     &.vote-down.active {
       background: theme.$c-bad;
     }
+  }
+}
+
+#modal-wrap.puzzle-report {
+  .title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  textarea {
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
   }
 }

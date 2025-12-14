@@ -38,6 +38,13 @@ object PuzzleForm {
     )(Tuple2.apply)(Tuple2.unapply),
   )
 
+  val report = Form(
+    mapping(
+      "puzzleId" -> nonEmptyText,
+      "text"     -> optional(text(maxLength = 300)),
+    )(Tuple2.apply)(Tuple2.unapply),
+  )
+
   object mobile {
 
     case class Solution(id: String, theme: String, win: Boolean)
