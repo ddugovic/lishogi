@@ -3,7 +3,7 @@ packages:
   - bin
 
 catalog:
-  '@badrap/result': ^0.3.1
+  '@badrap/result': 0.2.13
   breakpoint-sass: github:WandererXII/breakpoint#4.1
   shogiground: ^0.10.3
   shogiops: ^0.19.0
