@@ -10,9 +10,9 @@ import type { SetupDataKey } from './ctrl';
 export const variantChoicesTranslated: [number, string][] = RULES.map(
   r => [variantToId(r), i18nVariant(r)] as [number, string],
 );
-const validAiVariantsIds = (['standard', 'minishogi', 'kyotoshogi'] as VariantKey[]).map(v =>
-  variantToId(v),
-);
+const validAiVariantsIds = (
+  ['standard', 'minishogi', 'kyotoshogi', 'checkshogi'] as VariantKey[]
+).map(v => variantToId(v));
 export const aiVariantChoicesTranslated: [number, string][] = variantChoicesTranslated.filter(vt =>
   validAiVariantsIds.includes(vt[0]),
 );
