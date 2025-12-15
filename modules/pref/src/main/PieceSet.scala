@@ -44,6 +44,7 @@ object PieceSet extends PieceSetBase {
     new PieceSet("portella_2kanji", "Portella 2-Kanji", pro = true),
     new PieceSet("1kanji_3d", "Kanji 3D", pro = true),
     new PieceSet("2kanji_3d", "2-Kanji 3D", pro = true),
+    new PieceSet("hitomoji", "Hitomoji", pro = true),
     new PieceSet("shogi_cz", "Shogi.cz"),
     new PieceSet("shogi_fcz", "Czech"),
     new PieceSet("engraved_cz", "Engraved Shogi.cz"),
