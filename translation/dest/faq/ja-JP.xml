@@ -73,7 +73,7 @@
 Glicko 方式ではレーティングの算出と表示に「信頼区間」を使います。Lishogi を使い始めた人のレーティングは「1500 ± 700」となります。ここでは 1500 がレーティング、700 が信頼区間です。
 これはつまり「あなたのレーティングは 90% の確率で 800 と 2200 の間にある」ということです。ずいぶん幅がありますね。そのため、プレイを始めたばかりのプレイヤーのレーティングは非常に速く変動し、一度に数百点動くこともあります。しかしレーティングの安定した相手と何局も指すうちに信頼区間は狭まり、1 局の勝ち負けで動く点数も小さくなっていきます。
 もうひとつだいじな点は [プレイしないでいると] 時間とともに信頼区間が広くなることです。対局しなかった期間の棋力の変化に合わせて、点数の動きが速くなるようにしてあるのです。</string>
-	<string name="ratingSystemUsedByLishogiDraw">Draws do not affect ratings.</string>
+	<string name="ratingSystemUsedByLishogiDraw">引き分けはレート変動しません</string>
 	<string name="whatIsProvisionalRating">レーティングに「?」が付いているのは？</string>
 	<string name="provisionalRatingExplanation">「?」はレーティングが暫定であることを示します。理由は以下の通りです：</string>
 	<string name="notPlayedEnoughRatedGamesAgainstX">まだそのカテゴリーで%1$sと十分な数のレート戦を指していないから。</string>
@@ -84,9 +84,10 @@ Glicko 方式ではレーティングの算出と表示に「信頼区間」を�
 	<string name="inOrderToAppearsYouMust">%1$sに入るための条件は：</string>
 	<string name="ratingLeaderboards">レーティングのランキング</string>
 	<string name="havePlayedMoreThanThirtyGamesInThatRating">そのカテゴリーでレート戦 30 局以上を終え、</string>
-	<string name="havePlayedARatedGameAtLeastOneWeekAgo">そのカテゴリーで過去 1 週間以内にレート戦を指し、</string>
+	<string name="havePlayedARatedGameAtLeastOneMonthAgo">そのカテゴリーで過去 1 か月以内にレート戦を指し、</string>
 	<string name="ratingDeviationLowerThanXinShogiYinVariants">本将棋ではレーティング偏差が%1$sより小さく、変則将棋では%2$sよりも小さい</string>
 	<string name="beInTopTen">そのカテゴリーで上位 10 人に入っていることです。</string>
+	<string name="clickHereRatingRanks">レーティングと段級位の対応を見る。</string>
 	<string name="secondRequirementToStopOldPlayersTrustingLeaderboards">2 番目の要件は、アカウントを使わなくなった人がランキングの中に残らないようにするためです。</string>
 	<string name="whyAreRatingHigher">レーティングの数字が他のチェスサイトや団体 (FIDE, USCFなど) より高いのはなぜ？</string>
 	<string name="whyAreRatingHigherExplanation">レーティングは絶対的な評価と考えてはいけませんし、他の団体のレーティングとそのまま比べるのも間違いです。プレイヤーのレベルは団体によって違うし、レーティング方式も違います（Elo、Glicko、Glicko-2、これらの修正版など）。こういった要因はレーティングの数値を大きく左右します。
