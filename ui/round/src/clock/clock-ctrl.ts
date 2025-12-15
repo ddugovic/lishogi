@@ -162,7 +162,7 @@ export class ClockController {
     this.goneBerserk[color] = true;
   };
 
-  canPlaySound = (color: Color) => {
+  canPlaySound = (color: Color): boolean => {
     return (
       this.data.pref.clockAudible === prefs.clockAudible.ALL ||
       (this.data.pref.clockAudible === prefs.clockAudible.MYGAME && !this.isSpectator) ||
