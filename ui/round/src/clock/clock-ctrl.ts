@@ -272,7 +272,9 @@ export class ClockController {
           else if (spentByo > 0 && spentByo % 10 === 0 && spentByo <= 50)
             window.lishogi.sound.play(`${spentByo}s`, 'clock');
         } else {
-          if (remainingByo < 10 || (remainingByo < 60 && remainingByo % 10 === 0))
+          if (window.lishogi.sound.clockSoundSet() === 'system' && remainingByo <= 3)
+            window.lishogi.sound.countdown(remainingByo);
+          else if (remainingByo < 10 || (remainingByo < 60 && remainingByo % 10 === 0))
             window.lishogi.sound.countdown(remainingByo);
         }
       }
