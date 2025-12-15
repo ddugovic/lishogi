@@ -6,10 +6,10 @@
 $c-bg-page: #f3eac7;
 $c-body-gradient: #eee3ba;
 
-$c-bg-high: hsl(53deg, 74%, 95%);
+$c-bg-high: hsl(53deg, 71%, 93%);
 $c-bg-low: #f5edca;
 
-$c-bg-zebra: hsl(48deg, 80%, 89%);
+$c-bg-zebra: hsl(48deg, 80%, 92%);
 $c-bg-zebra2: hsl(48deg, 79%, 88%);
 
 $c-font: #3a322e;
@@ -59,7 +59,7 @@ $c-link-hover: c-blacker(color.adjust($c-primary, $saturation: 100%), 35%);
 
 $c-bg-box: $c-bg-high;
 $c-bg-box-opaque: $c-bg-box;
-$c-bg-input: c-light($c-bg-page, 98%);
+$c-bg-input: c-light($c-bg-page, 96%);
 
 $c-border: $c-font-dimmer;
 $border: 1px solid $c-border;

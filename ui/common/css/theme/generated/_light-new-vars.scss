@@ -15,14 +15,14 @@ html.light-new {
   --c-bg-box: #{$c-bg-high};
   --c-bg-box-opaque: #{$c-bg-box};
   --c-bg-header-dropdown: #{$c-bg-popup};
-  --c-bg-high: #{hsl(53deg, 74%, 95%)};
-  --c-bg-input: #{c-light($c-bg-page, 98%)};
+  --c-bg-high: #{hsl(53deg, 71%, 93%)};
+  --c-bg-input: #{c-light($c-bg-page, 96%)};
   --c-bg-low: #{#f5edca};
   --c-bg-metal: #{$c-bg-high};
   --c-bg-metal-hover: #{color.adjust($c-bg-high, $lightness: -3%)};
   --c-bg-page: #{#f3eac7};
   --c-bg-popup: #{$c-bg-high};
-  --c-bg-zebra: #{hsl(48deg, 80%, 89%)};
+  --c-bg-zebra: #{hsl(48deg, 80%, 92%)};
   --c-bg-zebra2: #{hsl(48deg, 79%, 88%)};
   --c-blunder: #{hsl(0deg, 68%, 50%)};
   --c-body-gradient: #{#eee3ba};

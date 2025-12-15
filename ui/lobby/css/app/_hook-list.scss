@@ -171,9 +171,10 @@
 
   a.accent {
     background: theme.$c-accent;
+    color: theme.$c-accent-over;
 
     &:hover {
-      background: theme.$c-accent;
+      background: theme.$c-accent-clear;
     }
   }
 }
