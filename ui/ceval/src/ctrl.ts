@@ -272,7 +272,7 @@ export default function (opts: CevalOpts): CevalCtrl {
             downloadProgress(mb);
             opts.redraw();
           }),
-          version: 'e01aa3d',
+          version: 'd49b90b',
           wasmMemory: sharedWasmMemory(2048, maxWasmPages(2048)),
           cache: window.indexedDB && new Cache('ceval-wasm-cache'),
         });
