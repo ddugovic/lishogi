@@ -126,7 +126,7 @@ object Query {
 
   val hasAis = List(0 -> "Human opponent", 1 -> "Computer opponent")
 
-  val aiLevels = (1 to 8) map { l =>
+  val aiLevels = (1 to 10) map { l =>
     l -> ("level " + l)
   }
 

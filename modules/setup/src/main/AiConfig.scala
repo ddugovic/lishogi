@@ -117,7 +117,7 @@ object AiConfig extends BaseConfig {
     color = Color.default,
   )
 
-  val levels = (1 to 8).toList
+  val levels = (1 to 10).toList
 
   import lila.db.BSON
   import lila.db.dsl._

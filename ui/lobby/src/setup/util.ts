@@ -33,7 +33,7 @@ export const periodChoices: number[] = [1, 2, 3, 4, 5];
 export const dayChoices: number[] = [1, 2, 3, 5, 7, 10, 14];
 export const dayExtraChoices: number[] = dayChoices.concat([0]);
 
-export const aiLevelChoices: number[] = Array.from(Array(8), (_, i) => i + 1);
+export const aiLevelChoices: number[] = Array.from(Array(10), (_, i) => i + 1);
 
 export const maxRatingChoices: number[] = Array.from(Array(16), (_, i) => i * 50);
 export const minRatingChoices: number[] = Array.from(Array(16), (_, i) => 750 - i * 50);
