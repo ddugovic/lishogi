@@ -9,25 +9,42 @@ export function bindMobileTapHold(
   redraw?: () => void,
 ): void {
   let longPressCountdown: number;
+  const passive = { passive: true };
 
-  el.addEventListener('touchstart', e => {
-    longPressCountdown = setTimeout(() => {
-      f(e);
-      if (redraw) redraw();
-    }, longPressDuration);
-  });
+  el.addEventListener(
+    'touchstart',
+    e => {
+      longPressCountdown = setTimeout(() => {
+        f(e);
+        redraw?.();
+      }, longPressDuration);
+    },
+    passive,
+  );
 
-  el.addEventListener('touchmove', () => {
-    clearTimeout(longPressCountdown);
-  });
+  el.addEventListener(
+    'touchmove',
+    () => {
+      clearTimeout(longPressCountdown);
+    },
+    passive,
+  );
 
-  el.addEventListener('touchcancel', () => {
-    clearTimeout(longPressCountdown);
-  });
+  el.addEventListener(
+    'touchcancel',
+    () => {
+      clearTimeout(longPressCountdown);
+    },
+    passive,
+  );
 
-  el.addEventListener('touchend', () => {
-    clearTimeout(longPressCountdown);
-  });
+  el.addEventListener(
+    'touchend',
+    () => {
+      clearTimeout(longPressCountdown);
+    },
+    passive,
+  );
 }
 
 export function bindMobileMousedown(

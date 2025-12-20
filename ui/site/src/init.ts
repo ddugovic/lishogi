@@ -66,38 +66,37 @@ export function init(): void {
     $('#friend_box').friends();
     $('.chat__members').watchers();
 
-    $('#main-wrap')
-      .on('mousedown touchstart', '.autoselect', function (this: HTMLElement, e: any) {
-        if (this === document.activeElement) return;
-        e.preventDefault();
-        this.focus();
-        $(this).trigger('select');
-      })
-      .on('click', 'button.copy', function (this: HTMLElement) {
-        $(`#${$(this).data('rel')}`).trigger('select');
-        const targetId = $(this).data('rel');
-        const textToCopy = $(`#${targetId}`).val() as string;
-        navigator.clipboard
-          .writeText(textToCopy)
-          .then(() => {
-            this.classList.add('copied');
+    $('#main-wrap').on('pointerdown', '.autoselect', function (e) {
+      if (this === document.activeElement) return;
+      e.preventDefault();
+      this.focus();
+      $(this).trigger('select');
+    });
+    $('#main-wrap').on('click', 'button.copy', function (this: HTMLElement) {
+      $(`#${$(this).data('rel')}`).trigger('select');
+      const targetId = $(this).data('rel');
+      const textToCopy = $(`#${targetId}`).val() as string;
+      navigator.clipboard
+        .writeText(textToCopy)
+        .then(() => {
+          this.classList.add('copied');
 
-            const prevTimeout = domData.get<number>(this, 'copyTimeout');
-            if (prevTimeout) clearTimeout(prevTimeout);
+          const prevTimeout = domData.get<number>(this, 'copyTimeout');
+          if (prevTimeout) clearTimeout(prevTimeout);
 
-            domData.set(
-              this,
-              'copyTimeout',
-              setTimeout(() => {
-                this.classList.remove('copied');
-                domData.set(this, 'copyTimeout', undefined);
-              }, 2000),
-            );
-          })
-          .catch(err => {
-            console.error('Failed to copy text: ', err);
-          });
-      });
+          domData.set(
+            this,
+            'copyTimeout',
+            setTimeout(() => {
+              this.classList.remove('copied');
+              domData.set(this, 'copyTimeout', undefined);
+            }, 2000),
+          );
+        })
+        .catch(err => {
+          console.error('Failed to copy text: ', err);
+        });
+    });
 
     $(document).on('click', 'a.relation-button', function (this: HTMLAnchorElement) {
       const $a = $(this).addClass('processing').css('opacity', 0.3);
