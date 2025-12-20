@@ -37,7 +37,7 @@ object search {
                   td(cls := "info")(
                     momentFromNow(view.post.createdAt),
                     br,
-                    authorLink(view.post, withModIcon = ~view.post.modIcon),
+                    authorLink(view.post),
                   )
                 tr(cls := "paginated")(
                   if (view.categ.team.forall(myTeamIds.contains))

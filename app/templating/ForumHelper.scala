@@ -24,11 +24,12 @@ trait ForumHelper { self: UserHelper with StringHelper with HasEnv =>
   def authorName(post: Post)(implicit lang: Lang) =
     post.userId match {
       case Some(userId) =>
-        showUsernameById(
-          userId.some,
-          withLink = false,
-          withOnline = true,
-          withModIcon = ~post.modIcon,
+        div(cls := List("mod-icon" -> ~post.modIcon))(
+          showUsernameById(
+            userId.some,
+            withLink = false,
+            withOnline = true,
+          ),
         )
       case None => anonSpan
     }
@@ -36,15 +37,15 @@ trait ForumHelper { self: UserHelper with StringHelper with HasEnv =>
   def authorLink(
       post: Post,
       withOnline: Boolean = true,
-      withModIcon: Boolean = false,
   )(implicit lang: Lang): Frag =
     if (post.erased) span(cls := "author")("<erased>")
     else
       post.userId.fold(anonSpan) { userId =>
-        showUsernameById(
-          userId.some,
-          withOnline = withOnline,
-          withModIcon = withModIcon,
+        div(cls := List("mod-icon" -> ~post.modIcon))(
+          showUsernameById(
+            userId.some,
+            withOnline = withOnline,
+          ),
         )
       }
 }

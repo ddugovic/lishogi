@@ -89,7 +89,6 @@ trait UserHelper {
       withFlag: Boolean = true,
       withLink: Boolean = true,
       withModLink: Boolean = false,
-      withModIcon: Boolean = false,
   )(implicit lang: Lang): Frag =
     userIdOption.flatMap(lightUser).fold[Frag](anonSpan) { user =>
       showUsernameLight(
@@ -100,7 +99,6 @@ trait UserHelper {
         withFlag = withFlag,
         withLink = withLink,
         withModLink = withModLink,
-        withModIcon = withModIcon,
       )
     }
 
@@ -112,7 +110,6 @@ trait UserHelper {
       withFlag: Boolean = true,
       withLink: Boolean = true,
       withModLink: Boolean = false,
-      withModIcon: Boolean = false,
   )(implicit lang: Lang): Tag =
     renderUsername(
       username = user.name,
@@ -125,7 +122,6 @@ trait UserHelper {
       withFlag = withFlag,
       withLink = withLink,
       withModLink = withModLink,
-      withModIcon = withModIcon,
     )
 
   def showUsername(
@@ -136,7 +132,6 @@ trait UserHelper {
       withFlag: Boolean = true,
       withLink: Boolean = true,
       withModLink: Boolean = false,
-      withModIcon: Boolean = false,
   )(implicit lang: Lang): Tag =
     renderUsername(
       username = user.username,
@@ -149,7 +144,6 @@ trait UserHelper {
       withFlag = withFlag,
       withLink = withLink,
       withModLink = withModLink,
-      withModIcon = withModIcon,
     )
 
   private def renderUsername(
@@ -163,7 +157,6 @@ trait UserHelper {
       withFlag: Boolean,
       withLink: Boolean,
       withModLink: Boolean,
-      withModIcon: Boolean,
   )(implicit lang: Lang): Tag = {
     val userCls = userClass(username, withOnline, withPowerTip)
     val isBot   = title has lila.user.Title.BOT.value

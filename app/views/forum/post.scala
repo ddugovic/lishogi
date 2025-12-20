@@ -43,10 +43,7 @@ object post {
     st.article(cls := List("forum-post" -> true, "erased" -> post.erased), id := post.number)(
       div(cls := "forum-post__metas")(
         div(cls := s"author${(topic.userId == post.userId) ?? " author--op"}")(
-          authorLink(
-            post = post,
-            withModIcon = ~post.modIcon,
-          ),
+          authorLink(post = post),
           a(href := url)(
             post.updatedAt
               .map { updatedAt =>
