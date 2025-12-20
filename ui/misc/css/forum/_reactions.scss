@@ -3,7 +3,7 @@
 @use 'pkg:common/theme';
 
 .reactions {
-  @extend %flex-center;
+  @extend %flex-center, %box-radius-force;
 
   font-size: 1.1em;
 
@@ -22,15 +22,11 @@
 
     &.mine {
       background: theme.$m-primary_bg-box_mix_10;
-
-      &:first-child {
-        @extend %box-radius-left;
-      }
-
-      &:last-child {
-        @extend %box-radius-right;
-      }
     }
+  }
+
+  button:nth-last-child(1 of .mine) {
+    @extend %box-radius-right;
   }
 
   button.no {
@@ -46,6 +42,10 @@
       filter: grayscale(0%);
       background: theme.$m-primary_bg-box_mix_15;
 
+      &:not(.mine) {
+        @extend %box-radius;
+      }
+
       img {
         transform: scale(1.2) !important;
       }
@@ -55,6 +55,14 @@
   button.yes {
     order: 0;
     opacity: 1;
+
+    &:hover {
+      background: theme.$m-primary_bg-box_mix_15;
+
+      &:not(.mine) {
+        @extend %box-radius;
+      }
+    }
   }
 
   img {
@@ -62,6 +70,6 @@
     height: 20px;
     transition: transform 0.15s cubic-bezier(0.2, 0, 0.13, 2);
     pointer-events: none;
-    margin-right: 0.4em;
+    margin: 0 0.2em;
   }
 }
