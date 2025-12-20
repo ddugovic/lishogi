@@ -1,5 +1,7 @@
 package lila.user
 
+import play.api.i18n.Lang
+
 case class Profile(
     country: Option[String] = None,
     location: Option[String] = None,
@@ -9,10 +11,15 @@ case class Profile(
     links: Option[String] = None,
 ) {
 
-  def nonEmptyRealName =
-    List(ne(firstName), ne(lastName)).flatten match {
-      case Nil   => none
-      case names => (names mkString " ").some
+  def nonEmptyRealName(lang: => Option[Lang]) =
+    (ne(firstName), ne(lastName)) match {
+      case (None, None) => none
+      case (f, l) =>
+        val ordered =
+          if (lang.exists(_.language == "ja")) List(l, f)
+          else List(f, l)
+
+        ordered.flatten.mkString(" ").some
     }
 
   def countryInfo = country flatMap Countries.info
@@ -23,10 +30,7 @@ case class Profile(
 
   def nonEmptyBio = ne(bio)
 
-  def isEmpty = completionPercent == 0
-
-  def completionPercent: Int =
-    100 * List(country, bio, firstName, lastName).count(_.isDefined) / 4
+  def isEmpty = List(country, bio, firstName, lastName).count(_.isDefined) == 0
 
   def actualLinks: List[Link] = links ?? Links.make
 

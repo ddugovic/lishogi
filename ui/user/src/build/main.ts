@@ -1,6 +1,17 @@
 import * as domData from 'common/data';
 
 window.lishogi.ready.then(() => {
+  $('.click-menu-open').on('click', e => {
+    e.stopPropagation();
+
+    const $menu = $('.click-menu');
+    $menu.toggleNone();
+
+    $(document).one('click', () => {
+      $menu.toggleNone(false);
+    });
+  });
+
   $('.user-show .note-zone-toggle').each(function (this: HTMLElement) {
     $(this).on('click', () => {
       $('.user-show .note-zone').toggle();

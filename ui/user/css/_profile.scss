@@ -4,9 +4,11 @@
 @use 'rating-history';
 
 #us_profile {
-  @extend %flex-center;
+  @extend %flex-wrap;
 
   border-top: theme.$border;
+  background-color: theme.$c-border;
+  gap: 1px;
 
   .warning {
     @extend %box-radius, %flex-center-nowrap;
@@ -26,35 +28,118 @@
     margin: 10px 0;
   }
 
+  .rating-history-container {
+    background: theme.$c-bg-box;
+  }
+
   .profile-side {
     @extend %flex-column;
 
     flex: 1 0 300px;
-    height: 100%; // 332px;
-    border-left: theme.$border;
+    min-height: 350px;
+    background: theme.$c-bg-box;
     overflow: hidden;
+
+    .user-infos {
+      @include mixins.hoverflow;
+      @extend %flex-column;
+
+      flex: 1 1 auto;
+      padding: 0.8em;
+      overflow: auto;
+
+      .ps-personal {
+        *::before {
+          color: theme.$c-font-dimmer;
+        }
+
+        .name {
+          &::before {
+            vertical-align: text-top;
+          }
+        }
+
+        .location {
+          margin-left: 1em;
+        }
+
+        .country {
+          margin-left: 0.4em;
+
+          img.flag {
+            height: 1.3em;
+            margin: 0;
+          }
+        }
+      }
+
+      .profile-times {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 1em;
+
+        p {
+          margin-right: 1em;
+          margin-bottom: 0;
+        }
+      }
+
+      .bio {
+        @extend %break-word;
+
+        margin-bottom: auto;
+
+        img {
+          max-width: 100%;
+          max-height: 260px;
+        }
+      }
+
+      .social_links,
+      .teams {
+        display: flex;
+        flex-flow: row wrap;
+        margin-bottom: 0.5rem;
+
+        .title {
+          font-weight: bold;
+          flex-basis: 100%;
+        }
+
+        > a {
+          @extend %nowrap-ellipsis;
+
+          flex: 0 0 33%;
+        }
+      }
+    }
   }
+}
 
-  .country img.flag {
-    margin: 0 0.5em 0.5em 0;
-    height: 1.3em;
-  }
+.stats {
+  display: flex;
+  border-top: theme.$border;
 
-  .user-infos {
-    flex: 1 1 auto;
-    padding: 0.8em;
-    overflow: auto;
+  .stats_badge {
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    text-align: center;
 
-    @include mixins.hoverflow;
+    time {
+      display: block;
+      margin-top: 0.1rem;
+    }
   }
 
   .insights {
     @extend %flex-center-nowrap;
 
-    flex: 0 0 auto;
-    padding: 0.5em 1em;
-    border-top: theme.$border;
+    padding: 0.5em 3em;
     color: theme.$c-link;
+    border-left: theme.$border;
+    text-align: center;
 
     strong {
       display: block;
@@ -77,31 +162,6 @@
 
       background: theme.$c-primary;
       color: theme.$c-primary-over;
-    }
-  }
-
-  .col2 {
-    display: flex;
-    flex-flow: row wrap;
-
-    > a {
-      @extend %nowrap-ellipsis;
-
-      flex: 0 0 50%;
-    }
-
-    &.teams {
-      padding-top: 1rem;
-    }
-  }
-
-  .bio {
-    @extend %break-word;
-
-    font-style: italic;
-
-    img {
-      max-width: 100%;
     }
   }
 }

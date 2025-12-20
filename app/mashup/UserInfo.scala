@@ -19,7 +19,6 @@ case class UserInfo(
     hasSimul: Boolean,
     ratingChart: Option[String],
     nbs: UserInfo.NbGames,
-    nbFollowers: Int,
     nbBlockers: Option[Int],
     nbPosts: Int,
     nbStudies: Int,
@@ -135,7 +134,6 @@ object UserInfo {
   )(implicit ec: scala.concurrent.ExecutionContext) {
     def apply(user: User, nbs: NbGames, ctx: Context): Fu[UserInfo] =
       (ctx.noBlind ?? ratingChartApi(user)).mon(_.user segment "ratingChart") zip
-        relationApi.countFollowers(user.id).mon(_.user segment "nbFollowers") zip
         (ctx.me ?? Granter(_.UserSpy) ?? { relationApi.countBlockers(user.id) dmap some })
           .mon(_.user segment "nbBlockers") zip
         postApi.nbByUser(user.id).mon(_.user segment "nbPosts") zip
@@ -154,7 +152,7 @@ object UserInfo {
         (nbs.playing > 0) ?? isHostingSimul(user.id).mon(_.user segment "simul") zip
         userCached.rankingsOf(user.id) map {
           // format: off
-          case ((((((((((((((ratingChart, nbFollowers), nbBlockers), nbPosts), nbStudies), trophies), shields), revols), teamIds), isCoach), isStreamer), insightsVisible), completionRate), hasSimul), ranks) =>
+          case (((((((((((((ratingChart, nbBlockers), nbPosts), nbStudies), trophies), shields), revols), teamIds), isCoach), isStreamer), insightsVisible), completionRate), hasSimul), ranks) =>
           // format: on
             new UserInfo(
               user = user,
@@ -162,7 +160,6 @@ object UserInfo {
               nbs = nbs,
               hasSimul = hasSimul,
               ratingChart = ratingChart,
-              nbFollowers = nbFollowers,
               nbBlockers = nbBlockers,
               nbPosts = nbPosts,
               nbStudies = nbStudies,

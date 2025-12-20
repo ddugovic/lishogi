@@ -26,7 +26,8 @@
     }
   }
 
-  &__social {
+  &__numbers,
+  &__sub-header {
     @extend %flex-between;
 
     background: theme.$c-bg-zebra;
@@ -36,26 +37,28 @@
     }
 
     .user-actions {
+      position: relative;
       margin: 1em;
+      overflow: visible;
 
       form {
         display: inline;
       }
-    }
 
-    .relation-actions {
-      @extend %flex-center-nowrap;
-
-      border-right: theme.$border;
-    }
-
-    .btn-rack.user-actions {
       .btn-rack__btn {
         font-size: 1.1rem;
         padding: 0.35rem 1.5rem;
 
         @include breakpoint.breakpoint(uniboard.$mq-col1-uniboard) {
           padding: 0.4rem 0.7rem;
+        }
+
+        &:first-child {
+          @extend %box-radius-left;
+        }
+
+        &:last-child {
+          @extend %box-radius-right;
         }
       }
     }
@@ -85,7 +88,7 @@
   .new-player {
     padding: 1.5em 3.5em;
     overflow-y: scroll;
-    border-right: theme.$border;
+    background: theme.$c-bg-box;
 
     h2 {
       font-size: 1.5em;
@@ -100,15 +103,9 @@
       line-height: 1.5em;
     }
 
-    + .profile-side {
-      border-left: none !important;
-    }
-
     @include breakpoint.breakpoint(uniboard.$mq-col1-uniboard) {
       width: 100%;
       padding: 0.8em;
-      border-right: none;
-      border-bottom: theme.$border;
     }
   }
 
@@ -137,5 +134,35 @@
 
   .activity {
     margin-bottom: 2em;
+  }
+}
+
+.click-menu {
+  @extend %box-neat-force;
+
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  top: calc(100% + 3px);
+  right: 0;
+  z-index: 100;
+  background-color: theme.$c-bg-zebra;
+  border: theme.$border;
+
+  a {
+    width: 100%;
+    padding: 1rem;
+    color: theme.$c-font;
+
+    &::before {
+      margin-right: 0.4em;
+    }
+
+    &:hover {
+      @extend %metal-hover;
+
+      color: theme.$c-font;
+    }
   }
 }

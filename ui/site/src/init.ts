@@ -99,12 +99,14 @@ export function init(): void {
           });
       });
 
-    $('body').on('click', 'a.relation-button', function (this: HTMLAnchorElement) {
+    $(document).on('click', 'a.relation-button', function (this: HTMLAnchorElement) {
       const $a = $(this).addClass('processing').css('opacity', 0.3);
-      window.lishogi.xhr.text('POST', this.href).then(html => {
-        if (html.includes('relation-actions')) $a.parent().replaceWith(html);
-        else $a.replaceWith(html);
-      });
+      const post = window.lishogi.xhr.text('POST', this.href);
+      if ($a.closest('.click-menu').length) reload();
+      else
+        post.then(html => {
+          $a.replaceWith(html);
+        });
       return false;
     });
 

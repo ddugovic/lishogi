@@ -76,17 +76,9 @@ object bits {
               td(showUsername(r.user)),
               td(showBestPerf(r.user)),
               td(trans.nbGames.pluralSame(r.user.count.game)),
-              td(
-                actions(
-                  r.user.id,
-                  relation = r.relation,
-                  followable = r.followable,
-                  blocked = false,
-                ),
-              ),
             )
           },
         )
-      else tbody(tr(td(colspan := 2)("None found.", br))),
+      else tbody(tr(td(colspan := 2)(trans.study.noneYet(), br))),
     )
 }

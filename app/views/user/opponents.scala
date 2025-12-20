@@ -34,9 +34,6 @@ object opponents {
                   )
                 },
               ),
-              td(
-                relation.actions(r.user.id, r.relation, followable = r.followable, blocked = false),
-              ),
             )
           }
           else tr(td(trans.none())),

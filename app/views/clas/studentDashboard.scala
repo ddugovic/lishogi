@@ -47,7 +47,9 @@ object studentDashboard {
                 showUsername(
                   user,
                 ),
-                user.profile.flatMap(_.nonEmptyRealName) map { name => em(s" (${name})") },
+                user.profile.flatMap(_.nonEmptyRealName(user.realLang)) map { name =>
+                  em(s" (${name})")
+                },
               ),
               td(
                 user.seenAt.map { seen =>

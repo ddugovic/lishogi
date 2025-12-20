@@ -34,9 +34,8 @@ object communication {
           div(cls := "title")(showUsername(u), " communications"),
           div(cls := "actions")(
             a(
-              cls  := "button button-empty mod-zone-toggle",
-              href := routes.User.mod(u.username),
-              titleOrText("Mod zone (Hotkey: m)"),
+              cls      := "button button-empty mod-zone-toggle",
+              href     := routes.User.mod(u.username),
               dataIcon := Icons.agent,
             ),
             isGranted(_.ViewPrivateComms) option {

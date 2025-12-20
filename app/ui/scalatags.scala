@@ -10,8 +10,6 @@ import scalatags.Text.Cap
 import scalatags.Text.all._
 import scalatags.text.Builder
 
-import lila.api.Context
-
 // collection of lila attrs
 trait ScalatagsAttrs {
   val dataAssetUrl     = attr("data-asset-url")
@@ -170,15 +168,6 @@ trait ScalatagsExtensions {
       }
     }
 
-  def titleOrText(blind: Boolean, v: String): Modifier =
-    new Modifier {
-      def applyTo(t: Builder) = {
-        if (blind) t.addChild(v)
-        else t.setAttr("title", Builder.GenericAttrValueSource(v))
-      }
-    }
-
-  def titleOrText(v: String)(implicit ctx: Context): Modifier = titleOrText(ctx.blind, v)
 }
 
 object ScalatagsExtensions extends ScalatagsExtensions

@@ -61,6 +61,14 @@
   .sub {
     margin: 3px 0;
     font-size: 1rem;
+
+    a {
+      color: theme.$c-font;
+
+      &:hover {
+        color: theme.$c-link;
+      }
+    }
   }
 
   .sub:last-child {

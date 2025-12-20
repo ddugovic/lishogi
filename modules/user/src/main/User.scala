@@ -51,7 +51,7 @@ case class User(
     countryCode = countryInfo.map(_.code),
   )
 
-  def realNameOrUsername = profileOrDefault.nonEmptyRealName | username
+  def realNameOrUsername = profileOrDefault.nonEmptyRealName(realLang) | username
 
   def realLang = lang flatMap Lang.get
 

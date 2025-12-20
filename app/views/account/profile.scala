@@ -9,12 +9,6 @@ import lila.app.ui.ScalatagsTemplate._
 
 object profile {
 
-  private val linksHelp = frag(
-    "Twitter, Facebook, GitHub, 81dojo.com, ...",
-    br,
-    "One URL per line.",
-  )
-
   def apply(u: lila.user.User, form: play.api.data.Form[_])(implicit ctx: Context) =
     account.layout(
       title = s"${u.username} - ${trans.editProfile.txt()}",
@@ -38,16 +32,26 @@ object profile {
             },
             form3.group(form("location"), trans.location(), half = true)(form3.input(_)),
           ),
+          form3.split(
+            form3.group(form("firstName"), trans.firstName(), half = true)(form3.input(_)),
+            form3.group(form("lastName"), trans.lastName(), half = true)(form3.input(_)),
+          ),
           ctx.noKid option
             form3.group(form("bio"), trans.biography(), help = trans.biographyDescription().some) {
               f =>
                 form3.textarea(f)(rows := 5)
             },
-          form3.split(
-            form3.group(form("firstName"), trans.firstName(), half = true)(form3.input(_)),
-            form3.group(form("lastName"), trans.lastName(), half = true)(form3.input(_)),
-          ),
-          form3.group(form("links"), trans.socialMediaLinks(), help = Some(linksHelp)) { f =>
+          form3.group(
+            form("links"),
+            trans.socialMediaLinks(),
+            help = Some(
+              frag(
+                "X (Twitter), Instagram, 81dojo.com, Lichess, YouTube, Twitch, GitHub...",
+                br,
+                trans.oneUrlPerLine.txt(),
+              ),
+            ),
+          ) { f =>
             form3.textarea(f)(rows := 5)
           },
           form3.action(form3.submit(trans.apply())),
