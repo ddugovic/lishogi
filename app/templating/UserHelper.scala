@@ -117,7 +117,7 @@ trait UserHelper {
     renderUsername(
       username = user.name,
       isPatron = user.isPatron,
-      isBot = user.isBot,
+      title = user.title,
       rating = rating,
       flag = user.countryCode,
       withOnline = withOnline,
@@ -141,7 +141,7 @@ trait UserHelper {
     renderUsername(
       username = user.username,
       isPatron = user.isPatron,
-      isBot = user.isBot,
+      title = user.title.map(_.value),
       rating = rating,
       flag = user.countryCode,
       withOnline = withOnline,
@@ -155,7 +155,7 @@ trait UserHelper {
   private def renderUsername(
       username: String,
       isPatron: Boolean,
-      isBot: Boolean,
+      title: Option[String],
       rating: Option[Int],
       flag: Option[String],
       withOnline: Boolean,
@@ -166,11 +166,18 @@ trait UserHelper {
       withModIcon: Boolean,
   )(implicit lang: Lang): Tag = {
     val userCls = userClass(username, withOnline, withPowerTip)
+    val isBot   = title has lila.user.Title.BOT.value
     val tag =
-      if (withLink) a(cls := userCls, href     := userUrl(username, mod = withModLink))
-      else span(cls       := userCls, dataHref := userUrl(username, mod = withModLink))
+      if (withLink)
+        a(cls := userCls, dataUserTitle := title, href := userUrl(username, mod = withModLink))
+      else
+        span(
+          cls           := userCls,
+          dataUserTitle := title,
+          dataHref      := userUrl(username, mod = withModLink),
+        )
     tag(
-      withOnline ?? (if (withModIcon) moderatorIcon else lineIcon(isPatron)),
+      withOnline ?? lineIcon(isPatron),
       if (isBot) botTag.some
       else rating.map(rankTag),
       username,

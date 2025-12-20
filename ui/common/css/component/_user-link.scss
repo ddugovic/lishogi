@@ -53,9 +53,23 @@
   &[href='/@/lishogi'],
   &[data-href='/@/lishogi'] {
     .line::before {
-      content: icons.$agent;
+      content: icons.$agent !important;
     }
   }
+
+  &[data-user-title='ADMIN'] {
+    .line::before {
+      content: icons.$logo !important;
+    }
+
+    &.online .line {
+      color: theme.$c-brag;
+    }
+  }
+}
+
+.mod-icon .user-link .line::before {
+  content: icons.$agent !important;
 }
 
 .bot-tag,
@@ -74,7 +88,7 @@ img.flag {
   margin-left: 0.37em;
   user-select: none;
   vertical-align: middle;
-  transform: translateY(-0.065em);
+  transform: translateY(-0.055em);
   outline: theme.$border;
   border-radius: 3px;
   overflow: hidden;

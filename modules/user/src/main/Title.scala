@@ -23,6 +23,7 @@ object Title {
     Title("LP"),
     LM,
     BOT,
+    Title("ADMIN"),
   )
 
   private def englishName(title: Title): String = title.value match {
@@ -34,11 +35,12 @@ object Title {
   }
 
   private def japaneseName(title: Title): String = title.value match {
-    case "PRO" => "プロ棋士"
-    case "LP"  => "女流棋士"
-    case "LM"  => "Lishogi マスター"
-    case "BOT" => "将棋ロボット"
-    case _     => title.value
+    case "PRO"   => "プロ棋士"
+    case "LP"    => "女流棋士"
+    case "LM"    => "Lishogi マスター"
+    case "BOT"   => "将棋ロボット"
+    case "ADMIN" => "管理者"
+    case _       => title.value
   }
 
   def trans(title: Title)(implicit lang: Lang) =

@@ -30,7 +30,7 @@ trait ScalatagsAttrs {
   val dataRel          = attr("data-rel")
   val novalidate       = attr("novalidate").empty
   val datetimeAttr     = attr("datetime")
-  val dataBotAttr      = attr("data-bot").empty
+  val dataUserTitle    = attr("data-user-title").empty
   val deferAttr        = attr("defer").empty
   object frame {
     val scrolling       = attr("scrolling")
