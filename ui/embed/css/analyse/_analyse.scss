@@ -74,7 +74,14 @@ body {
   }
 }
 
-sg-board {
-  border-radius: 0;
-  box-shadow: none;
+.analyse__board {
+  .sg-wrap {
+    gap: 2vmin;
+    padding: 0;
+
+    sg-board {
+      border-radius: 0;
+      box-shadow: none;
+    }
+  }
 }
