@@ -1,5 +1,6 @@
 import { Textcomplete } from '@textcomplete/core';
 import { TextareaEditor } from '@textcomplete/textarea';
+import { setupTranslator } from 'i18n/translator';
 
 window.lishogi.ready.then(() => {
   $('.forum')
@@ -115,4 +116,8 @@ window.lishogi.ready.then(() => {
       }
     });
   });
+
+  setTimeout(() => {
+    setupTranslator('.forum-post__message, .title-wrap h1');
+  }, 0);
 });

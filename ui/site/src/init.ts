@@ -50,7 +50,10 @@ export function init(): void {
     function renderFlatpickr() {
       if (window.flatpickr) {
         document.querySelectorAll('.flatpickr--init').forEach(el => {
-          const fp = window.flatpickr(el, { enableTime: true, time_24hr: true });
+          const fp = window.flatpickr(el, {
+            enableTime: !el.classList.contains('flatpickr--no-time'),
+            time_24hr: true,
+          });
           if (el.classList.contains('flatpickr--disabled')) fp._input.disabled = true;
         });
       }

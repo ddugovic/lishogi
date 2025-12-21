@@ -98,13 +98,15 @@ object topic {
       val teamOnly = categ.team.filterNot(myTeam)
 
       main(cls := "forum forum-topic box box-pad")(
-        h1(
-          a(
-            href     := routes.ForumCateg.show(categ.slug),
-            dataIcon := Icons.left,
-            cls      := "text",
+        div(cls := "title-wrap")(
+          h1(
+            a(
+              href     := routes.ForumCateg.show(categ.slug),
+              dataIcon := Icons.left,
+              cls      := "text",
+            ),
+            topic.name,
           ),
-          topic.name,
         ),
         div(cls := "forum-topic__posts")(
           posts.currentPageResults.map { p =>
