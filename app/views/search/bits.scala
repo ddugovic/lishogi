@@ -4,9 +4,6 @@ import scala.util.chaining._
 
 import play.api.data.Form
 
-import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
-
 import lila.api.Context
 import lila.app.templating.Environment._
 import lila.app.ui.ScalatagsTemplate._
@@ -16,11 +13,6 @@ import lila.gameSearch.Sorting
 private object bits {
 
   import trans.search._
-
-  private val dateFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-  private val dateMin       = "2011-01-01"
-  private def dateMinMax: List[Modifier] =
-    List(min := dateMin, max := dateFormatter.print(DateTime.now.plusDays(1)))
 
   def of(form: Form[_])(implicit ctx: Context) =
     new {
@@ -69,7 +61,8 @@ private object bits {
           )
         }
 
-      def rating =
+      def rating = {
+        val options = Query.averageRatings.map(v => (v, trans.averageRatingX.txt(v)))
         tr(
           th(
             label(
@@ -82,15 +75,16 @@ private object bits {
             div(cls := "half")(
               from(),
               " ",
-              form3.select(form("ratingMin"), Query.averageRatings, "".some),
+              form3.select(form("ratingMin"), options, "".some),
             ),
             div(cls := "half")(
               to(),
               " ",
-              form3.select(form("ratingMax"), Query.averageRatings, "".some),
+              form3.select(form("ratingMax"), options, "".some),
             ),
           ),
         )
+      }
 
       def hasAi =
         tr(
@@ -101,26 +95,42 @@ private object bits {
               span(cls := "help", title := humanOrComputer.txt())("(?)"),
             ),
           ),
-          td(cls := "single opponent")(form3.select(form("hasAi"), Query.hasAis, "".some)),
+          td(cls := "single opponent")(
+            form3.select(
+              form("hasAi"),
+              Query.hasAis.map(v => (v, if (v != 0) trans.computer.txt() else trans.human.txt())),
+              "".some,
+            ),
+          ),
         )
 
-      def aiLevel =
+      def aiLevel = {
+        val options = Query.aiLevels.map(v => (v, trans.levelX.txt(v)))
         tr(cls := "aiLevel none")(
           th(label(trans.search.aiLevel())),
           td(
             div(cls := "half")(
               from(),
               " ",
-              form3.select(form("aiLevelMin"), Query.aiLevels, "".some),
+              form3.select(form("aiLevelMin"), options, "".some),
             ),
-            div(cls := "half")(to(), " ", form3.select(form("aiLevelMax"), Query.aiLevels, "".some)),
+            div(cls := "half")(to(), " ", form3.select(form("aiLevelMax"), options, "".some)),
           ),
         )
+      }
 
       def source =
         tr(
           th(label(`for` := form3.id(form("source")))(trans.search.source())),
-          td(cls := "single")(form3.select(form("source"), Query.sources, "".some)),
+          td(cls := "single")(
+            form3.select(
+              form("source"),
+              Query.sources.map(v =>
+                (v, sourceName(lila.game.Source(v).getOrElse(lila.game.Source.Lobby))),
+              ),
+              "".some,
+            ),
+          ),
         )
 
       def perf =
@@ -140,19 +150,28 @@ private object bits {
       def mode =
         tr(
           th(label(`for` := form3.id(form("mode")))(trans.mode())),
-          td(cls := "single")(form3.select(form("mode"), Query.modes, "".some)),
-        )
-
-      def turns =
-        tr(
-          th(label(nbTurns())),
-          td(
-            div(cls := "half")(from(), " ", form3.select(form("pliesMin"), Query.plies, "".some)),
-            div(cls := "half")(to(), " ", form3.select(form("pliesMax"), Query.plies, "".some)),
+          td(cls := "single")(
+            form3.select(
+              form("mode"),
+              Query.modes.map(v => (v, modeName(shogi.Mode.orDefault(v)))),
+              "".some,
+            ),
           ),
         )
 
-      def duration =
+      def turns = {
+        val options = Query.plies.map(v => (v, trans.nbMoves.txt(v)))
+        tr(
+          th(label(nbTurns())),
+          td(
+            div(cls := "half")(from(), " ", form3.select(form("pliesMin"), options, "".some)),
+            div(cls := "half")(to(), " ", form3.select(form("pliesMax"), options, "".some)),
+          ),
+        )
+      }
+
+      def duration = {
+        val options = translatedTimes(Query.clockInits)
         tr(
           tr(
             th(label(trans.duration())),
@@ -160,86 +179,116 @@ private object bits {
               div(cls := "half")(
                 from(),
                 " ",
-                form3.select(form("durationMin"), Query.durations, "".some),
+                form3.select(form("durationMin"), options, "".some),
               ),
               div(cls := "half")(
                 to(),
                 " ",
-                form3.select(form("durationMax"), Query.durations, "".some),
+                form3.select(form("durationMax"), options, "".some),
               ),
             ),
           ),
         )
+      }
 
-      def clockTime =
+      def clockTime = {
+        val options = translatedTimes(Query.clockInits)
         tr(
           th(label(trans.clockInitialTime())),
           td(
             div(cls := "half")(
               from(),
               " ",
-              form3.select(form("clock")("initMin"), Query.clockInits, "".some),
+              form3.select(form("clock")("initMin"), options, "".some),
             ),
             div(cls := "half")(
               to(),
               " ",
-              form3.select(form("clock")("initMax"), Query.clockInits, "".some),
+              form3.select(form("clock")("initMax"), options, "".some),
             ),
           ),
         )
+      }
 
-      def clockIncrement =
+      def clockIncrement = {
+        val options = translatedTimes(Query.clockIncs, forceSeconds = true)
         tr(
           th(label(trans.clockIncrement())),
           td(
             div(cls := "half")(
               from(),
               " ",
-              form3.select(form("clock")("incMin"), Query.clockIncs, "".some),
+              form3.select(form("clock")("incMin"), options, "".some),
             ),
             div(cls := "half")(
               to(),
               " ",
-              form3.select(form("clock")("incMax"), Query.clockIncs, "".some),
+              form3.select(form("clock")("incMax"), options, "".some),
             ),
           ),
         )
+      }
 
-      def clockByoyomi =
+      def clockByoyomi = {
+        val options = translatedTimes(Query.clockByos, forceSeconds = true)
         tr(
           th(label(trans.clockByoyomi())),
           td(
             div(cls := "half")(
               from(),
               " ",
-              form3.select(form("clock")("byoMin"), Query.clockByos, "".some),
+              form3.select(form("clock")("byoMin"), options, "".some),
             ),
             div(cls := "half")(
               to(),
               " ",
-              form3.select(form("clock")("byoMax"), Query.clockByos, "".some),
+              form3.select(form("clock")("byoMax"), options, "".some),
             ),
           ),
         )
+      }
 
       def status =
         tr(
           th(label(`for` := form3.id(form("status")))(result())),
-          td(cls := "single")(form3.select(form("status"), Query.statuses, "".some)),
+          td(cls := "single")(
+            form3.select(
+              form("status"),
+              Query.statuses.map(v =>
+                (v, statusName(shogi.Status(v).getOrElse(shogi.Status.UnknownFinish))),
+              ),
+              "".some,
+            ),
+          ),
         )
 
       def winnerColor =
         tr(
           th(label(`for` := form3.id(form("winnerColor")))(trans.search.winnerColor())),
-          td(cls := "single")(form3.select(form("winnerColor"), Query.winnerColors, "".some)),
+          td(cls := "single")(
+            form3.select(
+              form("winnerColor"),
+              Query.winnerColors.map(v =>
+                (v, Query.winnerColorsToColor(v).map(standardColorName).getOrElse("-")),
+              ),
+            ),
+          ),
         )
 
       def date =
         tr(cls := "date")(
           th(label(trans.search.date())),
           td(
-            div(cls := "half")(from(), " ", form3.input(form("dateMin"), "date")(dateMinMax: _*)),
-            div(cls := "half")(to(), " ", form3.input(form("dateMax"), "date")(dateMinMax: _*)),
+            div(cls := "half")(
+              from(),
+              " ",
+              form3.flatpickr(form("dateMin"), init = true, noTime = true),
+            ),
+            div(cls := "half")(
+              to(),
+              " ",
+              form3.flatpickr(form("dateMax"), init = true, noTime = true),
+            ),
           ),
         )
 
@@ -247,8 +296,32 @@ private object bits {
         tr(
           th(label(trans.search.sortBy())),
           td(
-            div(cls := "half")(form3.select(form("sort")("field"), Sorting.fields)),
-            div(cls := "half")(form3.select(form("sort")("order"), Sorting.orders)),
+            div(cls := "half")(
+              form3.select(
+                form("sort")("field"),
+                Sorting.fields.map(v =>
+                  (
+                    v,
+                    v match {
+                      case lila.gameSearch.Fields.date          => trans.search.date.txt()
+                      case lila.gameSearch.Fields.plies         => trans.search.moves.txt()
+                      case lila.gameSearch.Fields.averageRating => trans.rating.txt()
+                    },
+                  ),
+                ),
+              ),
+            ),
+            div(cls := "half")(
+              form3.select(
+                form("sort")("order"),
+                Sorting.orders.map(v =>
+                  (
+                    v,
+                    if (v == "desc") trans.search.descending.txt() else trans.search.ascending.txt(),
+                  ),
+                ),
+              ),
+            ),
           ),
         )
 

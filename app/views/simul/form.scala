@@ -94,24 +94,24 @@ object form {
           trans.clockInitialTime(),
           help = trans.simulClockHint().some,
           half = true,
-        )(form3.select(_, clockTimeChoices)),
+        )(form3.select(_, translatedTimes(clockTimes))),
         form3.group(
           form("clockByoyomi"),
           trans.clockByoyomi(),
           half = true,
-        )(form3.select(_, clockByoyomiChoices)),
+        )(form3.select(_, translatedTimes(clockByoyomi, forceSeconds = true))),
       ),
       form3.split(
         form3.group(
           form("clockIncrement"),
           trans.clockIncrement(),
           half = true,
-        )(form3.select(_, clockIncrementChoices)),
+        )(form3.select(_, translatedTimes(clockIncrements, forceSeconds = true))),
         form3.group(
           form("periods"),
           trans.numberOfByoyomiPeriods(),
           half = true,
-        )(form3.select(_, periodsChoices)),
+        )(form3.select(_, periods.map(v => (v, v.toString)))),
       ),
       form3.split(
         form3.group(
@@ -120,7 +120,7 @@ object form {
           help = trans.simulAddExtraTime().some,
           half = true,
         )(
-          form3.select(_, clockExtraChoices),
+          form3.select(_, translatedTimes(clockExtras)),
         ),
         form3.group(form("color"), trans.hostColorForEachGame(), half = true)(
           form3.select(

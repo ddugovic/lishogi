@@ -2,6 +2,7 @@ package lila.gameSearch
 
 import org.joda.time.DateTime
 
+import shogi.Color
 import shogi.Mode
 import shogi.Status
 
@@ -58,28 +59,15 @@ object Query {
 
   import Range.rangeJsonWriter
 
-  import lila.common.Form._
   implicit private val sortingJsonWriter: OWrites[Sorting]   = Json.writes[Sorting]
   implicit private val clockingJsonWriter: OWrites[Clocking] = Json.writes[Clocking]
   implicit val jsonWriter: OWrites[Query]                    = Json.writes[Query]
 
-  val durations: List[(Int, String)] =
-    ((30, "30 seconds") ::
-      options(
-        List(60, 60 * 2, 60 * 3, 60 * 5, 60 * 10, 60 * 15, 60 * 20, 60 * 30),
-        _ / 60,
-        "%d minute{s}",
-      ).toList) :+
-      (60 * 60 * 1 -> "One hour") :+
-      (60 * 60 * 2 -> "Two hours") :+
-      (60 * 60 * 3 -> "Three hours")
+  private type Seconds = Int
 
-  val clockInits = List(
-    (0, "0 seconds"),
-    (30, "30 seconds"),
-    (45, "45 seconds"),
-  ) ::: options(
+  val durations: List[Seconds] =
     List(
+      30,
       60 * 1,
       60 * 2,
       60 * 3,
@@ -88,62 +76,62 @@ object Query {
       60 * 15,
       60 * 20,
       60 * 30,
-      60 * 45,
-      60 * 60,
-      60 * 90,
-      60 * 120,
-      60 * 150,
-      60 * 180,
-    ),
-    _ / 60,
-    "%d minute{s}",
-  ).toList
+      60 * 60 * 1,
+      60 * 60 * 2,
+      60 * 60 * 3,
+    )
 
-  val clockIncs =
-    options(List(0, 1, 2, 3, 5, 10, 15, 20, 30, 45, 60, 90, 120, 150, 180), "%d second{s}").toList
-
-  val clockByos =
-    options(List(0, 1, 2, 3, 5, 10, 15, 20, 30, 45, 60, 90, 120, 150, 180), "%d second{s}").toList
-
-  val winnerColors = List(1 -> "Sente", 2 -> "Gote", 3 -> "None")
-
-  val sources = lila.game.Source.searchable map { v =>
-    v.id -> v.name.capitalize
-  }
-
-  val modes = Mode.all map { mode =>
-    mode.id -> mode.name.capitalize
-  }
-
-  val plies = options(
-    (1 to 5) ++ (10 to 45 by 5) ++ (50 to 90 by 10) ++ (100 to 300 by 25),
-    "%d move{s}",
+  val clockInits: List[Seconds] = List(
+    0,
+    30,
+    45,
+    60 * 1,
+    60 * 2,
+    60 * 3,
+    60 * 5,
+    60 * 10,
+    60 * 15,
+    60 * 20,
+    60 * 30,
+    60 * 45,
+    60 * 60,
+    60 * 90,
+    60 * 120,
+    60 * 150,
+    60 * 180,
   )
 
-  val averageRatings = (RatingRange.min to RatingRange.max by 100).toList map { e =>
-    e -> s"$e Rating"
-  }
+  val clockIncs: List[Seconds] = List(0, 1, 2, 3, 5, 10, 15, 20, 30, 45, 60, 90, 120, 150, 180)
 
-  val hasAis = List(0 -> "Human opponent", 1 -> "Computer opponent")
+  val clockByos: List[Seconds] = List(0, 1, 2, 3, 5, 10, 15, 20, 30, 45, 60, 90, 120, 150, 180)
 
-  val aiLevels = (1 to 10) map { l =>
-    l -> ("level " + l)
-  }
+  // 1: Sente, 2: Gote, 3: None
+  val winnerColors: List[Int] = List(1, 2, 3)
+  def winnerColorsToColor(v: Int): Option[Color] =
+    if (v == 1) Color.Sente.some
+    else if (v == 2) Color.Gote.some
+    else none
 
-  val statuses = Status.finishedNotCheated.map {
-    case s if s.is(_.Timeout)           => none
-    case s if s.is(_.NoStart)           => none
-    case s if s.is(_.UnknownFinish)     => none
-    case s if s.is(_.Repetition)        => none
-    case s if s.is(_.Draw)              => Some(s.id -> "Draw/Repetition")
-    case s if s.is(_.Impasse27)         => Some(s.id -> "Impasse")
-    case s if s.is(_.TryRule)           => Some(s.id -> "Try rule")
-    case s if s.is(_.Outoftime)         => Some(s.id -> "Clock Flag")
-    case s if s.is(_.PerpetualCheck)    => Some(s.id -> "Perpetual check")
-    case s if s.is(_.RoyalsLost)        => Some(s.id -> "Royals lost")
-    case s if s.is(_.BareKing)          => Some(s.id -> "Bare king")
-    case s if s.is(_.SpecialVariantEnd) => Some(s.id -> "Special variant end")
-    case s if s.is(_.IllegalMove)       => Some(s.id -> "Illegal move")
-    case s                              => Some(s.id -> s.toString)
-  }.flatten
+  val sources: List[Int] = lila.game.Source.searchable.map(_.id)
+
+  val modes: List[Int] = Mode.all.map(_.id)
+
+  val plies: List[Int] =
+    ((1 to 5) ++ (10 to 45 by 5) ++ (50 to 90 by 10) ++ (100 to 300 by 25)).toList
+
+  val averageRatings: List[Int] = (RatingRange.min to RatingRange.max by 100).toList
+
+  // 0: Human, 1: Computer
+  val hasAis: List[Int] = List(0, 1)
+
+  val aiLevels: List[Int] = (1 to 10).toList
+
+  val statuses: List[Int] = Status.finishedNotCheated
+    .filterNot { s =>
+      s.is(_.Timeout) ||
+      s.is(_.NoStart) ||
+      s.is(_.UnknownFinish) ||
+      s.is(_.Repetition)
+    }
+    .map(_.id)
 }

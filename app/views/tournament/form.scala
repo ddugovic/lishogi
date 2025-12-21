@@ -158,19 +158,31 @@ object form {
         form3.group(form("conditions.nbRatedGame.nb"), frag("Minimum rated games"), half = true)(
           form3.select(
             _,
-            Condition.DataForm.nbRatedGameChoices,
+            Condition.DataForm.nbRatedGames map {
+              case 0 => (0, trans.noRestriction.txt())
+              case x => (x, trans.moreThanNbRatedGames.txt(x))
+            },
           ),
         ),
       ),
       form3.split(
         form3.group(form("conditions.minRating.rating"), frag("Minimum rating"), half = true)(
-          form3.select(_, Condition.DataForm.minRatingChoices),
+          form3.select(
+            _,
+            Condition.DataForm.minRatings map {
+              case 0 => (0, trans.noRestriction.txt())
+              case x => (x, x.toString)
+            },
+          ),
         ),
         form3
           .group(form("conditions.maxRating.rating"), frag("Maximum weekly rating"), half = true)(
             form3.select(
               _,
-              Condition.DataForm.maxRatingChoices,
+              Condition.DataForm.maxRatings map {
+                case 0 => (0, trans.noRestriction.txt())
+                case x => (x, x.toString)
+              },
             ),
           ),
       ),

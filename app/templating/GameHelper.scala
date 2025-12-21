@@ -173,37 +173,34 @@ trait GameHelper {
 
   def gameEndStatus(game: Game)(implicit ctx: Context): String =
     game.status match {
-      case S.Aborted => trans.gameAborted.txt()
-      case S.Mate    => trans.checkmate.txt()
       case S.Resign =>
         game.loserColor
           .map(l => transWithColorName(trans.xResigned, l, game.isHandicap))
           .getOrElse(trans.finished.txt())
-      case S.UnknownFinish => trans.finished.txt()
-      case S.Stalemate     => trans.stalemate.txt() // just say checkmate?
-      case S.TryRule           => "Try Rule" // games before July 2021 might still have this status
-      case S.Impasse27         => trans.impasse.txt()
-      case S.PerpetualCheck    => trans.perpetualCheck.txt()
-      case S.RoyalsLost        => trans.royalsLost.txt()
-      case S.BareKing          => trans.bareKing.txt()
-      case S.SpecialVariantEnd => trans.check.txt()
-      case S.IllegalMove       => trans.illegalMove.txt()
       case S.Timeout =>
         game.loserColor
           .map(l => transWithColorName(trans.xLeftTheGame, l, game.isHandicap))
           .getOrElse(
             trans.draw.txt(),
           )
-      case S.Repetition => trans.repetition.txt()
-      case S.Draw       => trans.draw.txt()
-      case S.Outoftime  => trans.timeOut.txt()
-      case S.Paused     => trans.gameAdjourned.txt()
       case S.NoStart =>
         game.loserColor
           .map(l => transWithColorName(trans.xDidntMove, l, game.isHandicap))
           .getOrElse(trans.finished.txt())
-      case S.Cheat => trans.cheatDetected.txt()
-      case _       => ""
+      case s => statusName(s)
+    }
+
+  def sourceName(source: Source)(implicit lang: Lang): String =
+    source match {
+      case Source.Lobby      => trans.lobby.txt()
+      case Source.Friend     => trans.friends.txt()
+      case Source.Ai         => trans.computer.txt()
+      case Source.Api        => "API"
+      case Source.Tournament => trans.tournaments.txt()
+      case Source.Position   => trans.fromPosition.txt()
+      case Source.Import     => trans.importCategory.txt()
+      case Source.ImportLive => trans.broadcast.broadcasts.txt()
+      case Source.Simul      => trans.simultaneousExhibitions.txt()
     }
 
   private def gameTitle(game: Game, color: Color)(implicit lang: Lang): String = {

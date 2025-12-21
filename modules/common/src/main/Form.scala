@@ -30,27 +30,6 @@ object Form {
     def errors: Seq[FormError]
   }
 
-  // todo - remove use trans
-  def options(it: Iterable[Int], pattern: String): Options[Int] =
-    it map { d =>
-      d -> (pluralize(pattern, d) format d)
-    }
-
-  def options(it: Iterable[Int], transformer: Int => Int, pattern: String): Options[Int] =
-    it map { d =>
-      d -> (pluralize(pattern, transformer(d)) format transformer(d))
-    }
-
-  def options(it: Iterable[Int], code: String, pattern: String): Options[String] =
-    it map { d =>
-      s"$d$code" -> (pluralize(pattern, d) format d)
-    }
-
-  def options(it: Iterable[Int], format: Int => String): Options[Int] =
-    it map { d =>
-      d -> format(d)
-    }
-
   private def mustBeOneOf(choices: Iterable[Any]) = s"Must be one of: ${choices mkString ", "}"
 
   def numberIn(choices: Options[Int]) =
@@ -99,6 +78,9 @@ object Form {
   def stringIn(choices: Set[String]) =
     cleanText.verifying(mustBeOneOf(choices), choices.contains _)
 
+  def stringIn(choices: Seq[String]) =
+    cleanText.verifying(mustBeOneOf(choices), choices.contains _)
+
   def urlText =
     text.verifying { url =>
       url.getBytes(UTF_8).sizeIs < 350 && (url.isEmpty || url.startsWith("https://") || url
@@ -113,9 +95,6 @@ object Form {
     choices.map(_._1).toList contains key
 
   def trueish(v: Any) = v == 1 || v == "1" || v == "true" || v == "on" || v == "yes"
-
-  private def pluralize(pattern: String, nb: Int) =
-    pattern.replace("{s}", if (nb == 1) "" else "s")
 
   object formatter {
     def stringFormatter[A](from: A => String, to: String => A): Formatter[A] =

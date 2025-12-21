@@ -2,6 +2,7 @@ package lila.app
 package templating
 
 import play.api.data._
+import play.api.i18n.Lang
 
 import lila.api.Context
 import lila.app.ui.ScalatagsTemplate._
@@ -28,6 +29,16 @@ trait FormHelper { self: I18nHelper =>
 
   val postForm     = form(method := "post")
   val submitButton = button(tpe := "submit")
+
+  def translatedTimes(seconds: List[Int], forceSeconds: Boolean = false)(implicit
+      lang: Lang,
+  ): List[(Int, String)] =
+    seconds map { sec =>
+      if (forceSeconds || sec == 0) (sec, trans.nbSeconds.pluralSameTxt(sec))
+      else if (sec % 3600 == 0) (sec, trans.nbHours.pluralSameTxt(sec / 3600))
+      else if (sec % 60 == 0) (sec, trans.nbMinutes.pluralSameTxt(sec / 60))
+      else (sec, trans.nbSeconds.pluralSameTxt(sec))
+    }
 
   object form3 {
 
@@ -222,10 +233,16 @@ trait FormHelper { self: I18nHelper =>
         div(cls := "form-group is-invalid")(error(err))
       }
 
-    def flatpickr(field: Field, init: Boolean = false, disabled: Boolean = false): Frag =
+    def flatpickr(
+        field: Field,
+        init: Boolean = false,
+        disabled: Boolean = false,
+        noTime: Boolean = false,
+    ): Frag =
       input(
         field,
-        klass = s"flatpickr${init ?? " flatpickr--init"}${disabled ?? " flatpickr--disabled"}",
+        klass =
+          s"flatpickr${init ?? " flatpickr--init"}${disabled ?? " flatpickr--disabled"}${noTime ?? " flatpickr--no-time"}",
       )
 
     object file {

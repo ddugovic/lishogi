@@ -22,6 +22,7 @@ object index {
       moreCss = cssTag("misc.search"),
       moreJs = frag(
         jsTag("misc.search"),
+        flatpickrTag,
         infiniteScrollTag,
       ),
     ) {

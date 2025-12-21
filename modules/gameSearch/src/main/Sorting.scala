@@ -5,14 +5,14 @@ case class Sorting(f: String, order: String)
 object Sorting {
 
   val fields = List(
-    Fields.date          -> "Date",
-    Fields.plies         -> "Moves",
-    Fields.averageRating -> "Rating",
+    Fields.date,
+    Fields.plies,
+    Fields.averageRating,
   )
 
   val orders = List(
-    "desc" -> "Descending",
-    "asc"  -> "Ascending",
+    "desc",
+    "asc",
   )
 
   val default = Sorting(Fields.date, "desc")
