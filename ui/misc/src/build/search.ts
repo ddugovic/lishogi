@@ -67,12 +67,11 @@ window.lishogi.ready.then(() => {
 
   const serialized = serialize();
 
-  const result = document.querySelector('')!;
+  const result = document.querySelector('.search__result')!;
   const rows = result.querySelectorAll('.search__rows');
 
   result.querySelectorAll('a.permalink').forEach(el => {
-    const s = el.classList.contains('download') ? serialize(true) : serialized;
-    el.setAttribute('href', `${(el.getAttribute('href') || '').split('?')[0]}?${s}`);
+    el.setAttribute('href', `${(el.getAttribute('href') || '').split('?')[0]}?${serialized}`);
   });
 
   rows.forEach(row => {
@@ -95,12 +94,26 @@ window.lishogi.ready.then(() => {
   });
 
   $form.on('submit', () => {
-    $form
-      .find('input,select')
-      .filter(function () {
-        return !(this as HTMLInputElement).value;
-      })
-      .attr('disabled', 'disabled');
-    $form.addClass('searching');
+    const newSerialized = serialize();
+
+    // browser doesn't submit the form again, avoid being stuck with spinner
+    if (serialized == newSerialized) {
+      result.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+      $form.addClass('searching');
+      setTimeout(() => {
+        $form.removeClass('searching');
+      }, 500);
+    } else {
+      $form
+        .find('input,select')
+        .filter(function () {
+          return !(this as HTMLInputElement).value;
+        })
+        .attr('disabled', 'disabled');
+      $form.addClass('searching');
+    }
   });
 });
