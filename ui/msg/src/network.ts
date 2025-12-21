@@ -49,7 +49,7 @@ export function del(u: string): Promise<MsgData> {
 }
 
 export function report(name: string, text: string): Promise<any> {
-  return window.lishogi.xhr.json('POST', '/report/flag', {
+  return window.lishogi.xhr.text('POST', '/report/flag', {
     formData: {
       username: name,
       text: text,
