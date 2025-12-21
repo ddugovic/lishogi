@@ -2,8 +2,10 @@ import { icons } from 'common/icons';
 import { richHTML } from 'common/rich-text';
 import { bind } from 'common/snabbdom';
 import { i18n } from 'i18n';
+import { usiToNotation } from 'shogi/notation';
 import { h, type VNode } from 'snabbdom';
 import type AnalyseCtrl from '../ctrl';
+import { replaceI18nPatterns } from '../tree-view/util';
 import { nodeFullName } from '../util';
 import type { StudyCtrl } from './interfaces';
 
@@ -58,9 +60,18 @@ export function currentComments(ctrl: AnalyseCtrl, includingMine: boolean): VNod
             })
           : null,
         authorDom(by),
-        ...(node.usi ? [' on ', h('span.node', nodeFullName(node))] : []),
+        ...(node.usi ? [' on ', h('span.node.inlined', nodeFullName(node))] : []),
         ': ',
-        h('div.text', { hook: richHTML(comment.text) }),
+        h('div.text', {
+          hook: richHTML(
+            usiToNotation(
+              node,
+              ctrl.path ? ctrl.tree.parentNode(ctrl.path) : undefined,
+              ctrl.data.game.variant.key,
+              replaceI18nPatterns(comment.text),
+            ),
+          ),
+        }),
       ]);
     }),
   );
