@@ -6,6 +6,7 @@
   "dependencies": {
     "breakpoint-sass": "catalog:",
     "common": "workspace:*",
+    "i18n": "workspace:*",
     "qrcode": "^1.5.4",
     "tablesort": "^5.6.0"
   },

@@ -21,10 +21,12 @@ import lila.game.Game
 import lila.game.Player
 import lila.game.Pov
 import lila.game.Source
+import lila.report.SuspectId
 import lila.user.User
 
 final class AssessApi(
     assessRepo: AssessmentRepo,
+    modApi: ModApi,
     userRepo: lila.user.UserRepo,
     reporter: lila.hub.actors.Report,
     shoginet: lila.hub.actors.Shoginet,
@@ -117,18 +119,18 @@ final class AssessApi(
     getPlayerAggregateAssessment(userId) flatMap {
       case Some(playerAggregateAssessment) =>
         playerAggregateAssessment.action match {
-          case AccountAction.Engine | AccountAction.EngineAndBan =>
-            fuccess {
-              reporter ! lila.hub.actorApi.report
-                .Cheater(userId, playerAggregateAssessment.reportText(3))
-            }
-          case AccountAction.Report(_) =>
+          case AccountAction.MarkEngine =>
+            modApi
+              .autoMark(
+                SuspectId(userId),
+                playerAggregateAssessment.reportText(3),
+              )
+          case AccountAction.Report =>
             fuccess {
               reporter ! lila.hub.actorApi.report
                 .Cheater(userId, playerAggregateAssessment.reportText(3))
             }
           case AccountAction.Nothing =>
-            // reporter ! lila.hub.actorApi.report.Clean(userId)
             funit
         }
       case _ => funit

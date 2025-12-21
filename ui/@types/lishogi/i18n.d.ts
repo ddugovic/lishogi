@@ -616,6 +616,7 @@ declare global {
     | 'blocked'
     | 'unblock'
     | 'thanksForReport'
+    | 'reportedSomeoneBanned'
     | 'moderatorsReportReview'
     | 'blockSuggestions'
     | 'followsYou'

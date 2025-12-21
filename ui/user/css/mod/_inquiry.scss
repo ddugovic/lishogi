@@ -147,6 +147,14 @@ body.no-inquiry {
     margin-bottom: 0.8em;
     border-bottom: 1px solid #777;
     padding-bottom: 0.8em;
+
+    .translator-container .translate-btn {
+      color: theme.$c-link;
+
+      &:hover {
+        color: theme.$c-link-hover;
+      }
+    }
   }
 
   .report .atom:last-child {

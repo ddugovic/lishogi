@@ -1,5 +1,6 @@
 import { spinnerHtml } from 'common/spinner';
 import { debounce } from 'common/timings';
+import { setupTranslator } from 'i18n/translator';
 // @ts-ignore
 import tablesort from 'tablesort';
 
@@ -181,3 +182,7 @@ const onScroll = () =>
 
 if (location.search.startsWith('?mod')) $toggle.trigger('click');
 window.lishogi.mousetrap.bind('m', () => $toggle.trigger('click'));
+
+window.lishogi.pubsub.on('content_loaded', () => {
+  setupTranslator('#inquiry div.docs.reports p, .mz_reports form .atom-text');
+});

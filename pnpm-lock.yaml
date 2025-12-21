@@ -937,6 +937,9 @@ importers:
       common:
         specifier: workspace:*
         version: link:../common
+      i18n:
+        specifier: workspace:*
+        version: link:../i18n
       qrcode:
         specifier: ^1.5.4
         version: 1.5.4

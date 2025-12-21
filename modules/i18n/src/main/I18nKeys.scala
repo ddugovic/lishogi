@@ -341,6 +341,7 @@ object I18nKeys {
   val `blocked` = new I18nKey("blocked")
   val `unblock` = new I18nKey("unblock")
   val `thanksForReport` = new I18nKey("thanksForReport")
+  val `reportedSomeoneBanned` = new I18nKey("reportedSomeoneBanned")
   val `moderatorsReportReview` = new I18nKey("moderatorsReportReview")
   val `blockSuggestions` = new I18nKey("blockSuggestions")
   val `followsYou` = new I18nKey("followsYou")

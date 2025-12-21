@@ -90,10 +90,10 @@ export const renderers: Renderers = {
   reportedBanned: {
     html: n =>
       generic(n, undefined, icons.infoCircle, [
-        h('span', [h('strong', 'Someone you reported was banned')]),
-        h('span', 'Thank you for the help!'),
+        h('span', [h('strong', i18n('reportedSomeoneBanned'))]),
+        h('span', i18n('thankYou')),
       ]),
-    text: _ => 'Someone you reported was banned',
+    text: _ => i18n('reportedSomeoneBanned'),
   },
   gameEnd: {
     html: n => {

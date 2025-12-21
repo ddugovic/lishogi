@@ -39,6 +39,10 @@
     overflow-y: auto;
     padding-bottom: 0.5em;
     border-bottom: theme.$border;
+
+    & > div {
+      padding-left: 0.5em;
+    }
   }
 
   .player_chats {

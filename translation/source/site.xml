@@ -439,6 +439,7 @@
 	<string name="blocked">Blocked</string>
 	<string name="unblock">Unblock</string>
 	<string name="thanksForReport">Thanks for the report</string>
+	<string name="reportedSomeoneBanned">Someone you reported was banned</string>
 	<string name="moderatorsReportReview">The moderators will review it very soon, and take appropriate action.</string>
 	<string name="blockSuggestions">In the meantime, you can block this user:</string>
 	<string name="followsYou">Follows you</string>

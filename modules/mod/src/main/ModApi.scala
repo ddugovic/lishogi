@@ -5,6 +5,7 @@ import lila.common.EmailAddress
 import lila.report.Mod
 import lila.report.Room
 import lila.report.Suspect
+import lila.report.SuspectId
 import lila.security.Granter
 import lila.security.Permission
 import lila.user.LightUserApi
@@ -16,6 +17,7 @@ final class ModApi(
     userRepo: UserRepo,
     logApi: ModlogApi,
     reportApi: lila.report.ReportApi,
+    noteApi: lila.user.NoteApi,
     reporter: lila.hub.actors.Report,
     notifier: ModNotifier,
     lightUserApi: LightUserApi,
@@ -47,6 +49,19 @@ final class ModApi(
         }
       }
     }
+
+  def autoMark(suspectId: SuspectId, note: String): Funit =
+    for {
+      sus       <- reportApi.getSuspect(suspectId.value) orFail s"No such suspect $suspectId"
+      unengined <- logApi.wasUnengined(sus)
+      _ <- (!sus.user.isBot && !unengined) ?? {
+        reportApi.getLishogiMod flatMap { mod =>
+          lila.mon.cheat.autoMark.increment()
+          setEngine(mod, sus, true) >>
+            noteApi.lishogiWrite(sus.user, note)
+        }
+      }
+    } yield ()
 
   def setBoost(mod: Mod, prev: Suspect, v: Boolean): Fu[Suspect] =
     if (prev.user.marks.boost == v) fuccess(prev)

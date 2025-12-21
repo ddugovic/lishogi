@@ -36,7 +36,6 @@ case class PlayerAggregateAssessment(
     user: User,
     playerAssessments: List[PlayerAssessment],
 ) {
-  import AccountAction._
   import GameAssessment.Cheating
   import GameAssessment.LikelyCheating
   import Statistics._
@@ -59,6 +58,7 @@ case class PlayerAggregateAssessment(
       (scoreCheatingGames(5) || scoreLikelyCheatingGames(10))
 
     val bannable: Boolean = false
+    // user.title.isEmpty && weightedCheatingSum > 5
 
     def sigDif(dif: Int)(a: Option[(Int, Int, Int)], b: Option[(Int, Int, Int)]): Option[Boolean] =
       (a, b) mapN { (a, b) => b._1 - a._1 > dif }
@@ -74,16 +74,9 @@ case class PlayerAggregateAssessment(
       difFlags.forall(_.isEmpty) || difFlags.exists(~_) || assessmentsCount < 50
     }
 
-    if (actionable) {
-      if (markable && bannable) EngineAndBan
-      else if (markable) Engine
-      else if (reportable) reportVariousReasons
-      else Nothing
-    } else {
-      if (markable) reportVariousReasons
-      else if (reportable) reportVariousReasons
-      else Nothing
-    }
+    if (bannable && markable && actionable) AccountAction.MarkEngine
+    else if (markable || reportable) AccountAction.Report
+    else AccountAction.Nothing
   }
 
   def countAssessmentValue(assessment: GameAssessment) =

@@ -369,7 +369,7 @@ final class ReportApi(
       "atoms.by",
       $doc(
         "user" -> sus.user.id,
-        "atoms.0.at" $gt DateTime.now.minusDays(3),
+        "atoms.0.at" $gt DateTime.now.minusDays(6),
       ),
       ReadPreference.secondaryPreferred,
     ) dmap (_ filterNot ReporterId.lishogi.==)

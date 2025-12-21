@@ -305,7 +305,9 @@ object mod {
               " ",
               momentFromNowServer(atom.at),
               ": ",
-              shorten(atom.text, 200),
+              span(cls := "atom-text")(
+                shorten(atom.text, 200),
+              ),
             )
           }
         },
@@ -326,7 +328,9 @@ object mod {
                   " ",
                   momentFromNowServer(atom.at),
                   ": ",
-                  shorten(atom.text, 200),
+                  span(cls := "atom-text")(
+                    shorten(atom.text, 200),
+                  ),
                 )
               },
               (r.atoms.size > 3) option s"(and ${r.atoms.size - 3} more)",
