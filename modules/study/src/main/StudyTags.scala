@@ -14,6 +14,14 @@ object StudyTags {
   def setRootClockFromTags(c: Chapter): Option[Chapter] =
     c.updateRoot { _.setClockAt(c.tags.clockConfig map (_.limit), Path.root) } filter (c !=)
 
+  // just so that csa output isn't all ugly...
+  def tagsToAscii(tags: Tags): Tags =
+    Tags(
+      tags.value.map(t =>
+        t.copy(value = t.value.replace("級", "kyu").filter(c => c >= 32 && c < 127)),
+      ),
+    )
+
   private def filterRelevant(tags: Tags) =
     Tags(tags.value.filter { t =>
       relevantTypeSet(t.name) && !unknownValues(t.value)

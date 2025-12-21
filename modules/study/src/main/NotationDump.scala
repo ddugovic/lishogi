@@ -49,7 +49,8 @@ final class NotationDump(
         chapter.root.shapes,
       ).toList,
     )
-    if (flags.csa && variant.standard) Csa(moves, chapter.root.sfen.some, initial, tags)
+    if (flags.csa && variant.standard)
+      Csa(moves, chapter.root.sfen.some, initial, StudyTags.tagsToAscii(tags))
     else Kif(moves, chapter.root.sfen.some, variant, initial, tags)
   }
 
