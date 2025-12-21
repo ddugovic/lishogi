@@ -39,10 +39,6 @@ case class Schedule(
 
   def sameFreq(other: Schedule) = freq == other.freq
 
-  def sameConditions(other: Schedule) = conditions == other.conditions
-
-  def sameMaxRating(other: Schedule) = conditions sameMaxRating other.conditions
-
   def similarConditions(other: Schedule) = conditions similar other.conditions
 
   def sameDay(other: Schedule) = day == other.day
@@ -50,7 +46,7 @@ case class Schedule(
   def hasMaxRating = conditions.maxRating.isDefined
 
   def similarTo(other: Schedule) =
-    sameVariant(other) && sameFreq(other) && sameConditions(other)
+    sameVariant(other) && sameFreq(other)
 
   def perfType = PerfType.byVariant(variant) | {
     if (speed == Schedule.Speed.Correspondence) PerfType.Correspondence
@@ -240,10 +236,10 @@ object Schedule {
       import Freq._
 
       val nbRatedGame = s.freq match {
-        case Hourly | Daily | Eastern   => 0
-        case Weekend | Monthly | Yearly => 1
-        case Shield                     => 3
-        case _                          => 0
+        case Hourly | Daily | Eastern => 0
+        case Weekend | Monthly        => 3
+        case Shield | Yearly          => 10
+        case _                        => 0
       }
 
       Condition.All(
