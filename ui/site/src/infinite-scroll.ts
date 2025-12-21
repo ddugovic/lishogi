@@ -24,6 +24,15 @@ export function loadInfiniteScroll(sel: string): void {
 
     domData.set(el, 'infinite-scroll', infScroll);
 
+    const fillScreen = () => {
+      if (
+        document.documentElement.scrollHeight <= window.innerHeight &&
+        !(infScroll as any).isLoading
+      ) {
+        infScroll.loadNextPage();
+      }
+    };
+
     infScroll.on('error', () => {
       document.getElementById('infscr-loading')?.remove();
     });
@@ -41,7 +50,6 @@ export function loadInfiniteScroll(sel: string): void {
     });
 
     if (parent) {
-      // Create and append a new button
       const moreButton = document.createElement('button');
       moreButton.className = 'inf-more button button-empty';
       moreButton.textContent = '…';
@@ -50,6 +58,8 @@ export function loadInfiniteScroll(sel: string): void {
       });
       parent.appendChild(moreButton);
     }
+
+    fillScreen();
   });
 }
 
