@@ -301,7 +301,7 @@ final class PuzzleApi(
       puzzle.existsBySfen(sfen) >>| gameId ?? { gid =>
         puzzle
           .fromGame(gid)
-          .map(_.exists(p => Math.abs(~p.sfen.stepNumber - ~sfen.stepNumber) >= 10))
+          .map(_.exists(p => Math.abs(~p.sfen.stepNumber - ~sfen.stepNumber) < 10))
       }
 
     private def makeId: Fu[Puzzle.Id] = {
