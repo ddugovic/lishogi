@@ -3,7 +3,6 @@ import { icons } from 'common/icons';
 import { modalJs } from 'common/modal';
 import notify from 'common/notification';
 import { prefs } from 'common/prefs';
-import { once } from 'common/storage';
 import { wsIsReady, wsLastVersionTime, wsOnOpen } from 'common/ws';
 import * as game from 'game';
 import type { Player } from 'game/interfaces';
@@ -721,28 +720,26 @@ export default class RoundController {
 
     if (oldRank.min >= newRank.min) return;
 
-    if (once(`r-${d.player.id}-${newRank.enName}`)) {
-      const firstRank = d.player.provisional;
-      const congratsList = [
-        i18n('learn:awesome'),
-        i18n('learn:excellent'),
-        i18n('learn:greatJob'),
-        i18n('learn:perfect'),
-        i18n('learn:outstanding'),
-        i18n('learn:wayToGo'),
-      ];
-      const congrats = congratsList[Math.floor(Math.random() * congratsList.length)];
+    const firstRank = d.player.provisional;
+    const congratsList = [
+      i18n('learn:awesome'),
+      i18n('learn:excellent'),
+      i18n('learn:greatJob'),
+      i18n('learn:perfect'),
+      i18n('learn:outstanding'),
+      i18n('learn:wayToGo'),
+    ];
+    const congrats = congratsList[Math.floor(Math.random() * congratsList.length)];
 
-      modalJs({
-        content: `
+    modalJs({
+      content: `
     <div class="rank-change">
-    <span class="title">${firstRank ? i18n('rank') : i18n('youRankedUp')}</span>
-    <span class="congrats">${congrats}</span>
-    <div class="r-${newRank.enName}" data-icon="${icons.upgrade}"></div>
-    <div class="rank-change-title">${rankTagHtml(newRank)}</div>
-  </div>`,
-      });
-    }
+      <span class="title">${firstRank ? i18n('rank') : i18n('youRankedUp')}</span>
+      <span class="congrats">${congrats}</span>
+      <div class="r-${newRank.enName}" data-icon="${icons.upgrade}"></div>
+      <div class="rank-change-title">${rankTagHtml(newRank)}</div>
+    </div>`,
+    });
   };
 
   challengeRematch = (): void => {

@@ -26,7 +26,7 @@ const uptA = (url: string, icon: string) =>
   `<a class="btn-rack__btn" href="${url}" data-icon="${icon}"></a>`;
 
 const userPowertip = (el: HTMLElement, pos?: any) => {
-  pos = pos || el.getAttribute('data-pt-pos') || (inCrosstable(el) ? 'n' : undefined);
+  pos = pos || el.getAttribute('data-pt-pos') || (inCrosstable(el) ? 'n' : 's');
 
   $(el)
     .removeClass('ulpt')

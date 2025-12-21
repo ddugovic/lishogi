@@ -74,6 +74,7 @@
 
   &__underboard {
     grid-area: under;
+    margin-top: 2vmin;
 
     @include breakpoint.breakpoint(local.$mq-col1) {
       overflow: hidden; // helps truncating long study names

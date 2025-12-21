@@ -22,16 +22,19 @@ export default function renderActions(ctrl: MsgCtrl, convo: Convo): VNode[] {
   nodes.push(h('div.msg-app__convo__action__sep', '|'));
   if (convo.relations.out === false)
     nodes.push(
-      h(`button.${cls}.text.hover-text`, {
-        key: 'unblock',
-        attrs: {
-          'data-icon': icons.forbidden,
-          title: i18n('blocked'),
-          type: 'button',
-          'data-hover-text': i18n('unblock'),
+      h(
+        `button.${cls}.text`,
+        {
+          key: 'unblock',
+          attrs: {
+            'data-icon': icons.forbidden,
+            title: i18n('unblock'),
+            type: 'button',
+          },
+          hook: bind('click', ctrl.unblock),
         },
-        hook: bind('click', ctrl.unblock),
-      }),
+        i18n('blocked'),
+      ),
     );
   else
     nodes.push(
