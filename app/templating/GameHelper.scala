@@ -17,6 +17,7 @@ import lila.game.Game
 import lila.game.Namer
 import lila.game.Player
 import lila.game.Pov
+import lila.game.Source
 import lila.i18n.defaultLang
 import lila.i18n.{ I18nKeys => trans }
 import lila.user.User
@@ -48,30 +49,31 @@ trait GameHelper {
 
   // Shogi - Dalliard vs Smith
   // Chushogi - PeterFile vs FilePeter
-  def titleGame(g: Game)(implicit lang: Lang) = {
-    s"${g.perfType.trans} - ${trans.xVsY.txt(playerText(g.sentePlayer), playerText(g.gotePlayer))}"
-  }
+  def titleGame(g: Game)(implicit lang: Lang) =
+    s"${if (g.imported) variantName(g.variant) else g.perfType.trans} - ${trans.xVsY.txt(playerText(g.sentePlayer), playerText(g.gotePlayer))}"
 
   // Beethoven played Handel - Rated Shogi (5|3) - Handel won! Click to replay, analyse, and discuss the game!
   def describePov(pov: Pov)(implicit lang: Lang) = {
     import pov._
-    val sentePlayer = playerText(game.player(shogi.Sente), withRank = false)
-    val gotePlayer  = playerText(game.player(shogi.Gote), withRank = false)
-    val players =
-      if (game.finishedOrAborted) trans.xPlayedY.txt(sentePlayer, gotePlayer)
-      else trans.xIsPlayingY.txt(sentePlayer, gotePlayer)
-    val gameDesc =
-      if (game.imported) trans.importedGame.txt()
-      else
+    if (game.imported) s"${trans.importedGame.txt()} ${trans.clickGame.txt()}"
+    else {
+      val sentePlayer = playerText(game.player(shogi.Sente), withRank = false)
+      val gotePlayer  = playerText(game.player(shogi.Gote), withRank = false)
+      val players =
+        if (game.finishedOrAborted) trans.xPlayedY.txt(sentePlayer, gotePlayer)
+        else trans.xIsPlayingY.txt(sentePlayer, gotePlayer)
+      val gameDesc =
         List(
           modeName(game.mode),
           game.perfType.trans,
           game.clock.map(_.config) ?? { clock => s"(${clock.show})" },
         ).filter(_.nonEmpty).mkString(" ")
-    val result = game.winner.map(w => trans.xWon.txt(playerText(w))) getOrElse {
-      if (game.finishedOrAborted) trans.gameWasDraw.txt() else trans.winnerIsNotYetDecided.txt()
+      val result = game.winner.map(w => trans.xWon.txt(playerText(w))) getOrElse {
+        if (game.finishedOrAborted) trans.gameWasDraw.txt()
+        else trans.winnerIsNotYetDecided.txt()
+      }
+      s"$players - $gameDesc - $result ${trans.clickGame.txt()}"
     }
-    s"$players - $gameDesc - $result ${trans.clickGame.txt()}"
   }
 
   def shortClockName(clock: Option[Clock.Config])(implicit lang: Lang): Frag =

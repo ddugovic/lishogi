@@ -353,8 +353,10 @@ case class Game(
 
   def isCorrespondence = perfType == PerfType.Correspondence
 
-  def perfKey  = perfType.key
-  def perfType = PerfType.from(variant, hasClock)
+  def perfKey = perfType.key
+  def perfType =
+    if (imported && variant.standard && !hasClock && !hasCorrespondenceClock) PerfType.RealTime
+    else PerfType.from(variant, hasClock)
 
   def started = status >= Status.Started
 
