@@ -73,17 +73,11 @@ final class ApiJsonView(lightUserApi: LightUserApi)(implicit
       "title" -> u.title,
     )
 
-  private val perfPositions: Map[PerfType, Int] = {
-    import PerfType._
-    List(RealTime, Correspondence) ::: variants
-  }.zipWithIndex.toMap
-
   private def perfJson(p: PerfType)(implicit lang: Lang) =
     Json.obj(
-      "icon"     -> p.icon,
-      "key"      -> p.key,
-      "name"     -> p.trans,
-      "position" -> ~perfPositions.get(p),
+      "icon" -> p.icon,
+      "key"  -> p.key,
+      "name" -> p.trans,
     )
 
 }

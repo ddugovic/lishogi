@@ -24,7 +24,7 @@ declare global {
     spectrum(opts: any): any;
     spectrum(action: string, value: any): any;
     infinitescroll(opts: any, f?: (...args: any[]) => any): any;
-    toggleNone(v: boolean): void;
+    toggleNone(v?: boolean): void;
   }
 
   namespace PowerTip {

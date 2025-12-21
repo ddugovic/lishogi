@@ -217,7 +217,7 @@ object BSONHandlers {
       Pairing(
         id = r str "_id",
         tourId = r str "tid",
-        status = shogi.Status(r int "s") err "tournament pairing status",
+        status = shogi.Status(r int "s").getOrElse(shogi.Status.UnknownFinish),
         user1 = user1,
         user2 = user2,
         winner = r boolO "w" map {
