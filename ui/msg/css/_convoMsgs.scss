@@ -105,16 +105,16 @@
   }
 
   .embed-wrap {
-    width: 75vh;
-    max-width: 60vw;
+    width: 80vh;
+    max-width: 55ch;
     margin: variables.$block-gap;
-
-    &:has(.embed--game) {
-      width: 85vh;
-    }
 
     @include breakpoint.breakpoint(media-queries.$mq-not-small) {
       max-width: 80vw;
+    }
+
+    @include breakpoint.breakpoint(media-queries.$mq-large) {
+      max-width: 90ch;
     }
 
     .embed {
