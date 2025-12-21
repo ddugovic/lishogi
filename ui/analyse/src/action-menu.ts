@@ -312,6 +312,16 @@ export function view(ctrl: AnalyseCtrl): VNode {
                     },
                     ctrl,
                   ),
+                  ctrlBoolSetting(
+                    {
+                      name: 'Fixed memory',
+                      title: 'Fixed memory',
+                      id: 'fixedMemory',
+                      checked: ceval.fixedMemory(),
+                      change: ctrl.cevalSetFixedMemoery,
+                    },
+                    ctrl,
+                  ),
                   (id => {
                     const max = 5;
                     return h('div.setting', [

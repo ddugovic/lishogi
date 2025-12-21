@@ -112,7 +112,7 @@ export class ThreadedWasmWorker extends AbstractWorker<ThreadedWasmWorkerOpts> {
         locateFile: (path: string) =>
           assetUrl(this.opts.baseUrl + path, {
             version: version,
-            sameDomain: path.endsWith('.worker.js'),
+            sameDomain: true,
           }),
         wasmMemory: this.opts.wasmMemory,
       });

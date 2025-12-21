@@ -48,7 +48,7 @@
   .engine {
     @extend %nowrap-hidden;
 
-    flex: 0 1 40%;
+    flex: 0 1 55%;
     font-size: 12px;
     line-height: 16px;
     margin-top: 3px;
@@ -71,6 +71,7 @@
     .info {
       display: block;
       white-space: nowrap;
+      font-size: 0.9em;
     }
 
     .deeper {

@@ -848,6 +848,12 @@ export default class AnalyseCtrl {
     alert('Reload the window to see changes.');
   };
 
+  cevalSetFixedMemoery = (v: boolean): void => {
+    this.ceval.fixedMemory(v);
+    this.ceval.stop();
+    alert('Reload the window to see changes.');
+  };
+
   cevalSetEnteringKingRule = (v: boolean): void => {
     this.ceval.enteringKingRule(v);
     this.tree.removeCeval();

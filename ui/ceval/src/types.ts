@@ -82,6 +82,7 @@ export interface CevalCtrl {
   setPvBoard: (pvBoard: PvBoard | null) => void;
   multiPv: StoredProp<number>;
   enteringKingRule: StoredBooleanProp;
+  fixedMemory: StoredBooleanProp;
   start: (path: string, steps: Step[], threatMode?: boolean) => void;
   stop(): void;
   threads(): number;

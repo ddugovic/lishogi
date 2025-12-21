@@ -3,7 +3,7 @@ import { prop } from 'common/common';
 import { isAndroid, isIOS, isIPad } from 'common/mobile';
 import { storedProp } from 'common/storage';
 import throttle from 'common/throttle';
-import { EngineCode, engineCode, engineName } from 'shogi/engine-name';
+import { EngineCode, engineCode, engineNameFromCode } from 'shogi/engine-name';
 import { isImpasse } from 'shogi/impasse';
 import { parseSfen } from 'shogiops/sfen';
 import { defaultPosition } from 'shogiops/variant/variant';
@@ -22,31 +22,32 @@ import { unsupportedVariants } from './util';
 import { povChances } from './winning-chances';
 import { type AbstractWorker, ThreadedWasmWorker } from './worker';
 
-const sharedWasmMemory = (initial: number, maximum: number): WebAssembly.Memory =>
-  new WebAssembly.Memory({ shared: true, initial, maximum } as WebAssembly.MemoryDescriptor);
-
-function sendableSharedWasmMemory(
-  initial: number,
-  maximum: number,
-): WebAssembly.Memory | undefined {
-  // Atomics
-  if (typeof Atomics !== 'object') return;
-
-  // SharedArrayBuffer
-  if (typeof SharedArrayBuffer !== 'function') return;
-
-  // Shared memory
-  const mem = sharedWasmMemory(initial, maximum);
-  if (!(mem.buffer instanceof SharedArrayBuffer)) return;
-
-  // Structured cloning
-  try {
-    window.postMessage(mem.buffer, '*');
-  } catch (_e) {
-    return undefined;
+const sharedWasmMemory = (lo: number, hi = 32767): WebAssembly.Memory => {
+  let shrink = 4; // 32767 -> 24576 -> 16384 -> 12288 -> 8192 -> 6144 -> etc
+  while (true) {
+    try {
+      console.debug(`Creating memory, lo: ${lo}, hi: ${hi}`);
+      return new WebAssembly.Memory({ shared: true, initial: lo, maximum: hi });
+    } catch (e) {
+      console.error(`Failed to create memory, lo: ${lo}, hi: ${hi}`);
+      if (hi < lo || !(e instanceof RangeError)) throw e;
+      hi = Math.max(lo, Math.ceil(hi - hi / shrink));
+      shrink = shrink === 4 ? 3 : 4;
+    }
   }
+};
 
-  return mem;
+function sharedMemoryTest(): boolean {
+  if (typeof Atomics !== 'object' || typeof SharedArrayBuffer !== 'function') return false;
+
+  try {
+    const mem = new WebAssembly.Memory({ shared: true, initial: 1, maximum: 2 });
+    if (!(mem.buffer instanceof SharedArrayBuffer)) return false;
+    window.postMessage(mem.buffer, '*');
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function defaultDepth(technology: CevalTechnology, threads: number, multiPv: number): number {
@@ -87,15 +88,13 @@ export default function (opts: CevalOpts): CevalCtrl {
   const fairySupports = analysable && !useYaneuraou;
   let supportsNnue = false;
   let technology: CevalTechnology = 'none';
-  let growableSharedMem = false;
-  const source = Uint8Array.from([0, 97, 115, 109, 1, 0, 0, 0]);
   if (
     (useYaneuraou || fairySupports) &&
     typeof WebAssembly === 'object' &&
     typeof WebAssembly.validate === 'function' &&
-    WebAssembly.validate(source)
+    WebAssembly.validate(Uint8Array.from([0, 97, 115, 109, 1, 0, 0, 0]))
   ) {
-    const sharedMem = sendableSharedWasmMemory(1, 2);
+    const sharedMem = sharedMemoryTest();
     if (sharedMem) {
       technology = 'hce';
 
@@ -105,21 +104,10 @@ export default function (opts: CevalOpts): CevalCtrl {
       ]);
       supportsNnue = WebAssembly.validate(sourceWithSimd);
       if (useYaneuraou && enableNnue()) technology = 'nnue';
-
-      try {
-        sharedMem.grow(1);
-        growableSharedMem = true;
-      } catch (_e) {
-        // memory growth not supported
-      }
     }
   }
 
-  const initialAllocationMaxThreads = useYaneuraou ? 2 : 1;
-  const maxThreads = Math.min(
-    Math.max((navigator.hardwareConcurrency || 1) - 1, 1),
-    growableSharedMem ? 32 : initialAllocationMaxThreads,
-  );
+  const maxThreads = Math.max((navigator.hardwareConcurrency || 1) - 1, 1);
   const threads = () => {
     const stored = window.lishogi.storage.get(storageKey('ceval.threads'));
     return Math.min(
@@ -133,7 +121,6 @@ export default function (opts: CevalOpts): CevalCtrl {
     return pow2;
   };
   const maxWasmPages = (minPages: number): number => {
-    if (!growableSharedMem) return minPages;
     let maxPages = 32768; // hopefully desktop browser, 2 GB max shared
     if (isAndroid())
       maxPages = 8192; // 512 MB max shared
@@ -163,6 +150,7 @@ export default function (opts: CevalOpts): CevalCtrl {
   const multiPv = storedProp(storageKey('ceval.multipv'), opts.multiPvDefault || 1);
   const enteringKingRule = storedProp(storageKey('ceval.enteringKingRule'), true);
   const infinite = storedProp('ceval.infinite', false);
+  const fixedMemory = storedProp('ceval.fixedMemory', false);
   let curEval: Tree.LocalEval | null = null;
   const allowed = prop(true);
   const enabled = prop(
@@ -263,7 +251,9 @@ export default function (opts: CevalOpts): CevalCtrl {
     );
 
     if (!worker) {
-      if (technology == 'nnue')
+      if (technology == 'nnue') {
+        const minMemory = 2048;
+        const maxMemory = maxWasmPages(minMemory);
         worker = new ThreadedWasmWorker({
           baseName: 'yaneuraou.k-p',
           baseUrl: 'vendors/yaneuraou.k-p/lib/',
@@ -273,17 +263,20 @@ export default function (opts: CevalOpts): CevalCtrl {
             opts.redraw();
           }),
           version: 'd49b90b2A',
-          wasmMemory: sharedWasmMemory(2048, maxWasmPages(2048)),
+          wasmMemory: sharedWasmMemory(fixedMemory() ? maxMemory : minMemory, maxMemory),
           cache: window.indexedDB && new Cache('ceval-wasm-cache'),
         });
-      else if (technology == 'hce')
+      } else if (technology == 'hce') {
+        const minMemory = 2048;
+        const maxMemory = maxWasmPages(minMemory);
         worker = new ThreadedWasmWorker({
           baseName: 'stockfish',
           baseUrl: 'vendors/fairy-stockfish-nnue.wasm/',
           module: 'Stockfish',
           version: 'a410474a',
-          wasmMemory: sharedWasmMemory(2048, maxWasmPages(2048)),
+          wasmMemory: sharedWasmMemory(fixedMemory() ? maxMemory : minMemory, maxMemory),
         });
+      }
     }
 
     if (worker) worker.start(work);
@@ -333,6 +326,7 @@ export default function (opts: CevalOpts): CevalCtrl {
     downloadProgress,
     multiPv,
     enteringKingRule,
+    fixedMemory,
     threads,
     setThreads(threads: number) {
       window.lishogi.storage.set(storageKey('ceval.threads'), threads.toString());
@@ -386,7 +380,12 @@ export default function (opts: CevalOpts): CevalCtrl {
       !isDeeper() &&
       ((!infinite() && !worker?.isComputing()) || showingCloud()),
     isComputing: () => !!running && !!worker?.isComputing(),
-    engineName: technology !== 'none' ? engineName(opts.variant.key, opts.initialSfen) : undefined,
+    engineName:
+      technology !== 'none'
+        ? technology === 'hce'
+          ? engineNameFromCode(EngineCode.Fairy)
+          : engineNameFromCode(EngineCode.YaneuraOu)
+        : undefined,
     destroy: () => worker?.destroy(),
     redraw: opts.redraw,
     shouldUseYaneuraou: useYaneuraou,
