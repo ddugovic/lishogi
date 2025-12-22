@@ -34,7 +34,10 @@ declare global {
   }
 }
 
-export async function setupTranslator(textSelector: string) {
+// to avoid fetching new models for stuff like 'okk', 'suuuuuuure'
+const passableConfidence = 0.6;
+
+export async function setupTranslator(textSelector: string, options?: { textSelector?: string }) {
   const isMetered =
     navigator.connection?.saveData === true || navigator.connection?.type === 'cellular';
   const isSupported = typeof Translator !== 'undefined' && typeof LanguageDetector !== 'undefined';
@@ -48,21 +51,35 @@ export async function setupTranslator(textSelector: string) {
 
   let detector: LanguageDetector | null = null;
 
+  function getText(el: HTMLElement): string {
+    const textElement = options?.textSelector
+      ? el.querySelector<HTMLElement>(options.textSelector) || el
+      : el;
+    return textElement.innerText.trim();
+  }
+
   try {
     detector = await LanguageDetector.create();
 
     for (const el of Array.from(textElements)) {
       if (el.nextElementSibling?.classList.contains('translator-container')) continue;
 
-      let cleanText = el.innerText.trim();
+      let cleanText = getText(el);
       if (!cleanText) return;
       // just double the text if it's too short
       if (cleanText.length < 15) cleanText = `${cleanText}\n${cleanText}`;
 
       const results = await detector.detect(cleanText);
+
+      const confidence = results[0]?.confidence;
       const sourceLang = results[0]?.detectedLanguage;
 
-      if (sourceLang && sourceLang !== 'und' && sourceLang !== targetLang) {
+      if (
+        sourceLang &&
+        sourceLang !== 'und' &&
+        confidence >= passableConfidence &&
+        sourceLang !== targetLang
+      ) {
         const container = document.createElement('div');
         container.className = 'translator-container';
         el.dataset.sourceLang = sourceLang;
@@ -101,7 +118,7 @@ export async function setupTranslator(textSelector: string) {
       progressLabel.className = 'translator-progress-label';
       container.appendChild(progressLabel);
 
-      const cleanText = messageElement.innerText.trim();
+      const cleanText = getText(messageElement);
       const sourceLang = messageElement.dataset.sourceLang || 'en';
 
       const availability = await Translator.availability({
