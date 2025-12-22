@@ -1,8 +1,16 @@
 {
-  "clock/sakura_ajisai": 1.9,
+  "clock/sakura_ajisai": 2.5,
+  "clock/sakura_ajisai/10s.mp3": 0.95,
+  "clock/sakura_ajisai/20s.mp3": 0.95,
+  "clock/sakura_ajisai/30s.mp3": 0.95,
+  "clock/sakura_ajisai/40s.mp3": 0.95,
+  "clock/sakura_ajisai/50s.mp3": 0.95,
+  "clock/sakura_ajisai/byoyomi.mp3": 1.2,
   "clock/ippan_dansei": 2.1,
-  "clock/shougi_sennin": 2,
-  "clock/chisei_mazawa": 0.8,
+  "clock/shougi_sennin": 2.1,
+  "clock/chisei_mazawa": 0.6,
   "clock/robot_ja": 0.7,
+  "clock/robot_en": 0.95,
+  "clock/system": 0.60,
   "system/shogi/capture.ogg": 0.85
 }
