@@ -31,7 +31,7 @@
         @extend %flex-center-nowrap;
 
         height: 100%;
-        align-items: stretch;
+        align-items: center;
       }
 
       &__back {
@@ -47,8 +47,6 @@
       }
 
       .user-link {
-        @extend %flex-center-nowrap;
-
         flex: 0 0 auto;
         color: theme.$c-font-clear;
         font-size: 1.4em;
@@ -115,14 +113,12 @@
       }
 
       &__submit {
-        outline: 0;
         margin-left: 1em;
-        border-radius: 99px;
         background: theme.$c-font-dimmer;
 
         &.connected,
         &.connected:hover {
-          background: local.$c-msg;
+          background: theme.$c-secondary;
         }
       }
     }

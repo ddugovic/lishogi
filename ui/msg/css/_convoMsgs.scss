@@ -55,8 +55,52 @@
 
   mine,
   their {
+    position: relative;
+
+    &:hover {
+      .translator-container {
+        opacity: 1;
+      }
+    }
+
     &:has(.embed-wrap) {
       max-width: 100%;
+    }
+  }
+
+  .translator-container {
+    &:has(.translate-btn) {
+      @extend %flex-column;
+
+      position: absolute;
+      opacity: 0;
+      width: 20%;
+      min-width: 12ch;
+      height: 100%;
+      left: 100%;
+      bottom: 0;
+
+      .translate-btn {
+        font-size: 0.8em;
+        margin-top: auto;
+        padding-left: 0.5rem;
+      }
+
+      &:hover {
+        opacity: 1;
+      }
+
+      @media (hover: none) {
+        opacity: 1;
+      }
+    }
+
+    .translated-text {
+      font-style: italic;
+      color: theme.$c-font-dim;
+      padding-top: 0.5rem;
+      margin-top: 0.5rem;
+      border-top: theme.$border;
     }
   }
 

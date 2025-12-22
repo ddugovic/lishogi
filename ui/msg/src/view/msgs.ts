@@ -1,6 +1,7 @@
 import { isMoreThanText } from 'common/rich-text';
 import { bind } from 'common/snabbdom';
 import { i18n, i18nFormat } from 'i18n';
+import { setupTranslator } from 'i18n/translator';
 import { h, type VNode } from 'snabbdom';
 import type MsgCtrl from '../ctrl';
 import type { Convo, Daily, Msg } from '../interfaces';
@@ -134,5 +135,9 @@ const setupMsgs = (insert: boolean) => (vnode: VNode) => {
   const el = vnode.elm as HTMLElement;
   if (insert) scroller.init(el);
   if (window.lishogi.modules.miscExpandText) window.lishogi.modules.miscExpandText();
+  setTimeout(() => {
+    setupTranslator('their t');
+  }, 0);
+
   scroller.toMarker() || scroller.auto();
 };
