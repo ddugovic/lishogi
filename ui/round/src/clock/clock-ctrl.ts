@@ -248,8 +248,8 @@ export class ClockController {
         this.emergSound.playable[color] = true;
       }
 
-      // To give more space for 'juubyou...' and such
-      const adjustedMillis = millis > 10 * 1000 ? millis - 200 : millis;
+      const audioOffset = 400;
+      const adjustedMillis = millis - audioOffset;
 
       if (
         millis > 0 &&
@@ -271,11 +271,12 @@ export class ClockController {
           // after 10, 20, 30, 40, 50 seconds elapsed
           else if (spentByo > 0 && spentByo % 10 === 0 && spentByo <= 50)
             window.lishogi.sound.play(`${spentByo}s`, 'clock');
-        } else {
+        } else if (remainingByo) {
           if (window.lishogi.sound.clockSoundSet() === 'system' && remainingByo > 3) return;
 
-          if (remainingByo < 10 || (remainingByo < 60 && remainingByo % 10 === 0))
-            window.lishogi.sound.countdown(remainingByo);
+          if (remainingByo <= 10) window.lishogi.sound.countdown(remainingByo);
+          else if (remainingByo < 60 && remainingByo % 10 === 0)
+            window.lishogi.sound.play(`${remainingByo}s`, 'clock');
         }
       }
     }

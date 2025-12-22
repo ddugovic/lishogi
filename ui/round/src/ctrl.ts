@@ -685,17 +685,7 @@ export default class RoundController {
         if (!d.player.spectator)
           li.sound.play(o.winner ? (isPlayerWinner ? 'victory' : 'defeat') : 'draw');
       };
-      if (
-        o.status.name === 'outoftime' &&
-        o.winner &&
-        this.clock?.canPlaySound(opposite(o.winner)) &&
-        (!isPlayerWinner || d.pref.clockAudible !== prefs.clockAudible.MINE) &&
-        d.clock?.byoyomi &&
-        window.lishogi.sound.clockSoundJapanese()
-      ) {
-        window.lishogi.sound.countdown(Math.min(d.clock.byoyomi, 10));
-        setTimeout(play, 750);
-      } else play();
+      play();
     }
     this.setTitle();
     this.moveOn.next();
