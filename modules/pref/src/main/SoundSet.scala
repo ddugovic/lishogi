@@ -42,16 +42,16 @@ object SoundSet extends SoundSetBase {
 
 object ClockSoundSet extends SoundSetBase {
 
-  val default = new SoundSet("system", "System", "システム")
   val silent  = new SoundSet("silent", "Silent", "無音")
+  val default = new SoundSet("system", "System", "システム")
 
   val all = List(
     silent,
     default,
     new SoundSet("chisei_mazawa", "Mazawa Chisei", "真澤千星"),
-    new SoundSet("shougi_sennin", "Shogi sage", "将棋仙人"),
-    new SoundSet("ippan_dansei", "Ordinary Male", "一般男性"),
     new SoundSet("sakura_ajisai", "Sakura Ajisai", "紫陽花さくら"),
+    new SoundSet("ippan_dansei", "Ordinary Male", "一般男性"),
+    new SoundSet("shougi_sennin", "Shogi Sage", "将棋仙人"),
     new SoundSet("robot_ja", "Robot (JP)", "ロボット(日本語)"),
     new SoundSet("eigo", "English", "英語女性"),
     new SoundSet("robot_en", "Robot (EN)", "ロボット（英語）"),
