@@ -37,7 +37,10 @@ declare global {
 // to avoid fetching new models for stuff like 'okk', 'suuuuuuure'
 const passableConfidence = 0.6;
 
-export async function setupTranslator(textSelector: string, options?: { textSelector?: string }) {
+export async function setupTranslator(
+  textSelector: string,
+  options?: { textSelector?: string },
+): Promise<void> {
   const isMetered =
     navigator.connection?.saveData === true || navigator.connection?.type === 'cellular';
   const isSupported = typeof Translator !== 'undefined' && typeof LanguageDetector !== 'undefined';

@@ -239,7 +239,7 @@ export class ClockController {
 
     if (this.canPlaySound(color)) {
       if (this.data.pref.lowClockSound && this.emergSound.playable[color]) {
-        if (millis < this.emergMs && !(now < this.emergSound.next!) && !this.isUsingByo(color)) {
+        if (millis < this.emergMs && !(now < this.emergSound.next!) && !this.byoyomi) {
           this.emergSound.lowtime();
           this.emergSound.next = now + this.emergSound.delay;
           this.emergSound.playable[color] = false;
