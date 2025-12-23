@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - '.github/workflows/translations.yml'
-      - 'translation/**'
+      - 'translation/source/**'
       - 'scripts/trans-lint.py'
   pull_request:
     paths:
