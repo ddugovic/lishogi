@@ -84,6 +84,11 @@ class AnalyserTest extends Specification {
       find("ばーか") must_== List("ばーか")
       find("ばか?") must_== List("ばか")
       find("ばか？") must_== List("ばか")
+      find("しね") must_== List("しね")
+      find("しねよ") must_== List("しねよ")
+      find("よわすぎ") must_== List("よわすぎ")
+      find("よわすぎる") must_== List("よわすぎる")
+      find("よわすぎだろ") must_== List("よわすぎだろ")
     }
   }
   "dirty" should {

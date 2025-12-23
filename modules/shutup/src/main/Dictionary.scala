@@ -281,9 +281,12 @@ yarra[gğ][iı] yediniz
 """)
 
   def ja = dict("""
+baka
 ばー?か
 バー?カ
 馬鹿
+ザコ
+雑魚
 うざい
 ちくしょう
 ばかやろう
@@ -291,13 +294,36 @@ yarra[gğ][iı] yediniz
 やりまん
 ヤリマン
 くたばれ
-死ね
+shine
+しねよ?
+死ねよ?
 まんこ
 マンコ
 ちんちん
 チンチン
 ちんぽ
 チンポ
+セックス
+童貞
+よわい(ね|な)?
+弱い(ね|な)?
+yowasugi(ru)?
+よわすぎ(る|だろ)?
+弱すぎ(る|だろ)?
+うるせ(ー|え|い)
+hetakuso
+下手(すぎ|くそ)?
+ヘタクソ
+キチガイ
+雑魚
+ザコ
+知的障害
+korosu(zo|ze)?
+ころす(ぞ|ぜ)?
+殺す(ぞ|ぜ)?
+ころしてやる
+殺してやる
+ぶっ殺す
 """)
 
   private def dict(words: String) = words.linesIterator.filter(_.nonEmpty)
