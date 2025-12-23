@@ -159,7 +159,7 @@ function renderUser(u?: ChallengeUser): VNode {
   return h(
     'a.ulpt.user-link',
     {
-      attrs: { href: `/@/${u.name}` },
+      attrs: { href: `/@/${u.name}`, 'data-user-title': u.title || '' },
       class: { online: !!u.online },
     },
     [
@@ -167,7 +167,7 @@ function renderUser(u?: ChallengeUser): VNode {
       ...usernameVNodes({
         username: u.name,
         rank: !u.provisional ? rankFromRating(u.rating) : undefined,
-        bot: u.title === 'BOT',
+        title: u.title,
         countryCode: u.countryCode,
       }),
       h(

@@ -36,6 +36,9 @@ export function userHtml(ctrl: RoundController, player: Player, position: Positi
           long: user.username.length > 15,
           connecting,
         },
+        attrs: {
+          'data-user-title': user.title || '',
+        },
       },
       [
         h(`i.line${user.patron ? '.patron' : ''}`, {
@@ -59,7 +62,7 @@ export function userHtml(ctrl: RoundController, player: Player, position: Positi
           usernameVNodes({
             username: user.username,
             rank: rank,
-            bot: isBot,
+            title: user.title,
             countryCode: user.countryCode,
           }),
         ),

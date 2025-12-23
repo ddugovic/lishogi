@@ -11,6 +11,9 @@ export function userIcon(user: User, cls: string): VNode {
         online: user.online,
         offline: !user.online,
       },
+      attrs: {
+        'data-user-title': user.title || '',
+      },
     },
     [h(`i.line${user.patron ? '.patron' : ''}${user.id === 'lishogi' ? '.moderator' : ''}`)],
   );
@@ -19,7 +22,7 @@ export function userIcon(user: User, cls: string): VNode {
 export function userName(user: User): MaybeVNodes {
   return usernameVNodes({
     username: user.name,
-    bot: user.title === 'BOT',
+    title: user.title,
     countryCode: user.countryCode,
   });
 }

@@ -34,7 +34,7 @@ function renderPlayer(ctrl: AnalyseCtrl, color: Color): VNode {
         : {
             username: p.aiCode ? engineNameFromCode(p.aiCode) : p.user?.username || p.name,
             rank: !p.provisional && p.rating ? rankFromRating(p.rating) : undefined,
-            bot: p.user?.title === 'BOT',
+            title: p.user?.title,
             engineLvl: p.ai,
           },
     ),

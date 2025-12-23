@@ -819,6 +819,9 @@ importers:
       i18n:
         specifier: workspace:*
         version: link:../i18n
+      shogi:
+        specifier: workspace:*
+        version: link:../shogi
       snabbdom:
         specifier: 'catalog:'
         version: 3.6.3

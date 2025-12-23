@@ -8,16 +8,17 @@ import { extractRank, type Rank, rankTag } from './rank';
 export interface UsernameData {
   username?: string;
   rank?: Rank;
-  bot?: boolean;
+  title?: string;
   engineLvl?: number;
   countryCode?: string;
 }
 
 export function usernameVNodes(data: UsernameData): MaybeVNodes {
+  const isBot = data.title?.toLowerCase() === 'bot';
   return [
-    !data.bot && data.rank ? rankTag(data.rank) : undefined,
+    !isBot && data.rank ? rankTag(data.rank) : undefined,
     data.engineLvl ? h('span.engine-lvl', `${i18nFormat('levelX', data.engineLvl)} `) : undefined,
-    data.bot ? h('span.bot-tag', 'BOT ') : undefined,
+    isBot ? h('span.bot-tag', 'BOT ') : undefined,
     h(`span.name${!data.username ? '.anon' : ''}`, data.username || i18n('anonymousUser')),
     data.countryCode ? flagImage(data.countryCode) : undefined,
   ];
@@ -39,7 +40,7 @@ export function usernameDataFromName(name: string | undefined): UsernameData {
     return {
       username: nameWithoutPrefix,
       rank: rank,
-      bot: isBot,
+      title: isBot ? 'BOT' : undefined,
     };
   }
 }

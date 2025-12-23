@@ -37,10 +37,13 @@ export function ratio2percent(r: number): string {
 }
 
 export function playerName(
-  p: { name: string; rating?: number; provisional?: boolean; countryCode?: string } | undefined,
+  p:
+    | { name: string; title?: string; rating?: number; provisional?: boolean; countryCode?: string }
+    | undefined,
 ): MaybeVNodes {
   return usernameVNodes({
     username: p?.name || '?',
+    title: p?.title,
     rank: p?.rating && !p.provisional ? rankFromRating(p.rating) : undefined,
     countryCode: p?.countryCode,
   });
@@ -59,7 +62,12 @@ export function player(
   return h(
     `a.ulpt.user-link${p.name.length > 15 ? '.long' : ''}${config.status?.online ? '.online' : ''}`,
     {
-      attrs: config.asLink ? { href: `/@/${p.name}` } : { 'data-href': `/@/${p.name}` },
+      attrs: config.asLink
+        ? {
+            'data-user-title': p.title || '',
+            href: `/@/${p.name}`,
+          }
+        : { 'data-href': `/@/${p.name}`, 'data-user-title': p.title || '' },
       hook: {
         destroy: vnode => $.powerTip.destroy(vnode.elm as HTMLElement),
       },

@@ -9,6 +9,7 @@
     "common": "workspace:*",
     "i18n": "workspace:*",
     "game": "workspace:*",
+    "shogi": "workspace:*",
     "snabbdom": "catalog:"
   }
 }

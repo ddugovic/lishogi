@@ -32,6 +32,7 @@ export interface Player extends LightUser {
   variant: VariantKey;
   rating: number;
   provisional?: boolean;
+  countryCode: string;
 }
 
 interface Host extends LightUser {

@@ -122,12 +122,14 @@ function gameInfos(ctrl: Controller, game: PuzzleGame, puzzle: Puzzle): VNode {
               h(
                 `${p.userId ? 'a' : 'span'}.user-link.ulpt`,
                 {
-                  attrs: p.userId ? { href: `/@/${p.userId}` } : undefined,
+                  attrs: p.userId
+                    ? { href: `/@/${p.userId}`, 'data-user-title': p.title || '' }
+                    : undefined,
                 },
                 usernameVNodes({
                   username: p.aiCode ? engineNameFromCode(p.aiCode) : p.name,
                   rank: p.rating ? rankFromRating(p.rating) : undefined,
-                  bot: p.title === 'BOT',
+                  title: p.title,
                   engineLvl: p.ai,
                   countryCode: p.countryCode,
                 }),

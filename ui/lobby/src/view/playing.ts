@@ -80,7 +80,7 @@ export default function (ctrl: LobbyController): VNode {
                   pov.opponent.rating && !pov.opponent.prov
                     ? rankFromRating(pov.opponent.rating)
                     : undefined,
-                bot: pov.opponent.isBot,
+                title: pov.opponent.title,
                 engineLvl: pov.opponent.ai,
                 countryCode: pov.opponent.countryCode,
               }),

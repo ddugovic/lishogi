@@ -165,6 +165,10 @@
 
     .head .user-link {
       margin-left: -5px;
+
+      signal {
+        margin-left: 0.4em;
+      }
     }
 
     &.tour-info {

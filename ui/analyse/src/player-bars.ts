@@ -71,7 +71,7 @@ function findPlayer(ctrl: AnalyseCtrl, color: Color): UsernameData {
       return {
         username: player.user.username,
         rank: rank,
-        bot: player.user.title === 'BOT',
+        title: player.user.title,
       };
     else if (player.ai)
       return {

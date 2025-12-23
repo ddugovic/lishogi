@@ -47,6 +47,7 @@ export interface AnalyseGame {
   variant: Variant;
   winner?: Color;
   moveCentis?: number[];
+  byoEntry?: { sente?: number; gote?: number };
   initialSfen?: string;
   importedBy?: string;
   division?: Division;

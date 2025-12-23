@@ -25,7 +25,10 @@ export default function renderConvo(ctrl: MsgCtrl, convo: Convo): VNode {
           h(
             'a.user-link.ulpt',
             {
-              attrs: { href: `/@/${user.name}` },
+              attrs: {
+                href: `/@/${user.name}`,
+                'data-user-title': user.title || '',
+              },
               class: {
                 online: user.online,
                 offline: !user.online,

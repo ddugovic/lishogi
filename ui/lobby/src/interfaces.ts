@@ -75,11 +75,11 @@ export interface Game {
     id?: string;
     username?: string;
     countryCode?: string;
+    title?: string;
     rating?: number;
     prov?: boolean;
     ai?: number;
     aiCode?: EngineCode;
-    isBot?: boolean;
   };
   isMyTurn: boolean;
   secondsLeft?: number;

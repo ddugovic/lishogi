@@ -68,10 +68,10 @@ final class JsonView(rematches: Rematches) {
           )
           .add("countryCode" -> luOpponent.map(_.countryCode))
           .add("rating" -> pov.opponent.rating)
+          .add("title" -> luOpponent.map(_.title))
           .add("prov" -> pov.opponent.provisional)
           .add("ai" -> pov.opponent.aiLevel)
-          .add("aiCode" -> pov.opponent.aiCode)
-          .add("isBot" -> luOpponent.map(_.isBot)),
+          .add("aiCode" -> pov.opponent.aiCode),
         "isMyTurn" -> pov.isMyTurn,
       )
       .add("secondsLeft" -> pov.remainingSeconds)
