@@ -122,8 +122,8 @@ case class Assessible(analysed: Analysed, color: Color) {
 
   lazy val sfAvg: Int = listAverage(Accuracy.diffsList(Pov(game, color), analysis)).toInt
   lazy val sfSd: Int  = listDeviation(Accuracy.diffsList(Pov(game, color), analysis)).toInt
-  lazy val mtAvg: Int = listAverage(~game.moveTimes(color) map (_.roundTenths)).toInt
-  lazy val mtSd: Int  = listDeviation(~game.moveTimes(color) map (_.roundTenths)).toInt
+  lazy val mtAvg: Int = listAverage(~game.moveTimesBeforeByoyomi(color) map (_.roundTenths)).toInt
+  lazy val mtSd: Int  = listDeviation(~game.moveTimesBeforeByoyomi(color) map (_.roundTenths)).toInt
   lazy val blurs: Int = game.playerBlurPercent(color)
 
   lazy val tcFactor: Double =

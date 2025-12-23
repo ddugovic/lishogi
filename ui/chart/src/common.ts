@@ -70,7 +70,11 @@ export function maybeChart(el: HTMLCanvasElement): Chart | undefined {
 /**  Instead of using the annotation plugin, create a dataset to plot as a pseudo-annotation
  *  @returns a vertical line from {ply,-1.05} to {ply,+1.05}.
  * */
-export function plyLine(ply: number, mainline = true): ChartDataset<'line'> {
+export function plyLine(
+  ply: number,
+  solid = true,
+  options?: { borderColor?: string },
+): ChartDataset<'line'> {
   return {
     xAxisID: 'x',
     type: 'line',
@@ -79,12 +83,12 @@ export function plyLine(ply: number, mainline = true): ChartDataset<'line'> {
       { x: ply, y: chartYMin },
       { x: ply, y: chartYMax },
     ],
-    borderColor: !ply ? 'transparent' : accentColor(),
+    borderColor: !ply ? 'transparent' : options?.borderColor || accentColor(),
     pointRadius: 0,
     pointHoverRadius: 0,
     borderWidth: 1,
     animation: false,
-    segment: !mainline ? { borderDash: [5] } : undefined,
+    segment: !solid ? { borderDash: [5] } : undefined,
     order: 0,
     datalabels: { display: false },
   };

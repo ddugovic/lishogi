@@ -25,12 +25,12 @@ object Statistics {
 
   def moveTimeCoefVariation(pov: lila.game.Pov): Option[Float] =
     for {
-      mt   <- moveTimes(pov)
+      mt   <- moveTimesBeforeByoyomi(pov)
       coef <- moveTimeCoefVariation(mt)
     } yield coef
 
-  def moveTimes(pov: lila.game.Pov): Option[List[Centis]] =
-    pov.game.moveTimes(pov.color)
+  def moveTimesBeforeByoyomi(pov: lila.game.Pov): Option[List[Centis]] =
+    pov.game.moveTimesBeforeByoyomi(pov.color).filter(mt => mt.size >= 15)
 
   def cvIndicatesHighlyFlatTimes(c: Float) =
     c < 0.25
@@ -39,12 +39,12 @@ object Statistics {
     c < 0.14
 
   def cvIndicatesModeratelyFlatTimes(c: Float) =
-    c < 0.4
+    c < 0.40
 
   private val instantaneous = Centis(0)
 
   def slidingMoveTimesCvs(pov: lila.game.Pov): Option[Iterator[Float]] =
-    moveTimes(pov) ?? {
+    moveTimesBeforeByoyomi(pov) ?? {
       _.iterator
         .sliding(14)
         .map(a => a.toList.sorted.drop(1).dropRight(1))
@@ -56,7 +56,7 @@ object Statistics {
   def moderatelyConsistentMoveTimes(pov: lila.game.Pov): Boolean =
     moveTimeCoefVariation(pov) ?? { cvIndicatesModeratelyFlatTimes(_) }
 
-  private val fastMove = Centis(50)
+  private val fastMove = Centis(55)
   def noFastMoves(pov: lila.game.Pov): Boolean = {
     val moveTimes = ~pov.game.moveTimes(pov.color)
     moveTimes.count(fastMove >) <= (moveTimes.size / 20) + 2

@@ -271,7 +271,6 @@ final class GameApiV2(
             .add("aiLevel" -> p.aiLevel)
             .add("analysis" -> analysisOption.flatMap(analysisJson.player(g pov p.color)))
             .add("team" -> teams.map(_(p.color)))
-        // .add("moveCentis" -> withFlags.moveTimes ?? g.moveTimes(p.color).map(_.map(_.centis)))
         }),
       )
       .add("initialSfen" -> g.initialSfen)

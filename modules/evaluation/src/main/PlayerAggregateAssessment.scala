@@ -94,7 +94,7 @@ case class PlayerAggregateAssessment(
   def weightedAssessmentValue(assessment: GameAssessment): Double =
     playerAssessments map { pa =>
       if (pa.assessment != assessment) 0.0
-      else pa.tcFactor.getOrElse(1.0) * (if (pa.flags.highlyConsistentMoveTimes) 1.6 else 1.0)
+      else pa.tcFactor.getOrElse(1.0) * (if (pa.flags.highlyConsistentMoveTimes) 1.5 else 1.0)
     } sum
 
   val weightedCheatingSum       = weightedAssessmentValue(Cheating)

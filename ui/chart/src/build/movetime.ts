@@ -24,6 +24,8 @@ function movetime(
   const possibleChart = maybeChart(el);
   if (possibleChart) return possibleChart as PlyChart;
   const moveCentis = data.game.moveCentis;
+  const byoEntry = data.game.byoEntry;
+
   if (!moveCentis) return; // imported games
   type PlotSeries = { sente: MovePoint[]; gote: MovePoint[] };
   const moveSeriesPlot: PlotSeries = {
@@ -159,6 +161,11 @@ function movetime(
   datasets.push(...lineBuilder(totalSeriesPlot, false));
   datasets.push(...lineBuilder(totalSeriesPlot, true));
   datasets.push(plyLine(ply || firstPly), ...divisionLines);
+
+  if (byoEntry?.sente)
+    datasets.push(plyLine(byoEntry.sente * 2 - 1, false, { borderColor: senteColor() }));
+  if (byoEntry?.gote)
+    datasets.push(plyLine(byoEntry.gote * 2 - 1, false, { borderColor: goteColor() }));
 
   const config: Chart['config'] = {
     type: 'line' /* Needed for compat. with plyline and divisionlines.

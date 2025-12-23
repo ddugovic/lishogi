@@ -188,6 +188,14 @@ case class Game(
       b <- moveTimes(!startColor)
     } yield Sequence.interleave(a, b)
 
+  def moveTimesBeforeByoyomi(color: Color): Option[List[Centis]] =
+    moveTimes(color) map { mt =>
+      val start = clockHistory
+        .flatMap(_.firstEnteredPeriod(color))
+        .getOrElse(mt.size)
+      mt.take(start)
+    }
+
   def bothClockStates: Option[Vector[Centis]] =
     clockHistory.map(_.bothClockStates(startColor, clock ?? (_.byoyomi)))
 
@@ -932,6 +940,12 @@ case class ClockHistory(
 
   def firstEnteredPeriod(color: Color): Option[Int] =
     periodEntries(color).headOption
+
+  def firstEnteredPeriodByColor: Color.Map[Option[Int]] =
+    Color.Map(
+      periodEntries(Color.Sente).headOption,
+      periodEntries(Color.Gote).headOption,
+    )
 
   def countSpentPeriods(color: Color, turn: Int) =
     periodEntries(color).count(_ == turn)

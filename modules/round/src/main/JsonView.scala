@@ -168,6 +168,17 @@ final class JsonView(
               "game" -> gameJsonView(game)
                 .add("moveCentis" -> (withFlags.movetimes ?? game.moveTimes.map(_.map(_.centis))))
                 .add("division" -> withFlags.division.option(divider(game)))
+                .add("byoEntry" -> game.clockHistory.map { ch =>
+                  val pers = ch.firstEnteredPeriodByColor
+                  Json
+                    .obj()
+                    .add(
+                      "sente" -> pers.sente,
+                    )
+                    .add(
+                      "gote" -> pers.gote,
+                    )
+                })
                 .add("importedBy" -> game.notationImport.flatMap(_.user)),
               "clock"          -> game.clock.map(clockJson),
               "correspondence" -> game.correspondenceClock,
