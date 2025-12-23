@@ -30,7 +30,7 @@ trait FormHelper { self: I18nHelper =>
   val postForm     = form(method := "post")
   val submitButton = button(tpe := "submit")
 
-  def translatedTimes(seconds: List[Int], forceSeconds: Boolean = false)(implicit
+  def translatedSeconds(seconds: List[Int], forceSeconds: Boolean = false)(implicit
       lang: Lang,
   ): List[(Int, String)] =
     seconds map { sec =>

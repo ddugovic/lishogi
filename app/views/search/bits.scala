@@ -171,7 +171,7 @@ private object bits {
       }
 
       def duration = {
-        val options = translatedTimes(Query.clockInits)
+        val options = translatedSeconds(Query.clockInits)
         tr(
           tr(
             th(label(trans.duration())),
@@ -192,7 +192,7 @@ private object bits {
       }
 
       def clockTime = {
-        val options = translatedTimes(Query.clockInits)
+        val options = translatedSeconds(Query.clockInits)
         tr(
           th(label(trans.clockInitialTime())),
           td(
@@ -211,7 +211,7 @@ private object bits {
       }
 
       def clockIncrement = {
-        val options = translatedTimes(Query.clockIncs, forceSeconds = true)
+        val options = translatedSeconds(Query.clockIncs, forceSeconds = true)
         tr(
           th(label(trans.clockIncrement())),
           td(
@@ -230,7 +230,7 @@ private object bits {
       }
 
       def clockByoyomi = {
-        val options = translatedTimes(Query.clockByos, forceSeconds = true)
+        val options = translatedSeconds(Query.clockByos, forceSeconds = true)
         tr(
           th(label(trans.clockByoyomi())),
           td(

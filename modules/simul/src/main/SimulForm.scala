@@ -14,6 +14,7 @@ import lila.user.User
 
 object SimulForm {
 
+  // minutes
   val clockTimes: List[Int] = ((5 to 15 by 5) ++ (20 to 90 by 10) ++ (120 to 180 by 20)).toList
   val clockTimeDefault      = 20
 
@@ -21,6 +22,7 @@ object SimulForm {
     ((0 to 2 by 1) ++ (3 to 7) ++ (10 to 30 by 5) ++ (40 to 60 by 10) ++ (90 to 180 by 30)).toList
   val clockIncrementDefault = 0
 
+  // minutes
   val clockExtras: List[Int] = ((0 to 15 by 5) ++ (20 to 60 by 10) ++ (90 to 120 by 30)).toList
   val clockExtraDefault      = 0
 

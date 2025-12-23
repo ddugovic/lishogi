@@ -169,9 +169,9 @@ object form {
         form3.group(form("conditions.minRating.rating"), frag("Minimum rating"), half = true)(
           form3.select(
             _,
-            Condition.DataForm.minRatings map {
-              case 0 => (0, trans.noRestriction.txt())
-              case x => (x, x.toString)
+            ("" :: Condition.DataForm.minRatings.map(_.toString)) map {
+              case "" => ("", trans.noRestriction.txt())
+              case x  => (x, x)
             },
           ),
         ),
@@ -179,9 +179,9 @@ object form {
           .group(form("conditions.maxRating.rating"), frag("Maximum weekly rating"), half = true)(
             form3.select(
               _,
-              Condition.DataForm.maxRatings map {
-                case 0 => (0, trans.noRestriction.txt())
-                case x => (x, x.toString)
+              ("" :: Condition.DataForm.maxRatings.map(_.toString)) map {
+                case "" => ("", trans.noRestriction.txt())
+                case x  => (x, x)
               },
             ),
           ),
