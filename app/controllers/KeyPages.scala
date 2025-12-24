@@ -41,5 +41,6 @@ final class KeyPages(env: Env)(implicit ec: scala.concurrent.ExecutionContext) {
   def blacklisted: Result = Results.Unauthorized(blacklistMessage)
 
   private val blacklistMessage =
-    "Sorry, your IP address has been used to violate the ToS, and is now blacklisted."
+    s"""Sorry, your IP address has been used to violate the ToS, and is now blacklisted. If you believe this to be a mistake contact lishogi.
+申し訳ありませんが、あなたのIPアドレスが利用規約（ToS）違反に使用されたため、現在ブラックリストに登録されています。これが誤りだと思われる場合は、「lishogi」までご連絡ください。"""
 }

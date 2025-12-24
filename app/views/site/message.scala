@@ -35,22 +35,17 @@ object message {
 
   def noBot(implicit ctx: Context) =
     apply("No bot area") {
-      frag("Sorry, bot accounts are not allowed here.")
+      frag("Sorry, bot accounts are not allowed here. 申し訳ありませんが、ボットアカウントはここでは許可されていません。")
     }
 
   def noEngine(implicit ctx: Context) =
     apply("No engine area") {
-      "Sorry, engine assisted players are not allowed here."
+      "Sorry, engine assisted players are not allowed here. 申し訳ありませんが、エンジン支援を使用するプレイヤーはここでは許可されていません。"
     }
 
   def noBooster(implicit ctx: Context) =
     apply("No booster area") {
-      "Sorry, boosters and sandbaggers are not allowed here."
-    }
-
-  def blacklisted(implicit ctx: Context) =
-    apply("IP address blacklisted") {
-      "Sorry, your IP address has been used to violate the ToS, and is now blacklisted."
+      "Sorry, boosters and sandbaggers are not allowed here. 申し訳ありませんが、レーティング操作（ブースト行為・サンドバッグ行為）は申し訳ありませんが、レーティング操作（ブースト行為・サンドバッグ行為）はこのページでは禁止されています。"
     }
 
   def privateStudy(study: lila.study.Study)(implicit ctx: Context) =
