@@ -39,7 +39,6 @@ final class UserSpyApi(
     store: Store,
     userRepo: UserRepo,
     geoIP: GeoIP,
-    ip2proxy: Ip2Proxy,
     printBan: PrintBan,
 )(implicit ec: scala.concurrent.ExecutionContext) {
 
@@ -49,8 +48,8 @@ final class UserSpyApi(
     store.chronoInfoByUser(user) flatMap { infos =>
       val ips = distinctRecent(infos.map(_.datedIp))
       val fps = distinctRecent(infos.flatMap(_.datedFp))
-      fetchOtherUsers(user, ips.map(_.value).toSet, fps.map(_.value).toSet, maxOthers) zip
-        ip2proxy.keepProxies(ips.map(_.value).toList) map { case (otherUsers, proxies) =>
+      fetchOtherUsers(user, ips.map(_.value).toSet, fps.map(_.value).toSet, maxOthers) map {
+        otherUsers =>
           val othersByIp = otherUsers.foldLeft(Map.empty[IpAddress, Set[User]]) {
             case (acc, other) =>
               other.ips.foldLeft(acc) { case (acc, ip) =>
@@ -69,7 +68,6 @@ final class UserSpyApi(
                 ip,
                 firewall blocksIp ip.value,
                 geoIP orUnknown ip.value,
-                proxies(ip.value),
                 Alts(othersByIp.getOrElse(ip.value, Set.empty)),
               )
             }.toList,
@@ -85,7 +83,7 @@ final class UserSpyApi(
             })).toList,
             otherUsers = otherUsers,
           )
-        }
+      }
     }
 
   private[security] def userHasPrint(u: User): Fu[Boolean] =
@@ -211,7 +209,6 @@ object UserSpy {
       ip: Dated[IpAddress],
       blocked: Boolean,
       location: Location,
-      proxy: Boolean,
       alts: Alts,
   ) {
     def datedLocation = Dated(location, ip.date)

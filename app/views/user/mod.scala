@@ -657,7 +657,6 @@ object mod {
             tr(
               th(pluralize("IP", spy.prints.size)),
               sortNumberTh("Alts"),
-              th,
               sortNumberTh("Date"),
               canIpBan option sortNumberTh,
             ),
@@ -667,7 +666,6 @@ object mod {
               tr(cls := ip.blocked option "blocked")(
                 td(a(href := routes.Mod.singleIp(ip.ip.value.value))(ip.ip.value)),
                 td(dataSort := ip.alts.score)(altMarks(ip.alts)),
-                td(ip.proxy option span(cls := "proxy")("PROXY")),
                 td(dataSort := ip.ip.date.getMillis)(momentFromNowServer(ip.ip.date)),
                 canIpBan option td(dataSort := (9999 - ip.alts.cleans))(
                   button(

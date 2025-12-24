@@ -25,7 +25,6 @@ final private class SecurityConfig(
     @ConfigName("check_mail_api") val checkMail: CheckMail,
     val recaptcha: Recaptcha.Config,
     val mailgun: Mailgun.Config,
-    @ConfigName("ip2proxy.url") val ip2ProxyUrl: String,
     @ConfigName("lame_name_check") val lameNameCheck: LameNameCheck,
 )
 

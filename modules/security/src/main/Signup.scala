@@ -47,13 +47,10 @@ final class Signup(
         else if (HTTPRequest weirdUA req) fuccess(YesBecauseUA)
         else
           print.fold[Fu[MustConfirmEmail]](fuccess(YesBecausePrintMissing)) { fp =>
-            store.recentByPrintExists(fp) flatMap { printFound =>
-              if (printFound) fuccess(YesBecausePrintExists)
-              else
-                ipTrust.isSuspicious(ip).map {
-                  case true => YesBecauseIpSusp
-                  case _    => Nope
-                }
+            store.recentByPrintExists(fp) map { printFound =>
+              if (printFound) YesBecausePrintExists
+              else if (ipTrust.isSuspicious(ip)) YesBecauseIpSusp
+              else Nope
             }
           }
       }

@@ -63,8 +63,8 @@ final class GarbageCollector(
     data match {
       case ApplyData(user, ip, email, req) =>
         for {
-          spy    <- userSpy(user, 300)
-          ipSusp <- ipTrust.isSuspicious(ip)
+          spy <- userSpy(user, 300)
+          ipSusp = ipTrust.isSuspicious(ip)
           _ <- {
             val printOpt = spy.prints.headOption
             logger.debug(s"apply ${data.user.username} print=$printOpt")
@@ -77,15 +77,11 @@ final class GarbageCollector(
               case _ =>
                 badOtherAccounts(spy.otherUsers.map(_.user)) ?? { others =>
                   logger.debug(s"other ${data.user.username} others=${others.map(_.username)}")
-                  lila.common.Future
-                    .exists(spy.ips)(ipTrust.isSuspicious)
-                    .map {
-                      _ ?? collect(
-                        user,
-                        email,
-                        msg = s"Prev users: ${others.map(o => "@" + o.username).mkString(", ")}",
-                      )
-                    }
+                  spy.ips.exists(ipTrust.isSuspicious) ?? collect(
+                    user,
+                    email,
+                    msg = s"Prev users: ${others.map(o => "@" + o.username).mkString(", ")}",
+                  )
                 }
             }
           }

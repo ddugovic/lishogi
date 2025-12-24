@@ -61,11 +61,6 @@ final class Env(
 
   lazy val store = new Store(db(config.collection.security), cacheApi, net.ip)
 
-  lazy val ip2proxy = {
-    def mk = (url: String) => wire[Ip2Proxy]
-    mk(config.ip2ProxyUrl)
-  }
-
   lazy val ugcArmedSetting = settingStore[Boolean](
     "ugcArmed",
     default = true,
