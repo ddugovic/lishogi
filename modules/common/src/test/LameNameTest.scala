@@ -32,6 +32,8 @@ class LameNameTest extends Specification {
       test("urcuntblah") must beTrue
       test("fuckster") must beTrue
       test("fuuckster") must beTrue
+      test("mankolicker") must beTrue
+      test("chinChinchin") must beTrue
     }
   }
   "allow" should {
@@ -44,6 +46,7 @@ class LameNameTest extends Specification {
       test("agm-foo") must beFalse
       test("atf90") must beFalse
       test("a_b") must beFalse
+      test("bigChin") must beFalse
     }
   }
 }

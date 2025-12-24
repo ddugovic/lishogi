@@ -28,12 +28,15 @@ object LameName {
     "chinpo",
     "cock",
     "coon",
+    "corona",
+    "covid",
     "cuck",
     "cunniling",
     "cunt",
     "cyka",
     "dick",
     "douche",
+    "epstein",
     "fag",
     "fart",
     "feces",
@@ -47,10 +50,8 @@ object LameName {
     "manko",
     "moderator",
     "mongool",
-    "nakadashi",
     "nazi",
     "nigg",
-    "oshiri",
     "pedo",
     "penis",
     "pidar",
@@ -60,11 +61,12 @@ object LameName {
     "poop",
     "poxyu",
     "pussy",
+    "rapist",
     "resign",
     "retard",
     "shit",
     "slut",
-    "unko",
+    "suicide",
     "vagin",
     "wanker",
     "whore",
@@ -73,8 +75,25 @@ object LameName {
     "xyuta",
   )
 
+  private val baseWordsJa = List(
+    "chinchin",
+    "chinpo",
+    "ecchi",
+    "hentai",
+    "hetakuso",
+    "kichigai",
+    "korosu",
+    "manko",
+    "nakadashi",
+    "oppai",
+    "oshiri",
+    "sukebe",
+    "unko",
+    "yariman",
+  )
+
   private val usernameRegex = lameWords(
-    baseWords ::: List("lishogi", "corona", "covid"),
+    baseWords ::: baseWordsJa ::: List("lishogi", "lichess"),
   )
 
   private val tournamentRegex = lameWords(baseWords)
