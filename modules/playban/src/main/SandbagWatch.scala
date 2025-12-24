@@ -53,7 +53,7 @@ final private class SandbagWatch(
     }
 
   private val records: Cache[User.ID, Record] = lila.memo.CacheApi.scaffeineNoScheduler
-    .expireAfterWrite(3 hours)
+    .expireAfterWrite(5 hours)
     .build[User.ID, Record]()
 
   private def isSandbag(game: Game, loser: Color, userId: User.ID): Boolean =

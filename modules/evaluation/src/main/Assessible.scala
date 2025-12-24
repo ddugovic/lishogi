@@ -17,9 +17,9 @@ case class Assessible(analysed: Analysed, color: Color) {
   import analysed._
 
   lazy val suspiciousErrorRate: Boolean =
-    listAverage(Accuracy.diffsList(Pov(game, color), analysis)) < (if (game.isVeryFast) 30
-                                                                   else if (game.isFast) 25
-                                                                   else 20)
+    listAverage(Accuracy.diffsList(Pov(game, color), analysis)) < (if (game.isVeryFast) 60
+                                                                   else if (game.isFast) 50
+                                                                   else 40)
 
   lazy val alwaysHasAdvantage: Boolean =
     !analysis.infos.exists { info =>

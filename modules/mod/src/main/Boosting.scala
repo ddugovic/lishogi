@@ -56,12 +56,11 @@ final class BoostingApi(
     if (
       game.rated
       && game.accountable
-      && game.playedPlies <= game.variant.numberOfRanks
+      && game.playedPlies <= (game.variant.numberOfRanks + 2)
       && !game.isTournament
       && game.winnerColor.isDefined
       && variants.contains(game.variant)
       && !game.isCorrespondence
-      && game.clock.fold(false) { _.limitInMinutes >= 1 }
     ) {
       game.winnerColor match {
         case Some(a) => {
