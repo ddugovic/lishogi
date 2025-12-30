@@ -17,7 +17,6 @@ function main(opts: { $wrap: JQuery; toggle: () => void }): void {
     .then(() => {
       $input.on('blur', e => {
         if (e.target !== document.activeElement) {
-          $input.val('');
           $('body').hasClass('clinput') && opts.toggle();
         }
       });
