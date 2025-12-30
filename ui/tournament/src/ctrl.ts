@@ -288,6 +288,16 @@ export default class TournamentController {
     this.socket.send('close-joining', { v });
   }
 
+  annulGame(arrId: string, gameId: string | undefined): void {
+    if (gameId) {
+      this.socket.send('arrangement-annul', {
+        id: arrId,
+        gid: gameId,
+      });
+      this.showArrangement(undefined);
+    }
+  }
+
   scrollToMe = (): void => {
     if (this.isArena()) {
       const page = myPage(this);

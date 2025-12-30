@@ -638,6 +638,7 @@ object JsonView {
       .add("color", a.color.map(_.name))
       .add("points", a.points.map(arrangementPoints))
       .add("gameId", a.gameId)
+      .add("prevGameIds", a.prevGameIds.nonEmpty option a.prevGameIds)
       .add("startedAt", a.startedAt)
       .add("status", a.status.map(_.id))
       .add("winner", a.winner)

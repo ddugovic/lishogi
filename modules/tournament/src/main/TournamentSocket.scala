@@ -151,6 +151,13 @@ final private class TournamentSocket(
             d      <- o obj "d"
             arrId  <- d.str("id")
           } api.organizedArrangementDelete(tourId.value, arrId, userId)
+        case "arrangement-annul" =>
+          for {
+            userId <- userIdOpt
+            d      <- o obj "d"
+            arrId  <- d.str("id")
+            gameId <- d.str("gid")
+          } api.arrangementAnnulGame(tourId.value, arrId, gameId, userId)
         case "process-candidate" =>
           for {
             by     <- userIdOpt

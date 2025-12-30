@@ -245,6 +245,7 @@ export interface Arrangement {
   color?: Color;
   points?: Points;
   gameId?: string;
+  prevGameIds?: string[];
   startedAt?: number;
   status?: StatusId;
   winner?: string;

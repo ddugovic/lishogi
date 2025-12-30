@@ -310,6 +310,24 @@ const arrangementForm = (ctrl: TournamentController, state: NewArrangement): May
             'button.button.button-red',
             {
               class: {
+                disabled: !hasGame || !!ctrl.data.isFinished,
+              },
+              hook: bind('click', () => {
+                if (
+                  confirm(`${i18n('tourArrangements:annulResults')} - ${i18n('notReversible')}`)
+                ) {
+                  ctrl.annulGame(state.id!, state.gameId);
+                }
+              }),
+            },
+            i18n('tourArrangements:annulResults'),
+          )
+        : null,
+      !isNew
+        ? h(
+            'button.button.button-red',
+            {
+              class: {
                 disabled: hasGame || !!ctrl.data.isFinished,
               },
               hook: bind('click', () => handleDelete()),

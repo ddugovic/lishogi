@@ -266,6 +266,7 @@ object BSONHandlers {
         color = r.getO[shogi.Color](Arrangement.BSONFields.color),
         points = r.getO[Arrangement.Points](Arrangement.BSONFields.points),
         gameId = r strO Arrangement.BSONFields.gameId,
+        prevGameIds = r strsD Arrangement.BSONFields.prevGameIds,
         startedAt = r dateO Arrangement.BSONFields.startedAt,
         status = r.intO(Arrangement.BSONFields.status) flatMap shogi.Status.apply,
         winner = r boolO Arrangement.BSONFields.winner flatMap {
@@ -289,6 +290,7 @@ object BSONHandlers {
         Arrangement.BSONFields.color         -> o.color,
         Arrangement.BSONFields.points        -> o.points.filterNot(_ == Arrangement.Points.default),
         Arrangement.BSONFields.gameId        -> o.gameId,
+        Arrangement.BSONFields.prevGameIds   -> o.prevGameIds,
         Arrangement.BSONFields.startedAt     -> o.startedAt,
         Arrangement.BSONFields.status        -> o.status.map(_.id),
         Arrangement.BSONFields.winner        -> o.winner.map(o.user1.contains),

@@ -560,6 +560,48 @@ final class TournamentApi(
       }
     }
 
+  private[tournament] def arrangementAnnulGame(
+      tourId: Tournament.ID,
+      arrId: Arrangement.ID,
+      gameId: Game.ID,
+      userId: User.ID,
+  ): Funit =
+    Sequencing(tourId)(tournamentRepo.enterableById) { tour =>
+      (tour.createdBy == userId) ?? {
+        arrangementRepo.byId(arrId) flatMap {
+          _ ?? { arr =>
+            (arr.gameId.has(gameId)) ?? {
+              (arrangementRepo.update(arr.annulGame) >> {
+                arr.finished ?? arr.userIds
+                  .map { userId =>
+                    playerRepo.update(arr.tourId, userId) { p =>
+                      val points = arr.points | Arrangement.Points.default
+                      val score =
+                        if (arr.winner.exists(_ == p.userId)) points.win
+                        else if (arr.winner.isEmpty) points.draw
+                        else points.loss
+
+                      fuccess(
+                        p.copy(
+                          score = p.score - score,
+                        ),
+                      )
+                    }
+                  }
+                  .sequenceFu
+                  .void
+              }) >>- {
+                cached.arrangement.invalidateArrangements(tour.id)
+                cached.arrangement.invalidatePlayers(tour.id)
+                updateTournamentStanding(tour)
+                socket.foreach(_.reload(tour.id))
+              }
+            }
+          }
+        }
+      }
+    }
+
   def pageOf(tour: Tournament, userId: User.ID): Fu[Option[Int]] =
     cached ranking tour map {
       _ get userId map { rank =>
@@ -673,7 +715,7 @@ final class TournamentApi(
           },
         ) { arrId =>
           arrangementRepo.byId(arrId) flatMap {
-            _ ?? { arr =>
+            _.filter(_.gameId.has(game.id)) ?? { arr =>
               arrangementRepo.finish(game, arr) >>
                 game.userIds
                   .map(updateArrangementPlayer(tour, game.some, arr))

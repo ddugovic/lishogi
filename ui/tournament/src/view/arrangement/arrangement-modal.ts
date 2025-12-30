@@ -97,6 +97,30 @@ function header(ctrl: TournamentController, a: Arrangement): VNode {
           }),
         )
       : null,
+    ctrl.isCreator() && !ctrl.isOrganized() && !!a.gameId && !ctrl.data.isFinished
+      ? h(
+          'a.annul-icon',
+          {
+            attrs: {
+              title: i18n('tourArrangements:annulResults'),
+            },
+            on: {
+              click: () => {
+                if (
+                  confirm(`${i18n('tourArrangements:annulResults')} - ${i18n('notReversible')}`)
+                ) {
+                  ctrl.annulGame(a.id, a.gameId);
+                }
+              },
+            },
+          },
+          h('i', {
+            attrs: {
+              'data-icon': icons.reload,
+            },
+          }),
+        )
+      : null,
     h('h3', a.name || i18n('tourArrangements:gameScheduling')),
   ]);
 }
@@ -311,6 +335,17 @@ function totalSection(ctrl: TournamentController, a: Arrangement): VNode {
         : null,
       points
         ? titleValueWrap(i18n('tourArrangements:pointsWDL'), `${points.w}/${points.d}/${points.l}`)
+        : null,
+      a.prevGameIds
+        ? titleValueWrap(
+            i18n('tourArrangements:annulledGames'),
+            h(
+              'div.annulled-games',
+              a.prevGameIds.map(gid =>
+                h('a', { attrs: { href: `/${gid}`, target: '_blank' } }, `#${gid}`),
+              ),
+            ),
+          )
         : null,
     ]),
     a.gameId

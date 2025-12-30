@@ -13,12 +13,15 @@
 
   .arr-modal {
     .arr-header {
+      @extend %box-radius-top;
+
       position: relative;
       background: theme.$c-bg-zebra;
       border-bottom: theme.$border;
       padding: 1rem;
 
-      .edit-icon {
+      .edit-icon,
+      .annul-icon {
         position: absolute;
         top: 0.35rem;
         left: 0;
@@ -26,6 +29,15 @@
         line-height: 28px;
         width: 32px;
         height: 32px;
+      }
+
+      .annul-icon {
+        color: theme.$c-red;
+        opacity: 0.8;
+
+        &:hover {
+          opacity: 1;
+        }
       }
     }
 
@@ -250,6 +262,17 @@
       .value {
         margin: 0 0.5rem;
         color: theme.$c-font-clear;
+
+        &:has(.annulled-games) {
+          flex: 0 1 60%;
+        }
+
+        .annulled-games {
+          display: flex;
+          flex-wrap: wrap;
+          column-gap: 0.25em;
+          font-size: 0.9em;
+        }
       }
 
       .right {

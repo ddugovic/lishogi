@@ -13,6 +13,7 @@ case class Arrangement(
     color: Option[Color] = none, // user1 color
     points: Option[Arrangement.Points] = none,
     gameId: Option[lila.game.Game.ID] = none,
+    prevGameIds: List[lila.game.Game.ID] = Nil,
     startedAt: Option[DateTime] = none,
     status: Option[shogi.Status] = none,
     winner: Option[lila.user.User.ID] = none,
@@ -77,6 +78,18 @@ case class Arrangement(
       color = color.some, // same color after abandoned games
     )
   }
+
+  def annulGame =
+    copy(
+      gameId = none,
+      prevGameIds = (gameId.fold(prevGameIds)(_ :: prevGameIds)).take(10),
+      startedAt = none,
+      status = none,
+      winner = none,
+      plies = none,
+      scheduledAt = none,
+      lastNotified = none,
+    )
 
   def setSettings(settings: Arrangement.Settings) =
     if (gameId.isDefined)
@@ -179,6 +192,7 @@ object Arrangement {
     val color             = "c"
     val points            = "pt"
     val gameId            = "g"
+    val prevGameIds       = "pg"
     val startedAt         = "st"
     val status            = "s"
     val winner            = "w"
