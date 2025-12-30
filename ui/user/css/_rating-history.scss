@@ -1,7 +1,12 @@
 @use 'pkg:common/theme';
 
 .rating-history-container {
-  flex: 1 1 58%;
+  &,
+  &-stub {
+    flex: 1 1 58%;
+    min-height: 50px;
+  }
+
   height: 350px;
 
   .chart-container {

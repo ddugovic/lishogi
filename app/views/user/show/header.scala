@@ -245,7 +245,13 @@ object header {
       if (info.ratingChart.isDefined && (!u.lame || ctx.is(u) || isGranted(_.UserSpy)))
         views.html.user.bits.ratingHistoryContainer
       else
-        ctx.is(u) option newPlayer(u),
+        div(cls := "rating-history-container-stub")(
+          if (ctx.is(u))
+            a(href := routes.User.newPlayer)(
+              trans.welcomeToX("lishogi.org"),
+            )
+          else p(trans.clas.nothingHere()),
+        ),
       div(cls := "profile-side")(
         div(cls := "user-infos")(
           !ctx.is(u) option frag(
