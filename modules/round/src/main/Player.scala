@@ -162,8 +162,16 @@ final private class Player(
             UsiApplied(game.pauseAndSealUsi(usi, nsg, blur))
           else UsiApplied(game.applyGame(nsg, blur)),
         )
-      case Invalid(err) if game.isProMode => Valid(Illegal(game.withIllegalUsi(usi), err))
-      case i @ Invalid(_)                 => i
+      case Invalid(err) if (game.isProMode && illegalSanityCheck(game.shogi, usi)) =>
+        Valid(Illegal(game.withIllegalUsi(usi), err))
+      case i @ Invalid(_) => i
+    }
+
+  private def illegalSanityCheck(shogiGame: shogi.Game, usi: Usi): Boolean =
+    usi match {
+      case u: Usi.Move => shogiGame.board(u.orig).exists(_.color == shogiGame.color)
+      case u: Usi.Drop =>
+        shogiGame.board(u.pos).isEmpty && shogiGame.hands(shogiGame.color)(u.role) > 0
     }
 
   private def notifyOfPausedGame(usi: Usi, game: Game): Funit = {
