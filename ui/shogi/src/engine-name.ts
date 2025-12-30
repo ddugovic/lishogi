@@ -14,7 +14,7 @@ export type EngineCode = (typeof EngineCode)[keyof typeof EngineCode];
 // modules/game/src/main/EngineConfig.scala
 export function engineCode(rules: Rules, sfen: Sfen | undefined, level?: number): EngineCode {
   return rules === 'standard' &&
-    (!level || level > 1) &&
+    (!level || level > 4) &&
     (!sfen ||
       initialSfen(rules) === sfen ||
       isHandicap({ sfen, rules }) ||

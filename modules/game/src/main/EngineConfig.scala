@@ -41,7 +41,7 @@ object EngineConfig {
 
     def apply(initialSfen: Option[Sfen], variant: Variant, level: Option[Int]): Engine =
       if (
-        variant.standard && level.fold(true)(_ > 1) && initialSfen
+        variant.standard && level.fold(true)(_ > 4) && initialSfen
           .filterNot(_.initialOf(variant))
           .fold(true)(sf => Handicap.isHandicap(sf, variant) || isStandardMaterial(sf))
       ) YaneuraOu
