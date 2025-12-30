@@ -415,6 +415,7 @@ object mod {
           tr(
             th("Opponent"),
             th("Game"),
+            th("#Moves"),
             th("Centi-Pawn", br, "(Avg ± SD)"),
             th("Move Times", br, "(Avg ± SD)"),
             th(span(title := "The frequency of which the user leaves the game page.")("Blurs")),
@@ -445,6 +446,7 @@ object mod {
                     )
                   },
                 ),
+                td(span(pag.pov(result).fold("?")(p => p.game.playedPlies.toString))),
                 td(
                   span(
                     cls      := s"sig sig_${Display.stockfishSig(result)}",
