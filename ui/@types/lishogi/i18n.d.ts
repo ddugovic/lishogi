@@ -321,6 +321,7 @@ declare global {
     | 'shogi'
     | 'playWithAFriend'
     | 'playWithTheMachine'
+    | 'playOtherPlayers'
     | 'toInviteSomeoneToPlayGiveThisUrl'
     | 'gameOver'
     | 'waitingForOpponent'
@@ -969,6 +970,7 @@ declare global {
     | 'learnFromThisMistake'
     | 'skipThisMove'
     | 'next'
+    | 'prev'
     | 'resumeLearning'
     | 'youCanDoBetter'
     | 'solution'
@@ -1104,6 +1106,15 @@ declare global {
     | 'leavingLobbyAlert'
     | 'oneUrlPerLine'
     | 'translate'
+    | 'newPlayerIntro'
+    | 'newPlayerRegisterCta'
+    | 'newPlayerPreferences'
+    | 'newPlayerLearn'
+    | 'newPlayerPlayPeople'
+    | 'newPlayerPlayAi'
+    | 'newPlayerTournaments'
+    | 'newPlayerPuzzles'
+    | 'newPlayerStudies'
     | 'activity:activity'
     | 'activity:hostedALiveStream'
     | 'activity:signedUp'
@@ -2298,7 +2309,9 @@ declare global {
     | 'tourArrangements:whoStartsMatchesAnswerNew'
     | 'tourArrangements:organizedScoring'
     | 'tourArrangements:organizedScoringAnswer'
-    | 'tourArrangements:howManyGames';
+    | 'tourArrangements:howManyGames'
+    | 'tourArrangements:annulResults'
+    | 'tourArrangements:annulledGames';
 }
 
 export {};
