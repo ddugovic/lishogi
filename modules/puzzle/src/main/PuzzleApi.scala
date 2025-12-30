@@ -303,7 +303,16 @@ final class PuzzleApi(
               submittedBy = submittedBy,
             )
             _ <- colls.puzzle(_.insert.one(puzzle))
-            _ <- colls.puzzle(_.updateField($id(puzzle.id), Puzzle.BSONFields.voteUp, 10))
+            _ <- colls.puzzle(
+              _.update.one(
+                $id(puzzle.id),
+                $set(
+                  Puzzle.BSONFields.voteUp   -> 10,
+                  Puzzle.BSONFields.voteDown -> 0,
+                  "gen"                      -> "puz1", // for easier deletion if necessary
+                ),
+              ),
+            )
           } yield (puzzle.id.some))
         }
       }
