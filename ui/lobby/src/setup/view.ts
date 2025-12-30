@@ -12,6 +12,7 @@ import { sfenColor } from 'shogi/common';
 import { engineCode, engineNameFromCode } from 'shogi/engine-name';
 import { usernameVNodes } from 'shogi/username';
 import { findHandicaps } from 'shogiops/handicaps';
+import { parseSfen } from 'shogiops/sfen';
 import { h, type VNode } from 'snabbdom';
 import type SetupCtrl from './ctrl';
 import {
@@ -152,7 +153,14 @@ function positionInput(ctrl: SetupCtrl): VNode {
                 });
               },
               update: vnode => {
-                update(vnode.elm as HTMLElement, ctrl.data.sfen);
+                const el = vnode.elm as HTMLElement;
+
+                if (!ctrl.data.sfen || parseSfen(ctrl.variantKey(), ctrl.data.sfen, false).isErr)
+                  el.classList.add('none');
+                else {
+                  el.classList.remove('none');
+                  update(el, ctrl.data.sfen);
+                }
               },
             },
           })
@@ -167,10 +175,16 @@ function sfenInput(ctrl: SetupCtrl): VNode {
       success: !ctrl.invalidSfen,
       failure: ctrl.invalidSfen,
     },
-    hook: bind('keyup', e => {
-      const sfen = (e.target as HTMLSelectElement).value;
-      ctrl.set('sfen', sfen);
-    }),
+    hook: {
+      ...bind('keyup', e => {
+        const sfen = (e.target as HTMLSelectElement).value;
+        ctrl.set('sfen', sfen);
+      }),
+      postpatch: (_, vnode) => {
+        const el = vnode.elm as HTMLInputElement;
+        el.value = ctrl.data.sfen;
+      },
+    },
     attrs: {
       id: fieldId('sfen'),
       type: 'text',

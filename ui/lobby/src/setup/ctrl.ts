@@ -60,6 +60,7 @@ export default class SetupCtrl {
     if (key === 'handicap') {
       this.data.sfen = value as string;
       this.invalidSfen = false;
+      this.redraw();
     } else if (key === 'sfen') {
       this.data.handicap =
         findHandicap({
