@@ -41,7 +41,7 @@ const miniPairing = (ctrl: SimulCtrl) => (pairing: Pairing) => {
     },
     [
       h(
-        `span.mini-board mini-board-${game.id} parse-sfen v-${game.variant}`,
+        `span.mini-board.mini-board-${game.id}.parse-sfen.v-${game.variant}`,
         {
           props: {
             'data-color': game.orient,

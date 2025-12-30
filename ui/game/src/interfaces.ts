@@ -53,6 +53,8 @@ export interface AnalyseGame {
   division?: Division;
   perf: string;
   rated?: boolean;
+  lastMove?: Usi;
+  illegalUsi?: Usi;
 }
 
 export interface Division {

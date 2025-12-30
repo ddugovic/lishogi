@@ -30,7 +30,8 @@ export function makeConfig(ctrl: RoundController): Config {
   const posRes = playing ? parseSfen(variant, step.sfen, false) : undefined;
   const splitSfen = step.sfen.split(' ');
   const sealedUsi = data.player.sealedUsi && usiToSquareNames(data.player.sealedUsi);
-  const enablePre = data.pref.enablePremove && !data.game.isProMode;
+  const isProMode = !!data.game.isProMode;
+  const enablePre = data.pref.enablePremove && !isProMode;
 
   return {
     sfen: { board: splitSfen[0], hands: splitSfen[2] },

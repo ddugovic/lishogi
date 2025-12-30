@@ -35,8 +35,12 @@
     content: icons.$patron;
     font-size: 1.3em;
     color: theme.$c-brag;
-    margin: 0 0 0.08ch 0.3ch;
+    margin: 0 0 0.08ch auto;
     transform: scaleX(-1);
+  }
+
+  &:hover {
+    background: theme.$c-brag;
   }
 }
 
