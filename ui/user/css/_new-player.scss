@@ -1,0 +1,141 @@
+@use 'pkg:breakpoint-sass' as breakpoint;
+@use 'pkg:common/theme';
+@use 'pkg:common/abstract/extends';
+@use 'pkg:common/abstract/media-queries';
+
+.new-player-list {
+  display: flex;
+  flex-direction: column;
+  margin: 2rem 0;
+
+  .row {
+    @extend %box-neat;
+
+    display: flex;
+    align-items: center;
+    padding: 1.25rem;
+    border: theme.$border;
+    text-decoration: none;
+    color: theme.$c-font;
+    margin: 0.25rem 0;
+
+    &:hover {
+      background: theme.$c-bg-zebra;
+      color: theme.$c-font-clearer;
+
+      i {
+        color: theme.$c-primary-clear;
+        opacity: 1;
+      }
+    }
+
+    i {
+      font-size: 2.2rem;
+      margin-right: 1.5rem;
+      width: 40px;
+      text-align: center;
+      opacity: 0.9;
+      color: theme.$c-primary;
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin: 0;
+      font-weight: bold;
+      color: theme.$c-font-clear;
+      flex: 0 0 200px;
+    }
+
+    p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: theme.$c-font-dim;
+      line-height: 1.4;
+      flex: 1;
+    }
+
+    &[href=''] i {
+      color: theme.$c-font-clear;
+    }
+
+    &[href='/learn'] i {
+      color: theme.$c-red;
+    }
+
+    &[href='/'] i {
+      color: theme.$c-font-clearer;
+    }
+
+    &[href='/#ai'] i {
+      color: theme.$c-accent;
+    }
+
+    &[href='/tournament'] i {
+      color: theme.$c-brag;
+    }
+
+    &[href='/training'] i {
+      color: theme.$c-good;
+    }
+
+    &[href='/study'] i {
+      color: theme.$c-primary;
+    }
+
+    @include breakpoint.breakpoint(media-queries.$mq-not-small) {
+      flex-wrap: wrap;
+
+      i {
+        font-size: 2rem;
+      }
+
+      h2 {
+        flex: 1 1 auto;
+      }
+
+      p {
+        flex: 1 0 100%;
+        margin-top: 0.75rem;
+      }
+    }
+  }
+}
+
+#dasher_app {
+  @keyframes highlight-fade {
+    0%,
+    100% {
+      background-color: transparent;
+    }
+
+    10%,
+    90% {
+      background-color: theme.$c-accent;
+      color: theme.$c-accent-over;
+    }
+  }
+
+  .highlight-1 {
+    &,
+    &::before {
+      animation: highlight-fade 1s;
+      animation-delay: 0.25s;
+    }
+  }
+
+  .highlight-2 {
+    &,
+    &::before {
+      animation: highlight-fade 1s;
+      animation-delay: 1.25s;
+    }
+  }
+
+  .highlight-3 {
+    &,
+    &::before {
+      animation: highlight-fade 1s;
+      animation-delay: 2.25s;
+    }
+  }
+}

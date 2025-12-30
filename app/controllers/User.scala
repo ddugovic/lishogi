@@ -562,4 +562,11 @@ final class User(
     Auth { _ => me =>
       fuccess(Redirect(routes.User.show(me.username)))
     }
+
+  def newPlayer =
+    Open { implicit ctx =>
+      pageHit
+      Ok(html.user.newPlayer()).fuccess
+    }
+
 }

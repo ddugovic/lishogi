@@ -289,7 +289,7 @@ final class Auth(
   private def redirectNewUser(user: UserModel)(implicit ctx: Context) = {
     api.saveAuthentication(user.id) flatMap { sessionId =>
       negotiate(
-        html = Redirect(routes.User.show(user.username)).fuccess,
+        html = Redirect(routes.User.newPlayer).fuccess,
         json = mobileUserOk(user, sessionId),
       ) map authenticateCookie(sessionId)
     } recoverWith authRecovery

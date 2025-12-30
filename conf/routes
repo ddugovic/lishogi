@@ -56,6 +56,7 @@ GET   /player/top/:nb/:perfKey         controllers.User.topNb(nb: Int, perfKey: 
 GET   /player/top/month                controllers.User.topMonth
 GET   /player/online                   controllers.User.online
 GET   /api/player/autocomplete         controllers.User.autocomplete
+GET   /new-player                      controllers.User.newPlayer
 
 GET   /dasher                          controllers.Dasher.get
 
