@@ -75,8 +75,15 @@
 .bot-tag,
 .engine-lvl {
   font-weight: bold;
-  color: theme.$c-bot;
   white-space: pre;
+}
+
+.bot-tag {
+  color: theme.$c-bot;
+}
+
+.engine-lvl {
+  color: theme.$c-accent;
 }
 
 a.user-link:hover {
