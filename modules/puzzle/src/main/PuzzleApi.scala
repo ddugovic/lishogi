@@ -39,8 +39,18 @@ final class PuzzleApi(
     def fromGame(gameId: lila.game.Game.ID): Fu[List[Puzzle]] =
       colls.puzzle(_.list[Puzzle]($doc(F.gameId -> gameId), 5))
 
-    def delete(id: Puzzle.Id): Funit =
-      colls.puzzle(_.delete.one($id(id.value))).void
+    def downvoteToDeletion(id: Puzzle.Id): Funit =
+      colls
+        .puzzle(
+          _.update.one(
+            $id(id.value),
+            $set(
+              F.voteDown -> 9999,
+              "deleted"  -> true,
+            ),
+          ),
+        )
+        .void
 
     def of(user: User, page: Int): Fu[Paginator[Puzzle]] =
       colls.puzzle { coll =>

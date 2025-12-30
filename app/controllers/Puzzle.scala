@@ -189,7 +189,7 @@ final class Puzzle(
 
   def delete(id: String) =
     Secure(_.Puzzles) { _ => me =>
-      env.puzzle.api.puzzle.delete(Puz.Id(id)) >>
+      env.puzzle.api.puzzle.downvoteToDeletion(Puz.Id(id)) >>
         env.mod.logApi.puzzleDelete(lila.report.Mod(me), id) inject jsonOkResult
     }
 
