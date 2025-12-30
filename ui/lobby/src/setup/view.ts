@@ -9,6 +9,8 @@ import { i18n, i18nFormat } from 'i18n';
 import { i18nPerf } from 'i18n/perf';
 import { colorName } from 'shogi/color-name';
 import { sfenColor } from 'shogi/common';
+import { engineCode, engineNameFromCode } from 'shogi/engine-name';
+import { usernameVNodes } from 'shogi/username';
 import { findHandicaps } from 'shogiops/handicaps';
 import { h, type VNode } from 'snabbdom';
 import type SetupCtrl from './ctrl';
@@ -268,7 +270,15 @@ function mode(ctrl: SetupCtrl): VNode {
 
 function levels(ctrl: SetupCtrl): VNode {
   return h('div.setup-levels.section', [
-    h('div.label', ctrl.engineName()),
+    h(
+      'div.label',
+      usernameVNodes({
+        username: engineNameFromCode(
+          engineCode(ctrl.variantKey(), ctrl.data.sfen, ctrl.data.level),
+        ),
+        engineLvl: ctrl.data.level,
+      }),
+    ),
     radioGroup(
       ctrl,
       'level',

@@ -1,7 +1,6 @@
 import { clockEstimateSeconds } from 'common/clock';
 import { debounce } from 'common/timings';
 import { idToVariant, variantToId } from 'common/variant';
-import { engineName } from 'shogi/engine-name';
 import { RULES } from 'shogiops/constants';
 import { findHandicap, findHandicaps, isHandicap } from 'shogiops/handicaps';
 import { parseSfen } from 'shogiops/sfen';
@@ -165,14 +164,6 @@ export default class SetupCtrl {
     const sfenOk = this.data.position === Position.initial || !this.invalidSfen;
 
     return !this.submitted && !this.invalidSfen && timeOk && ratedOk && aiOk && sfenOk;
-  }
-
-  engineName(): string {
-    const sfen = this.data.sfen;
-    const rules = idToVariant(this.data.variant);
-    const level = this.data.level;
-
-    return engineName(rules, sfen, level);
   }
 
   perf(): Perf | undefined {
