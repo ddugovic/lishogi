@@ -12,7 +12,7 @@ $(".row[href='']").on('click', e => {
   setTimeout(triggerHighlights, 500);
 });
 
-function triggerHighlights() {
+function triggerHighlights(): void {
   const allSubs = document.querySelectorAll<HTMLElement>('.subs .sub');
   const subs = Array.from(allSubs).slice(-3);
 

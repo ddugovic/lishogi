@@ -1,4 +1,6 @@
+@use 'pkg:breakpoint-sass' as breakpoint;
 @use '../abstract/mixins';
+@use '../abstract/media-queries';
 
 body.custom-background-img {
   &::before {
@@ -20,7 +22,7 @@ body.custom-background-img {
 html.transp {
   .button,
   textarea,
-  input,
+  input:not(.slider),
   .box,
   #modal-wrap,
   #topnav div,
@@ -35,6 +37,8 @@ html.transp {
   .lobby__box,
   .lobby__puzzle,
   .lobby__tv,
+  .lobby__support,
+  .tour-spotlight,
   .analyse__clock,
   .analyse__underboard__panels,
   .analyse__tools,
@@ -44,16 +48,29 @@ html.transp {
   .puzzle__side > div,
   .study__side > div:nth-child(2),
   .analyse__underboard > div:nth-child(2),
-  .coord-trainer__table {
+  .coord-trainer__table,
+  .crosstable,
+  .game__meta {
     backdrop-filter: blur(10px);
+  }
+
+  @include breakpoint.breakpoint(media-queries.$mq-xx-small) {
+    .ruser,
+    .rcontrols,
+    .rmoves {
+      backdrop-filter: blur(10px);
+    }
   }
 
   #us_profile {
     background-color: unset;
   }
 
-  .puzzle__feedback,
-  .tour-spotlight:not(.disabled):hover {
+  .puzzle__feedback {
     background: none;
+  }
+
+  .tour-spotlight:not(.disabled):hover {
+    background-color: var(--c-bg-box);
   }
 }
