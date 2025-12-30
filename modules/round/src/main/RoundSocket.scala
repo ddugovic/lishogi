@@ -127,8 +127,8 @@ final class RoundSocket(
   private def tellRound(gameId: Game.Id, msg: Any): Unit = rounds.tell(gameId.value, msg)
 
   private lazy val roundHandler: Handler = {
-    case Protocol.In.PlayerMove(fullId, usi, blur, lag) if !stopping =>
-      tellRound(fullId.gameId, HumanPlay(fullId.playerId, usi, blur, lag, none))
+    case Protocol.In.PlayerMove(fullId, usi, ply, blur, lag) if !stopping =>
+      tellRound(fullId.gameId, HumanPlay(fullId.playerId, usi, ply, blur, lag, none))
     case Protocol.In.PlayerDo(id, tpe) if !stopping =>
       tpe match {
         case "moretime"     => tellRound(id.gameId, Moretime(id.playerId))
@@ -270,9 +270,10 @@ object RoundSocket {
 
     object In {
 
-      case class PlayerOnlines(onlines: Iterable[(Game.Id, Option[RoomCrowd])])       extends P.In
-      case class PlayerDo(fullId: FullId, tpe: String)                                extends P.In
-      case class PlayerMove(fullId: FullId, usi: Usi, blur: Boolean, lag: LagMetrics) extends P.In
+      case class PlayerOnlines(onlines: Iterable[(Game.Id, Option[RoomCrowd])]) extends P.In
+      case class PlayerDo(fullId: FullId, tpe: String)                          extends P.In
+      case class PlayerMove(fullId: FullId, usi: Usi, ply: Int, blur: Boolean, lag: LagMetrics)
+          extends P.In
       case class PlayerChatSay(gameId: Game.Id, userIdOrColor: Either[User.ID, Color], msg: String)
           extends P.In
       case class WatcherChatSay(gameId: Game.Id, userId: User.ID, msg: String)       extends P.In
@@ -305,11 +306,13 @@ object RoundSocket {
               } yield PlayerDo(FullId(fullId), tpe)
             }
           case "r/move" =>
-            raw.get(5) { case Array(fullId, usiS, blurS, lagS, mtS) =>
-              Usi(usiS).orElse(UciToUsi(usiS)) map { usi =>
+            raw.get(6) { case Array(fullId, usiS, plyS, blurS, lagS, mtS) =>
+              (Usi(usiS).orElse(UciToUsi(usiS)) zip
+                plyS.toIntOption) map { case (usi, ply) =>
                 PlayerMove(
                   FullId(fullId),
                   usi,
+                  ply,
                   P.In.boolean(blurS),
                   LagMetrics(centis(lagS), centis(mtS)),
                 )

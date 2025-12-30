@@ -435,6 +435,8 @@ export default class RoundController {
         }
       }
     }
+
+    data.p = round.lastPly(this.data);
     this.socket.send('usi', data, socketOpts);
 
     if (!status.prepaused(this.data))

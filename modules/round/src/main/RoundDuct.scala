@@ -439,7 +439,7 @@ final private[round] class RoundDuct(
       handle { game =>
         forecastApi.nextMove(game, lastUsi) map { usiOpt =>
           usiOpt foreach { usi =>
-            this ! HumanPlay(PlayerId(game.player.id), usi, false)
+            this ! HumanPlay(PlayerId(game.player.id), usi, game.plies, false)
           }
           Nil
         }

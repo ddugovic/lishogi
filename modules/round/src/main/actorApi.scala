@@ -32,6 +32,7 @@ package round {
   case class HumanPlay(
       playerId: PlayerId,
       usi: Usi,
+      ply: Int,
       blur: Boolean,
       lagMetrics: LagMetrics = LagMetrics(),
       promise: Option[Promise[Unit]] = None,

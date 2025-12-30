@@ -40,12 +40,12 @@ final private class Player(
       pov: Pov,
   )(implicit proxy: GameProxy): Fu[Events] =
     play match {
-      case HumanPlay(_, usi, blur, lag, _) =>
+      case HumanPlay(_, usi, ply, blur, lag, _) =>
         pov match {
           case Pov(game, _) if game.playedPlies > Game.maxPlies(game.variant) =>
             round ! TooManyPlies
             fuccess(Nil)
-          case Pov(game, color) if game playableBy color =>
+          case Pov(game, color) if game.playableBy(color) && game.plies == ply =>
             applyUsi(game, usi, blur, lag)
               .leftMap(e => s"$pov $e")
               .fold(errs => fufail(ClientError(errs.toString)), fuccess)
@@ -56,11 +56,17 @@ final private class Player(
                   proxy.save(progress) >>
                     postHumanOrBotPlay(round, pov, progress, usi)
               }
-          case Pov(game, _) if game.finished => fufail(ClientError(s"$pov game is finished"))
-          case Pov(game, _) if game.paused   => fufail(ClientError(s"$pov game is paused"))
-          case Pov(game, _) if game.aborted  => fufail(ClientError(s"$pov game is aborted"))
-          case Pov(game, color) if !game.turnOf(color) => fufail(ClientError(s"$pov not your turn"))
-          case _ => fufail(ClientError(s"$pov move refused for some reason"))
+          case Pov(game, _) if game.finished =>
+            fufail(ClientError(s"$pov game is finished ($ply. $usi)"))
+          case Pov(game, _) if game.paused =>
+            fufail(ClientError(s"$pov game is paused ($ply. $usi)"))
+          case Pov(game, _) if game.aborted =>
+            fufail(ClientError(s"$pov game is aborted ($ply. $usi)"))
+          case Pov(game, color) if !game.turnOf(color) =>
+            fufail(ClientError(s"$pov not your turn ($ply. $usi)"))
+          case Pov(game, _) if game.plies != ply =>
+            fufail(ClientError(s"$pov send wrong ply  ($ply. $usi, server: ${game.plies})"))
+          case _ => fufail(ClientError(s"$pov move refused for some reason ($ply. $usi)"))
         }
     }
 
@@ -80,10 +86,11 @@ final private class Player(
             case UsiApplied(progress) =>
               proxy.save(progress) >> postHumanOrBotPlay(round, pov, progress, usi)
           }
-      case Pov(game, _) if game.finished           => fufail(ClientError(s"$pov game is finished"))
-      case Pov(game, _) if game.aborted            => fufail(ClientError(s"$pov game is aborted"))
-      case Pov(game, color) if !game.turnOf(color) => fufail(ClientError(s"$pov not your turn"))
-      case _ => fufail(ClientError(s"$pov move refused for some reason"))
+      case Pov(game, _) if game.finished => fufail(ClientError(s"$pov game is finished ($usi)"))
+      case Pov(game, _) if game.aborted  => fufail(ClientError(s"$pov game is aborted ($usi)"))
+      case Pov(game, color) if !game.turnOf(color) =>
+        fufail(ClientError(s"$pov not your turn ($usi)"))
+      case _ => fufail(ClientError(s"$pov move refused for some reason ($usi)"))
     }
 
   private def postHumanOrBotPlay(

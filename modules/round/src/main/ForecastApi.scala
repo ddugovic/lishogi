@@ -58,6 +58,7 @@ final class ForecastApi(coll: Coll, tellRound: TellRound)(implicit
             actorApi.round.HumanPlay(
               playerId = PlayerId(pov.playerId),
               usi = usi,
+              ply = pov.game.plies,
               blur = true,
               promise = promise.some,
             ),
