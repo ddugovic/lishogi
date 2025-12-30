@@ -48,6 +48,13 @@
         color: theme.$c-bg-box;
         border-radius: 50%;
       }
+
+      &::before {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
     }
 
     .close:hover {
