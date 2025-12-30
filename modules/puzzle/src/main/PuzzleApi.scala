@@ -72,9 +72,9 @@ final class PuzzleApi(
         Paginator(
           adapter = new Adapter[Puzzle](
             collection = coll,
-            selector = $doc("submittedBy" -> user.id),
+            selector = $doc(Puzzle.BSONFields.submittedBy -> user.id),
             projection = none,
-            sort = $sort desc "plays",
+            sort = $sort desc Puzzle.BSONFields.plays,
           ),
           page,
           MaxPerPage(15),
