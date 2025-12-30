@@ -55,6 +55,7 @@ export default class EditorCtrl {
     this.bind();
 
     this.setShogiground(this.data.sfen);
+    this.currentBeforeStack = this.data.sfen;
 
     this.updateUrl();
   }
