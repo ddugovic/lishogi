@@ -46,6 +46,7 @@ final class PuzzleApi(
             $id(id.value),
             $set(
               F.voteDown -> 9999,
+              F.vote     -> -1f,
               "deleted"  -> true,
             ),
           ),
