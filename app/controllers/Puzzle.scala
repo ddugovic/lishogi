@@ -23,19 +23,21 @@ final class Puzzle(
 ) extends LilaController(env) {
 
   private def renderJson(
-      puzzle: Puz,
+      puzzleOpt: Option[Puz],
       theme: PuzzleTheme,
       replay: Option[PuzzleReplay] = None,
       newUser: Option[lila.user.User] = None,
   )(implicit
       ctx: Context,
   ): Fu[JsObject] =
-    env.puzzle.jsonView(
-      puzzle = puzzle,
-      theme = theme,
-      replay = replay,
-      user = newUser orElse ctx.me,
-    )
+    puzzleOpt.fold(fuccess(Json.obj("noPuzzle" -> true))) { puzzle =>
+      env.puzzle.jsonView(
+        puzzle = puzzle,
+        theme = theme,
+        replay = replay,
+        user = newUser orElse ctx.me,
+      )
+    }
 
   private def renderShow(
       puzzle: Puz,
@@ -45,7 +47,7 @@ final class Puzzle(
   )(implicit
       ctx: Context,
   ) =
-    renderJson(puzzle, theme, replay) zip
+    renderJson(puzzle.some, theme, replay) zip
       ctx.me.??(u => env.puzzle.session.getDifficulty(u) dmap some) map { case (json, difficulty) =>
         Ok(
           views.html.puzzle
@@ -59,7 +61,7 @@ final class Puzzle(
         OptionFuResult(env.puzzle.daily.get) { daily =>
           negotiate(
             html = renderShow(daily.puzzle, PuzzleTheme.mix),
-            json = renderJson(daily.puzzle, PuzzleTheme.mix) dmap { Ok(_) },
+            json = renderJson(daily.puzzle.some, PuzzleTheme.mix) dmap { Ok(_) },
           ) dmap (_.noCache)
         }
       }
@@ -79,16 +81,21 @@ final class Puzzle(
       NoBot {
         val theme = PuzzleTheme.mix
         nextPuzzleForMe(theme.key) flatMap {
-          renderShow(_, theme)
+          _.fold(fuccess(redirectNoPuzzle)) {
+            renderShow(_, theme)
+          }
         }
       }
     }
 
-  private def nextPuzzleForMe(theme: PuzzleTheme.Key)(implicit ctx: Context): Fu[Puz] =
-    ctx.me match {
+  private def redirectNoPuzzle =
+    Redirect(routes.Puzzle.themes).flashFailure("No more puzzles available! Try another theme.")
+
+  private def nextPuzzleForMe(theme: PuzzleTheme.Key)(implicit ctx: Context): Fu[Option[Puz]] =
+    (ctx.me match {
       case Some(me) => env.puzzle.session.nextPuzzleFor(me, theme)
       case None     => env.puzzle.anon.getOneFor(theme) orFail "Couldn't find a puzzle for anon!"
-    }
+    }).map(some).recover { case _ => none }
 
   def complete(themeStr: String, id: String) =
     OpenBody { implicit ctx =>
@@ -143,7 +150,7 @@ final class Puzzle(
                             json <- next match {
                               case None => fuccess(Json.obj("replayComplete" -> true))
                               case Some((puzzle, replay)) =>
-                                renderJson(puzzle, theme, replay.some) map { nextJson =>
+                                renderJson(puzzle.some, theme, replay.some) map { nextJson =>
                                   Json.obj(
                                     "round" -> env.puzzle.jsonView.roundJson(me, round, perf),
                                     "next"  -> nextJson,
@@ -227,7 +234,9 @@ final class Puzzle(
       PuzzleTheme.find(themeOrId) match {
         case Some(theme) =>
           nextPuzzleForMe(theme.key) flatMap {
-            renderShow(_, theme)
+            _.fold(fuccess(redirectNoPuzzle)) {
+              renderShow(_, theme)
+            }
           }
         case None if themeOrId.sizeIs == Puz.idSize =>
           OptionFuResult(env.puzzle.api.puzzle find Puz.Id(themeOrId)) { puz =>
