@@ -129,6 +129,34 @@ export function compute(ctrl: AnalyseCtrl): DrawShape[] {
   return shapes;
 }
 
+export function getIllegalShape(ctrl: AnalyseCtrl): DrawShape[] {
+  const g = ctrl.data.game;
+  if (
+    g.status.name === 'illegalMove' &&
+    g.illegalUsi &&
+    g.plies === ctrl.node.ply &&
+    g.lastMove === ctrl.node.usi
+  ) {
+    const parsed = parseUsi(g.illegalUsi)!;
+    const to = makeSquareName(parsed.to);
+
+    return [
+      isDrop(parsed)
+        ? {
+            orig: { color: opposite(g.winner!), role: parsed.role },
+            dest: to,
+            brush: 'red',
+          }
+        : {
+            orig: makeSquareName(parsed.from),
+            dest: to,
+            description: parsed.promotion ? '+' : undefined,
+            brush: 'red',
+          },
+    ];
+  } else return [];
+}
+
 const prependDropShadow = (svgBase: string) =>
   `
 <defs>

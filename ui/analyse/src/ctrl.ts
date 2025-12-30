@@ -37,7 +37,7 @@ import type { Position, PositionError } from 'shogiops/variant/position';
 import { promotableOnDrop, promote } from 'shogiops/variant/util';
 import { build as makeTree, type TreeWrapper, ops as treeOps, path as treePath } from 'tree';
 import { Ctrl as ActionMenuCtrl } from './action-menu';
-import { compute as computeAutoShapes } from './auto-shape';
+import { compute as computeAutoShapes, getIllegalShape } from './auto-shape';
 import { Autoplay, type AutoplayDelay } from './autoplay';
 import { type EvalCache, make as makeEvalCache } from './eval-cache';
 import { make as makeForecast } from './forecast/forecast-ctrl';
@@ -668,7 +668,8 @@ export default class AnalyseCtrl {
   }
 
   setAutoShapes = (): void => {
-    this.shogiground.setAutoShapes(computeAutoShapes(this));
+    const baseShapes = computeAutoShapes(this);
+    this.shogiground.setAutoShapes(baseShapes.length ? baseShapes : getIllegalShape(this));
   };
 
   setShapes = (shapes?: DrawShape[]): void => {
