@@ -196,7 +196,7 @@ export default function (opts: PuzzleOpts, redraw: Redraw): Controller {
     pos.play(md);
     addNode(
       {
-        ply: pos.moveNumber - 1,
+        ply: parent.ply + 1,
         sfen: makeSfen(pos),
         id: scalashogiCharPair(md, 'standard'),
         usi: makeUsi(md),

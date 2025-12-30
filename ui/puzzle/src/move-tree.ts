@@ -1,8 +1,9 @@
+import { plyColor } from 'shogi/common';
 import { makeNotationWithPosition } from 'shogi/notation';
 import { scalashogiCharPair } from 'shogiops/compat';
 import { initialSfen, makeSfen, parseSfen } from 'shogiops/sfen';
 import type { MoveOrDrop } from 'shogiops/types';
-import { makeUsi, parseUsi } from 'shogiops/util';
+import { makeUsi, parseUsi, toColor } from 'shogiops/util';
 import type { Position } from 'shogiops/variant/position';
 import { Shogi } from 'shogiops/variant/shogi';
 import type { TreeWrapper } from 'tree';
@@ -29,9 +30,12 @@ export function usiToTree(usis: Usi[]): Tree.Node {
 }
 
 export function sfenToTree(sfen: string): Tree.Node {
-  const startPly = Number.parseInt(sfen.split(' ')[3]) - 1;
+  const color = toColor(sfen.split(' ')[1] || 'b');
+  const startPly = (Number.parseInt(sfen.split(' ')[3]) || 1) - 1;
+  const offset = plyColor(startPly) !== color ? 1 : 0;
+
   return {
-    ply: startPly || 0,
+    ply: startPly + offset,
     id: '',
     sfen: sfen,
     children: [],

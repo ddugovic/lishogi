@@ -34,7 +34,7 @@ final class PuzzleApi(
       colls.puzzle(_.exists($id(id)))
 
     def existsBySfen(sfen: Sfen): Fu[Boolean] =
-      colls.puzzle(_.exists($doc(F.sfen -> sfen.value)))
+      colls.puzzle(_.exists($doc(F.sfen $startsWith sfen.value)))
 
     def fromGame(gameId: lila.game.Game.ID): Fu[List[Puzzle]] =
       colls.puzzle(_.list[Puzzle]($doc(F.gameId -> gameId), 5))
@@ -279,8 +279,10 @@ final class PuzzleApi(
         submittedBy: Option[String],
     ): Fu[Option[Puzzle.Id]] = {
       val validated = for {
-        validSfen <- sfen.toSituation(shogi.variant.Standard).map(_.toSfen)
-        validLine <- line.toNel
+        sitPlus <- sfen.toSituationPlus(shogi.variant.Standard)
+        validSfen = sitPlus.toSfen
+        result    = shogi.Replay(line, validSfen.some, shogi.variant.Standard).valid
+        validLine <- line.toNel.ifTrue(result.isValid)
       } yield ((validSfen, validLine))
 
       validated ?? { case (validSfen, validLine) =>
@@ -308,10 +310,10 @@ final class PuzzleApi(
     }
 
     private def alreadyExistsOrSimilar(sfen: Sfen, gameId: Option[lila.game.Game.ID]): Fu[Boolean] =
-      puzzle.existsBySfen(sfen) >>| gameId ?? { gid =>
+      puzzle.existsBySfen(sfen.truncate) >>| gameId ?? { gid =>
         puzzle
           .fromGame(gid)
-          .map(_.exists(p => Math.abs(~p.sfen.stepNumber - ~sfen.stepNumber) < 10))
+          .map(_.exists(p => Math.abs(~p.sfen.stepNumber - ~sfen.stepNumber) < 8))
       }
 
     private def makeId: Fu[Puzzle.Id] = {

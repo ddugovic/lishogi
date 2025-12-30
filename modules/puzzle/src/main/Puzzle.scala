@@ -2,6 +2,7 @@ package lila.puzzle
 
 import cats.data.NonEmptyList
 
+import shogi.Color
 import shogi.format.forsyth.Sfen
 import shogi.format.usi.Usi
 
@@ -21,34 +22,28 @@ case class Puzzle(
     description: Option[String] = None,
     submittedBy: Option[String] = None,
 ) {
+
   // ply after "initial move" when we start solving
-  def initialPly: Int =
-    sfen.stepNumber ?? { mn =>
-      mn - 1
-    }
+  def initialPly: Int = {
+    val stepNumber = sfen.stepNumber | 1
+    stepNumber - (if ((stepNumber % 2 == 1) == (sfen.color | shogi.Sente).sente) 1 else 0)
+  }
 
-  lazy val sfenAfterInitialMove: Sfen = {
-    gameId match {
-      case Some(_) =>
-        for {
-          sit1 <- sfen.toSituation(shogi.variant.Standard)
-          sit2 <- sit1(line.head).toOption
-        } yield sit2.toSfen
-      case None => sfen.some
-    }
-  } err s"Can't apply puzzle $id first move"
+  lazy val sfenAfterInitialMove: Sfen =
+    (if (gameId.isDefined)
+       for {
+         sit1 <- sfen.toSituation(shogi.variant.Standard)
+         sit2 <- sit1(line.head).toOption
+       } yield sit2.toSfen
+     else sfen.some).getOrElse(sfen)
 
-  def color: shogi.Color =
-    gameId match {
-      case Some(_) => sfen.color.fold[shogi.Color](shogi.Sente)(!_)
-      case None    => sfen.color.getOrElse(shogi.Sente)
-    }
+  def color: Color =
+    if (gameId.isDefined) sfen.color.fold[Color](shogi.Sente)(!_)
+    else sfen.color.getOrElse(shogi.Sente)
 
   def lastUsi: String =
-    gameId match {
-      case Some(_) => line.head.usi
-      case None    => ""
-    }
+    if (gameId.isDefined) line.head.usi
+    else ""
 }
 
 object Puzzle {
