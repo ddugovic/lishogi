@@ -111,41 +111,95 @@ object layout {
       )
         "Disable"
       else "Enable"} blind mode</button></form>""")
-  private val zenToggle = raw(
-    s"""<a data-icon="${Icons.correct}" id="zentog" class="text fbt active">ZEN MODE</a>""",
-  )
+  private val zenToggle =
+    a(
+      id       := "zentog",
+      cls      := "text fbt active",
+      dataIcon := Icons.correct,
+      "ZEN MODE",
+    )
+
   private def dasher(me: lila.user.User) =
-    raw(
-      s"""<div class="dasher"><a id="user_tag" class="toggle link">${me.username}</a><div id="dasher_app" class="dropdown"></div></div>""",
+    div(
+      cls := "dasher",
+      a(
+        id  := "user_tag",
+        cls := "toggle link",
+      )(me.username),
+      div(
+        id  := "dasher_app",
+        cls := "dropdown",
+      ),
     )
 
   private def allNotifications(implicit ctx: Context) =
-    spaceless(s"""<div>
-  <a id="challenge-toggle" class="toggle link">
-    <span title="${trans.challenges
-        .txt()}" class="data-count" data-count="${ctx.nbChallenges}" data-icon="${Icons.challenge}"></span>
-  </a>
-  <div id="challenge-app" class="dropdown"></div>
-</div>
-<div>
-  <a id="notify-toggle" class="toggle link">
-    <span title="${trans.notifications
-        .txt()}" class="data-count" data-count="${ctx.nbNotifications}" data-icon="${Icons.bell}"></span>
-  </a>
-  <div id="notify-app" class="dropdown"></div>
-</div>""")
+    frag(
+      div(
+        a(
+          id  := "challenge-toggle",
+          cls := "toggle link",
+        )(
+          span(
+            title     := trans.challenges.txt(),
+            cls       := "data-count",
+            dataCount := ctx.nbChallenges,
+            dataIcon  := Icons.challenge,
+          ),
+        ),
+        div(
+          id  := "challenge-app",
+          cls := "dropdown",
+        ),
+      ),
+      div(
+        a(
+          id  := "notify-toggle",
+          cls := "toggle link",
+        )(
+          span(
+            title     := trans.notifications.txt(),
+            cls       := "data-count",
+            dataCount := ctx.nbNotifications,
+            dataIcon  := Icons.bell,
+          ),
+        ),
+        div(
+          id  := "notify-app",
+          cls := "dropdown",
+        ),
+      ),
+    )
 
-  private def anonDasher(playing: Boolean)(implicit ctx: Context) =
-    spaceless(s"""<div class="dasher">
-  <a class="toggle link anon">
-    <span title="${trans.preferences.preferences.txt()}" data-icon="${Icons.gear}"></span>
-  </a>
-  <div id="dasher_app" class="dropdown" data-playing="$playing"></div>
-</div>
-<a href="${langHref(
-        s"${routes.Auth.login.url}?referrer=${ctx.req.path}",
-      )}" class="signin button button-empty">${trans.signIn
-        .txt()}</a>""")
+  private def anonDasher(implicit ctx: Context) =
+    frag(
+      a(cls := "link", href := routes.User.newPlayer)(span(dataIcon := Icons.infoCircle)),
+      div(cls := "signin-signup")(
+        a(
+          href := langHref(
+            routes.Auth.signup.url,
+          ),
+          cls := "signup button",
+        )(trans.signUp.txt()),
+        a(
+          href := langHref(
+            s"${routes.Auth.login.url}?referrer=${ctx.req.path}",
+          ),
+          cls := "signin button",
+        )(trans.signIn.txt()),
+      ),
+      div(cls := "dasher")(
+        a(cls := "toggle link anon")(
+          span(
+            title    := trans.preferences.preferences.txt(),
+            dataIcon := Icons.gear,
+          ),
+        ),
+        div(
+          id  := "dasher_app",
+          cls := "dropdown",
+        ),
+      ),
+    )
 
   private val clinputLink = a(cls := "link")(span(dataIcon := Icons.search))
 
@@ -352,7 +406,7 @@ object layout {
             .get(ctx.req)
             .map(views.html.auth.bits.checkYourEmailBanner(_)),
           playing option zenToggle,
-          siteHeader(playing),
+          siteHeader(),
           div(
             id := "main-wrap",
             cls := List(
@@ -411,7 +465,7 @@ object layout {
         urlWithLangQuery("/", "ja")
       else langHref("/")
 
-    def apply(playing: Boolean)(implicit ctx: Context) = {
+    def apply()(implicit ctx: Context) = {
       val isRoot = ctx.req.path == "/"
       // date good enough
       val holiday = isRoot ?? Holiday.find(
@@ -446,7 +500,7 @@ object layout {
           teamRequests,
           ctx.me map { me =>
             frag(allNotifications, dasher(me))
-          } getOrElse { !ctx.pageData.error option anonDasher(playing) },
+          } getOrElse { !ctx.pageData.error option anonDasher },
         ),
       )
     }

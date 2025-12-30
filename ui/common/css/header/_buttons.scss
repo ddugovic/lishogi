@@ -1,4 +1,7 @@
+@use 'pkg:breakpoint-sass' as breakpoint;
 @use '../abstract/extends';
+@use '../abstract/icons';
+@use '../abstract/media-queries';
 @use '../abstract/mixins';
 @use '../abstract/variables';
 @use '../abstract/z-index' as z;
@@ -14,12 +17,18 @@
   @extend %flex-center-nowrap;
 
   .header-langs {
+    display: none;
+
     button {
       padding: 0.3rem;
       border: none;
       border-radius: 0;
       background: none;
       -webkit-appearance: none;
+    }
+
+    @include breakpoint.breakpoint(media-queries.$mq-xx-small) {
+      display: block;
     }
   }
 
@@ -34,6 +43,10 @@
 
     font-size: 1.1rem;
     padding: 0 0.7rem;
+
+    &.anon {
+      padding: 0 14px;
+    }
 
     &:hover {
       color: theme.$c-font-clearer;
@@ -84,14 +97,33 @@
     }
   }
 
-  .signin {
-    margin: 0 1rem;
+  .signin-signup {
+    margin: 0 0.5em;
+
+    .signup {
+      color: theme.$c-link-over;
+      background: theme.$c-link;
+      margin-right: 0.5em;
+    }
+
+    .signin {
+      padding-right: 0.75em;
+      padding-left: 0.75em;
+      color: theme.$c-link;
+      background: none;
+      box-shadow: none;
+      outline: 2px solid theme.$c-link;
+      outline-offset: -2px;
+
+      &:hover {
+        outline-color: theme.$c-link-hover;
+      }
+    }
 
     @include mixins.has-bg-img {
-      &.button-empty {
-        @extend %metal;
-
-        color: theme.$c-font-clear;
+      .button {
+        background: theme.$c-link;
+        color: theme.$c-link-over;
       }
     }
   }
@@ -103,8 +135,18 @@
 }
 
 #user_tag {
-  padding-right: 1rem;
+  @extend %flex-center-nowrap;
+
   white-space: nowrap;
+  gap: 0.5rem;
+
+  &::after {
+    @extend %data-icon;
+
+    color: theme.$c-font-dim;
+    content: icons.$account-circle;
+    font-size: 2rem;
+  }
 }
 
 #notify-app .initiating {
