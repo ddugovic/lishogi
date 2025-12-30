@@ -15,3 +15,45 @@ body.custom-background-img {
     z-index: -1;
   }
 }
+
+// very ugly, but let's not spend much time on this
+html.transp {
+  .button,
+  textarea,
+  input,
+  .box,
+  #modal-wrap,
+  #topnav div,
+  #topnav.hover section:hover > a,
+  #topnav section:active > a,
+  .mselect__label,
+  .mselect__list a,
+  .site-buttons .dropdown,
+  .site-buttons .shown .toggle,
+  .mchat,
+  .lobby__app__content,
+  .lobby__box,
+  .lobby__puzzle,
+  .lobby__tv,
+  .analyse__clock,
+  .analyse__underboard__panels,
+  .analyse__tools,
+  .learn-stages .stage,
+  .learn__screen,
+  .learn__side-map .categ_stages,
+  .puzzle__side > div,
+  .study__side > div:nth-child(2),
+  .analyse__underboard > div:nth-child(2),
+  .coord-trainer__table {
+    backdrop-filter: blur(10px);
+  }
+
+  #us_profile {
+    background-color: unset;
+  }
+
+  .puzzle__feedback,
+  .tour-spotlight:not(.disabled):hover {
+    background: none;
+  }
+}

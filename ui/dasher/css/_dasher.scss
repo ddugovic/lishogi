@@ -207,6 +207,12 @@
     }
   }
 
+  .background .image {
+    background: theme.$c-bg-zebra;
+    border-top: theme.$border;
+    padding: 0.5rem;
+  }
+
   .board .zoom {
     display: none;
     border-top: theme.$border;

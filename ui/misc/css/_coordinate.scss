@@ -1,5 +1,6 @@
 @use 'pkg:breakpoint-sass' as breakpoint;
 @use 'pkg:common/abstract/extends';
+@use 'pkg:common/abstract/mixins';
 @use 'pkg:common/abstract/uniboard';
 @use 'pkg:common/abstract/variables';
 @use 'pkg:common/theme';
@@ -73,6 +74,13 @@ $mq-col3: uniboard.$mq-col3-uniboard;
     .explanation li {
       list-style: outside disc;
       margin: 0.5em 0 0.5em 1em;
+    }
+
+    @include mixins.has-bg-img {
+      @extend %box-neat;
+
+      padding: 1rem;
+      background: theme.$c-bg-box;
     }
   }
 
