@@ -34,7 +34,7 @@ final class PuzzleApi(
       colls.puzzle(_.exists($id(id)))
 
     def existsBySfen(sfen: Sfen): Fu[Boolean] =
-      colls.puzzle(_.exists($doc(F.sfen $startsWith sfen.value)))
+      colls.puzzle(_.exists($doc(F.sfen $startsWith java.util.regex.Pattern.quote(sfen.value))))
 
     def fromGame(gameId: lila.game.Game.ID): Fu[List[Puzzle]] =
       colls.puzzle(_.list[Puzzle]($doc(F.gameId -> gameId), 5))
