@@ -69,8 +69,9 @@ export function ctrl(
         loadCssPath('common.variables');
       }
 
-      if (c === 'transp') data.image = this.getImage();
-      else if (c === 'custom') {
+      if (c === 'transp' && !data.image) {
+        this.setImage(this.getImage());
+      } else if (c === 'custom') {
         loadCssPath('common.custom');
         open('customBackground');
       }
