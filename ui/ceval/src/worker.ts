@@ -106,7 +106,9 @@ export class ThreadedWasmWorker extends AbstractWorker<ThreadedWasmWorkerOpts> {
       }
 
       // Load Emscripten module.
-      await loadScript(assetUrl(`${this.opts.baseUrl + this.opts.baseName}.js`, { version }));
+      await loadScript(
+        assetUrl(`${this.opts.baseUrl + this.opts.baseName}.js`, { version, sameDomain: true }),
+      );
       const engine = await (window as any)[this.opts.module]!({
         wasmBinary,
         locateFile: (path: string) =>
