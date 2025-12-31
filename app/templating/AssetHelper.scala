@@ -30,6 +30,7 @@ trait AssetHelper { self: I18nHelper with SecurityHelper =>
 
   def assetVersion = AssetVersion.current
 
+  def netAssetUrl(path: String): String = s"${env.net.baseUrl}/assets/_$assetVersion/$path"
   def assetUrl(path: String): String = s"$assetBaseUrl/assets/_$assetVersion/$path"
 
   def cdnUrl(path: String)    = s"$assetBaseUrl$path"
@@ -114,7 +115,7 @@ trait AssetHelper { self: I18nHelper with SecurityHelper =>
 
   def spriteSvg(categ: String, key: String): Frag =
     tag("svg")(cls := "extra-icon")(
-      tag("use")(href := assetUrl(s"icons/${categ}.svg#$key")),
+      tag("use")(href := netAssetUrl(s"icons/${categ}.svg#$key")),
     )
 
   def flagImage(code: String) =
