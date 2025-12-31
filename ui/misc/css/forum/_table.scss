@@ -28,6 +28,10 @@
       font-size: 1em;
     }
 
+    div:has(.user-link) {
+      display: inline-block;
+    }
+
     display: none;
 
     @include breakpoint.breakpoint(media-queries.$mq-xx-small) {
