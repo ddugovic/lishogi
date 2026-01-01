@@ -183,6 +183,7 @@ const onScroll = () =>
 if (location.search.startsWith('?mod')) $toggle.trigger('click');
 window.lishogi.mousetrap.bind('m', () => $toggle.trigger('click'));
 
+setupTranslator('#inquiry div.docs.reports p, .player_chats .chat');
 window.lishogi.pubsub.on('content_loaded', () => {
-  setupTranslator('#inquiry div.docs.reports p, .mz_reports form .atom-text');
+  setupTranslator('.mz_reports form .atom-text');
 });
