@@ -51,6 +51,7 @@ export async function setupTranslator(
 
   const targetLang = document.documentElement.lang || 'en';
   const textElements = document.querySelectorAll<HTMLElement>(textSelector);
+  if (!textElements.length) return;
 
   let detector: LanguageDetector | null = null;
 
