@@ -63,14 +63,7 @@ export function makeConfig(
       },
       forceMovePromotion: (orig: Key, dest: Key) => {
         const piece = state.pieces.get(orig) as Piece;
-        const origSq = parseSquareName(orig)!;
-        const destSq = parseSquareName(dest)!;
-        return (
-          !!piece &&
-          ((['rook', 'bishop'].includes(piece.role) &&
-            standardPieceCanPromote(piece, origSq, destSq, undefined)) ||
-            standardPieceForcePromote(piece, destSq))
-        );
+        return !!piece && pieceForcePromote(variant)(piece, parseSquareName(dest)!);
       },
     },
     draggable: {

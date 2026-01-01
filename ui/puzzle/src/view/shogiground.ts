@@ -65,14 +65,7 @@ function makeConfig(ctrl: Controller): SgConfig {
       },
       forceMovePromotion: (orig: Key, dest: Key) => {
         const piece = ctrl.shogiground.state.pieces.get(orig) as Piece;
-        const origSq = parseSquareName(orig)!;
-        const destSq = parseSquareName(dest)!;
-        return (
-          !!piece &&
-          ((['rook', 'bishop'].includes(piece.role) &&
-            standardPieceCanPromote(piece, origSq, destSq, undefined)) ||
-            standardPieceForcePromote(piece, destSq))
-        );
+        return !!piece && standardPieceForcePromote(piece, parseSquareName(dest)!);
       },
     },
     draggable: {
