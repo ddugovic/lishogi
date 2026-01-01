@@ -36,6 +36,9 @@ function parseSfen(el: HTMLElement): void {
     sgWrap.classList.add('sg-wrap');
     el.appendChild(sgWrap);
     data.set(el, 'shogiground', window.Shogiground(config, { board: sgWrap }));
+    document.querySelectorAll('.sg-wrap.preload').forEach(el => {
+      el.remove();
+    });
   }
 }
 
